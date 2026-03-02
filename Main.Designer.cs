@@ -100,6 +100,7 @@
             Name = "Main";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "RotoGestionClientes";
+            Load += Main_Load;
             panel_Header.ResumeLayout(false);
             panel_Header.PerformLayout();
             ResumeLayout(false);

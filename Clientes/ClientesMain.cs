@@ -20,11 +20,12 @@ namespace RotoGestionClientes
         #endregion
 
         #region Constructors
-        public ClientesMain()
+        public ClientesMain(List<ClienteGridItem> clientesList, ApplicationDbContext context)
         {
             InitializeComponent();
-            _context = Program.AppServices.GetRequiredService<ApplicationDbContext>();
+            _context = context;
             ConfigureGrid();
+            _allClientes = clientesList;
         }
 
         #endregion
@@ -33,9 +34,7 @@ namespace RotoGestionClientes
 
         private void ClientesMain_Load(object sender, EventArgs e)
         {
-            Cursor.Current = Cursors.WaitCursor;
-            LoadClientesFromDB();
-            Cursor.Current = Cursors.Default;
+            ApplyFilter();
         }
         private void txt_Filtro_TextChanged(object sender, EventArgs e)
         {
@@ -56,7 +55,6 @@ namespace RotoGestionClientes
 
             //}
         }
-
         private void dgvClientes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -86,7 +84,6 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
-
         private void ConfigureGrid()
         {
             dgvClientes.AutoGenerateColumns = false;
@@ -110,26 +107,6 @@ namespace RotoGestionClientes
                 DataPropertyName = "Nombre",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
-
-            //dgvClientes.Columns.Add(new DataGridViewButtonColumn
-            //{
-            //    Name = "Edit",
-            //    HeaderText = "",
-            //    Text = "Editar",
-            //    UseColumnTextForButtonValue = true,
-            //    Width = 80,
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-            //});
-            //dgvClientes.Columns.Add(new DataGridViewButtonColumn
-            //{
-            //    Name = "Delete",
-            //    HeaderText = "",
-            //    Text = "Borrar",
-            //    UseColumnTextForButtonValue = true,
-            //    Width = 80,
-            //    AutoSizeMode = DataGridViewAutoSizeColumnMode.None
-            //});
-
             dgvClientes.Columns.Add(new DataGridViewImageColumn
             {
                 Name = "Edit",
@@ -183,8 +160,5 @@ namespace RotoGestionClientes
             dgvClientes.DataSource = filtered;
         }
         #endregion
-
-
-
     }
 }
