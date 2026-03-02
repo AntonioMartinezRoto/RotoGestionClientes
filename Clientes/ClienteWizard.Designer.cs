@@ -143,7 +143,7 @@
             panel_Sidebar.Location = new Point(0, 60);
             panel_Sidebar.Name = "panel_Sidebar";
             panel_Sidebar.Padding = new Padding(10);
-            panel_Sidebar.Size = new Size(238, 654);
+            panel_Sidebar.Size = new Size(250, 654);
             panel_Sidebar.TabIndex = 2;
             // 
             // flowLayoutPanel_Sidebar
@@ -153,7 +153,7 @@
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(10, 10);
             flowLayoutPanel_Sidebar.Name = "flowLayoutPanel_Sidebar";
-            flowLayoutPanel_Sidebar.Size = new Size(218, 634);
+            flowLayoutPanel_Sidebar.Size = new Size(230, 634);
             flowLayoutPanel_Sidebar.TabIndex = 0;
             flowLayoutPanel_Sidebar.WrapContents = false;
             // 
@@ -161,10 +161,10 @@
             // 
             panel_Content.BackColor = Color.White;
             panel_Content.Dock = DockStyle.Fill;
-            panel_Content.Location = new Point(238, 60);
+            panel_Content.Location = new Point(250, 60);
             panel_Content.Name = "panel_Content";
             panel_Content.Padding = new Padding(25);
-            panel_Content.Size = new Size(1008, 654);
+            panel_Content.Size = new Size(996, 654);
             panel_Content.TabIndex = 3;
             // 
             // ClienteWizard

@@ -43,6 +43,8 @@ namespace RotoGestionClientes
             {
                 _model = MapClienteToModel(clienteId);
                 _clienteId = clienteId.Value;
+                btn_Siguiente.Visible = false;
+                btn_Atras.Visible = false;
             }
             else
             {

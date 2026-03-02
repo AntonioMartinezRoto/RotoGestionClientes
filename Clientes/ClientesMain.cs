@@ -34,6 +34,7 @@ namespace RotoGestionClientes
 
         private void ClientesMain_Load(object sender, EventArgs e)
         {
+            panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
             ApplyFilter();
         }
         private void txt_Filtro_TextChanged(object sender, EventArgs e)
@@ -75,7 +76,7 @@ namespace RotoGestionClientes
             }
             LoadClientesFromDB();
         }
-        private void btn_Add_Click(object sender, EventArgs e)
+        private void btn_AddCliente_Click(object sender, EventArgs e)
         {
             ClienteWizard clienteWizard = new ClienteWizard(WizardMode.Create, this._context);
             clienteWizard.ShowDialog();
@@ -107,6 +108,13 @@ namespace RotoGestionClientes
                 DataPropertyName = "Nombre",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
+            dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Alias",
+                HeaderText = "Alias",
+                DataPropertyName = "Alias",
+                Width = 300,
+            });
             dgvClientes.Columns.Add(new DataGridViewImageColumn
             {
                 Name = "Edit",
@@ -131,7 +139,9 @@ namespace RotoGestionClientes
                 .Select(f => new ClienteGridItem
                 {
                     Id = f.Id,
-                    Nombre = f.Nombre
+                    Nombre = f.Nombre,
+                    Alias = f.Alias,
+                    Comentarios = f.Comentarios
                 })
                 .OrderBy(f => f.Nombre)
                 .ToList();
@@ -160,5 +170,7 @@ namespace RotoGestionClientes
             dgvClientes.DataSource = filtered;
         }
         #endregion
+
+
     }
 }

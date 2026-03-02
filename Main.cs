@@ -27,6 +27,7 @@ namespace RotoGestionClientes
         {            
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             this.Text = $"RotoGestiónClientes v{version?.Major}.{version?.Minor}";
+            panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
             LoadClientesFromDB();
         }
         private void btn_Clientes_Click(object sender, EventArgs e)
@@ -45,7 +46,9 @@ namespace RotoGestionClientes
                 .Select(f => new ClienteGridItem
                 {
                     Id = f.Id,
-                    Nombre = f.Nombre
+                    Nombre = f.Nombre,
+                    Alias = f.Alias,
+                    Comentarios = f.Comentarios
                 })
                 .OrderBy(f => f.Nombre)
                 .ToList();

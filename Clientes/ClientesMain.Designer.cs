@@ -32,15 +32,16 @@
             dgvClientes = new DataGridView();
             lbl_Filtro = new Label();
             txt_Filtro = new TextBox();
-            btn_Add = new Button();
             lbl_Total = new Label();
             panel_Header = new Panel();
             label1 = new Label();
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
+            btn_AddCliente = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClientes).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
+            flowLayoutPanel_Sidebar.SuspendLayout();
             SuspendLayout();
             // 
             // dgvClientes
@@ -51,11 +52,11 @@
             dgvClientes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvClientes.BackgroundColor = SystemColors.ActiveCaption;
             dgvClientes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvClientes.Location = new Point(163, 112);
+            dgvClientes.Location = new Point(303, 112);
             dgvClientes.Name = "dgvClientes";
             dgvClientes.ReadOnly = true;
             dgvClientes.RowHeadersVisible = false;
-            dgvClientes.Size = new Size(1025, 634);
+            dgvClientes.Size = new Size(885, 634);
             dgvClientes.TabIndex = 1;
             dgvClientes.CellClick += dgvClientes_CellClick;
             dgvClientes.CellContentClick += dgvClientes_CellContentClick;
@@ -80,23 +81,12 @@
             txt_Filtro.TabIndex = 28;
             txt_Filtro.TextChanged += txt_Filtro_TextChanged;
             // 
-            // btn_Add
-            // 
-            btn_Add.BackgroundImage = (Image)resources.GetObject("btn_Add.BackgroundImage");
-            btn_Add.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_Add.Location = new Point(163, 81);
-            btn_Add.Name = "btn_Add";
-            btn_Add.Size = new Size(26, 25);
-            btn_Add.TabIndex = 31;
-            btn_Add.UseVisualStyleBackColor = true;
-            btn_Add.Click += btn_Add_Click;
-            // 
             // lbl_Total
             // 
             lbl_Total.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lbl_Total.AutoSize = true;
             lbl_Total.BackColor = Color.Transparent;
-            lbl_Total.Location = new Point(163, 749);
+            lbl_Total.Location = new Point(303, 86);
             lbl_Total.Name = "lbl_Total";
             lbl_Total.Size = new Size(44, 15);
             lbl_Total.TabIndex = 32;
@@ -131,19 +121,34 @@
             panel_Sidebar.Location = new Point(0, 60);
             panel_Sidebar.Name = "panel_Sidebar";
             panel_Sidebar.Padding = new Padding(10);
-            panel_Sidebar.Size = new Size(106, 714);
+            panel_Sidebar.Size = new Size(250, 714);
             panel_Sidebar.TabIndex = 34;
             // 
             // flowLayoutPanel_Sidebar
             // 
             flowLayoutPanel_Sidebar.AutoScroll = true;
+            flowLayoutPanel_Sidebar.Controls.Add(btn_AddCliente);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(10, 10);
             flowLayoutPanel_Sidebar.Name = "flowLayoutPanel_Sidebar";
-            flowLayoutPanel_Sidebar.Size = new Size(86, 694);
+            flowLayoutPanel_Sidebar.Size = new Size(230, 694);
             flowLayoutPanel_Sidebar.TabIndex = 0;
             flowLayoutPanel_Sidebar.WrapContents = false;
+            // 
+            // btn_AddCliente
+            // 
+            btn_AddCliente.Font = new Font("Calibri", 9F);
+            btn_AddCliente.Image = (Image)resources.GetObject("btn_AddCliente.Image");
+            btn_AddCliente.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_AddCliente.Location = new Point(3, 3);
+            btn_AddCliente.Name = "btn_AddCliente";
+            btn_AddCliente.Padding = new Padding(10, 0, 0, 0);
+            btn_AddCliente.Size = new Size(224, 56);
+            btn_AddCliente.TabIndex = 32;
+            btn_AddCliente.Text = "Nuevo cliente";
+            btn_AddCliente.UseVisualStyleBackColor = true;
+            btn_AddCliente.Click += btn_AddCliente_Click;
             // 
             // ClientesMain
             // 
@@ -154,7 +159,6 @@
             Controls.Add(panel_Sidebar);
             Controls.Add(panel_Header);
             Controls.Add(lbl_Total);
-            Controls.Add(btn_Add);
             Controls.Add(lbl_Filtro);
             Controls.Add(txt_Filtro);
             Controls.Add(dgvClientes);
@@ -167,6 +171,7 @@
             panel_Header.ResumeLayout(false);
             panel_Header.PerformLayout();
             panel_Sidebar.ResumeLayout(false);
+            flowLayoutPanel_Sidebar.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -176,11 +181,11 @@
         private DataGridView dgvClientes;
         private Label lbl_Filtro;
         private TextBox txt_Filtro;
-        private Button btn_Add;
         private Label lbl_Total;
         private Panel panel_Header;
         private Label label1;
         private Panel panel_Sidebar;
         private FlowLayoutPanel flowLayoutPanel_Sidebar;
+        private Button btn_AddCliente;
     }
 }
