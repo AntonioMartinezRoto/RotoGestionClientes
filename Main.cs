@@ -34,6 +34,7 @@ namespace RotoGestionClientes
         {
             ClientesMain clientesMainForm = new(_allClientes, _context);
             clientesMainForm.ShowDialog();
+            LoadClientesFromDB();
         }
 
         #endregion
@@ -48,7 +49,8 @@ namespace RotoGestionClientes
                     Id = f.Id,
                     Nombre = f.Nombre,
                     Alias = f.Alias,
-                    Comentarios = f.Comentarios
+                    Comentarios = f.Comentarios,
+                    ObservacionesVentanas = f.ObservacionesVentanas
                 })
                 .OrderBy(f => f.Nombre)
                 .ToList();

@@ -93,8 +93,11 @@
             // btn_Atras
             // 
             btn_Atras.FlatStyle = FlatStyle.Flat;
+            btn_Atras.Image = (Image)resources.GetObject("btn_Atras.Image");
+            btn_Atras.ImageAlign = ContentAlignment.MiddleLeft;
             btn_Atras.Location = new Point(128, 14);
             btn_Atras.Name = "btn_Atras";
+            btn_Atras.Padding = new Padding(10, 0, 0, 0);
             btn_Atras.Size = new Size(110, 34);
             btn_Atras.TabIndex = 3;
             btn_Atras.Text = "Atrás";
@@ -104,8 +107,11 @@
             // btn_Cancelar
             // 
             btn_Cancelar.FlatStyle = FlatStyle.Flat;
+            btn_Cancelar.Image = (Image)resources.GetObject("btn_Cancelar.Image");
+            btn_Cancelar.ImageAlign = ContentAlignment.MiddleLeft;
             btn_Cancelar.Location = new Point(12, 14);
             btn_Cancelar.Name = "btn_Cancelar";
+            btn_Cancelar.Padding = new Padding(10, 0, 0, 0);
             btn_Cancelar.Size = new Size(110, 34);
             btn_Cancelar.TabIndex = 2;
             btn_Cancelar.Text = "Cancelar";
@@ -115,8 +121,11 @@
             // btn_Siguiente
             // 
             btn_Siguiente.FlatStyle = FlatStyle.Flat;
+            btn_Siguiente.Image = (Image)resources.GetObject("btn_Siguiente.Image");
+            btn_Siguiente.ImageAlign = ContentAlignment.MiddleLeft;
             btn_Siguiente.Location = new Point(1008, 14);
             btn_Siguiente.Name = "btn_Siguiente";
+            btn_Siguiente.Padding = new Padding(10, 0, 0, 0);
             btn_Siguiente.Size = new Size(110, 34);
             btn_Siguiente.TabIndex = 1;
             btn_Siguiente.Text = "Siguiente";
@@ -126,8 +135,11 @@
             // btn_Finalizar
             // 
             btn_Finalizar.FlatStyle = FlatStyle.Flat;
+            btn_Finalizar.Image = (Image)resources.GetObject("btn_Finalizar.Image");
+            btn_Finalizar.ImageAlign = ContentAlignment.MiddleLeft;
             btn_Finalizar.Location = new Point(1124, 14);
             btn_Finalizar.Name = "btn_Finalizar";
+            btn_Finalizar.Padding = new Padding(10, 0, 0, 0);
             btn_Finalizar.Size = new Size(110, 34);
             btn_Finalizar.TabIndex = 0;
             btn_Finalizar.Text = "Finalizar";

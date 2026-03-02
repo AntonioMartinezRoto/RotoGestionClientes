@@ -18,6 +18,7 @@ namespace RotoGestionClientes
         private ApplicationDbContext _context;
         private BindingSource _bindingSourcePerfilTipo = new BindingSource();
         private BindingSource _bindingSourceManillas = new BindingSource();
+        private BindingSource _bindingSourceSoporteCompas = new BindingSource();
 
         #endregion
 
@@ -251,7 +252,8 @@ namespace RotoGestionClientes
                         })
                         .OrderBy(f => f.Id)
                         .ToList();
-            dgvSoporteCompas.DataSource = lista;
+            _bindingSourceSoporteCompas.DataSource = lista;
+            dgvSoporteCompas.DataSource = _bindingSourceSoporteCompas;
         }
         public bool IsValid()
         {

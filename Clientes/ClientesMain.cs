@@ -63,6 +63,9 @@ namespace RotoGestionClientes
 
             var cliente = (ClienteGridItem)dgvClientes.Rows[e.RowIndex].DataBoundItem;
 
+            if (cliente == null)
+                return;
+
             if (dgvClientes.Columns[e.ColumnIndex].Name == "Edit")
             {
                 //ClientesEditForm clientesEditForm = new ClientesEditForm(cliente, _context);
@@ -71,8 +74,7 @@ namespace RotoGestionClientes
             }
             else if (dgvClientes.Columns[e.ColumnIndex].Name == "Delete")
             {
-
-                //DeleteCliente(cliente.Id);
+                DeleteCliente(cliente);
             }
             LoadClientesFromDB();
         }
@@ -141,7 +143,8 @@ namespace RotoGestionClientes
                     Id = f.Id,
                     Nombre = f.Nombre,
                     Alias = f.Alias,
-                    Comentarios = f.Comentarios
+                    Comentarios = f.Comentarios,
+                    ObservacionesVentanas = f.ObservacionesVentanas
                 })
                 .OrderBy(f => f.Nombre)
                 .ToList();
@@ -168,6 +171,17 @@ namespace RotoGestionClientes
 
             lbl_Total.Text = "Total: " + filtered.Count().ToString();
             dgvClientes.DataSource = filtered;
+        }
+        private void DeleteCliente(ClienteGridItem cliente)
+        {
+            if (MessageBox.Show("¿Está seguro que desea eliminar el cliente " + cliente.Nombre + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                Cliente clienteBD = _context.Clientes
+                      .First(c => c.Id == cliente.Id);
+
+                _context.Clientes.Remove(clienteBD);
+                _context.SaveChanges();
+            }
         }
         #endregion
 
