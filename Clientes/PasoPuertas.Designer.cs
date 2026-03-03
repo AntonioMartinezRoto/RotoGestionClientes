@@ -49,7 +49,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(pictureBox1);
             Name = "PasoPuertas";
-            Size = new Size(1008, 654);
+            Size = new Size(996, 654);
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
         }
