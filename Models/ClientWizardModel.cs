@@ -16,5 +16,6 @@ namespace RotoGestionClientes
         public List<int> SoporteCompasList { get; set; } = new();
         public List<int> SeguridadVentanaList { get; set; } = new();
         public List<int> CremonaPasivaVentanaList { get; set; } = new();
+        public List<int> PerfilesList { get; set; } = new();
     }
 }

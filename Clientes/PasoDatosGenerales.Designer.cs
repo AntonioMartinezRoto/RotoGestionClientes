@@ -42,7 +42,7 @@
             group_Comentarios = new GroupBox();
             group_SoporteCompas = new GroupBox();
             dgvSoporteCompas = new DataGridView();
-            this.group_Perfil = new GroupBox();
+            group_Perfil = new GroupBox();
             cmb_Perfil = new ComboBox();
             group_PerfilTipo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPerfilTipo).BeginInit();
@@ -52,7 +52,7 @@
             group_Comentarios.SuspendLayout();
             group_SoporteCompas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSoporteCompas).BeginInit();
-            this.group_Perfil.SuspendLayout();
+            group_Perfil.SuspendLayout();
             SuspendLayout();
             // 
             // txt_NombreCliente
@@ -208,13 +208,13 @@
             // 
             // group_Perfil
             // 
-            this.group_Perfil.Controls.Add(cmb_Perfil);
-            this.group_Perfil.Location = new Point(153, 190);
-            this.group_Perfil.Name = "group_Perfil";
-            this.group_Perfil.Size = new Size(290, 59);
-            this.group_Perfil.TabIndex = 11;
-            this.group_Perfil.TabStop = false;
-            this.group_Perfil.Text = "Perfil";
+            group_Perfil.Controls.Add(cmb_Perfil);
+            group_Perfil.Location = new Point(153, 190);
+            group_Perfil.Name = "group_Perfil";
+            group_Perfil.Size = new Size(290, 59);
+            group_Perfil.TabIndex = 11;
+            group_Perfil.TabStop = false;
+            group_Perfil.Text = "Perfil";
             // 
             // cmb_Perfil
             // 
@@ -224,13 +224,14 @@
             cmb_Perfil.Name = "cmb_Perfil";
             cmb_Perfil.Size = new Size(250, 23);
             cmb_Perfil.TabIndex = 0;
+            cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
             // 
             // PasoDatosGenerales
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(this.group_Perfil);
+            Controls.Add(group_Perfil);
             Controls.Add(group_SoporteCompas);
             Controls.Add(group_Comentarios);
             Controls.Add(group_Manillas);
@@ -252,7 +253,7 @@
             group_Comentarios.PerformLayout();
             group_SoporteCompas.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvSoporteCompas).EndInit();
-            this.group_Perfil.ResumeLayout(false);
+            group_Perfil.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }

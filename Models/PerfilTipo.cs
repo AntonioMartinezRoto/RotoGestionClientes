@@ -19,6 +19,7 @@ namespace RotoGestionClientes
         public string NombreAbreviado { get; set; } = null!;
 
         public ICollection<ClientePerfilTipo> ClientePerfilTipos { get; set; } = new List<ClientePerfilTipo>();
+        public virtual ICollection<Perfil> Perfiles { get; set; } = new List<Perfil>();
 
     }
 }

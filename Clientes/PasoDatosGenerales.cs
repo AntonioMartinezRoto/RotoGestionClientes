@@ -54,6 +54,7 @@ namespace RotoGestionClientes
             RellenarSoftwareList();
             RellenarGridManillas();
             RellenarGridSoporteCompas();
+            RellenarPerfilesList();
 
             InitializeData();
         }
@@ -74,6 +75,8 @@ namespace RotoGestionClientes
                 {
                     _model.PerfilTipoList.Remove(item.Id);
                 }
+
+                RellenarPerfilesList();
             }
         }
         private void cmb_Software_SelectedValueChanged(object sender, EventArgs e)
@@ -125,6 +128,18 @@ namespace RotoGestionClientes
                 else
                 {
                     _model.SoporteCompasList.Remove(item.Id);
+                }
+            }
+        }
+        private void cmb_Perfil_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (cmb_Perfil.SelectedIndex != -1 && cmb_Perfil.SelectedValue != null)
+            {
+                // Si ValueMember es "Id", SelectedValue será el entero
+                if (int.TryParse(cmb_Perfil.SelectedValue.ToString(), out int id))
+                {
+                    this._model.PerfilesList.Clear();
+                    this._model.PerfilesList.Add(id);
                 }
             }
         }
@@ -275,12 +290,76 @@ namespace RotoGestionClientes
 
             cmb_Software.SelectedValueChanged += cmb_Software_SelectedValueChanged;
         }
+        private void RellenarPerfilesListOld()
+        {
+            cmb_Perfil.SelectedValueChanged -= cmb_Perfil_SelectedValueChanged;
+
+            var perfilList = _context.Perfiles
+                .AsNoTracking()
+                .Where(p => _model.PerfilTipoList.Contains(p.PerfilTipoId))
+                .Select(p => new PerfilComboItem
+                {
+                    Id = p.Id,
+                    Texto = p.Nombre + " (" + p.PerfilTipo.NombreAbreviado + ")"
+                })
+                .OrderBy(p => p.Texto)
+                .ToList();
+
+            cmb_Perfil.DataSource = null;
+            cmb_Perfil.DataSource = perfilList;
+            cmb_Perfil.DisplayMember = "Texto";
+            cmb_Perfil.ValueMember = "Id";
+            cmb_Perfil.SelectedIndex = -1;
+
+            cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
+        }
+        private void RellenarPerfilesList()
+        {
+            cmb_Perfil.SelectedValueChanged -= cmb_Perfil_SelectedValueChanged;
+
+            int? selectedId = cmb_Perfil.SelectedValue as int?;
+
+            if (!_model.PerfilTipoList.Any())
+            {
+                cmb_Perfil.DataSource = null;
+                cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
+                return;
+            }
+
+            var perfiles = _context.Perfiles
+                .AsNoTracking()
+                .Where(p => _model.PerfilTipoList.Contains(p.PerfilTipoId))
+                .Select(p => new PerfilComboItem
+                {
+                    Id = p.Id,
+                    Texto = p.Nombre + " (" + p.PerfilTipo.NombreAbreviado + ")"
+                })
+                .OrderBy(p => p.Texto)
+                .ToList();
+
+            cmb_Perfil.DataSource = null;
+            cmb_Perfil.DataSource = perfiles;
+            cmb_Perfil.DisplayMember = "Texto";
+            cmb_Perfil.ValueMember = "Id";
+
+            if (selectedId.HasValue && perfiles.Any(p => p.Id == selectedId.Value))
+            {
+                cmb_Perfil.SelectedValue = selectedId.Value;
+            }
+            else
+            {
+                cmb_Perfil.SelectedIndex = -1;
+            }
+
+            cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
+        }
         private void InitializeData()
         {
             txt_NombreCliente.Text = _model.Nombre;
             txt_Alias.Text = _model.Alias;
             txt_Comentarios.Text = _model.Comentarios;
             cmb_Software.SelectedValue = _model.SoftwareList.FirstOrDefault();
+            cmb_Perfil.SelectedValue = _model.PerfilesList.FirstOrDefault();
         }
 
         #endregion
@@ -291,6 +370,12 @@ namespace RotoGestionClientes
         public string Nombre { get; set; } = string.Empty;
         public string NombreAbreviado { get; set; } = string.Empty;
         public bool Selected { get; set; }
+    }
+    public class PerfilComboItem
+    {
+        public int Id { get; set; }
+
+        public string Texto { get; set; } = null!;
     }
 
 }

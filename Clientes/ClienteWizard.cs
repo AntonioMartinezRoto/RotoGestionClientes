@@ -210,6 +210,7 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteSoporteCompases)
                 .Include(c => c.ClienteSeguridadVentanas)
                 .Include(c => c.ClienteCremonaPasivaVentanas)
+                .Include(c => c.ClientePerfiles)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -218,9 +219,11 @@ namespace RotoGestionClientes
             cliente.Comentarios = _model.Comentarios;
             cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
 
-            UpdateClientePerfil(cliente);
+            UpdateClientePerfilTipo(cliente);
 
             UpdateSoftware(cliente);
+
+            UpdateClientePerfil(cliente);
 
             UpdateManillas(cliente);
 
@@ -261,6 +264,38 @@ namespace RotoGestionClientes
                 {
                     ClienteId = cliente.Id,
                     SeguridadVentanaId = itemId
+                });
+            }
+        }
+        private void UpdateClientePerfil(Cliente cliente)
+        {
+            var itemActuales = cliente.ClientePerfiles
+                .Select(cp => cp.PerfilId)
+                .ToList();
+
+            var itemSeleccionadas = _model.PerfilesList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClientePerfiles
+                .Where(cp => !itemSeleccionadas.Contains(cp.PerfilId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClientePerfiles.Add(new ClientePerfil
+                {
+                    ClienteId = cliente.Id,
+                    PerfilId = itemId
                 });
             }
         }
@@ -392,7 +427,7 @@ namespace RotoGestionClientes
                 });
             }
         }
-        private void UpdateClientePerfil(Cliente cliente)
+        private void UpdateClientePerfilTipo(Cliente cliente)
         {
             var perfilesActuales = cliente.ClientePerfilTipos
                             .Select(cp => cp.PerfilTipoId)
@@ -440,6 +475,8 @@ namespace RotoGestionClientes
             CrearClientePerfilTipo(cliente.Id);
 
             CrearClienteSoftware(cliente.Id);
+
+            CrearClientePerfil(cliente.Id);
 
             CrearClienteManillas(cliente.Id);
 
@@ -498,6 +535,17 @@ namespace RotoGestionClientes
                 });
             }
         }
+        private void CrearClientePerfil(int clienteId)
+        {
+            if (_model.PerfilesList.Any())
+            {
+                _context.ClientePerfiles.Add(new ClientePerfil
+                {
+                    ClienteId = clienteId,
+                    PerfilId = _model.PerfilesList.FirstOrDefault()
+                });
+            }
+        }
         private void CrearClientePerfilTipo(int clienteId)
         {
             foreach (var perfilTipoId in _model.PerfilTipoList)
@@ -547,6 +595,7 @@ namespace RotoGestionClientes
             model.SoporteCompasList = _context.ClienteSoporteCompases.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.SoporteCompasId).ToList();
             model.SeguridadVentanaList = _context.ClienteSeguridadVentanas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.SeguridadVentanaId).ToList();
             model.CremonaPasivaVentanaList = _context.ClienteCremonaPasivaVentanas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.CremonaPasivaVentanaId).ToList();
+            model.PerfilesList = _context.ClientePerfiles.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.PerfilId).ToList();
             return model;
         }
         private void InitializeTitulo()

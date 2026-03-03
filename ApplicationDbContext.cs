@@ -22,6 +22,8 @@ namespace RotoGestionClientes
         public DbSet<SoporteCompas> SoporteCompases{ get; set; } = null!;
         public DbSet<ClienteSoporteCompas> ClienteSoporteCompases { get; set; } = null!;
         public DbSet<ClienteCremonaPasivaVentana> ClienteCremonaPasivaVentanas { get; set; } = null!;
+        public DbSet<Perfil> Perfiles { get; set; } = null!;
+        public DbSet<ClientePerfil> ClientePerfiles { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -217,6 +219,37 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.CremonaPasivaVentanaTipo)
                       .WithMany(s => s.ClienteCremonaPasivaVentanas)
                       .HasForeignKey(e => e.CremonaPasivaVentanaId);
+            });
+            modelBuilder.Entity<Perfil>(entity =>
+            {
+                entity.ToTable("Perfil");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_Perfil");
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.HasOne(e => e.PerfilTipo)
+                      .WithMany(p => p.Perfiles)
+                      .HasForeignKey(e => e.PerfilTipoId)
+                      .HasConstraintName("FK_Perfil_PerfilTipo");
+            });
+            modelBuilder.Entity<ClientePerfil>(entity =>
+            {
+                entity.ToTable("ClientePerfil", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.PerfilId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClientePerfiles)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Perfil)
+                      .WithMany(s => s.ClientePerfiles)
+                      .HasForeignKey(e => e.PerfilId);
             });
         }
     }
