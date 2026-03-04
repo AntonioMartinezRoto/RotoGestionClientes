@@ -201,6 +201,185 @@ namespace RotoGestionClientes
                 UpdateCliente();
             }
         }
+
+        private ClientWizardModel? MapClienteToModel(int? clienteId)
+        {
+            if (clienteId == null)
+            {
+                return null;
+            }
+
+            ClientWizardModel model = new();
+            Cliente? cliente = _context.Clientes.Where(c => c.Id == clienteId).FirstOrDefault();
+
+            if (cliente == null)
+            {
+                return null;
+            }
+
+            model.Nombre = cliente.Nombre;
+            model.Alias = cliente.Alias;
+            model.Comentarios = cliente.Comentarios;
+            model.ObservacionesVentanas = cliente.ObservacionesVentanas;
+            model.ObservacionesBalconeras = cliente.ObservacionesBalconeras;
+            model.SoftwareList = _context.ClienteSoftwares.Where(cs => cs.ClienteId == clienteId).Select(cs => cs.SoftwareId).ToList();
+            model.PerfilTipoList = _context.ClientePerfilTipos.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.PerfilTipoId).ToList();
+            model.ManillasList = _context.ClienteManillas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.ManillaId).ToList();
+            model.SoporteCompasList = _context.ClienteSoporteCompases.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.SoporteCompasId).ToList();
+            model.SeguridadVentanaList = _context.ClienteSeguridadVentanas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.SeguridadVentanaId).ToList();
+            model.CremonaPasivaVentanaList = _context.ClienteCremonaPasivaVentanas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.CremonaPasivaVentanaId).ToList();
+            model.PerfilesList = _context.ClientePerfiles.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.PerfilId).ToList();
+            model.AgujaBalconera = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaBalconeraId;
+            model.AgujaPuertaSec = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaPuertaSecId;
+            model.AgujaPuerta = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaPuertaId;
+            return model;
+        }
+        private void InitializeTitulo()
+        {
+            if (_mode == WizardMode.Edit)
+            {
+                lbl_Titulo.Text = _model.Nombre;
+                lbl_Subtitulo.Text = "Editando cliente";
+            }
+            else
+            {
+                lbl_Titulo.Text = "Nuevo Cliente";
+                lbl_Subtitulo.Text = "Completa los datos para crear el cliente";
+            }
+
+        }
+
+
+        #region Creación cliente
+        private void CrearCliente()
+        {
+            var cliente = new Cliente
+            {
+                Nombre = _model.Nombre,
+                Alias = _model.Alias,
+                Comentarios = _model.Comentarios,
+                ObservacionesVentanas = _model.ObservacionesVentanas,
+                ObservacionesBalconeras = _model.ObservacionesBalconeras
+            };
+
+            _context.Clientes.Add(cliente);
+            _context.SaveChanges();
+
+            CrearClientePerfilTipo(cliente.Id);
+
+            CrearClienteSoftware(cliente.Id);
+
+            CrearClientePerfil(cliente.Id);
+
+            CrearClienteManillas(cliente.Id);
+
+            CrearClienteSoporteCompas(cliente.Id);
+
+            CrearClienteSeguridadVentana(cliente.Id);
+
+            CrearClienteCremonaPasivaVentana(cliente.Id);
+
+            CrearClienteAgujas(cliente.Id);
+
+            _context.SaveChanges();
+        }
+
+        private void CrearClienteAgujas(int id)
+        {
+            _context.ClienteAgujases.Add(new ClienteAgujas
+            {
+                ClienteId = id,
+                AgujaBalconeraId = _model.AgujaBalconera,
+                AgujaPuertaSecId = _model.AgujaPuertaSec,
+                AgujaPuertaId = _model.AgujaPuerta
+            });
+        }
+
+        private void CrearClienteSeguridadVentana(int clienteId)
+        {
+            foreach (var seguridadVentanaId in _model.SeguridadVentanaList)
+            {
+                _context.ClienteSeguridadVentanas.Add(new ClienteSeguridadVentana
+                {
+                    ClienteId = clienteId,
+                    SeguridadVentanaId = seguridadVentanaId
+                });
+
+            }
+        }
+        private void CrearClienteSoporteCompas(int clienteId)
+        {
+            foreach (var soporteCompasId in _model.SoporteCompasList)
+            {
+                _context.ClienteSoporteCompases.Add(new ClienteSoporteCompas
+                {
+                    ClienteId = clienteId,
+                    SoporteCompasId = soporteCompasId
+                });
+
+            }
+        }
+        private void CrearClienteManillas(int clienteId)
+        {
+            foreach (var manillaId in _model.ManillasList)
+            {
+                _context.ClienteManillas.Add(new ClienteManilla
+                {
+                    ClienteId = clienteId,
+                    ManillaId = manillaId
+                });
+
+            }
+        }
+        private void CrearClienteSoftware(int clienteId)
+        {
+            if (_model.SoftwareList.Any())
+            {
+                _context.ClienteSoftwares.Add(new ClienteSoftware
+                {
+                    ClienteId = clienteId,
+                    SoftwareId = _model.SoftwareList.FirstOrDefault()
+                });
+            }
+        }
+        private void CrearClientePerfil(int clienteId)
+        {
+            if (_model.PerfilesList.Any())
+            {
+                _context.ClientePerfiles.Add(new ClientePerfil
+                {
+                    ClienteId = clienteId,
+                    PerfilId = _model.PerfilesList.FirstOrDefault()
+                });
+            }
+        }
+        private void CrearClientePerfilTipo(int clienteId)
+        {
+            foreach (var perfilTipoId in _model.PerfilTipoList)
+            {
+                _context.ClientePerfilTipos.Add(new ClientePerfilTipo
+                {
+                    ClienteId = clienteId,
+                    PerfilTipoId = perfilTipoId
+                });
+
+            }
+        }
+        private void CrearClienteCremonaPasivaVentana(int clienteId)
+        {
+            foreach (var cremonaPasivaVentanaTipoId in _model.CremonaPasivaVentanaList)
+            {
+                _context.ClienteCremonaPasivaVentanas.Add(new ClienteCremonaPasivaVentana
+                {
+                    ClienteId = clienteId,
+                    CremonaPasivaVentanaId = cremonaPasivaVentanaTipoId
+                });
+
+            }
+        }
+        #endregion
+
+        #region Actualización cliente
         private void UpdateCliente()
         {
             Cliente cliente = _context.Clientes
@@ -211,6 +390,7 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteSeguridadVentanas)
                 .Include(c => c.ClienteCremonaPasivaVentanas)
                 .Include(c => c.ClientePerfiles)
+                .Include(c => c.ClienteAgujases)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -218,6 +398,7 @@ namespace RotoGestionClientes
             cliente.Alias = _model.Alias;
             cliente.Comentarios = _model.Comentarios;
             cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
+            cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
 
             UpdateClientePerfilTipo(cliente);
 
@@ -233,7 +414,32 @@ namespace RotoGestionClientes
 
             UpdateCremonaPasivaVentanas(cliente);
 
+            UpdateAgujas(cliente);
+
             _context.SaveChanges();
+        }
+
+        private void UpdateAgujas(Cliente cliente)
+        {
+            var clienteAgujas = _context.ClienteAgujases.Where(ca => ca.ClienteId == cliente.Id).FirstOrDefault();
+
+            if (clienteAgujas == null)
+            {
+                _context.ClienteAgujases.Add(new ClienteAgujas
+                {
+                    ClienteId = cliente.Id,
+                    AgujaBalconeraId = _model.AgujaBalconera,
+                    AgujaPuertaSecId = _model.AgujaPuertaSec,
+                    AgujaPuertaId = _model.AgujaPuerta
+                });
+            }
+            else
+            {
+                cliente.ClienteAgujases?.AgujaBalconeraId = _model.AgujaBalconera;
+                cliente.ClienteAgujases?.AgujaPuertaSecId = _model.AgujaPuertaSec;
+                cliente.ClienteAgujases?.AgujaPuertaId = _model.AgujaPuerta;
+            }
+
         }
         private void UpdateSeguridadVentanas(Cliente cliente)
         {
@@ -459,159 +665,9 @@ namespace RotoGestionClientes
                 });
             }
         }
-        private void CrearCliente()
-        {
-            var cliente = new Cliente
-            {
-                Nombre = _model.Nombre,
-                Alias = _model.Alias,
-                Comentarios = _model.Comentarios,
-                ObservacionesVentanas = _model.ObservacionesVentanas
-            };
 
-            _context.Clientes.Add(cliente);
-            _context.SaveChanges();
+        #endregion
 
-            CrearClientePerfilTipo(cliente.Id);
-
-            CrearClienteSoftware(cliente.Id);
-
-            CrearClientePerfil(cliente.Id);
-
-            CrearClienteManillas(cliente.Id);
-
-            CrearClienteSoporteCompas(cliente.Id);
-
-            CrearClienteSeguridadVentana(cliente.Id);
-
-            CrearClienteCremonaPasivaVentana(cliente.Id);
-
-            _context.SaveChanges();
-        }
-        private void CrearClienteSeguridadVentana(int clienteId)
-        {
-            foreach (var seguridadVentanaId in _model.SeguridadVentanaList)
-            {
-                _context.ClienteSeguridadVentanas.Add(new ClienteSeguridadVentana
-                {
-                    ClienteId = clienteId,
-                    SeguridadVentanaId = seguridadVentanaId
-                });
-
-            }
-        }
-        private void CrearClienteSoporteCompas(int clienteId)
-        {
-            foreach (var soporteCompasId in _model.SoporteCompasList)
-            {
-                _context.ClienteSoporteCompases.Add(new ClienteSoporteCompas
-                {
-                    ClienteId = clienteId,
-                    SoporteCompasId = soporteCompasId
-                });
-
-            }
-        }
-        private void CrearClienteManillas(int clienteId)
-        {
-            foreach (var manillaId in _model.ManillasList)
-            {
-                _context.ClienteManillas.Add(new ClienteManilla
-                {
-                    ClienteId = clienteId,
-                    ManillaId = manillaId
-                });
-
-            }
-        }
-        private void CrearClienteSoftware(int clienteId)
-        {
-            if (_model.SoftwareList.Any())
-            {
-                _context.ClienteSoftwares.Add(new ClienteSoftware
-                {
-                    ClienteId = clienteId,
-                    SoftwareId = _model.SoftwareList.FirstOrDefault()
-                });
-            }
-        }
-        private void CrearClientePerfil(int clienteId)
-        {
-            if (_model.PerfilesList.Any())
-            {
-                _context.ClientePerfiles.Add(new ClientePerfil
-                {
-                    ClienteId = clienteId,
-                    PerfilId = _model.PerfilesList.FirstOrDefault()
-                });
-            }
-        }
-        private void CrearClientePerfilTipo(int clienteId)
-        {
-            foreach (var perfilTipoId in _model.PerfilTipoList)
-            {
-                _context.ClientePerfilTipos.Add(new ClientePerfilTipo
-                {
-                    ClienteId = clienteId,
-                    PerfilTipoId = perfilTipoId
-                });
-
-            }
-        }
-        private void CrearClienteCremonaPasivaVentana(int clienteId)
-        {
-            foreach (var cremonaPasivaVentanaTipoId in _model.CremonaPasivaVentanaList)
-            {
-                _context.ClienteCremonaPasivaVentanas.Add(new ClienteCremonaPasivaVentana
-                {
-                    ClienteId = clienteId,
-                    CremonaPasivaVentanaId = cremonaPasivaVentanaTipoId
-                });
-
-            }
-        }
-        private ClientWizardModel? MapClienteToModel(int? clienteId)
-        {
-            if (clienteId == null)
-            {
-                return null;
-            }
-
-            ClientWizardModel model = new();
-            Cliente? cliente = _context.Clientes.Where(c => c.Id == clienteId).FirstOrDefault();
-
-            if (cliente == null)
-            {
-                return null;
-            }
-
-            model.Nombre = cliente.Nombre;
-            model.Alias = cliente.Alias;
-            model.Comentarios= cliente.Comentarios;
-            model.ObservacionesVentanas = cliente.ObservacionesVentanas;
-            model.SoftwareList = _context.ClienteSoftwares.Where(cs => cs.ClienteId == clienteId).Select(cs => cs.SoftwareId).ToList();
-            model.PerfilTipoList = _context.ClientePerfilTipos.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.PerfilTipoId).ToList();
-            model.ManillasList = _context.ClienteManillas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.ManillaId).ToList();
-            model.SoporteCompasList = _context.ClienteSoporteCompases.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.SoporteCompasId).ToList();
-            model.SeguridadVentanaList = _context.ClienteSeguridadVentanas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.SeguridadVentanaId).ToList();
-            model.CremonaPasivaVentanaList = _context.ClienteCremonaPasivaVentanas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.CremonaPasivaVentanaId).ToList();
-            model.PerfilesList = _context.ClientePerfiles.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.PerfilId).ToList();
-            return model;
-        }
-        private void InitializeTitulo()
-        {
-            if (_mode == WizardMode.Edit)
-            {
-                lbl_Titulo.Text = _model.Nombre;
-                lbl_Subtitulo.Text = "Editando cliente";
-            }
-            else
-            {
-                lbl_Titulo.Text = "Nuevo Cliente";
-                lbl_Subtitulo.Text = "Completa los datos para crear el cliente";
-            }
-
-        }
 
         #endregion
     }

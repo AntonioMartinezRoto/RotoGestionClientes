@@ -8,5 +8,6 @@ namespace RotoGestionClientes
         public string? Alias { get; set; }
         public string? Comentarios { get; set; }
         public string? ObservacionesVentanas{ get; set; }
+        public string? ObservacionesBalconeras { get; set; }
     }
 }

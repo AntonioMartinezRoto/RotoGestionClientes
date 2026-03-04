@@ -50,7 +50,8 @@ namespace RotoGestionClientes
                     Nombre = f.Nombre,
                     Alias = f.Alias,
                     Comentarios = f.Comentarios,
-                    ObservacionesVentanas = f.ObservacionesVentanas
+                    ObservacionesVentanas = f.ObservacionesVentanas,
+                    ObservacionesBalconeras = f.ObservacionesBalconeras
                 })
                 .OrderBy(f => f.Nombre)
                 .ToList();

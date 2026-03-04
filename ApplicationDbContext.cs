@@ -24,6 +24,8 @@ namespace RotoGestionClientes
         public DbSet<ClienteCremonaPasivaVentana> ClienteCremonaPasivaVentanas { get; set; } = null!;
         public DbSet<Perfil> Perfiles { get; set; } = null!;
         public DbSet<ClientePerfil> ClientePerfiles { get; set; } = null!;
+        public DbSet<Aguja> Agujas { get; set; } = null!;
+        public DbSet<ClienteAgujas> ClienteAgujases { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +45,8 @@ namespace RotoGestionClientes
                       .IsRequired();
                 entity.Property(e => e.Alias);
                 entity.Property(e => e.Comentarios);
+                entity.Property(e => e.ObservacionesVentanas);
+                entity.Property(e => e.ObservacionesBalconeras);
             });
             modelBuilder.Entity<PerfilTipo>(entity =>
             {
@@ -250,6 +254,46 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.Perfil)
                       .WithMany(s => s.ClientePerfiles)
                       .HasForeignKey(e => e.PerfilId);
+            });
+            modelBuilder.Entity<Aguja>(entity =>
+            {
+                entity.ToTable("Agujas");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_Aguja");
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+            });
+            modelBuilder.Entity<ClienteAgujas>(entity =>
+            {
+                entity.ToTable("ClienteAgujas", "dbo");
+
+                entity.HasKey(e => e.ClienteId);
+
+                entity.HasOne(e => e.Cliente)
+                      .WithOne(c => c.ClienteAgujases)
+                      .HasForeignKey<ClienteAgujas>(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.AgujaBalconera)
+                      .WithMany()
+                      .HasForeignKey(e => e.AgujaBalconeraId)
+                      .IsRequired(false)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.AgujaPuertaSec)
+                      .WithMany()
+                      .HasForeignKey(e => e.AgujaPuertaSecId)
+                      .IsRequired(false)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.AgujaPuerta)
+                      .WithMany()
+                      .HasForeignKey(e => e.AgujaPuertaId)
+                      .IsRequired(false)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
         }
     }

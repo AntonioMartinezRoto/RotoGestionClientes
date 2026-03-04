@@ -57,7 +57,7 @@
             // 
             // txt_NombreCliente
             // 
-            txt_NombreCliente.Location = new Point(279, 57);
+            txt_NombreCliente.Location = new Point(242, 51);
             txt_NombreCliente.MaxLength = 50;
             txt_NombreCliente.Name = "txt_NombreCliente";
             txt_NombreCliente.Size = new Size(163, 23);
@@ -67,7 +67,7 @@
             // lbl_NombreCliente
             // 
             lbl_NombreCliente.AutoSize = true;
-            lbl_NombreCliente.Location = new Point(154, 60);
+            lbl_NombreCliente.Location = new Point(117, 54);
             lbl_NombreCliente.Name = "lbl_NombreCliente";
             lbl_NombreCliente.Size = new Size(108, 15);
             lbl_NombreCliente.TabIndex = 1;
@@ -76,7 +76,7 @@
             // lbl_Alias
             // 
             lbl_Alias.AutoSize = true;
-            lbl_Alias.Location = new Point(154, 97);
+            lbl_Alias.Location = new Point(117, 91);
             lbl_Alias.Name = "lbl_Alias";
             lbl_Alias.Size = new Size(32, 15);
             lbl_Alias.TabIndex = 3;
@@ -84,7 +84,7 @@
             // 
             // txt_Alias
             // 
-            txt_Alias.Location = new Point(279, 94);
+            txt_Alias.Location = new Point(242, 88);
             txt_Alias.MaxLength = 50;
             txt_Alias.Name = "txt_Alias";
             txt_Alias.Size = new Size(163, 23);
@@ -94,7 +94,7 @@
             // group_PerfilTipo
             // 
             group_PerfilTipo.Controls.Add(dgvPerfilTipo);
-            group_PerfilTipo.Location = new Point(465, 57);
+            group_PerfilTipo.Location = new Point(500, 51);
             group_PerfilTipo.Name = "group_PerfilTipo";
             group_PerfilTipo.Size = new Size(289, 192);
             group_PerfilTipo.TabIndex = 4;
@@ -119,7 +119,7 @@
             // group_Software
             // 
             group_Software.Controls.Add(cmb_Software);
-            group_Software.Location = new Point(154, 129);
+            group_Software.Location = new Point(117, 123);
             group_Software.Name = "group_Software";
             group_Software.Size = new Size(289, 59);
             group_Software.TabIndex = 6;
@@ -139,7 +139,7 @@
             // group_Manillas
             // 
             group_Manillas.Controls.Add(dgvManillas);
-            group_Manillas.Location = new Point(465, 255);
+            group_Manillas.Location = new Point(500, 255);
             group_Manillas.Name = "group_Manillas";
             group_Manillas.Size = new Size(289, 221);
             group_Manillas.TabIndex = 7;
@@ -167,16 +167,16 @@
             txt_Comentarios.MaxLength = 1000;
             txt_Comentarios.Multiline = true;
             txt_Comentarios.Name = "txt_Comentarios";
-            txt_Comentarios.Size = new Size(589, 60);
+            txt_Comentarios.Size = new Size(659, 60);
             txt_Comentarios.TabIndex = 8;
             txt_Comentarios.TextChanged += txt_Comentarios_TextChanged;
             // 
             // group_Comentarios
             // 
             group_Comentarios.Controls.Add(txt_Comentarios);
-            group_Comentarios.Location = new Point(153, 482);
+            group_Comentarios.Location = new Point(118, 482);
             group_Comentarios.Name = "group_Comentarios";
-            group_Comentarios.Size = new Size(601, 88);
+            group_Comentarios.Size = new Size(671, 88);
             group_Comentarios.TabIndex = 9;
             group_Comentarios.TabStop = false;
             group_Comentarios.Text = "Comentarios";
@@ -184,7 +184,7 @@
             // group_SoporteCompas
             // 
             group_SoporteCompas.Controls.Add(dgvSoporteCompas);
-            group_SoporteCompas.Location = new Point(154, 255);
+            group_SoporteCompas.Location = new Point(118, 255);
             group_SoporteCompas.Name = "group_SoporteCompas";
             group_SoporteCompas.Size = new Size(288, 221);
             group_SoporteCompas.TabIndex = 10;
@@ -209,7 +209,7 @@
             // group_Perfil
             // 
             group_Perfil.Controls.Add(cmb_Perfil);
-            group_Perfil.Location = new Point(153, 190);
+            group_Perfil.Location = new Point(116, 184);
             group_Perfil.Name = "group_Perfil";
             group_Perfil.Size = new Size(290, 59);
             group_Perfil.TabIndex = 11;

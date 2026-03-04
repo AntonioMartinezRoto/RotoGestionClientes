@@ -90,8 +90,6 @@ namespace RotoGestionClientes
                     this._model.SoftwareList.Add(id);
                 }
             }
-
-
         }
         private void dgvManillas_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -289,29 +287,6 @@ namespace RotoGestionClientes
             cmb_Software.SelectedIndex = -1;
 
             cmb_Software.SelectedValueChanged += cmb_Software_SelectedValueChanged;
-        }
-        private void RellenarPerfilesListOld()
-        {
-            cmb_Perfil.SelectedValueChanged -= cmb_Perfil_SelectedValueChanged;
-
-            var perfilList = _context.Perfiles
-                .AsNoTracking()
-                .Where(p => _model.PerfilTipoList.Contains(p.PerfilTipoId))
-                .Select(p => new PerfilComboItem
-                {
-                    Id = p.Id,
-                    Texto = p.Nombre + " (" + p.PerfilTipo.NombreAbreviado + ")"
-                })
-                .OrderBy(p => p.Texto)
-                .ToList();
-
-            cmb_Perfil.DataSource = null;
-            cmb_Perfil.DataSource = perfilList;
-            cmb_Perfil.DisplayMember = "Texto";
-            cmb_Perfil.ValueMember = "Id";
-            cmb_Perfil.SelectedIndex = -1;
-
-            cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
         }
         private void RellenarPerfilesList()
         {
