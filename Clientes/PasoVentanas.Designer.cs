@@ -39,9 +39,7 @@
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
             groupBox1 = new GroupBox();
-            dataGridView1 = new DataGridView();
-            groupBox2 = new GroupBox();
-            dataGridView2 = new DataGridView();
+            dgvPasivasPract = new DataGridView();
             pictureBox4 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Seguridad.SuspendLayout();
@@ -52,9 +50,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
-            groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dgvPasivasPract).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             SuspendLayout();
             // 
@@ -72,7 +68,7 @@
             // group_Seguridad
             // 
             group_Seguridad.Controls.Add(dgvSeguridad);
-            group_Seguridad.Location = new Point(328, 58);
+            group_Seguridad.Location = new Point(641, 60);
             group_Seguridad.Name = "group_Seguridad";
             group_Seguridad.Size = new Size(289, 154);
             group_Seguridad.TabIndex = 4;
@@ -90,14 +86,14 @@
             dgvSeguridad.Location = new Point(17, 22);
             dgvSeguridad.Name = "dgvSeguridad";
             dgvSeguridad.ReadOnly = true;
-            dgvSeguridad.Size = new Size(252, 115);
+            dgvSeguridad.Size = new Size(252, 113);
             dgvSeguridad.TabIndex = 2;
             dgvSeguridad.CellMouseUp += dgvSeguridad_CellMouseUp;
             // 
             // group_Pasivas
             // 
             group_Pasivas.Controls.Add(dgvPasivas);
-            group_Pasivas.Location = new Point(641, 58);
+            group_Pasivas.Location = new Point(328, 58);
             group_Pasivas.Name = "group_Pasivas";
             group_Pasivas.Size = new Size(289, 154);
             group_Pasivas.TabIndex = 5;
@@ -115,7 +111,7 @@
             dgvPasivas.Location = new Point(17, 28);
             dgvPasivas.Name = "dgvPasivas";
             dgvPasivas.ReadOnly = true;
-            dgvPasivas.Size = new Size(254, 102);
+            dgvPasivas.Size = new Size(254, 109);
             dgvPasivas.TabIndex = 2;
             dgvPasivas.CellMouseUp += dgvPasivas_CellMouseUp;
             // 
@@ -163,51 +159,28 @@
             // 
             // groupBox1
             // 
-            groupBox1.Controls.Add(dataGridView1);
-            groupBox1.Location = new Point(641, 284);
+            groupBox1.Controls.Add(dgvPasivasPract);
+            groupBox1.Location = new Point(328, 284);
             groupBox1.Name = "groupBox1";
             groupBox1.Size = new Size(289, 154);
             groupBox1.TabIndex = 14;
             groupBox1.TabStop = false;
             groupBox1.Text = "Hoja Pasiva";
             // 
-            // dataGridView1
+            // dgvPasivasPract
             // 
-            dataGridView1.AllowUserToAddRows = false;
-            dataGridView1.AllowUserToDeleteRows = false;
-            dataGridView1.AllowUserToOrderColumns = true;
-            dataGridView1.Anchor = AnchorStyles.None;
-            dataGridView1.BackgroundColor = Color.White;
-            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(17, 22);
-            dataGridView1.Name = "dataGridView1";
-            dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(254, 116);
-            dataGridView1.TabIndex = 2;
-            // 
-            // groupBox2
-            // 
-            groupBox2.Controls.Add(dataGridView2);
-            groupBox2.Location = new Point(328, 284);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Size = new Size(289, 154);
-            groupBox2.TabIndex = 13;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Seguridad";
-            // 
-            // dataGridView2
-            // 
-            dataGridView2.AllowUserToAddRows = false;
-            dataGridView2.AllowUserToDeleteRows = false;
-            dataGridView2.AllowUserToOrderColumns = true;
-            dataGridView2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dataGridView2.BackgroundColor = Color.White;
-            dataGridView2.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2.Location = new Point(17, 22);
-            dataGridView2.Name = "dataGridView2";
-            dataGridView2.ReadOnly = true;
-            dataGridView2.Size = new Size(252, 116);
-            dataGridView2.TabIndex = 2;
+            dgvPasivasPract.AllowUserToAddRows = false;
+            dgvPasivasPract.AllowUserToDeleteRows = false;
+            dgvPasivasPract.AllowUserToOrderColumns = true;
+            dgvPasivasPract.Anchor = AnchorStyles.None;
+            dgvPasivasPract.BackgroundColor = Color.White;
+            dgvPasivasPract.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvPasivasPract.Location = new Point(17, 22);
+            dgvPasivasPract.Name = "dgvPasivasPract";
+            dgvPasivasPract.ReadOnly = true;
+            dgvPasivasPract.Size = new Size(254, 116);
+            dgvPasivasPract.TabIndex = 2;
+            dgvPasivasPract.CellMouseUp += dgvPasivasPract_CellMouseUp;
             // 
             // pictureBox4
             // 
@@ -227,7 +200,6 @@
             BackColor = Color.White;
             Controls.Add(pictureBox3);
             Controls.Add(groupBox1);
-            Controls.Add(groupBox2);
             Controls.Add(pictureBox4);
             Controls.Add(pictureBox2);
             Controls.Add(group_Comentarios);
@@ -247,9 +219,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             groupBox1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
-            groupBox2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)dataGridView2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dgvPasivasPract).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             ResumeLayout(false);
         }
@@ -266,9 +236,7 @@
         private PictureBox pictureBox2;
         private PictureBox pictureBox3;
         private GroupBox groupBox1;
-        private DataGridView dataGridView1;
-        private GroupBox groupBox2;
-        private DataGridView dataGridView2;
+        private DataGridView dgvPasivasPract;
         private PictureBox pictureBox4;
     }
 }

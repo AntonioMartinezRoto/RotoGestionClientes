@@ -16,6 +16,10 @@ namespace RotoGestionClientes
         [Required]
         public string Nombre { get; set; } = null!;
 
+        public int PerfilTipoId { get; set; }
+
         public ICollection<ClienteSoporteCompas> ClienteSoporteCompases { get; set; } = new List<ClienteSoporteCompas>();
+        public virtual PerfilTipo PerfilTipo { get; set; } = null!;
+
     }
 }

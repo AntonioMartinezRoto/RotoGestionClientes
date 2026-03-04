@@ -22,6 +22,7 @@ namespace RotoGestionClientes
         public DbSet<SoporteCompas> SoporteCompases{ get; set; } = null!;
         public DbSet<ClienteSoporteCompas> ClienteSoporteCompases { get; set; } = null!;
         public DbSet<ClienteCremonaPasivaVentana> ClienteCremonaPasivaVentanas { get; set; } = null!;
+        public DbSet<ClienteCremonaPasivaVentanaPract> ClienteCremonaPasivaVentanasPract { get; set; } = null!;
         public DbSet<Perfil> Perfiles { get; set; } = null!;
         public DbSet<ClientePerfil> ClientePerfiles { get; set; } = null!;
         public DbSet<Aguja> Agujas { get; set; } = null!;
@@ -185,6 +186,11 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Nombre)
                       .IsRequired();
+
+                entity.HasOne(e => e.PerfilTipo)
+                      .WithMany(p => p.SoporteCompases)
+                      .HasForeignKey(e => e.PerfilTipoId)
+                      .HasConstraintName("FK_SoporteCompas_PerfilTipo");
             });
             modelBuilder.Entity<ClienteSoporteCompas>(entity =>
             {
@@ -226,6 +232,21 @@ namespace RotoGestionClientes
 
                 entity.HasOne(e => e.CremonaPasivaVentanaTipo)
                       .WithMany(s => s.ClienteCremonaPasivaVentanas)
+                      .HasForeignKey(e => e.CremonaPasivaVentanaId);
+            });
+            modelBuilder.Entity<ClienteCremonaPasivaVentanaPract>(entity =>
+            {
+                entity.ToTable("ClienteCremonaPasivaVentanaPract", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.CremonaPasivaVentanaId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteCremonaPasivaVentanasPract)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.CremonaPasivaVentanaTipo)
+                      .WithMany(s => s.ClienteCremonaPasivaVentanasPract)
                       .HasForeignKey(e => e.CremonaPasivaVentanaId);
             });
             modelBuilder.Entity<Perfil>(entity =>

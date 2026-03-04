@@ -20,6 +20,7 @@ namespace RotoGestionClientes
 
         public ICollection<ClientePerfilTipo> ClientePerfilTipos { get; set; } = new List<ClientePerfilTipo>();
         public virtual ICollection<Perfil> Perfiles { get; set; } = new List<Perfil>();
+        public virtual ICollection<SoporteCompas> SoporteCompases { get; set; } = new List<SoporteCompas>();
 
     }
 }

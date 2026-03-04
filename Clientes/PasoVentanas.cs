@@ -17,6 +17,7 @@ namespace RotoGestionClientes
         private ApplicationDbContext _context;
         private BindingSource _bindingSourceSeguridadVentana = new BindingSource();
         private BindingSource _bindingSourceCremonaPasiva = new BindingSource();
+        private BindingSource _bindingSourceCremonaPasivaPract = new BindingSource();
 
         #endregion
 
@@ -42,8 +43,10 @@ namespace RotoGestionClientes
 
             CrearGridSeguridadVentana();
             CrearGridCremonaPasivas();
+            CrearGridCremonaPasivasPract();
             RellenarGridSeguridadVentana();
             RellenarGridCremonaPasivas();
+            RellenarGridCremonaPasivasPract();
         }
 
         private void dgvSeguridad_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
@@ -81,6 +84,25 @@ namespace RotoGestionClientes
                 else
                 {
                     _model.CremonaPasivaVentanaList.Remove(item.Id);
+                }
+            }
+        }
+        private void dgvPasivasPract_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0) return;
+
+            if (dgvPasivasPract.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
+            {
+                dgvPasivasPract.EndEdit();
+                var item = (GridItem)dgvPasivasPract.Rows[e.RowIndex].DataBoundItem;
+
+                if (item.Selected)
+                {
+                    _model.CremonaPasivaVentanaPractList.Add(item.Id);
+                }
+                else
+                {
+                    _model.CremonaPasivaVentanaPractList.Remove(item.Id);
                 }
             }
         }
@@ -144,6 +166,32 @@ namespace RotoGestionClientes
             dgvPasivas.ReadOnly = false;
             dgvPasivas.Enabled = true;
         }
+        private void CrearGridCremonaPasivasPract()
+        {
+            dgvPasivasPract.AutoGenerateColumns = false;
+            dgvPasivasPract.AllowUserToAddRows = false;
+            dgvPasivasPract.RowHeadersVisible = false;
+
+            dgvPasivasPract.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Selected",
+                HeaderText = "",
+                Width = 30
+            });
+
+            dgvPasivasPract.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nombre",
+                HeaderText = "Tipo",
+                ReadOnly = true,
+                Width = 100,
+                Name = "Nombre",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            dgvPasivasPract.ReadOnly = false;
+            dgvPasivasPract.Enabled = true;
+        }
         private void RellenarGridSeguridadVentana()
         {
             var lista = _context.SeguridadVentanas
@@ -174,11 +222,22 @@ namespace RotoGestionClientes
             _bindingSourceCremonaPasiva.DataSource = lista;
             dgvPasivas.DataSource = _bindingSourceCremonaPasiva;
         }
+        private void RellenarGridCremonaPasivasPract()
+        {
+            var lista = _context.CremonaPasivaVentanaTipos
+                        .Where(f => !f.Nombre.Contains("Perimetral"))
+                        .Select(f => new GridItem
+                        {
+                            Id = f.Id,
+                            Nombre = f.Nombre,
+                            Selected = _model.CremonaPasivaVentanaPractList.Contains(f.Id)
+                        })
+                        .OrderBy(f => f.Id)
+                        .ToList();
+
+            _bindingSourceCremonaPasivaPract.DataSource = lista;
+            dgvPasivasPract.DataSource = _bindingSourceCremonaPasivaPract;
+        }
         #endregion
-
-
-
-
-
     }
 }

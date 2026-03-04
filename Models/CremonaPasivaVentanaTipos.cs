@@ -17,6 +17,7 @@ namespace RotoGestionClientes
         public string Nombre { get; set; } = null!;
 
         public ICollection<ClienteCremonaPasivaVentana> ClienteCremonaPasivaVentanas { get; set; } = new List<ClienteCremonaPasivaVentana>();
+        public ICollection<ClienteCremonaPasivaVentanaPract> ClienteCremonaPasivaVentanasPract { get; set; } = new List<ClienteCremonaPasivaVentanaPract>();
 
     }
 }

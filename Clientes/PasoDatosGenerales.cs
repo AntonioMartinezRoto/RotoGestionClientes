@@ -59,8 +59,8 @@ namespace RotoGestionClientes
             RellenarGridPerFilTipo();
             RellenarSoftwareList();
             RellenarGridManillas();
-            RellenarGridSoporteCompas();
-            //RellenarPerfilesList();
+            //RellenarGridSoporteCompas();
+            CargarSoporteComprasFiltrado();
             CargarPerfilesFiltrados();
             InitializeData();
         }
@@ -84,6 +84,7 @@ namespace RotoGestionClientes
                 }
 
                 CargarPerfilesFiltrados();
+                CargarSoporteComprasFiltrado();
             }
         }
         private void cmb_Software_SelectedValueChanged(object sender, EventArgs e)
@@ -331,19 +332,31 @@ namespace RotoGestionClientes
             _bindingSourceManillas.DataSource = lista;
             dgvManillas.DataSource = _bindingSourceManillas;
         }
-        private void RellenarGridSoporteCompas()
+        private void CargarSoporteComprasFiltrado()
         {
-            var lista = _context.SoporteCompases
-                        .Select(f => new GridItem
-                        {
-                            Id = f.Id,
-                            Nombre = f.Nombre,
-                            Selected = _model.SoporteCompasList.Contains(f.Id)
-                        })
-                        .OrderBy(f => f.Id)
-                        .ToList();
-            _bindingSourceSoporteCompas.DataSource = lista;
-            dgvSoporteCompas.DataSource = _bindingSourceSoporteCompas;
+            var tiposSeleccionados = ((List<GridItem>)_bindingSourcePerfilTipo.DataSource)
+                .Where(x => x.Selected)
+                .Select(x => x.Id)
+                .ToList();
+
+            if (!tiposSeleccionados.Any())
+            {
+                dgvSoporteCompas.DataSource = null;
+                return;
+            }
+
+            var soporteCompases = _context.SoporteCompases
+                .Where(p => tiposSeleccionados.Contains(p.PerfilTipoId))
+                .Select(p => new GridItem
+                {
+                    Id = p.Id,
+                    Nombre = p.Nombre,
+                    Selected = _model.SoporteCompasList.Contains(p.Id)
+                })
+                .OrderBy(p => p.Nombre)
+                .ToList();
+
+            dgvSoporteCompas.DataSource = soporteCompases;
         }
         public bool IsValid()
         {
