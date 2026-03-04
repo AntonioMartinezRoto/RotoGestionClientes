@@ -102,7 +102,7 @@
             group_Pasivas.Size = new Size(289, 154);
             group_Pasivas.TabIndex = 5;
             group_Pasivas.TabStop = false;
-            group_Pasivas.Text = "Cremona Pasiva";
+            group_Pasivas.Text = "Hoja Pasiva";
             // 
             // dgvPasivas
             // 
@@ -169,7 +169,7 @@
             groupBox1.Size = new Size(289, 154);
             groupBox1.TabIndex = 14;
             groupBox1.TabStop = false;
-            groupBox1.Text = "Cremona Pasiva";
+            groupBox1.Text = "Hoja Pasiva";
             // 
             // dataGridView1
             // 

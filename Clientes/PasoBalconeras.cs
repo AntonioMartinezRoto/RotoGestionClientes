@@ -14,7 +14,9 @@ namespace RotoGestionClientes
 
         private readonly ClientWizardModel _model;
         private ApplicationDbContext _context;
-        private BindingSource _bindingSourcePerfilTipo = new BindingSource();
+        private BindingSource _bindingSourceSeguridadVentana = new BindingSource();
+        private BindingSource _bindingSourceCremonaPasiva = new BindingSource();
+        private BindingSource _bindingSourceBisagras = new BindingSource();
 
         #endregion
 
@@ -36,9 +38,20 @@ namespace RotoGestionClientes
         private void PasoBalconeras_Load(object sender, EventArgs e)
         {
             txt_ObservacionesBalconeras.Text = _model.ObservacionesBalconeras;
-            RellenarAgujasList();
+
+            RellenarAgujasBalconeras();
+            CrearGridCremonaPasivas();
+            CrearGridSeguridadBalconera();
+            RellenarGridSeguridadBalconera();
+            RellenarGridCremonaPasivas();
 
             cmb_AgujaBalconeras.SelectedValue = _model.AgujaBalconera != null ? _model.AgujaBalconera : -1;
+
+            CrearGridBisagras();
+            RellenarGridBisagras();
+
+            RellenarAgujasPuertaSec();
+            cmb_AgujaPuertaSec.SelectedValue = _model.AgujaPuertaSec != null ? _model.AgujaPuertaSec : -1;
         }
         private void txt_ObservacionesBalconeras_TextChanged(object sender, EventArgs e)
         {
@@ -48,17 +61,83 @@ namespace RotoGestionClientes
         {
             if (cmb_AgujaBalconeras.SelectedIndex != -1 && cmb_AgujaBalconeras.SelectedValue != null)
             {
-                // Si ValueMember es "Id", SelectedValue será el entero
                 if (int.TryParse(cmb_AgujaBalconeras.SelectedValue.ToString(), out int id))
                 {
                     this._model.AgujaBalconera = id;
                 }
             }
         }
+        private void cmb_AgujaPuertaSec_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (cmb_AgujaPuertaSec.SelectedIndex != -1 && cmb_AgujaPuertaSec.SelectedValue != null)
+            {
+                if (int.TryParse(cmb_AgujaPuertaSec.SelectedValue.ToString(), out int id))
+                {
+                    this._model.AgujaPuertaSec = id;
+                }
+            }
+        }
+        private void dgvPasivas_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0) return;
+
+            if (dgvPasivas.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
+            {
+                dgvPasivas.EndEdit();
+                var item = (GridItem)dgvPasivas.Rows[e.RowIndex].DataBoundItem;
+
+                if (item.Selected)
+                {
+                    _model.CremonaPasivaVentanaList.Add(item.Id);
+                }
+                else
+                {
+                    _model.CremonaPasivaVentanaList.Remove(item.Id);
+                }
+            }
+        }
+        private void dgvSeguridad_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0) return;
+
+            if (dgvSeguridad.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
+            {
+                dgvSeguridad.EndEdit();
+                var item = (GridItem)dgvSeguridad.Rows[e.RowIndex].DataBoundItem;
+
+                if (item.Selected)
+                {
+                    _model.SeguridadVentanaList.Add(item.Id);
+                }
+                else
+                {
+                    _model.SeguridadVentanaList.Remove(item.Id);
+                }
+            }
+        }
+        private void dgvBisagras_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0) return;
+
+            if (dgvBisagras.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
+            {
+                dgvBisagras.EndEdit();
+                var item = (GridItem)dgvBisagras.Rows[e.RowIndex].DataBoundItem;
+
+                if (item.Selected)
+                {
+                    _model.BisagrasPuertaSecList.Add(item.Id);
+                }
+                else
+                {
+                    _model.BisagrasPuertaSecList.Remove(item.Id);
+                }
+            }
+        }
         #endregion
 
         #region Private methods
-        private void RellenarAgujasList()
+        private void RellenarAgujasBalconeras()
         {
             cmb_AgujaBalconeras.SelectedValueChanged -= cmb_AgujaBalconeras_SelectedValueChanged;
 
@@ -74,9 +153,148 @@ namespace RotoGestionClientes
 
             cmb_AgujaBalconeras.SelectedValueChanged += cmb_AgujaBalconeras_SelectedValueChanged;
         }
+        private void RellenarAgujasPuertaSec()
+        {
+            List<Aguja> agujaList = new List<Aguja>();
+            agujaList = _context.Agujas.OrderBy(s => s.Id).ToList();
+
+            cmb_AgujaPuertaSec.SelectedValueChanged -= cmb_AgujaPuertaSec_SelectedValueChanged;
+
+            cmb_AgujaPuertaSec.DataSource = null;
+            cmb_AgujaPuertaSec.DataSource = agujaList;
+            cmb_AgujaPuertaSec.DisplayMember = "Nombre";
+            cmb_AgujaPuertaSec.ValueMember = "Id";
+
+            cmb_AgujaPuertaSec.SelectedIndex = -1;
+
+            cmb_AgujaPuertaSec.SelectedValueChanged += cmb_AgujaPuertaSec_SelectedValueChanged;
+        }
+        private void CrearGridSeguridadBalconera()
+        {
+            dgvSeguridad.AutoGenerateColumns = false;
+            dgvSeguridad.AllowUserToAddRows = false;
+            dgvSeguridad.RowHeadersVisible = false;
+
+            dgvSeguridad.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Selected",
+                HeaderText = "",
+                Width = 30
+            });
+
+            dgvSeguridad.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nombre",
+                HeaderText = "Tipo",
+                ReadOnly = true,
+                Width = 100,
+                Name = "Nombre",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            dgvSeguridad.ReadOnly = false;
+            dgvSeguridad.Enabled = true;
+        }
+        private void CrearGridCremonaPasivas()
+        {
+            dgvPasivas.AutoGenerateColumns = false;
+            dgvPasivas.AllowUserToAddRows = false;
+            dgvPasivas.RowHeadersVisible = false;
+
+            dgvPasivas.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Selected",
+                HeaderText = "",
+                Width = 30
+            });
+
+            dgvPasivas.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nombre",
+                HeaderText = "Tipo",
+                ReadOnly = true,
+                Width = 100,
+                Name = "Nombre",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            dgvPasivas.ReadOnly = false;
+            dgvPasivas.Enabled = true;
+        }
+        private void RellenarGridSeguridadBalconera()
+        {
+            var lista = _context.SeguridadVentanas
+                        .Select(f => new GridItem
+                        {
+                            Id = f.Id,
+                            Nombre = f.Nombre,
+                            Selected = _model.SeguridadVentanaList.Contains(f.Id)
+                        })
+                        .OrderBy(f => f.Id)
+                        .ToList();
+
+            _bindingSourceSeguridadVentana.DataSource = lista;
+            dgvSeguridad.DataSource = _bindingSourceSeguridadVentana;
+        }
+        private void RellenarGridCremonaPasivas()
+        {
+            var lista = _context.CremonaPasivaVentanaTipos
+                        .Select(f => new GridItem
+                        {
+                            Id = f.Id,
+                            Nombre = f.Nombre,
+                            Selected = _model.CremonaPasivaVentanaList.Contains(f.Id)
+                        })
+                        .OrderBy(f => f.Id)
+                        .ToList();
+
+            _bindingSourceCremonaPasiva.DataSource = lista;
+            dgvPasivas.DataSource = _bindingSourceCremonaPasiva;
+        }
+        private void CrearGridBisagras()
+        {
+            dgvBisagras.AutoGenerateColumns = false;
+            dgvBisagras.AllowUserToAddRows = false;
+            dgvBisagras.RowHeadersVisible = false;
+
+            dgvBisagras.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Selected",
+                HeaderText = "",
+                Width = 30
+            });
+
+            dgvBisagras.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nombre",
+                HeaderText = "Tipo",
+                ReadOnly = true,
+                Width = 100,
+                Name = "Nombre",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            dgvBisagras.ReadOnly = false;
+            dgvBisagras.Enabled = true;
+        }
+        private void RellenarGridBisagras()
+        {
+            var lista = _context.Bisagras
+                        .Select(f => new GridItem
+                        {
+                            Id = f.Id,
+                            Nombre = f.Nombre,
+                            Selected = _model.BisagrasPuertaSecList.Contains(f.Id)
+                        })
+                        .OrderBy(f => f.Id)
+                        .ToList();
+
+            _bindingSourceBisagras.DataSource = lista;
+            dgvBisagras.DataSource = _bindingSourceBisagras;
+        }
         #endregion
 
 
-        
+
     }
 }

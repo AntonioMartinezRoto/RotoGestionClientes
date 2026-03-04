@@ -42,8 +42,10 @@
             group_Comentarios = new GroupBox();
             group_SoporteCompas = new GroupBox();
             dgvSoporteCompas = new DataGridView();
-            group_Perfil = new GroupBox();
-            cmb_Perfil = new ComboBox();
+            lbl_SapId = new Label();
+            txt_SapId = new TextBox();
+            groupBox1 = new GroupBox();
+            dgvPerfil = new DataGridView();
             group_PerfilTipo.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPerfilTipo).BeginInit();
             group_Software.SuspendLayout();
@@ -52,12 +54,13 @@
             group_Comentarios.SuspendLayout();
             group_SoporteCompas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSoporteCompas).BeginInit();
-            group_Perfil.SuspendLayout();
+            groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvPerfil).BeginInit();
             SuspendLayout();
             // 
             // txt_NombreCliente
             // 
-            txt_NombreCliente.Location = new Point(242, 51);
+            txt_NombreCliente.Location = new Point(162, 52);
             txt_NombreCliente.MaxLength = 50;
             txt_NombreCliente.Name = "txt_NombreCliente";
             txt_NombreCliente.Size = new Size(163, 23);
@@ -67,7 +70,7 @@
             // lbl_NombreCliente
             // 
             lbl_NombreCliente.AutoSize = true;
-            lbl_NombreCliente.Location = new Point(117, 54);
+            lbl_NombreCliente.Location = new Point(37, 55);
             lbl_NombreCliente.Name = "lbl_NombreCliente";
             lbl_NombreCliente.Size = new Size(108, 15);
             lbl_NombreCliente.TabIndex = 1;
@@ -76,7 +79,7 @@
             // lbl_Alias
             // 
             lbl_Alias.AutoSize = true;
-            lbl_Alias.Location = new Point(117, 91);
+            lbl_Alias.Location = new Point(37, 92);
             lbl_Alias.Name = "lbl_Alias";
             lbl_Alias.Size = new Size(32, 15);
             lbl_Alias.TabIndex = 3;
@@ -84,7 +87,7 @@
             // 
             // txt_Alias
             // 
-            txt_Alias.Location = new Point(242, 88);
+            txt_Alias.Location = new Point(162, 89);
             txt_Alias.MaxLength = 50;
             txt_Alias.Name = "txt_Alias";
             txt_Alias.Size = new Size(163, 23);
@@ -94,7 +97,7 @@
             // group_PerfilTipo
             // 
             group_PerfilTipo.Controls.Add(dgvPerfilTipo);
-            group_PerfilTipo.Location = new Point(500, 51);
+            group_PerfilTipo.Location = new Point(341, 33);
             group_PerfilTipo.Name = "group_PerfilTipo";
             group_PerfilTipo.Size = new Size(289, 192);
             group_PerfilTipo.TabIndex = 4;
@@ -119,7 +122,7 @@
             // group_Software
             // 
             group_Software.Controls.Add(cmb_Software);
-            group_Software.Location = new Point(117, 123);
+            group_Software.Location = new Point(37, 166);
             group_Software.Name = "group_Software";
             group_Software.Size = new Size(289, 59);
             group_Software.TabIndex = 6;
@@ -139,7 +142,7 @@
             // group_Manillas
             // 
             group_Manillas.Controls.Add(dgvManillas);
-            group_Manillas.Location = new Point(500, 255);
+            group_Manillas.Location = new Point(341, 246);
             group_Manillas.Name = "group_Manillas";
             group_Manillas.Size = new Size(289, 221);
             group_Manillas.TabIndex = 7;
@@ -163,20 +166,20 @@
             // 
             // txt_Comentarios
             // 
-            txt_Comentarios.Location = new Point(6, 18);
+            txt_Comentarios.Location = new Point(15, 18);
             txt_Comentarios.MaxLength = 1000;
             txt_Comentarios.Multiline = true;
             txt_Comentarios.Name = "txt_Comentarios";
-            txt_Comentarios.Size = new Size(659, 60);
+            txt_Comentarios.Size = new Size(858, 60);
             txt_Comentarios.TabIndex = 8;
             txt_Comentarios.TextChanged += txt_Comentarios_TextChanged;
             // 
             // group_Comentarios
             // 
             group_Comentarios.Controls.Add(txt_Comentarios);
-            group_Comentarios.Location = new Point(118, 482);
+            group_Comentarios.Location = new Point(39, 484);
             group_Comentarios.Name = "group_Comentarios";
-            group_Comentarios.Size = new Size(671, 88);
+            group_Comentarios.Size = new Size(892, 88);
             group_Comentarios.TabIndex = 9;
             group_Comentarios.TabStop = false;
             group_Comentarios.Text = "Comentarios";
@@ -184,7 +187,7 @@
             // group_SoporteCompas
             // 
             group_SoporteCompas.Controls.Add(dgvSoporteCompas);
-            group_SoporteCompas.Location = new Point(118, 255);
+            group_SoporteCompas.Location = new Point(39, 246);
             group_SoporteCompas.Name = "group_SoporteCompas";
             group_SoporteCompas.Size = new Size(288, 221);
             group_SoporteCompas.TabIndex = 10;
@@ -206,32 +209,57 @@
             dgvSoporteCompas.TabIndex = 3;
             dgvSoporteCompas.CellMouseUp += dgvSoporteCompas_CellMouseUp;
             // 
-            // group_Perfil
+            // lbl_SapId
             // 
-            group_Perfil.Controls.Add(cmb_Perfil);
-            group_Perfil.Location = new Point(116, 184);
-            group_Perfil.Name = "group_Perfil";
-            group_Perfil.Size = new Size(290, 59);
-            group_Perfil.TabIndex = 11;
-            group_Perfil.TabStop = false;
-            group_Perfil.Text = "Perfil";
+            lbl_SapId.AutoSize = true;
+            lbl_SapId.Location = new Point(37, 133);
+            lbl_SapId.Name = "lbl_SapId";
+            lbl_SapId.Size = new Size(41, 15);
+            lbl_SapId.TabIndex = 13;
+            lbl_SapId.Text = "Id SAP";
             // 
-            // cmb_Perfil
+            // txt_SapId
             // 
-            cmb_Perfil.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmb_Perfil.FormattingEnabled = true;
-            cmb_Perfil.Location = new Point(17, 22);
-            cmb_Perfil.Name = "cmb_Perfil";
-            cmb_Perfil.Size = new Size(250, 23);
-            cmb_Perfil.TabIndex = 0;
-            cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
+            txt_SapId.Location = new Point(162, 130);
+            txt_SapId.MaxLength = 50;
+            txt_SapId.Name = "txt_SapId";
+            txt_SapId.Size = new Size(163, 23);
+            txt_SapId.TabIndex = 12;
+            txt_SapId.TextChanged += txt_SapId_TextChanged;
+            // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(dgvPerfil);
+            groupBox1.Location = new Point(642, 33);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(289, 434);
+            groupBox1.TabIndex = 14;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Perfil";
+            // 
+            // dgvPerfil
+            // 
+            dgvPerfil.AllowUserToAddRows = false;
+            dgvPerfil.AllowUserToDeleteRows = false;
+            dgvPerfil.AllowUserToOrderColumns = true;
+            dgvPerfil.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvPerfil.BackgroundColor = Color.White;
+            dgvPerfil.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvPerfil.Location = new Point(17, 22);
+            dgvPerfil.Name = "dgvPerfil";
+            dgvPerfil.ReadOnly = true;
+            dgvPerfil.Size = new Size(253, 393);
+            dgvPerfil.TabIndex = 2;
+            dgvPerfil.CellMouseUp += dgvPerfil_CellMouseUp;
             // 
             // PasoDatosGenerales
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(group_Perfil);
+            Controls.Add(groupBox1);
+            Controls.Add(lbl_SapId);
+            Controls.Add(txt_SapId);
             Controls.Add(group_SoporteCompas);
             Controls.Add(group_Comentarios);
             Controls.Add(group_Manillas);
@@ -253,7 +281,8 @@
             group_Comentarios.PerformLayout();
             group_SoporteCompas.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvSoporteCompas).EndInit();
-            group_Perfil.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvPerfil).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -275,7 +304,9 @@
         private GroupBox group_Comentarios;
         private GroupBox group_SoporteCompas;
         private DataGridView dgvSoporteCompas;
-        private GroupBox group_Perfil;
-        private ComboBox cmb_Perfil;
+        private Label lbl_SapId;
+        private TextBox txt_SapId;
+        private GroupBox groupBox1;
+        private DataGridView dgvPerfil;
     }
 }

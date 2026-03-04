@@ -8,6 +8,7 @@ namespace RotoGestionClientes
     {
         public string Nombre { get; set; }
         public string? Comentarios { get; set; }
+        public string? SapId { get; set; }
         public string? Alias { get; set; }
         public string? ObservacionesVentanas { get; set; }
         public string? ObservacionesBalconeras { get; set; }
@@ -21,5 +22,7 @@ namespace RotoGestionClientes
         public int? AgujaBalconera { get; set; }
         public int? AgujaPuertaSec { get; set; }
         public int? AgujaPuerta { get; set; }
+        public List<int> BisagrasPuertaSecList { get; set; } = new();
+        public List<int> BisagrasPuertaList { get; set; } = new();
     }
 }

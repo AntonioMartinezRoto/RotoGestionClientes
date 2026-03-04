@@ -40,6 +40,14 @@
             group_Balconeras = new GroupBox();
             group_Aguja = new GroupBox();
             cmb_AgujaBalconeras = new ComboBox();
+            groupBox1 = new GroupBox();
+            groupBox2 = new GroupBox();
+            cmb_AgujaPuertaSec = new ComboBox();
+            group_Cerraduras = new GroupBox();
+            dgvCerraduras = new DataGridView();
+            pictureBox4 = new PictureBox();
+            group_Bisagras = new GroupBox();
+            dgvBisagras = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Pasivas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPasivas).BeginInit();
@@ -49,6 +57,13 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             group_Balconeras.SuspendLayout();
             group_Aguja.SuspendLayout();
+            groupBox1.SuspendLayout();
+            groupBox2.SuspendLayout();
+            group_Cerraduras.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvCerraduras).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
+            group_Bisagras.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)dgvBisagras).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -85,6 +100,7 @@
             dgvPasivas.ReadOnly = true;
             dgvPasivas.Size = new Size(253, 118);
             dgvPasivas.TabIndex = 2;
+            dgvPasivas.CellMouseUp += dgvPasivas_CellMouseUp;
             // 
             // group_Seguridad
             // 
@@ -109,13 +125,14 @@
             dgvSeguridad.ReadOnly = true;
             dgvSeguridad.Size = new Size(256, 118);
             dgvSeguridad.TabIndex = 2;
+            dgvSeguridad.CellMouseUp += dgvSeguridad_CellMouseUp;
             // 
             // group_Comentarios
             // 
             group_Comentarios.Controls.Add(txt_ObservacionesBalconeras);
-            group_Comentarios.Location = new Point(20, 497);
+            group_Comentarios.Location = new Point(20, 507);
             group_Comentarios.Name = "group_Comentarios";
-            group_Comentarios.Size = new Size(905, 104);
+            group_Comentarios.Size = new Size(884, 94);
             group_Comentarios.TabIndex = 11;
             group_Comentarios.TabStop = false;
             group_Comentarios.Text = "Observaciones";
@@ -126,7 +143,7 @@
             txt_ObservacionesBalconeras.MaxLength = 1000;
             txt_ObservacionesBalconeras.Multiline = true;
             txt_ObservacionesBalconeras.Name = "txt_ObservacionesBalconeras";
-            txt_ObservacionesBalconeras.Size = new Size(870, 66);
+            txt_ObservacionesBalconeras.Size = new Size(851, 66);
             txt_ObservacionesBalconeras.TabIndex = 8;
             txt_ObservacionesBalconeras.TextChanged += txt_ObservacionesBalconeras_TextChanged;
             // 
@@ -175,11 +192,105 @@
             cmb_AgujaBalconeras.TabIndex = 0;
             cmb_AgujaBalconeras.SelectedValueChanged += cmb_AgujaBalconeras_SelectedValueChanged;
             // 
+            // groupBox1
+            // 
+            groupBox1.Controls.Add(groupBox2);
+            groupBox1.Controls.Add(group_Cerraduras);
+            groupBox1.Controls.Add(pictureBox4);
+            groupBox1.Controls.Add(group_Bisagras);
+            groupBox1.Location = new Point(20, 260);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(884, 241);
+            groupBox1.TabIndex = 14;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "Puerta Secundaria";
+            // 
+            // groupBox2
+            // 
+            groupBox2.Controls.Add(cmb_AgujaPuertaSec);
+            groupBox2.Location = new Point(284, 17);
+            groupBox2.Name = "groupBox2";
+            groupBox2.Size = new Size(289, 59);
+            groupBox2.TabIndex = 14;
+            groupBox2.TabStop = false;
+            groupBox2.Text = "Aguja";
+            // 
+            // cmb_AgujaPuertaSec
+            // 
+            cmb_AgujaPuertaSec.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmb_AgujaPuertaSec.FormattingEnabled = true;
+            cmb_AgujaPuertaSec.Location = new Point(17, 22);
+            cmb_AgujaPuertaSec.Name = "cmb_AgujaPuertaSec";
+            cmb_AgujaPuertaSec.Size = new Size(250, 23);
+            cmb_AgujaPuertaSec.TabIndex = 0;
+            cmb_AgujaPuertaSec.SelectedValueChanged += cmb_AgujaPuertaSec_SelectedValueChanged;
+            // 
+            // group_Cerraduras
+            // 
+            group_Cerraduras.Controls.Add(dgvCerraduras);
+            group_Cerraduras.Location = new Point(579, 79);
+            group_Cerraduras.Name = "group_Cerraduras";
+            group_Cerraduras.Size = new Size(289, 154);
+            group_Cerraduras.TabIndex = 7;
+            group_Cerraduras.TabStop = false;
+            group_Cerraduras.Text = "Cerraduras";
+            // 
+            // dgvCerraduras
+            // 
+            dgvCerraduras.AllowUserToAddRows = false;
+            dgvCerraduras.AllowUserToDeleteRows = false;
+            dgvCerraduras.AllowUserToOrderColumns = true;
+            dgvCerraduras.Anchor = AnchorStyles.None;
+            dgvCerraduras.BackgroundColor = Color.White;
+            dgvCerraduras.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvCerraduras.Location = new Point(18, 22);
+            dgvCerraduras.Name = "dgvCerraduras";
+            dgvCerraduras.ReadOnly = true;
+            dgvCerraduras.Size = new Size(253, 126);
+            dgvCerraduras.TabIndex = 2;
+            // 
+            // pictureBox4
+            // 
+            pictureBox4.BackgroundImageLayout = ImageLayout.None;
+            pictureBox4.Image = (Image)resources.GetObject("pictureBox4.Image");
+            pictureBox4.Location = new Point(78, 22);
+            pictureBox4.Name = "pictureBox4";
+            pictureBox4.Size = new Size(114, 211);
+            pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox4.TabIndex = 1;
+            pictureBox4.TabStop = false;
+            // 
+            // group_Bisagras
+            // 
+            group_Bisagras.Controls.Add(dgvBisagras);
+            group_Bisagras.Location = new Point(284, 79);
+            group_Bisagras.Name = "group_Bisagras";
+            group_Bisagras.Size = new Size(289, 154);
+            group_Bisagras.TabIndex = 6;
+            group_Bisagras.TabStop = false;
+            group_Bisagras.Text = "Bisagras";
+            // 
+            // dgvBisagras
+            // 
+            dgvBisagras.AllowUserToAddRows = false;
+            dgvBisagras.AllowUserToDeleteRows = false;
+            dgvBisagras.AllowUserToOrderColumns = true;
+            dgvBisagras.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            dgvBisagras.BackgroundColor = Color.White;
+            dgvBisagras.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvBisagras.Location = new Point(17, 22);
+            dgvBisagras.Name = "dgvBisagras";
+            dgvBisagras.ReadOnly = true;
+            dgvBisagras.Size = new Size(256, 126);
+            dgvBisagras.TabIndex = 2;
+            dgvBisagras.CellMouseUp += dgvBisagras_CellMouseUp;
+            // 
             // PasoBalconeras
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
+            Controls.Add(groupBox1);
             Controls.Add(group_Balconeras);
             Controls.Add(group_Comentarios);
             Name = "PasoBalconeras";
@@ -195,6 +306,13 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             group_Balconeras.ResumeLayout(false);
             group_Aguja.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox2.ResumeLayout(false);
+            group_Cerraduras.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvCerraduras).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
+            group_Bisagras.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)dgvBisagras).EndInit();
             ResumeLayout(false);
         }
 
@@ -211,5 +329,13 @@
         private GroupBox group_Balconeras;
         private GroupBox group_Aguja;
         private ComboBox cmb_AgujaBalconeras;
+        private GroupBox groupBox1;
+        private GroupBox groupBox2;
+        private ComboBox cmb_AgujaPuertaSec;
+        private GroupBox group_Cerraduras;
+        private DataGridView dgvCerraduras;
+        private PictureBox pictureBox4;
+        private GroupBox group_Bisagras;
+        private DataGridView dgvBisagras;
     }
 }

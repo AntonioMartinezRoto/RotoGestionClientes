@@ -27,6 +27,13 @@ namespace RotoGestionClientes
             ConfigureGrid();
             _allClientes = clientesList;
         }
+        public ClientesMain(ApplicationDbContext context)
+        {
+            InitializeComponent();
+            _context = context;
+            ConfigureGrid();
+            LoadClientesFromDB();
+        }
 
         #endregion
 
@@ -105,6 +112,13 @@ namespace RotoGestionClientes
             });
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
+                Name = "SapId",
+                HeaderText = "SAP Id",
+                DataPropertyName = "SapId",
+                Width = 100
+            });
+            dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
+            {
                 Name = "Nombre",
                 HeaderText = "Nombre",
                 DataPropertyName = "Nombre",
@@ -142,6 +156,7 @@ namespace RotoGestionClientes
                 {
                     Id = f.Id,
                     Nombre = f.Nombre,
+                    SapId = f.SapId,
                     Alias = f.Alias,
                     Comentarios = f.Comentarios,
                     ObservacionesVentanas = f.ObservacionesVentanas,

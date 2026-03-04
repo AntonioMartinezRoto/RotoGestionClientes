@@ -218,6 +218,7 @@ namespace RotoGestionClientes
             }
 
             model.Nombre = cliente.Nombre;
+            model.SapId = cliente.SapId;
             model.Alias = cliente.Alias;
             model.Comentarios = cliente.Comentarios;
             model.ObservacionesVentanas = cliente.ObservacionesVentanas;
@@ -232,6 +233,8 @@ namespace RotoGestionClientes
             model.AgujaBalconera = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaBalconeraId;
             model.AgujaPuertaSec = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaPuertaSecId;
             model.AgujaPuerta = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaPuertaId;
+            model.BisagrasPuertaList = _context.ClienteBisagraPuertas.Where(cb => cb.ClienteId == clienteId).Select(cb => cb.BisagraPuertaId).ToList();
+            model.BisagrasPuertaSecList = _context.ClienteBisagraPuertasSec.Where(cb => cb.ClienteId == clienteId).Select(cb => cb.BisagraPuertaId).ToList();
             return model;
         }
         private void InitializeTitulo()
@@ -256,6 +259,7 @@ namespace RotoGestionClientes
             var cliente = new Cliente
             {
                 Nombre = _model.Nombre,
+                SapId = _model.SapId,
                 Alias = _model.Alias,
                 Comentarios = _model.Comentarios,
                 ObservacionesVentanas = _model.ObservacionesVentanas,
@@ -281,9 +285,36 @@ namespace RotoGestionClientes
 
             CrearClienteAgujas(cliente.Id);
 
+            CrearClienteBisagraPuerta(cliente.Id);
+
+            CrearClienteBisagraPuertaSec(cliente.Id);
+
             _context.SaveChanges();
         }
+        private void CrearClienteBisagraPuerta(int clienteId)
+        {
+            foreach (var bisagraId in _model.BisagrasPuertaList)
+            {
+                _context.ClienteBisagraPuertas.Add(new ClienteBisagraPuerta
+                {
+                    ClienteId = clienteId,
+                    BisagraPuertaId = bisagraId
+                });
 
+            }
+        }
+        private void CrearClienteBisagraPuertaSec(int clienteId)
+        {
+            foreach (var bisagraId in _model.BisagrasPuertaSecList)
+            {
+                _context.ClienteBisagraPuertasSec.Add(new ClienteBisagraPuertaSec
+                {
+                    ClienteId = clienteId,
+                    BisagraPuertaId = bisagraId
+                });
+
+            }
+        }
         private void CrearClienteAgujas(int id)
         {
             _context.ClienteAgujases.Add(new ClienteAgujas
@@ -294,7 +325,6 @@ namespace RotoGestionClientes
                 AgujaPuertaId = _model.AgujaPuerta
             });
         }
-
         private void CrearClienteSeguridadVentana(int clienteId)
         {
             foreach (var seguridadVentanaId in _model.SeguridadVentanaList)
@@ -391,11 +421,14 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteCremonaPasivaVentanas)
                 .Include(c => c.ClientePerfiles)
                 .Include(c => c.ClienteAgujases)
+                .Include(c => c.ClienteBisagraPuertas)
+                .Include(c => c.ClienteBisagraPuertasSec)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
             cliente.Nombre = _model.Nombre;
             cliente.Alias = _model.Alias;
+            cliente.SapId = _model.SapId;
             cliente.Comentarios = _model.Comentarios;
             cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
             cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
@@ -416,9 +449,76 @@ namespace RotoGestionClientes
 
             UpdateAgujas(cliente);
 
+            UpdateBisagrasPuerta(cliente);
+
+            UpdateBisagrasPuertaSec(cliente);
+
             _context.SaveChanges();
         }
+        private void UpdateBisagrasPuerta(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteBisagraPuertas
+                .Select(cp => cp.BisagraPuertaId)
+                .ToList();
 
+            var itemSeleccionadas = _model.BisagrasPuertaList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteBisagraPuertas
+                .Where(cp => !itemSeleccionadas.Contains(cp.BisagraPuertaId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteBisagraPuertas.Add(new ClienteBisagraPuerta
+                {
+                    ClienteId = cliente.Id,
+                    BisagraPuertaId = itemId
+                });
+            }
+        }
+        private void UpdateBisagrasPuertaSec(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteBisagraPuertasSec
+                .Select(cp => cp.BisagraPuertaId)
+                .ToList();
+
+            var itemSeleccionadas = _model.BisagrasPuertaSecList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteBisagraPuertasSec
+                .Where(cp => !itemSeleccionadas.Contains(cp.BisagraPuertaId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteBisagraPuertasSec.Add(new ClienteBisagraPuertaSec
+                {
+                    ClienteId = cliente.Id,
+                    BisagraPuertaId = itemId
+                });
+            }
+        }
         private void UpdateAgujas(Cliente cliente)
         {
             var clienteAgujas = _context.ClienteAgujases.Where(ca => ca.ClienteId == cliente.Id).FirstOrDefault();

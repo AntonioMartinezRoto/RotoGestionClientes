@@ -33,6 +33,7 @@ namespace RotoGestionClientes
         private void btn_Clientes_Click(object sender, EventArgs e)
         {
             ClientesMain clientesMainForm = new(_allClientes, _context);
+            //ClientesMain clientesMainForm = new(_context);
             clientesMainForm.ShowDialog();
             LoadClientesFromDB();
         }
@@ -48,6 +49,7 @@ namespace RotoGestionClientes
                 {
                     Id = f.Id,
                     Nombre = f.Nombre,
+                    SapId = f.SapId,
                     Alias = f.Alias,
                     Comentarios = f.Comentarios,
                     ObservacionesVentanas = f.ObservacionesVentanas,

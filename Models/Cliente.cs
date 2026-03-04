@@ -1,4 +1,5 @@
 ﻿
+using RotoGestionClientes;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -14,6 +15,7 @@ namespace RotoGestionClientes
 
         [Required]
         public string Nombre { get; set; } = null!;
+        public string? SapId { get; set; }
         public string? Alias { get; set; }
         public string? Comentarios { get; set; }
         public string? ObservacionesVentanas { get; set; }
@@ -26,5 +28,7 @@ namespace RotoGestionClientes
         public ICollection<ClienteCremonaPasivaVentana> ClienteCremonaPasivaVentanas { get; set; } = new List<ClienteCremonaPasivaVentana>();
         public ICollection<ClientePerfil> ClientePerfiles { get; set; } = new List<ClientePerfil>();
         public ClienteAgujas? ClienteAgujases { get; set; }
+        public ICollection<ClienteBisagraPuerta> ClienteBisagraPuertas { get; set; } = new List<ClienteBisagraPuerta>();
+        public ICollection<ClienteBisagraPuertaSec> ClienteBisagraPuertasSec { get; set; } = new List<ClienteBisagraPuertaSec>();
     }
 }

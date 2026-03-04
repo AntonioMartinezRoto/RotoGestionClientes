@@ -26,6 +26,9 @@ namespace RotoGestionClientes
         public DbSet<ClientePerfil> ClientePerfiles { get; set; } = null!;
         public DbSet<Aguja> Agujas { get; set; } = null!;
         public DbSet<ClienteAgujas> ClienteAgujases { get; set; } = null!;
+        public DbSet<Bisagra> Bisagras { get; set; } = null!;
+        public DbSet<ClienteBisagraPuerta> ClienteBisagraPuertas { get; set; } = null!;
+        public DbSet<ClienteBisagraPuertaSec> ClienteBisagraPuertasSec { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,6 +47,7 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired();
                 entity.Property(e => e.Alias);
+                entity.Property(e => e.SapId);
                 entity.Property(e => e.Comentarios);
                 entity.Property(e => e.ObservacionesVentanas);
                 entity.Property(e => e.ObservacionesBalconeras);
@@ -294,6 +298,47 @@ namespace RotoGestionClientes
                       .HasForeignKey(e => e.AgujaPuertaId)
                       .IsRequired(false)
                       .OnDelete(DeleteBehavior.Restrict);
+            });
+            modelBuilder.Entity<Bisagra>(entity =>
+            {
+                entity.ToTable("BisagraPuerta");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_BisagraPuerta");
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+            });
+            modelBuilder.Entity<ClienteBisagraPuerta>(entity =>
+            {
+                entity.ToTable("ClienteBisagraPuerta", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.BisagraPuertaId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteBisagraPuertas)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Bisagra)
+                      .WithMany(s => s.ClienteBisagraPuertas)
+                      .HasForeignKey(e => e.BisagraPuertaId);
+            });
+            modelBuilder.Entity<ClienteBisagraPuertaSec>(entity =>
+            {
+                entity.ToTable("ClienteBisagraPuertaSec", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.BisagraPuertaId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteBisagraPuertasSec)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Bisagra)
+                      .WithMany(s => s.ClienteBisagraPuertasSec)
+                      .HasForeignKey(e => e.BisagraPuertaId);
             });
         }
     }

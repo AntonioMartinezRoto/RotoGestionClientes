@@ -19,6 +19,7 @@ namespace RotoGestionClientes
         private BindingSource _bindingSourcePerfilTipo = new BindingSource();
         private BindingSource _bindingSourceManillas = new BindingSource();
         private BindingSource _bindingSourceSoporteCompas = new BindingSource();
+        private BindingSource _bindingSourcePerfil = new BindingSource();
 
         #endregion
 
@@ -45,17 +46,22 @@ namespace RotoGestionClientes
         {
             _model.Alias = txt_Alias.Text;
         }
+        private void txt_SapId_TextChanged(object sender, EventArgs e)
+        {
+            _model.SapId = txt_SapId.Text;
+        }
         private void PasoDatosGenerales_Load(object sender, EventArgs e)
         {
             CrearGridPerfilTipo();
             CrearGridManillas();
             CrearGridSoporteCompas();
+            CrearGridPerfil();
             RellenarGridPerFilTipo();
             RellenarSoftwareList();
             RellenarGridManillas();
             RellenarGridSoporteCompas();
-            RellenarPerfilesList();
-
+            //RellenarPerfilesList();
+            CargarPerfilesFiltrados();
             InitializeData();
         }
         private void dgvPerfilTipo_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
@@ -74,9 +80,10 @@ namespace RotoGestionClientes
                 else
                 {
                     _model.PerfilTipoList.Remove(item.Id);
+                    DesmarcarPerfilesDeTipo(item.Id);
                 }
 
-                RellenarPerfilesList();
+                CargarPerfilesFiltrados();
             }
         }
         private void cmb_Software_SelectedValueChanged(object sender, EventArgs e)
@@ -129,15 +136,22 @@ namespace RotoGestionClientes
                 }
             }
         }
-        private void cmb_Perfil_SelectedValueChanged(object sender, EventArgs e)
+        private void dgvPerfil_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (cmb_Perfil.SelectedIndex != -1 && cmb_Perfil.SelectedValue != null)
+            if (e.ColumnIndex < 0) return;
+
+            if (dgvPerfil.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
             {
-                // Si ValueMember es "Id", SelectedValue será el entero
-                if (int.TryParse(cmb_Perfil.SelectedValue.ToString(), out int id))
+                dgvPerfil.EndEdit();
+                var item = (GridItem)dgvPerfil.Rows[e.RowIndex].DataBoundItem;
+
+                if (item.Selected)
                 {
-                    this._model.PerfilesList.Clear();
-                    this._model.PerfilesList.Add(id);
+                    _model.PerfilesList.Add(item.Id);
+                }
+                else
+                {
+                    _model.PerfilesList.Remove(item.Id);
                 }
             }
         }
@@ -171,6 +185,32 @@ namespace RotoGestionClientes
             dgvPerfilTipo.ReadOnly = false;
             dgvPerfilTipo.Enabled = true;
         }
+        private void CrearGridPerfil()
+        {
+            dgvPerfil.AutoGenerateColumns = false;
+            dgvPerfil.AllowUserToAddRows = false;
+            dgvPerfil.RowHeadersVisible = false;
+
+            dgvPerfil.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Selected",
+                HeaderText = "",
+                Width = 30
+            });
+
+            dgvPerfil.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nombre",
+                HeaderText = "Nombre",
+                ReadOnly = true,
+                Width = 100,
+                Name = "Nombre",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            dgvPerfil.ReadOnly = false;
+            dgvPerfil.Enabled = true;
+        }
         private void CrearGridManillas()
         {
             dgvManillas.AutoGenerateColumns = false;
@@ -187,7 +227,7 @@ namespace RotoGestionClientes
             dgvManillas.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Nombre",
-                HeaderText = "Tipo",
+                HeaderText = "Nombre",
                 ReadOnly = true,
                 Width = 100,
                 Name = "Nombre",
@@ -239,6 +279,43 @@ namespace RotoGestionClientes
             _bindingSourcePerfilTipo.DataSource = lista;
             dgvPerfilTipo.DataSource = _bindingSourcePerfilTipo;
         }
+        private void CargarPerfilesFiltrados()
+        {
+            var tiposSeleccionados = ((List<GridItem>)_bindingSourcePerfilTipo.DataSource)
+                .Where(x => x.Selected)
+                .Select(x => x.Id)
+                .ToList();
+
+            if (!tiposSeleccionados.Any())
+            {
+                dgvPerfil.DataSource = null;
+                return;
+            }
+
+            var perfiles = _context.Perfiles
+                .Where(p => tiposSeleccionados.Contains(p.PerfilTipoId))
+                .Select(p => new GridItem
+                {
+                    Id = p.Id,
+                    Nombre = p.Nombre + " (" + p.PerfilTipo.NombreAbreviado + ")",
+                    Selected = _model.PerfilesList.Contains(p.Id)
+                })
+                .OrderBy(p => p.Nombre)
+                .ToList();
+
+            dgvPerfil.DataSource = perfiles;
+        }
+        private void DesmarcarPerfilesDeTipo(int perfilTipoId)
+        {
+            // Obtener IDs de perfiles que pertenecen a ese tipo
+            var perfilesDelTipo = _context.Perfiles
+                .Where(p => p.PerfilTipoId == perfilTipoId)
+                .Select(p => p.Id)
+                .ToList();
+
+            // Eliminar del modelo
+            _model.PerfilesList.RemoveAll(id => perfilesDelTipo.Contains(id));
+        }
         private void RellenarGridManillas()
         {
             var lista = _context.Manillas
@@ -288,53 +365,13 @@ namespace RotoGestionClientes
 
             cmb_Software.SelectedValueChanged += cmb_Software_SelectedValueChanged;
         }
-        private void RellenarPerfilesList()
-        {
-            cmb_Perfil.SelectedValueChanged -= cmb_Perfil_SelectedValueChanged;
-
-            int? selectedId = cmb_Perfil.SelectedValue as int?;
-
-            if (!_model.PerfilTipoList.Any())
-            {
-                cmb_Perfil.DataSource = null;
-                cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
-                return;
-            }
-
-            var perfiles = _context.Perfiles
-                .AsNoTracking()
-                .Where(p => _model.PerfilTipoList.Contains(p.PerfilTipoId))
-                .Select(p => new PerfilComboItem
-                {
-                    Id = p.Id,
-                    Texto = p.Nombre + " (" + p.PerfilTipo.NombreAbreviado + ")"
-                })
-                .OrderBy(p => p.Texto)
-                .ToList();
-
-            cmb_Perfil.DataSource = null;
-            cmb_Perfil.DataSource = perfiles;
-            cmb_Perfil.DisplayMember = "Texto";
-            cmb_Perfil.ValueMember = "Id";
-
-            if (selectedId.HasValue && perfiles.Any(p => p.Id == selectedId.Value))
-            {
-                cmb_Perfil.SelectedValue = selectedId.Value;
-            }
-            else
-            {
-                cmb_Perfil.SelectedIndex = -1;
-            }
-
-            cmb_Perfil.SelectedValueChanged += cmb_Perfil_SelectedValueChanged;
-        }
         private void InitializeData()
         {
             txt_NombreCliente.Text = _model.Nombre;
+            txt_SapId.Text = _model.SapId;
             txt_Alias.Text = _model.Alias;
             txt_Comentarios.Text = _model.Comentarios;
             cmb_Software.SelectedValue = _model.SoftwareList.FirstOrDefault();
-            cmb_Perfil.SelectedValue = _model.PerfilesList.FirstOrDefault();
         }
 
         #endregion
