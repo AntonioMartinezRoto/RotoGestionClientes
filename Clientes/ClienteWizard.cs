@@ -202,7 +202,7 @@ namespace RotoGestionClientes
             }
         }
 
-        private ClientWizardModel? MapClienteToModel(int? clienteId)
+        private ClientWizardModel? MapClienteToModelOld(int? clienteId)
         {
             if (clienteId == null)
             {
@@ -231,11 +231,104 @@ namespace RotoGestionClientes
             model.CremonaPasivaVentanaList = _context.ClienteCremonaPasivaVentanas.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.CremonaPasivaVentanaId).ToList();
             model.CremonaPasivaVentanaPractList = _context.ClienteCremonaPasivaVentanasPract.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.CremonaPasivaVentanaId).ToList();
             model.PerfilesList = _context.ClientePerfiles.Where(cp => cp.ClienteId == clienteId).Select(cp => cp.PerfilId).ToList();
-            model.AgujaBalconera = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaBalconeraId;
-            model.AgujaPuertaSec = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaPuertaSecId;
-            model.AgujaPuerta = _context.ClienteAgujases.Where(ca => ca.ClienteId == clienteId).FirstOrDefault()?.AgujaPuertaId;
+
+            var clienteAgujas = _context.ClienteAgujases.FirstOrDefault(ca => ca.ClienteId == clienteId);
+
+            model.AgujaBalconeraTipo = clienteAgujas?.AgujaBalconeraTipoId ?? 1;
+            model.AgujaBalconera = clienteAgujas?.AgujaBalconeraId;
+
+            model.AgujaPuertaSecTipo = clienteAgujas?.AgujaPuertaSecTipoId ?? 1;
+            model.AgujaPuertaSec = clienteAgujas?.AgujaPuertaSecId;
+
+            model.AgujaPuertaTipo = clienteAgujas?.AgujaPuertaTipoId ?? 1;
+            model.AgujaPuerta = clienteAgujas?.AgujaPuertaId;
+
             model.BisagrasPuertaList = _context.ClienteBisagraPuertas.Where(cb => cb.ClienteId == clienteId).Select(cb => cb.BisagraPuertaId).ToList();
             model.BisagrasPuertaSecList = _context.ClienteBisagraPuertasSec.Where(cb => cb.ClienteId == clienteId).Select(cb => cb.BisagraPuertaId).ToList();
+            return model;
+        }
+        private ClientWizardModel? MapClienteToModel(int? clienteId)
+        {
+            if (clienteId == null)
+                return null;
+
+            Cliente? cliente = _context.Clientes
+                .FirstOrDefault(c => c.Id == clienteId);
+
+            if (cliente == null)
+                return null;
+
+            ClientWizardModel model = new()
+            {
+                Nombre = cliente.Nombre,
+                SapId = cliente.SapId,
+                Alias = cliente.Alias,
+                Comentarios = cliente.Comentarios,
+                ObservacionesVentanas = cliente.ObservacionesVentanas,
+                ObservacionesBalconeras = cliente.ObservacionesBalconeras,
+
+                SoftwareList = _context.ClienteSoftwares
+                    .Where(cs => cs.ClienteId == clienteId)
+                    .Select(cs => cs.SoftwareId)
+                    .ToList(),
+
+                PerfilTipoList = _context.ClientePerfilTipos
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.PerfilTipoId)
+                    .ToList(),
+
+                ManillasList = _context.ClienteManillas
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.ManillaId)
+                    .ToList(),
+
+                SoporteCompasList = _context.ClienteSoporteCompases
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.SoporteCompasId)
+                    .ToList(),
+
+                SeguridadVentanaList = _context.ClienteSeguridadVentanas
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.SeguridadVentanaId)
+                    .ToList(),
+
+                CremonaPasivaVentanaList = _context.ClienteCremonaPasivaVentanas
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.CremonaPasivaVentanaId)
+                    .ToList(),
+
+                CremonaPasivaVentanaPractList = _context.ClienteCremonaPasivaVentanasPract
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.CremonaPasivaVentanaId)
+                    .ToList(),
+
+                PerfilesList = _context.ClientePerfiles
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.PerfilId)
+                    .ToList(),
+
+                BisagrasPuertaList = _context.ClienteBisagraPuertas
+                    .Where(cb => cb.ClienteId == clienteId)
+                    .Select(cb => cb.BisagraPuertaId)
+                    .ToList(),
+
+                BisagrasPuertaSecList = _context.ClienteBisagraPuertasSec
+                    .Where(cb => cb.ClienteId == clienteId)
+                    .Select(cb => cb.BisagraPuertaId)
+                    .ToList()
+            };
+
+            var clienteAgujas = _context.ClienteAgujases.FirstOrDefault(ca => ca.ClienteId == clienteId);
+
+            model.AgujaBalconeraTipo = clienteAgujas?.AgujaBalconeraTipoId ?? 1;
+            model.AgujaBalconera = clienteAgujas?.AgujaBalconeraId;
+
+            model.AgujaPuertaSecTipo = clienteAgujas?.AgujaPuertaSecTipoId ?? 1;
+            model.AgujaPuertaSec = clienteAgujas?.AgujaPuertaSecId;
+
+            model.AgujaPuertaTipo = clienteAgujas?.AgujaPuertaTipoId ?? 1;
+            model.AgujaPuerta = clienteAgujas?.AgujaPuertaId;
+
             return model;
         }
         private void InitializeTitulo()
@@ -323,8 +416,11 @@ namespace RotoGestionClientes
             _context.ClienteAgujases.Add(new ClienteAgujas
             {
                 ClienteId = id,
+                AgujaBalconeraTipoId = _model.AgujaBalconeraTipo,
                 AgujaBalconeraId = _model.AgujaBalconera,
+                AgujaPuertaSecTipoId = _model.AgujaPuertaSecTipo,
                 AgujaPuertaSecId = _model.AgujaPuertaSec,
+                AgujaPuertaTipoId = _model.AgujaPuertaTipo,
                 AgujaPuertaId = _model.AgujaPuerta
             });
         }
@@ -546,15 +642,21 @@ namespace RotoGestionClientes
                 _context.ClienteAgujases.Add(new ClienteAgujas
                 {
                     ClienteId = cliente.Id,
+                    AgujaBalconeraTipoId = _model.AgujaBalconeraTipo,
                     AgujaBalconeraId = _model.AgujaBalconera,
+                    AgujaPuertaSecTipoId = _model.AgujaPuertaSecTipo,
+                    AgujaPuertaTipoId = _model.AgujaPuertaTipo,
                     AgujaPuertaSecId = _model.AgujaPuertaSec,
                     AgujaPuertaId = _model.AgujaPuerta
                 });
             }
             else
             {
+                cliente.ClienteAgujases?.AgujaBalconeraTipoId = _model.AgujaBalconeraTipo;
                 cliente.ClienteAgujases?.AgujaBalconeraId = _model.AgujaBalconera;
+                cliente.ClienteAgujases?.AgujaPuertaSecTipoId = _model.AgujaPuertaSecTipo;
                 cliente.ClienteAgujases?.AgujaPuertaSecId = _model.AgujaPuertaSec;
+                cliente.ClienteAgujases?.AgujaPuertaTipoId = _model.AgujaPuertaTipo;
                 cliente.ClienteAgujases?.AgujaPuertaId = _model.AgujaPuerta;
             }
 

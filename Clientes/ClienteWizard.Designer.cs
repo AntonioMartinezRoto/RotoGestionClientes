@@ -120,6 +120,7 @@
             // 
             // btn_Siguiente
             // 
+            btn_Siguiente.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btn_Siguiente.FlatStyle = FlatStyle.Flat;
             btn_Siguiente.Image = (Image)resources.GetObject("btn_Siguiente.Image");
             btn_Siguiente.ImageAlign = ContentAlignment.MiddleLeft;
@@ -134,6 +135,7 @@
             // 
             // btn_Finalizar
             // 
+            btn_Finalizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btn_Finalizar.FlatStyle = FlatStyle.Flat;
             btn_Finalizar.Image = (Image)resources.GetObject("btn_Finalizar.Image");
             btn_Finalizar.ImageAlign = ContentAlignment.MiddleLeft;

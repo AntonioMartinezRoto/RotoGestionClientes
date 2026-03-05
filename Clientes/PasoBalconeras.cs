@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
 {
@@ -45,7 +46,7 @@ namespace RotoGestionClientes
             RellenarGridSeguridadBalconera();
             RellenarGridCremonaPasivas();
 
-            cmb_AgujaBalconeras.SelectedValue = _model.AgujaBalconera != null ? _model.AgujaBalconera : -1;
+            InitializeAgujaBalconera(_model.AgujaBalconeraTipo);
 
             CrearGridBisagras();
             RellenarGridBisagras();
@@ -53,6 +54,9 @@ namespace RotoGestionClientes
             RellenarAgujasPuertaSec();
             cmb_AgujaPuertaSec.SelectedValue = _model.AgujaPuertaSec != null ? _model.AgujaPuertaSec : -1;
         }
+
+
+
         private void txt_ObservacionesBalconeras_TextChanged(object sender, EventArgs e)
         {
             _model.ObservacionesBalconeras = txt_ObservacionesBalconeras.Text;
@@ -134,6 +138,23 @@ namespace RotoGestionClientes
                 }
             }
         }
+        private void rb_AgujaBalcGenerica_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_AgujaBalcGenerica.Checked)
+            {
+                InitializeAgujaBalconera((int)AgujaMode.Todos);
+                _model.AgujaBalconeraTipo = (int)AgujaMode.Todos;
+            }
+        }
+        private void rb_AgujaBalcPerfil_CheckedChanged(object sender, EventArgs e)
+        {
+            
+            if (rb_AgujaBalcPerfil.Checked)
+            {
+                InitializeAgujaBalconera((int)AgujaMode.PorPerfil);
+                _model.AgujaBalconeraTipo = (int)AgujaMode.PorPerfil;
+            }
+        }
         #endregion
 
         #region Private methods
@@ -174,6 +195,7 @@ namespace RotoGestionClientes
             dgvSeguridad.AutoGenerateColumns = false;
             dgvSeguridad.AllowUserToAddRows = false;
             dgvSeguridad.RowHeadersVisible = false;
+            dgvSeguridad.ColumnHeadersVisible = false;
 
             dgvSeguridad.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -200,6 +222,7 @@ namespace RotoGestionClientes
             dgvPasivas.AutoGenerateColumns = false;
             dgvPasivas.AllowUserToAddRows = false;
             dgvPasivas.RowHeadersVisible = false;
+            dgvPasivas.ColumnHeadersVisible = false;
 
             dgvPasivas.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -256,6 +279,7 @@ namespace RotoGestionClientes
             dgvBisagras.AutoGenerateColumns = false;
             dgvBisagras.AllowUserToAddRows = false;
             dgvBisagras.RowHeadersVisible = false;
+            dgvBisagras.ColumnHeadersVisible = false;
 
             dgvBisagras.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -292,7 +316,33 @@ namespace RotoGestionClientes
             _bindingSourceBisagras.DataSource = lista;
             dgvBisagras.DataSource = _bindingSourceBisagras;
         }
+        private void InitializeAgujaBalconera(int agujaBalconeraTipo)
+        {
+            switch (agujaBalconeraTipo)
+            {
+                case (int)AgujaMode.Todos:
+                    rb_AgujaBalcGenerica.Checked = true;
+                    cmb_AgujaBalconeras.Enabled = true;
+                    cmb_AgujaBalconeras.SelectedValue = _model.AgujaBalconera != null ? _model.AgujaBalconera : -1;
+                    btn_DefinitAgujaBalPerfil.Enabled = false;
+                    break;
+                case (int)AgujaMode.PorPerfil:
+                    rb_AgujaBalcPerfil.Checked = true;
+                    cmb_AgujaBalconeras.SelectedValue = -1;
+                    cmb_AgujaBalconeras.Enabled = false;
+                    btn_DefinitAgujaBalPerfil.Enabled = true;
+                    break;
+                default:
+                    rb_AgujaBalcGenerica.Checked = true;
+                    cmb_AgujaBalconeras.Enabled = true;
+                    cmb_AgujaBalconeras.SelectedValue = _model.AgujaBalconera != null ? _model.AgujaBalconera : -1;
+                    btn_DefinitAgujaBalPerfil.Enabled = false;
+                    break;
+            }
+            
+        }
         #endregion
+
 
 
 

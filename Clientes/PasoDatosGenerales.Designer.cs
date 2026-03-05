@@ -115,6 +115,7 @@
             dgvPerfilTipo.Location = new Point(17, 22);
             dgvPerfilTipo.Name = "dgvPerfilTipo";
             dgvPerfilTipo.ReadOnly = true;
+            dgvPerfilTipo.RowHeadersVisible = false;
             dgvPerfilTipo.Size = new Size(255, 153);
             dgvPerfilTipo.TabIndex = 2;
             dgvPerfilTipo.CellMouseUp += dgvPerfilTipo_CellMouseUp;

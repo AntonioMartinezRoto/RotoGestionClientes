@@ -83,7 +83,6 @@
             // 
             // lbl_Total
             // 
-            lbl_Total.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             lbl_Total.AutoSize = true;
             lbl_Total.BackColor = Color.Transparent;
             lbl_Total.Location = new Point(303, 86);

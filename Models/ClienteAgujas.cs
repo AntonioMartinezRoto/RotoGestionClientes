@@ -8,8 +8,11 @@ namespace RotoGestionClientes
     {
         public int ClienteId { get; set; }
 
+        public int AgujaBalconeraTipoId { get; set; }
         public int? AgujaBalconeraId { get; set; }
+        public int AgujaPuertaSecTipoId { get; set; }
         public int? AgujaPuertaSecId { get; set; }
+        public int AgujaPuertaTipoId { get; set; }
         public int? AgujaPuertaId { get; set; }
 
         public virtual Cliente Cliente { get; set; } = null!;

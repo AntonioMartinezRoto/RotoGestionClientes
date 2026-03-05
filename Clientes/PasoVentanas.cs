@@ -119,6 +119,7 @@ namespace RotoGestionClientes
             dgvSeguridad.AutoGenerateColumns = false;
             dgvSeguridad.AllowUserToAddRows = false;
             dgvSeguridad.RowHeadersVisible = false;
+            dgvSeguridad.ColumnHeadersVisible = false;
 
             dgvSeguridad.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -145,6 +146,7 @@ namespace RotoGestionClientes
             dgvPasivas.AutoGenerateColumns = false;
             dgvPasivas.AllowUserToAddRows = false;
             dgvPasivas.RowHeadersVisible = false;
+            dgvPasivas.ColumnHeadersVisible = false;
 
             dgvPasivas.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -171,6 +173,7 @@ namespace RotoGestionClientes
             dgvPasivasPract.AutoGenerateColumns = false;
             dgvPasivasPract.AllowUserToAddRows = false;
             dgvPasivasPract.RowHeadersVisible = false;
+            dgvPasivasPract.ColumnHeadersVisible = false;
 
             dgvPasivasPract.Columns.Add(new DataGridViewCheckBoxColumn
             {

@@ -20,8 +20,11 @@ namespace RotoGestionClientes
         public List<int> CremonaPasivaVentanaList { get; set; } = new();
         public List<int> CremonaPasivaVentanaPractList { get; set; } = new();
         public List<int> PerfilesList { get; set; } = new();
+        public int AgujaBalconeraTipo { get; set; }
         public int? AgujaBalconera { get; set; }
+        public int AgujaPuertaSecTipo { get; set; }
         public int? AgujaPuertaSec { get; set; }
+        public int AgujaPuertaTipo { get; set; }
         public int? AgujaPuerta { get; set; }
         public List<int> BisagrasPuertaSecList { get; set; } = new();
         public List<int> BisagrasPuertaList { get; set; } = new();

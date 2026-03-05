@@ -59,7 +59,6 @@ namespace RotoGestionClientes
             RellenarGridPerFilTipo();
             RellenarSoftwareList();
             RellenarGridManillas();
-            //RellenarGridSoporteCompas();
             CargarSoporteComprasFiltrado();
             CargarPerfilesFiltrados();
             InitializeData();
@@ -165,6 +164,7 @@ namespace RotoGestionClientes
             dgvPerfilTipo.AutoGenerateColumns = false;
             dgvPerfilTipo.AllowUserToAddRows = false;
             dgvPerfilTipo.RowHeadersVisible = false;
+            dgvPerfilTipo.ColumnHeadersVisible = false;
 
             dgvPerfilTipo.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -191,6 +191,7 @@ namespace RotoGestionClientes
             dgvPerfil.AutoGenerateColumns = false;
             dgvPerfil.AllowUserToAddRows = false;
             dgvPerfil.RowHeadersVisible = false;
+            dgvPerfil.ColumnHeadersVisible = false;
 
             dgvPerfil.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -217,6 +218,7 @@ namespace RotoGestionClientes
             dgvManillas.AutoGenerateColumns = false;
             dgvManillas.AllowUserToAddRows = false;
             dgvManillas.RowHeadersVisible = false;
+            dgvManillas.ColumnHeadersVisible = false;
 
             dgvManillas.Columns.Add(new DataGridViewCheckBoxColumn
             {
@@ -243,6 +245,7 @@ namespace RotoGestionClientes
             dgvSoporteCompas.AutoGenerateColumns = false;
             dgvSoporteCompas.AllowUserToAddRows = false;
             dgvSoporteCompas.RowHeadersVisible = false;
+            dgvSoporteCompas.ColumnHeadersVisible = false;
 
             dgvSoporteCompas.Columns.Add(new DataGridViewCheckBoxColumn
             {

@@ -111,6 +111,7 @@
             dgvPasivas.Location = new Point(17, 28);
             dgvPasivas.Name = "dgvPasivas";
             dgvPasivas.ReadOnly = true;
+            dgvPasivas.RowHeadersVisible = false;
             dgvPasivas.Size = new Size(254, 109);
             dgvPasivas.TabIndex = 2;
             dgvPasivas.CellMouseUp += dgvPasivas_CellMouseUp;

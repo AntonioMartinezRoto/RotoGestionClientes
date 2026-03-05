@@ -39,8 +39,12 @@
             pictureBox2 = new PictureBox();
             group_Balconeras = new GroupBox();
             group_Aguja = new GroupBox();
+            rb_AgujaBalcPerfil = new RadioButton();
+            rb_AgujaBalcGenerica = new RadioButton();
             cmb_AgujaBalconeras = new ComboBox();
             groupBox1 = new GroupBox();
+            groupBox3 = new GroupBox();
+            comboBox1 = new ComboBox();
             groupBox2 = new GroupBox();
             cmb_AgujaPuertaSec = new ComboBox();
             group_Cerraduras = new GroupBox();
@@ -48,6 +52,7 @@
             pictureBox4 = new PictureBox();
             group_Bisagras = new GroupBox();
             dgvBisagras = new DataGridView();
+            btn_DefinitAgujaBalPerfil = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Pasivas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPasivas).BeginInit();
@@ -58,6 +63,7 @@
             group_Balconeras.SuspendLayout();
             group_Aguja.SuspendLayout();
             groupBox1.SuspendLayout();
+            groupBox3.SuspendLayout();
             groupBox2.SuspendLayout();
             group_Cerraduras.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvCerraduras).BeginInit();
@@ -80,12 +86,12 @@
             // group_Pasivas
             // 
             group_Pasivas.Controls.Add(dgvPasivas);
-            group_Pasivas.Location = new Point(579, 79);
+            group_Pasivas.Location = new Point(579, 116);
             group_Pasivas.Name = "group_Pasivas";
-            group_Pasivas.Size = new Size(289, 154);
+            group_Pasivas.Size = new Size(289, 117);
             group_Pasivas.TabIndex = 7;
             group_Pasivas.TabStop = false;
-            group_Pasivas.Text = "Cremona Pasiva";
+            group_Pasivas.Text = "Hoja Pasiva";
             // 
             // dgvPasivas
             // 
@@ -98,16 +104,16 @@
             dgvPasivas.Location = new Point(18, 22);
             dgvPasivas.Name = "dgvPasivas";
             dgvPasivas.ReadOnly = true;
-            dgvPasivas.Size = new Size(253, 118);
+            dgvPasivas.Size = new Size(253, 81);
             dgvPasivas.TabIndex = 2;
             dgvPasivas.CellMouseUp += dgvPasivas_CellMouseUp;
             // 
             // group_Seguridad
             // 
             group_Seguridad.Controls.Add(dgvSeguridad);
-            group_Seguridad.Location = new Point(284, 79);
+            group_Seguridad.Location = new Point(284, 116);
             group_Seguridad.Name = "group_Seguridad";
-            group_Seguridad.Size = new Size(289, 154);
+            group_Seguridad.Size = new Size(289, 117);
             group_Seguridad.TabIndex = 6;
             group_Seguridad.TabStop = false;
             group_Seguridad.Text = "Seguridad";
@@ -123,7 +129,7 @@
             dgvSeguridad.Location = new Point(17, 22);
             dgvSeguridad.Name = "dgvSeguridad";
             dgvSeguridad.ReadOnly = true;
-            dgvSeguridad.Size = new Size(256, 118);
+            dgvSeguridad.Size = new Size(256, 81);
             dgvSeguridad.TabIndex = 2;
             dgvSeguridad.CellMouseUp += dgvSeguridad_CellMouseUp;
             // 
@@ -174,26 +180,54 @@
             // 
             // group_Aguja
             // 
+            group_Aguja.Controls.Add(btn_DefinitAgujaBalPerfil);
             group_Aguja.Controls.Add(cmb_AgujaBalconeras);
+            group_Aguja.Controls.Add(rb_AgujaBalcPerfil);
+            group_Aguja.Controls.Add(rb_AgujaBalcGenerica);
             group_Aguja.Location = new Point(284, 17);
             group_Aguja.Name = "group_Aguja";
-            group_Aguja.Size = new Size(289, 59);
+            group_Aguja.Size = new Size(584, 60);
             group_Aguja.TabIndex = 14;
             group_Aguja.TabStop = false;
             group_Aguja.Text = "Aguja";
+            // 
+            // rb_AgujaBalcPerfil
+            // 
+            rb_AgujaBalcPerfil.AutoSize = true;
+            rb_AgujaBalcPerfil.Location = new Point(313, 22);
+            rb_AgujaBalcPerfil.Name = "rb_AgujaBalcPerfil";
+            rb_AgujaBalcPerfil.Size = new Size(73, 19);
+            rb_AgujaBalcPerfil.TabIndex = 3;
+            rb_AgujaBalcPerfil.TabStop = true;
+            rb_AgujaBalcPerfil.Text = "Por perfil";
+            rb_AgujaBalcPerfil.UseVisualStyleBackColor = true;
+            rb_AgujaBalcPerfil.CheckedChanged += rb_AgujaBalcPerfil_CheckedChanged;
+            // 
+            // rb_AgujaBalcGenerica
+            // 
+            rb_AgujaBalcGenerica.AutoSize = true;
+            rb_AgujaBalcGenerica.Location = new Point(23, 22);
+            rb_AgujaBalcGenerica.Name = "rb_AgujaBalcGenerica";
+            rb_AgujaBalcGenerica.Size = new Size(56, 19);
+            rb_AgujaBalcGenerica.TabIndex = 2;
+            rb_AgujaBalcGenerica.TabStop = true;
+            rb_AgujaBalcGenerica.Text = "Todos";
+            rb_AgujaBalcGenerica.UseVisualStyleBackColor = true;
+            rb_AgujaBalcGenerica.CheckedChanged += rb_AgujaBalcGenerica_CheckedChanged;
             // 
             // cmb_AgujaBalconeras
             // 
             cmb_AgujaBalconeras.DropDownStyle = ComboBoxStyle.DropDownList;
             cmb_AgujaBalconeras.FormattingEnabled = true;
-            cmb_AgujaBalconeras.Location = new Point(17, 22);
+            cmb_AgujaBalconeras.Location = new Point(128, 22);
             cmb_AgujaBalconeras.Name = "cmb_AgujaBalconeras";
-            cmb_AgujaBalconeras.Size = new Size(250, 23);
+            cmb_AgujaBalconeras.Size = new Size(145, 23);
             cmb_AgujaBalconeras.TabIndex = 0;
             cmb_AgujaBalconeras.SelectedValueChanged += cmb_AgujaBalconeras_SelectedValueChanged;
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(groupBox3);
             groupBox1.Controls.Add(groupBox2);
             groupBox1.Controls.Add(group_Cerraduras);
             groupBox1.Controls.Add(pictureBox4);
@@ -204,6 +238,25 @@
             groupBox1.TabIndex = 14;
             groupBox1.TabStop = false;
             groupBox1.Text = "Puerta Secundaria";
+            // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(comboBox1);
+            groupBox3.Location = new Point(579, 17);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(289, 59);
+            groupBox3.TabIndex = 15;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Aguja";
+            // 
+            // comboBox1
+            // 
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Location = new Point(17, 22);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(256, 23);
+            comboBox1.TabIndex = 0;
             // 
             // groupBox2
             // 
@@ -221,7 +274,7 @@
             cmb_AgujaPuertaSec.FormattingEnabled = true;
             cmb_AgujaPuertaSec.Location = new Point(17, 22);
             cmb_AgujaPuertaSec.Name = "cmb_AgujaPuertaSec";
-            cmb_AgujaPuertaSec.Size = new Size(250, 23);
+            cmb_AgujaPuertaSec.Size = new Size(256, 23);
             cmb_AgujaPuertaSec.TabIndex = 0;
             cmb_AgujaPuertaSec.SelectedValueChanged += cmb_AgujaPuertaSec_SelectedValueChanged;
             // 
@@ -285,6 +338,15 @@
             dgvBisagras.TabIndex = 2;
             dgvBisagras.CellMouseUp += dgvBisagras_CellMouseUp;
             // 
+            // btn_DefinitAgujaBalPerfil
+            // 
+            btn_DefinitAgujaBalPerfil.Image = (Image)resources.GetObject("btn_DefinitAgujaBalPerfil.Image");
+            btn_DefinitAgujaBalPerfil.Location = new Point(459, 12);
+            btn_DefinitAgujaBalPerfil.Name = "btn_DefinitAgujaBalPerfil";
+            btn_DefinitAgujaBalPerfil.Size = new Size(48, 42);
+            btn_DefinitAgujaBalPerfil.TabIndex = 4;
+            btn_DefinitAgujaBalPerfil.UseVisualStyleBackColor = true;
+            // 
             // PasoBalconeras
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -306,7 +368,9 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             group_Balconeras.ResumeLayout(false);
             group_Aguja.ResumeLayout(false);
+            group_Aguja.PerformLayout();
             groupBox1.ResumeLayout(false);
+            groupBox3.ResumeLayout(false);
             groupBox2.ResumeLayout(false);
             group_Cerraduras.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvCerraduras).EndInit();
@@ -337,5 +401,10 @@
         private PictureBox pictureBox4;
         private GroupBox group_Bisagras;
         private DataGridView dgvBisagras;
+        private GroupBox groupBox3;
+        private ComboBox comboBox1;
+        private RadioButton rb_AgujaBalcPerfil;
+        private RadioButton rb_AgujaBalcGenerica;
+        private Button btn_DefinitAgujaBalPerfil;
     }
 }

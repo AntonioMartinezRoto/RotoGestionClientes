@@ -8,5 +8,10 @@ namespace RotoGestionClientes
             Create,
             Edit
         }
+        public enum AgujaMode
+        {
+            Todos = 1,
+            PorPerfil = 2
+        }
     }
 }
