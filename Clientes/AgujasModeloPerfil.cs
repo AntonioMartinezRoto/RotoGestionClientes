@@ -119,7 +119,7 @@ namespace RotoGestionClientes
             };
 
             combo.DataSource = _context.Agujas
-                .OrderBy(a => a.Nombre)
+                .OrderBy(a => a.Id)
                 .ToList();
 
             dgvAgujas.Columns.Add(combo);

@@ -390,20 +390,46 @@ namespace RotoGestionClientes
             });
 
             // Tabla por perfil
-            if (_model.AgujaBalconeraTipo == (int)AgujaMode.PorPerfil && _model.AgujasModeloPerfilList != null && _model.AgujasModeloPerfilList.Any())
+            if (_model.AgujasModeloPerfilList != null && _model.AgujasModeloPerfilList.Any())
             {
-                var lista = _model.AgujasModeloPerfilList
-                    .Select(x => new ClienteAgujasModeloPerfil
-                    {
-                        ClienteId = clienteId,
-                        AgujaModeloTipoId = x.AgujaModeloTipoId,
-                        AgujaId = x.AgujaId,
-                        PerfilId = x.PerfilId
-                    })
-                    .ToList();
+                if (_model.AgujaBalconeraTipo == (int)AgujaMode.PorPerfil)
+                    CrearClienteAgujasModeloPerfil(clienteId, (int)AgujasTipoModelo.Balconera);
 
-                _context.ClienteAgujasModeloPerfil.AddRange(lista);
+                if (_model.AgujaPuertaSecTipo == (int)AgujaMode.PorPerfil)
+                    CrearClienteAgujasModeloPerfil(clienteId, (int)AgujasTipoModelo.PuertaSecundaria);
+
+                if (_model.AgujaPuertaTipo == (int)AgujaMode.PorPerfil)
+                    CrearClienteAgujasModeloPerfil(clienteId, (int)AgujasTipoModelo.Puerta);
+
+                //var lista = _model.AgujasModeloPerfilList
+                //    .Where(t => t.AgujaModeloTipoId == (int)AgujasTipoModelo.Balconera)
+                //    .Select(x => new ClienteAgujasModeloPerfil
+                //    {
+                //        ClienteId = clienteId,
+                //        AgujaModeloTipoId = x.AgujaModeloTipoId,
+                //        AgujaId = x.AgujaId,
+                //        PerfilId = x.PerfilId
+                //    })
+                //    .ToList();
+
+                //_context.ClienteAgujasModeloPerfil.AddRange(lista);
             }
+
+        }
+        private void CrearClienteAgujasModeloPerfil(int clienteId, int agujaModeloTipoId)
+        {
+            var lista = _model.AgujasModeloPerfilList
+                        .Where(t => t.AgujaModeloTipoId == agujaModeloTipoId)
+                        .Select(x => new ClienteAgujasModeloPerfil
+                        {
+                            ClienteId = clienteId,
+                            AgujaModeloTipoId = x.AgujaModeloTipoId,
+                            AgujaId = x.AgujaId,
+                            PerfilId = x.PerfilId
+                        })
+                        .ToList();
+
+            _context.ClienteAgujasModeloPerfil.AddRange(lista);
         }
         private void CrearClienteSeguridadVentana(int clienteId)
         {
@@ -655,17 +681,42 @@ namespace RotoGestionClientes
 
             if (_model.AgujaBalconeraTipo == (int)AgujaMode.PorPerfil)
             {
-                var nuevos = _model.AgujasModeloPerfilList
-                            .Select(x => new ClienteAgujasModeloPerfil
-                            {
-                                ClienteId = cliente.Id,
-                                AgujaModeloTipoId = x.AgujaModeloTipoId,
-                                AgujaId = x.AgujaId,
-                                PerfilId = x.PerfilId
-                            });
+                AddAgujasModeloPerfil(cliente.Id, (int)AgujasTipoModelo.Balconera);
+                //var nuevos = _model.AgujasModeloPerfilList
+                //            .Where(t => t.AgujaModeloTipoId == agujaModeloTipoId)
+                //            .Select(x => new ClienteAgujasModeloPerfil
+                //            {
+                //                ClienteId = cliente.Id,
+                //                AgujaModeloTipoId = x.AgujaModeloTipoId,
+                //                AgujaId = x.AgujaId,
+                //                PerfilId = x.PerfilId
+                //            });
 
-                _context.ClienteAgujasModeloPerfil.AddRange(nuevos);
+                //_context.ClienteAgujasModeloPerfil.AddRange(nuevos);
             }
+
+            if (_model.AgujaPuertaSecTipo == (int)AgujaMode.PorPerfil)
+            {
+                AddAgujasModeloPerfil(cliente.Id, (int)AgujasTipoModelo.PuertaSecundaria);
+            }
+            if (_model.AgujaPuertaTipo == (int)AgujaMode.PorPerfil)
+            {
+                AddAgujasModeloPerfil(cliente.Id, (int)AgujasTipoModelo.Puerta);
+            }
+        }
+        private void AddAgujasModeloPerfil(int clienteId, int agujaModeloTipoId)
+        {
+            var nuevos = _model.AgujasModeloPerfilList
+            .Where(t => t.AgujaModeloTipoId == agujaModeloTipoId)
+            .Select(x => new ClienteAgujasModeloPerfil
+            {
+                ClienteId = clienteId,
+                AgujaModeloTipoId = x.AgujaModeloTipoId,
+                AgujaId = x.AgujaId,
+                PerfilId = x.PerfilId
+            });
+
+            _context.ClienteAgujasModeloPerfil.AddRange(nuevos);
         }
         private void UpdateSeguridadVentanas(Cliente cliente)
         {

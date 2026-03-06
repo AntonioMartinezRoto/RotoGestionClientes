@@ -54,12 +54,18 @@ namespace RotoGestionClientes
             rb_AgujaBalcGenerica.CheckedChanged += rb_AgujaBalcGenerica_CheckedChanged;
             rb_AgujaBalcPerfil.CheckedChanged += rb_AgujaBalcPerfil_CheckedChanged;
 
+
+
+
             CrearGridBisagras();
             RellenarGridBisagras();
 
-
             RellenarAgujasPuertaSec();
-            cmb_AgujaPuertaSec.SelectedValue = _model.AgujaPuertaSec != null ? _model.AgujaPuertaSec : -1;
+            InitializeAgujaPuertaSec(_model.AgujaPuertaSecTipo);
+
+            rb_AgujaPuertaSecGenerica.CheckedChanged += rb_AgujaPuertaSecGenerica_CheckedChanged;
+            rb_AgujaPuertaSecPerfil.CheckedChanged += rb_AgujaPuertaSecPerfil_CheckedChanged;
+
         }
 
         private void txt_ObservacionesBalconeras_TextChanged(object sender, EventArgs e)
@@ -153,7 +159,6 @@ namespace RotoGestionClientes
         }
         private void rb_AgujaBalcPerfil_CheckedChanged(object sender, EventArgs e)
         {
-
             if (rb_AgujaBalcPerfil.Checked)
             {
                 InitializeAgujaBalconera((int)AgujaMode.PorPerfil);
@@ -163,6 +168,28 @@ namespace RotoGestionClientes
         private void btn_DefinitAgujaBalPerfil_Click(object sender, EventArgs e)
         {
             var form = new AgujasModeloPerfil(_model, _context, (int)AgujasTipoModelo.Balconera);
+            form.ShowDialog();
+        }
+        private void rb_AgujaPuertaSecGenerica_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_AgujaPuertaSecGenerica.Checked)
+            {
+                InitializeAgujaPuertaSec((int)AgujaMode.Todos);
+                _model.AgujaPuertaSecTipo = (int)AgujaMode.Todos;
+            }
+        }
+        private void rb_AgujaPuertaSecPerfil_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_AgujaPuertaSecPerfil.Checked)
+            {
+                InitializeAgujaPuertaSec((int)AgujaMode.PorPerfil);
+                _model.AgujaPuertaSecTipo = (int)AgujaMode.PorPerfil;
+            }
+        }
+
+        private void btn_DefinirAgujaPuertaSecPerfil_Click(object sender, EventArgs e)
+        {
+            var form = new AgujasModeloPerfil(_model, _context, (int)AgujasTipoModelo.PuertaSecundaria);
             form.ShowDialog();
         }
         #endregion
@@ -351,7 +378,33 @@ namespace RotoGestionClientes
             }
 
         }
+        private void InitializeAgujaPuertaSec(int agujaPuertaSecTipo)
+        {
+            switch (agujaPuertaSecTipo)
+            {
+                case (int)AgujaMode.Todos:
+                    rb_AgujaPuertaSecGenerica.Checked = true;
+                    cmb_AgujaPuertaSec.Enabled = true;
+                    cmb_AgujaPuertaSec.SelectedValue = _model.AgujaPuertaSec != null ? _model.AgujaPuertaSec : -1;
+                    btn_DefinirAgujaPuertaSecPerfil.Enabled = false;
+                    break;
+                case (int)AgujaMode.PorPerfil:
+                    rb_AgujaPuertaSecPerfil.Checked = true;
+                    cmb_AgujaPuertaSec.SelectedValue = -1;
+                    cmb_AgujaPuertaSec.Enabled = false;
+                    btn_DefinirAgujaPuertaSecPerfil.Enabled = true;
+                    break;
+                default:
+                    rb_AgujaPuertaSecGenerica.Checked = true;
+                    cmb_AgujaPuertaSec.Enabled = true;
+                    cmb_AgujaPuertaSec.SelectedValue = _model.AgujaPuertaSec != null ? _model.AgujaPuertaSec : -1;
+                    btn_DefinirAgujaPuertaSecPerfil.Enabled = false;
+                    break;
+            }
+
+        }
         #endregion
+
 
 
 
