@@ -28,5 +28,12 @@ namespace RotoGestionClientes
         public int? AgujaPuerta { get; set; }
         public List<int> BisagrasPuertaSecList { get; set; } = new();
         public List<int> BisagrasPuertaList { get; set; } = new();
+        public List<AgujaModeloPerfilItem> AgujasModeloPerfilList { get; set; } = new();
+    }
+    public class AgujaModeloPerfilItem
+    {
+        public int AgujaModeloTipoId { get; set; }
+        public int AgujaId { get; set; }
+        public int PerfilId { get; set; }
     }
 }

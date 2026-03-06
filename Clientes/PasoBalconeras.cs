@@ -46,16 +46,21 @@ namespace RotoGestionClientes
             RellenarGridSeguridadBalconera();
             RellenarGridCremonaPasivas();
 
+            rb_AgujaBalcGenerica.CheckedChanged -= rb_AgujaBalcGenerica_CheckedChanged;
+            rb_AgujaBalcPerfil.CheckedChanged -= rb_AgujaBalcPerfil_CheckedChanged;
+
             InitializeAgujaBalconera(_model.AgujaBalconeraTipo);
+
+            rb_AgujaBalcGenerica.CheckedChanged += rb_AgujaBalcGenerica_CheckedChanged;
+            rb_AgujaBalcPerfil.CheckedChanged += rb_AgujaBalcPerfil_CheckedChanged;
 
             CrearGridBisagras();
             RellenarGridBisagras();
 
+
             RellenarAgujasPuertaSec();
             cmb_AgujaPuertaSec.SelectedValue = _model.AgujaPuertaSec != null ? _model.AgujaPuertaSec : -1;
         }
-
-
 
         private void txt_ObservacionesBalconeras_TextChanged(object sender, EventArgs e)
         {
@@ -148,12 +153,17 @@ namespace RotoGestionClientes
         }
         private void rb_AgujaBalcPerfil_CheckedChanged(object sender, EventArgs e)
         {
-            
+
             if (rb_AgujaBalcPerfil.Checked)
             {
                 InitializeAgujaBalconera((int)AgujaMode.PorPerfil);
                 _model.AgujaBalconeraTipo = (int)AgujaMode.PorPerfil;
             }
+        }
+        private void btn_DefinitAgujaBalPerfil_Click(object sender, EventArgs e)
+        {
+            var form = new AgujasModeloPerfil(_model, _context, (int)AgujasTipoModelo.Balconera);
+            form.ShowDialog();
         }
         #endregion
 
@@ -339,9 +349,10 @@ namespace RotoGestionClientes
                     btn_DefinitAgujaBalPerfil.Enabled = false;
                     break;
             }
-            
+
         }
         #endregion
+
 
 
 

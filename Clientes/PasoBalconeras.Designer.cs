@@ -39,9 +39,10 @@
             pictureBox2 = new PictureBox();
             group_Balconeras = new GroupBox();
             group_Aguja = new GroupBox();
+            btn_DefinitAgujaBalPerfil = new Button();
+            cmb_AgujaBalconeras = new ComboBox();
             rb_AgujaBalcPerfil = new RadioButton();
             rb_AgujaBalcGenerica = new RadioButton();
-            cmb_AgujaBalconeras = new ComboBox();
             groupBox1 = new GroupBox();
             groupBox3 = new GroupBox();
             comboBox1 = new ComboBox();
@@ -52,7 +53,6 @@
             pictureBox4 = new PictureBox();
             group_Bisagras = new GroupBox();
             dgvBisagras = new DataGridView();
-            btn_DefinitAgujaBalPerfil = new Button();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Pasivas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPasivas).BeginInit();
@@ -191,6 +191,26 @@
             group_Aguja.TabStop = false;
             group_Aguja.Text = "Aguja";
             // 
+            // btn_DefinitAgujaBalPerfil
+            // 
+            btn_DefinitAgujaBalPerfil.Image = (Image)resources.GetObject("btn_DefinitAgujaBalPerfil.Image");
+            btn_DefinitAgujaBalPerfil.Location = new Point(459, 12);
+            btn_DefinitAgujaBalPerfil.Name = "btn_DefinitAgujaBalPerfil";
+            btn_DefinitAgujaBalPerfil.Size = new Size(48, 42);
+            btn_DefinitAgujaBalPerfil.TabIndex = 4;
+            btn_DefinitAgujaBalPerfil.UseVisualStyleBackColor = true;
+            btn_DefinitAgujaBalPerfil.Click += btn_DefinitAgujaBalPerfil_Click;
+            // 
+            // cmb_AgujaBalconeras
+            // 
+            cmb_AgujaBalconeras.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmb_AgujaBalconeras.FormattingEnabled = true;
+            cmb_AgujaBalconeras.Location = new Point(128, 22);
+            cmb_AgujaBalconeras.Name = "cmb_AgujaBalconeras";
+            cmb_AgujaBalconeras.Size = new Size(145, 23);
+            cmb_AgujaBalconeras.TabIndex = 0;
+            cmb_AgujaBalconeras.SelectedValueChanged += cmb_AgujaBalconeras_SelectedValueChanged;
+            // 
             // rb_AgujaBalcPerfil
             // 
             rb_AgujaBalcPerfil.AutoSize = true;
@@ -214,16 +234,6 @@
             rb_AgujaBalcGenerica.Text = "Todos";
             rb_AgujaBalcGenerica.UseVisualStyleBackColor = true;
             rb_AgujaBalcGenerica.CheckedChanged += rb_AgujaBalcGenerica_CheckedChanged;
-            // 
-            // cmb_AgujaBalconeras
-            // 
-            cmb_AgujaBalconeras.DropDownStyle = ComboBoxStyle.DropDownList;
-            cmb_AgujaBalconeras.FormattingEnabled = true;
-            cmb_AgujaBalconeras.Location = new Point(128, 22);
-            cmb_AgujaBalconeras.Name = "cmb_AgujaBalconeras";
-            cmb_AgujaBalconeras.Size = new Size(145, 23);
-            cmb_AgujaBalconeras.TabIndex = 0;
-            cmb_AgujaBalconeras.SelectedValueChanged += cmb_AgujaBalconeras_SelectedValueChanged;
             // 
             // groupBox1
             // 
@@ -337,15 +347,6 @@
             dgvBisagras.Size = new Size(256, 126);
             dgvBisagras.TabIndex = 2;
             dgvBisagras.CellMouseUp += dgvBisagras_CellMouseUp;
-            // 
-            // btn_DefinitAgujaBalPerfil
-            // 
-            btn_DefinitAgujaBalPerfil.Image = (Image)resources.GetObject("btn_DefinitAgujaBalPerfil.Image");
-            btn_DefinitAgujaBalPerfil.Location = new Point(459, 12);
-            btn_DefinitAgujaBalPerfil.Name = "btn_DefinitAgujaBalPerfil";
-            btn_DefinitAgujaBalPerfil.Size = new Size(48, 42);
-            btn_DefinitAgujaBalPerfil.TabIndex = 4;
-            btn_DefinitAgujaBalPerfil.UseVisualStyleBackColor = true;
             // 
             // PasoBalconeras
             // 

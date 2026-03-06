@@ -31,5 +31,6 @@ namespace RotoGestionClientes
         public ClienteAgujas? ClienteAgujases { get; set; }
         public ICollection<ClienteBisagraPuerta> ClienteBisagraPuertas { get; set; } = new List<ClienteBisagraPuerta>();
         public ICollection<ClienteBisagraPuertaSec> ClienteBisagraPuertasSec { get; set; } = new List<ClienteBisagraPuertaSec>();
+        public ICollection<ClienteAgujasModeloPerfil> ClienteAgujasModelos{ get; set; } = new List<ClienteAgujasModeloPerfil>();
     }
 }

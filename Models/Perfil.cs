@@ -15,5 +15,6 @@ namespace RotoGestionClientes
         // Navigation property
         public virtual PerfilTipo PerfilTipo { get; set; } = null!;
         public ICollection<ClientePerfil> ClientePerfiles { get; set; } = new List<ClientePerfil>();
+        public ICollection<ClienteAgujasModeloPerfil> ClienteAgujasModelos { get; set; } = new List<ClienteAgujasModeloPerfil>();
     }
 }

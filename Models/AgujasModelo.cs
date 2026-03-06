@@ -6,8 +6,8 @@ using System.Text;
 
 namespace RotoGestionClientes
 {
-    [Table("Agujas", Schema = "dbo")]
-    public class Aguja
+    [Table("AgujasModelo", Schema = "dbo")]
+    public class AgujasModelo
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -15,6 +15,7 @@ namespace RotoGestionClientes
 
         [Required]
         public string Nombre { get; set; } = null!;
+
         public ICollection<ClienteAgujasModeloPerfil> ClienteAgujasModelos { get; set; } = new List<ClienteAgujasModeloPerfil>();
 
     }

@@ -26,10 +26,12 @@ namespace RotoGestionClientes
         public DbSet<Perfil> Perfiles { get; set; } = null!;
         public DbSet<ClientePerfil> ClientePerfiles { get; set; } = null!;
         public DbSet<Aguja> Agujas { get; set; } = null!;
+        public DbSet<AgujasModelo> AgujasModelo { get; set; } = null!;
         public DbSet<ClienteAgujas> ClienteAgujases { get; set; } = null!;
         public DbSet<Bisagra> Bisagras { get; set; } = null!;
         public DbSet<ClienteBisagraPuerta> ClienteBisagraPuertas { get; set; } = null!;
         public DbSet<ClienteBisagraPuertaSec> ClienteBisagraPuertasSec { get; set; } = null!;
+        public DbSet<ClienteAgujasModeloPerfil> ClienteAgujasModeloPerfil { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -290,6 +292,40 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired()
                       .HasMaxLength(50);
+            });
+            modelBuilder.Entity<AgujasModelo>(entity =>
+            {
+                entity.ToTable("AgujasModelo");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_AgujasModelo");
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+            });
+            modelBuilder.Entity<ClienteAgujasModeloPerfil>(entity =>
+            {
+                entity.ToTable("ClienteAgujasModeloPerfil", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.AgujaModeloTipoId, e.AgujaId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteAgujasModelos)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Aguja)
+                      .WithMany(s => s.ClienteAgujasModelos)
+                      .HasForeignKey(e => e.AgujaId);
+
+                entity.HasOne(e => e.AgujasModelo)
+                      .WithMany(s => s.ClienteAgujasModelos)
+                      .HasForeignKey(e => e.AgujaModeloTipoId);
+
+                entity.HasOne(e => e.Perfil)
+                      .WithMany(s => s.ClienteAgujasModelos)
+                      .HasForeignKey(e => e.PerfilId);
             });
             modelBuilder.Entity<ClienteAgujas>(entity =>
             {
