@@ -271,6 +271,11 @@ namespace RotoGestionClientes
                     .Select(cb => cb.BisagraPuertaId)
                     .ToList(),
 
+                CerradurasPuertaSecList = _context.ClienteCerradurasPuertaSec
+                    .Where(cb => cb.ClienteId == clienteId)
+                    .Select(cb => cb.CerraduraPuertaSecId)
+                    .ToList(),
+
                 AgujasModeloPerfilList = _context.ClienteAgujasModeloPerfil
                     .Where(cam => cam.ClienteId == clienteId)
                     .Select(cam => new AgujaModeloPerfilItem
@@ -349,7 +354,20 @@ namespace RotoGestionClientes
 
             CrearClienteBisagraPuertaSec(cliente.Id);
 
+            CrearClienteCerraduraPuertaSec(cliente.Id);
+
             _context.SaveChanges();
+        }
+        private void CrearClienteCerraduraPuertaSec(int clienteId)
+        {
+            foreach (var cerraduraId in _model.CerradurasPuertaSecList)
+            {
+                _context.ClienteCerradurasPuertaSec.Add(new ClienteCerraduraPuertaSec
+                {
+                    ClienteId = clienteId,
+                    CerraduraPuertaSecId = cerraduraId
+                });
+            }
         }
         private void CrearClienteBisagraPuerta(int clienteId)
         {
@@ -542,6 +560,7 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteAgujases)
                 .Include(c => c.ClienteBisagraPuertas)
                 .Include(c => c.ClienteBisagraPuertasSec)
+                .Include(c => c.ClienteCerradurasPuertaSec)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -574,7 +593,41 @@ namespace RotoGestionClientes
 
             UpdateBisagrasPuertaSec(cliente);
 
+            UpdateCerraduraPuertaSec(cliente);
+
             _context.SaveChanges();
+        }
+        private void UpdateCerraduraPuertaSec(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteCerradurasPuertaSec
+                .Select(cp => cp.CerraduraPuertaSecId)
+                .ToList();
+
+            var itemSeleccionadas = _model.CerradurasPuertaSecList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteCerradurasPuertaSec
+                .Where(cp => !itemSeleccionadas.Contains(cp.CerraduraPuertaSecId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteCerradurasPuertaSec.Add(new ClienteCerraduraPuertaSec
+                {
+                    ClienteId = cliente.Id,
+                    CerraduraPuertaSecId = itemId
+                });
+            }
         }
         private void UpdateBisagrasPuerta(Cliente cliente)
         {
@@ -680,29 +733,15 @@ namespace RotoGestionClientes
                 return;
 
             if (_model.AgujaBalconeraTipo == (int)AgujaMode.PorPerfil)
-            {
                 AddAgujasModeloPerfil(cliente.Id, (int)AgujasTipoModelo.Balconera);
-                //var nuevos = _model.AgujasModeloPerfilList
-                //            .Where(t => t.AgujaModeloTipoId == agujaModeloTipoId)
-                //            .Select(x => new ClienteAgujasModeloPerfil
-                //            {
-                //                ClienteId = cliente.Id,
-                //                AgujaModeloTipoId = x.AgujaModeloTipoId,
-                //                AgujaId = x.AgujaId,
-                //                PerfilId = x.PerfilId
-                //            });
 
-                //_context.ClienteAgujasModeloPerfil.AddRange(nuevos);
-            }
 
             if (_model.AgujaPuertaSecTipo == (int)AgujaMode.PorPerfil)
-            {
                 AddAgujasModeloPerfil(cliente.Id, (int)AgujasTipoModelo.PuertaSecundaria);
-            }
+
             if (_model.AgujaPuertaTipo == (int)AgujaMode.PorPerfil)
-            {
                 AddAgujasModeloPerfil(cliente.Id, (int)AgujasTipoModelo.Puerta);
-            }
+
         }
         private void AddAgujasModeloPerfil(int clienteId, int agujaModeloTipoId)
         {

@@ -18,6 +18,7 @@ namespace RotoGestionClientes
         private BindingSource _bindingSourceSeguridadVentana = new BindingSource();
         private BindingSource _bindingSourceCremonaPasiva = new BindingSource();
         private BindingSource _bindingSourceBisagras = new BindingSource();
+        private BindingSource _bindingSourceCerradurasPuertaSec = new BindingSource();
 
         #endregion
 
@@ -40,6 +41,8 @@ namespace RotoGestionClientes
         {
             txt_ObservacionesBalconeras.Text = _model.ObservacionesBalconeras;
 
+            #region Balconeras
+            
             RellenarAgujasBalconeras();
             CrearGridCremonaPasivas();
             CrearGridSeguridadBalconera();
@@ -54,18 +57,27 @@ namespace RotoGestionClientes
             rb_AgujaBalcGenerica.CheckedChanged += rb_AgujaBalcGenerica_CheckedChanged;
             rb_AgujaBalcPerfil.CheckedChanged += rb_AgujaBalcPerfil_CheckedChanged;
 
+            #endregion
 
-
+            #region Puertas Secundarias
 
             CrearGridBisagras();
             RellenarGridBisagras();
 
+            CrearGridCerraduraPuertaSec();
+            RellenarGridCerraduraPuertaSec();
+
             RellenarAgujasPuertaSec();
+
+            rb_AgujaPuertaSecGenerica.CheckedChanged -= rb_AgujaPuertaSecGenerica_CheckedChanged;
+            rb_AgujaPuertaSecPerfil.CheckedChanged -= rb_AgujaPuertaSecPerfil_CheckedChanged;
+
             InitializeAgujaPuertaSec(_model.AgujaPuertaSecTipo);
 
             rb_AgujaPuertaSecGenerica.CheckedChanged += rb_AgujaPuertaSecGenerica_CheckedChanged;
             rb_AgujaPuertaSecPerfil.CheckedChanged += rb_AgujaPuertaSecPerfil_CheckedChanged;
 
+            #endregion
         }
 
         private void txt_ObservacionesBalconeras_TextChanged(object sender, EventArgs e)
@@ -149,6 +161,25 @@ namespace RotoGestionClientes
                 }
             }
         }
+        private void dgvCerraduras_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (e.ColumnIndex < 0) return;
+
+            if (dgvCerraduras.Columns[e.ColumnIndex] is DataGridViewCheckBoxColumn)
+            {
+                dgvCerraduras.EndEdit();
+                var item = (GridItem)dgvCerraduras.Rows[e.RowIndex].DataBoundItem;
+
+                if (item.Selected)
+                {
+                    _model.CerradurasPuertaSecList.Add(item.Id);
+                }
+                else
+                {
+                    _model.CerradurasPuertaSecList.Remove(item.Id);
+                }
+            }
+        }
         private void rb_AgujaBalcGenerica_CheckedChanged(object sender, EventArgs e)
         {
             if (rb_AgujaBalcGenerica.Checked)
@@ -186,7 +217,6 @@ namespace RotoGestionClientes
                 _model.AgujaPuertaSecTipo = (int)AgujaMode.PorPerfil;
             }
         }
-
         private void btn_DefinirAgujaPuertaSecPerfil_Click(object sender, EventArgs e)
         {
             var form = new AgujasModeloPerfil(_model, _context, (int)AgujasTipoModelo.PuertaSecundaria);
@@ -338,6 +368,33 @@ namespace RotoGestionClientes
             dgvBisagras.ReadOnly = false;
             dgvBisagras.Enabled = true;
         }
+        private void CrearGridCerraduraPuertaSec()
+        {
+            dgvCerraduras.AutoGenerateColumns = false;
+            dgvCerraduras.AllowUserToAddRows = false;
+            dgvCerraduras.RowHeadersVisible = false;
+            dgvCerraduras.ColumnHeadersVisible = false;
+
+            dgvCerraduras.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                DataPropertyName = "Selected",
+                HeaderText = "",
+                Width = 30
+            });
+
+            dgvCerraduras.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = "Nombre",
+                HeaderText = "Tipo",
+                ReadOnly = true,
+                Width = 100,
+                Name = "Nombre",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            dgvCerraduras.ReadOnly = false;
+            dgvCerraduras.Enabled = true;
+        }
         private void RellenarGridBisagras()
         {
             var lista = _context.Bisagras
@@ -352,6 +409,22 @@ namespace RotoGestionClientes
 
             _bindingSourceBisagras.DataSource = lista;
             dgvBisagras.DataSource = _bindingSourceBisagras;
+        }
+
+        private void RellenarGridCerraduraPuertaSec()
+        {
+            var lista = _context.CerradurasPuertaSec
+                        .Select(f => new GridItem
+                        {
+                            Id = f.Id,
+                            Nombre = f.Nombre,
+                            Selected = _model.CerradurasPuertaSecList.Contains(f.Id)
+                        })
+                        .OrderBy(f => f.Id)
+                        .ToList();
+
+            _bindingSourceCerradurasPuertaSec.DataSource = lista;
+            dgvCerraduras.DataSource = _bindingSourceCerradurasPuertaSec;
         }
         private void InitializeAgujaBalconera(int agujaBalconeraTipo)
         {
@@ -404,11 +477,5 @@ namespace RotoGestionClientes
 
         }
         #endregion
-
-
-
-
-
-
     }
 }

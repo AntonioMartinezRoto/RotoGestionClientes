@@ -46,14 +46,14 @@
             groupBox1 = new GroupBox();
             groupBox2 = new GroupBox();
             cmb_AgujaPuertaSec = new ComboBox();
+            btn_DefinirAgujaPuertaSecPerfil = new Button();
+            rb_AgujaPuertaSecGenerica = new RadioButton();
+            rb_AgujaPuertaSecPerfil = new RadioButton();
             group_Cerraduras = new GroupBox();
             dgvCerraduras = new DataGridView();
             pictureBox4 = new PictureBox();
             group_Bisagras = new GroupBox();
             dgvBisagras = new DataGridView();
-            btn_DefinirAgujaPuertaSecPerfil = new Button();
-            rb_AgujaPuertaSecPerfil = new RadioButton();
-            rb_AgujaPuertaSecGenerica = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Pasivas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPasivas).BeginInit();
@@ -271,6 +271,40 @@
             cmb_AgujaPuertaSec.TabIndex = 0;
             cmb_AgujaPuertaSec.SelectedValueChanged += cmb_AgujaPuertaSec_SelectedValueChanged;
             // 
+            // btn_DefinirAgujaPuertaSecPerfil
+            // 
+            btn_DefinirAgujaPuertaSecPerfil.Image = (Image)resources.GetObject("btn_DefinirAgujaPuertaSecPerfil.Image");
+            btn_DefinirAgujaPuertaSecPerfil.Location = new Point(459, 13);
+            btn_DefinirAgujaPuertaSecPerfil.Name = "btn_DefinirAgujaPuertaSecPerfil";
+            btn_DefinirAgujaPuertaSecPerfil.Size = new Size(48, 42);
+            btn_DefinirAgujaPuertaSecPerfil.TabIndex = 7;
+            btn_DefinirAgujaPuertaSecPerfil.UseVisualStyleBackColor = true;
+            btn_DefinirAgujaPuertaSecPerfil.Click += btn_DefinirAgujaPuertaSecPerfil_Click;
+            // 
+            // rb_AgujaPuertaSecGenerica
+            // 
+            rb_AgujaPuertaSecGenerica.AutoSize = true;
+            rb_AgujaPuertaSecGenerica.Location = new Point(23, 23);
+            rb_AgujaPuertaSecGenerica.Name = "rb_AgujaPuertaSecGenerica";
+            rb_AgujaPuertaSecGenerica.Size = new Size(56, 19);
+            rb_AgujaPuertaSecGenerica.TabIndex = 5;
+            rb_AgujaPuertaSecGenerica.TabStop = true;
+            rb_AgujaPuertaSecGenerica.Text = "Todos";
+            rb_AgujaPuertaSecGenerica.UseVisualStyleBackColor = true;
+            rb_AgujaPuertaSecGenerica.CheckedChanged += rb_AgujaPuertaSecGenerica_CheckedChanged;
+            // 
+            // rb_AgujaPuertaSecPerfil
+            // 
+            rb_AgujaPuertaSecPerfil.AutoSize = true;
+            rb_AgujaPuertaSecPerfil.Location = new Point(313, 23);
+            rb_AgujaPuertaSecPerfil.Name = "rb_AgujaPuertaSecPerfil";
+            rb_AgujaPuertaSecPerfil.Size = new Size(73, 19);
+            rb_AgujaPuertaSecPerfil.TabIndex = 6;
+            rb_AgujaPuertaSecPerfil.TabStop = true;
+            rb_AgujaPuertaSecPerfil.Text = "Por perfil";
+            rb_AgujaPuertaSecPerfil.UseVisualStyleBackColor = true;
+            rb_AgujaPuertaSecPerfil.CheckedChanged += rb_AgujaPuertaSecPerfil_CheckedChanged;
+            // 
             // group_Cerraduras
             // 
             group_Cerraduras.Controls.Add(dgvCerraduras);
@@ -294,6 +328,7 @@
             dgvCerraduras.ReadOnly = true;
             dgvCerraduras.Size = new Size(253, 126);
             dgvCerraduras.TabIndex = 2;
+            dgvCerraduras.CellMouseUp += dgvCerraduras_CellMouseUp;
             // 
             // pictureBox4
             // 
@@ -330,40 +365,6 @@
             dgvBisagras.Size = new Size(256, 126);
             dgvBisagras.TabIndex = 2;
             dgvBisagras.CellMouseUp += dgvBisagras_CellMouseUp;
-            // 
-            // btn_DefinirAgujaPuertaSecPerfil
-            // 
-            btn_DefinirAgujaPuertaSecPerfil.Image = (Image)resources.GetObject("btn_DefinirAgujaPuertaSecPerfil.Image");
-            btn_DefinirAgujaPuertaSecPerfil.Location = new Point(459, 13);
-            btn_DefinirAgujaPuertaSecPerfil.Name = "btn_DefinirAgujaPuertaSecPerfil";
-            btn_DefinirAgujaPuertaSecPerfil.Size = new Size(48, 42);
-            btn_DefinirAgujaPuertaSecPerfil.TabIndex = 7;
-            btn_DefinirAgujaPuertaSecPerfil.UseVisualStyleBackColor = true;
-            btn_DefinirAgujaPuertaSecPerfil.Click += btn_DefinirAgujaPuertaSecPerfil_Click;
-            // 
-            // rb_AgujaPuertaSecPerfil
-            // 
-            rb_AgujaPuertaSecPerfil.AutoSize = true;
-            rb_AgujaPuertaSecPerfil.Location = new Point(313, 23);
-            rb_AgujaPuertaSecPerfil.Name = "rb_AgujaPuertaSecPerfil";
-            rb_AgujaPuertaSecPerfil.Size = new Size(73, 19);
-            rb_AgujaPuertaSecPerfil.TabIndex = 6;
-            rb_AgujaPuertaSecPerfil.TabStop = true;
-            rb_AgujaPuertaSecPerfil.Text = "Por perfil";
-            rb_AgujaPuertaSecPerfil.UseVisualStyleBackColor = true;
-            rb_AgujaPuertaSecPerfil.CheckedChanged += rb_AgujaPuertaSecPerfil_CheckedChanged;
-            // 
-            // rb_AgujaPuertaSecGenerica
-            // 
-            rb_AgujaPuertaSecGenerica.AutoSize = true;
-            rb_AgujaPuertaSecGenerica.Location = new Point(23, 23);
-            rb_AgujaPuertaSecGenerica.Name = "rb_AgujaPuertaSecGenerica";
-            rb_AgujaPuertaSecGenerica.Size = new Size(56, 19);
-            rb_AgujaPuertaSecGenerica.TabIndex = 5;
-            rb_AgujaPuertaSecGenerica.TabStop = true;
-            rb_AgujaPuertaSecGenerica.Text = "Todos";
-            rb_AgujaPuertaSecGenerica.UseVisualStyleBackColor = true;
-            rb_AgujaPuertaSecGenerica.CheckedChanged += rb_AgujaPuertaSecGenerica_CheckedChanged;
             // 
             // PasoBalconeras
             // 
