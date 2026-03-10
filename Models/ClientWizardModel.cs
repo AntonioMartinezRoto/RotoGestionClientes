@@ -12,6 +12,7 @@ namespace RotoGestionClientes
         public string? Alias { get; set; }
         public string? ObservacionesVentanas { get; set; }
         public string? ObservacionesBalconeras { get; set; }
+        public string? ObservacionesPuertas { get; set; }
         public List<int> PerfilTipoList { get; set; } = new();
         public List<int> SoftwareList { get; set; } = new();
         public List<int> ManillasList { get; set; } = new();
@@ -30,6 +31,7 @@ namespace RotoGestionClientes
         public List<int> BisagrasPuertaList { get; set; } = new();
         public List<AgujaModeloPerfilItem> AgujasModeloPerfilList { get; set; } = new();
         public List<int> CerradurasPuertaSecList { get; set; } = new();
+        public List<int> CerradurasPuertaList { get; set; } = new();
     }
     public class AgujaModeloPerfilItem
     {

@@ -106,7 +106,8 @@ namespace RotoGestionClientes
                     new PasoCorrederas(_model, _context),
                     new PasoElevables(_model, _context),
                     new PasoEspeciales(_model, _context),
-                    new PasoMaquinas(_model, _context)
+                    new PasoMaquinas(_model, _context),
+                    new PasoDocumentosAsociados(_model, _context)
                 };
 
             CreateSidebar();
@@ -119,7 +120,7 @@ namespace RotoGestionClientes
 
             string[] titles =
                             {
-                                "Datos Generales",
+                                "Datos generales",
                                 "Ventanas OB-PRAC",
                                 "Balconeras",
                                 "Puertas",
@@ -128,6 +129,7 @@ namespace RotoGestionClientes
                                 "Elevables",
                                 "Especiales",
                                 "Máquinas",
+                                "Documentos asociados"
                             };
 
             for (int i = 0; i < titles.Length; i++)
@@ -220,6 +222,7 @@ namespace RotoGestionClientes
                 Comentarios = cliente.Comentarios,
                 ObservacionesVentanas = cliente.ObservacionesVentanas,
                 ObservacionesBalconeras = cliente.ObservacionesBalconeras,
+                ObservacionesPuertas = cliente.ObservacionesPuertas,
 
                 SoftwareList = _context.ClienteSoftwares
                     .Where(cs => cs.ClienteId == clienteId)
@@ -276,6 +279,11 @@ namespace RotoGestionClientes
                     .Select(cb => cb.CerraduraPuertaSecId)
                     .ToList(),
 
+                CerradurasPuertaList = _context.ClienteCerradurasPuerta
+                    .Where(cb => cb.ClienteId == clienteId)
+                    .Select(cb => cb.CerraduraPuertaId)
+                    .ToList(),
+
                 AgujasModeloPerfilList = _context.ClienteAgujasModeloPerfil
                     .Where(cam => cam.ClienteId == clienteId)
                     .Select(cam => new AgujaModeloPerfilItem
@@ -315,7 +323,6 @@ namespace RotoGestionClientes
 
         }
 
-
         #region Creación cliente
         private void CrearCliente()
         {
@@ -326,7 +333,8 @@ namespace RotoGestionClientes
                 Alias = _model.Alias,
                 Comentarios = _model.Comentarios,
                 ObservacionesVentanas = _model.ObservacionesVentanas,
-                ObservacionesBalconeras = _model.ObservacionesBalconeras
+                ObservacionesBalconeras = _model.ObservacionesBalconeras,
+                ObservacionesPuertas = _model.ObservacionesPuertas
             };
 
             _context.Clientes.Add(cliente);
@@ -356,7 +364,20 @@ namespace RotoGestionClientes
 
             CrearClienteCerraduraPuertaSec(cliente.Id);
 
+            CrearClienteCerraduraPuerta(cliente.Id);
+
             _context.SaveChanges();
+        }
+        private void CrearClienteCerraduraPuerta(int clienteId)
+        {
+            foreach (var cerraduraId in _model.CerradurasPuertaList)
+            {
+                _context.ClienteCerradurasPuerta.Add(new ClienteCerraduraPuerta
+                {
+                    ClienteId = clienteId,
+                    CerraduraPuertaId = cerraduraId
+                });
+            }
         }
         private void CrearClienteCerraduraPuertaSec(int clienteId)
         {
@@ -418,19 +439,6 @@ namespace RotoGestionClientes
 
                 if (_model.AgujaPuertaTipo == (int)AgujaMode.PorPerfil)
                     CrearClienteAgujasModeloPerfil(clienteId, (int)AgujasTipoModelo.Puerta);
-
-                //var lista = _model.AgujasModeloPerfilList
-                //    .Where(t => t.AgujaModeloTipoId == (int)AgujasTipoModelo.Balconera)
-                //    .Select(x => new ClienteAgujasModeloPerfil
-                //    {
-                //        ClienteId = clienteId,
-                //        AgujaModeloTipoId = x.AgujaModeloTipoId,
-                //        AgujaId = x.AgujaId,
-                //        PerfilId = x.PerfilId
-                //    })
-                //    .ToList();
-
-                //_context.ClienteAgujasModeloPerfil.AddRange(lista);
             }
 
         }
@@ -561,6 +569,7 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteBisagraPuertas)
                 .Include(c => c.ClienteBisagraPuertasSec)
                 .Include(c => c.ClienteCerradurasPuertaSec)
+                .Include(c => c.ClienteCerradurasPuerta)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -570,6 +579,7 @@ namespace RotoGestionClientes
             cliente.Comentarios = _model.Comentarios;
             cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
             cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
+            cliente.ObservacionesPuertas = _model.ObservacionesPuertas;
 
             UpdateClientePerfilTipo(cliente);
 
@@ -595,7 +605,41 @@ namespace RotoGestionClientes
 
             UpdateCerraduraPuertaSec(cliente);
 
+            UpdateCerraduraPuerta(cliente);
+
             _context.SaveChanges();
+        }
+        private void UpdateCerraduraPuerta(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteCerradurasPuerta
+                .Select(cp => cp.CerraduraPuertaId)
+                .ToList();
+
+            var itemSeleccionadas = _model.CerradurasPuertaList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteCerradurasPuerta
+                .Where(cp => !itemSeleccionadas.Contains(cp.CerraduraPuertaId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteCerradurasPuerta.Add(new ClienteCerraduraPuerta
+                {
+                    ClienteId = cliente.Id,
+                    CerraduraPuertaId = itemId
+                });
+            }
         }
         private void UpdateCerraduraPuertaSec(Cliente cliente)
         {

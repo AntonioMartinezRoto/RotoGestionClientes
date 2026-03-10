@@ -20,6 +20,7 @@ namespace RotoGestionClientes
         public string? Comentarios { get; set; }
         public string? ObservacionesVentanas { get; set; }
         public string? ObservacionesBalconeras { get; set; }
+        public string? ObservacionesPuertas { get; set; }
         public ICollection<ClienteSeguridadVentana> ClienteSeguridadVentanas { get; set; } = new List<ClienteSeguridadVentana>();
         public ICollection<ClientePerfilTipo> ClientePerfilTipos { get; set; } = new List<ClientePerfilTipo>();
         public ICollection<ClienteSoftware> ClienteSoftwares { get; set; } = new List<ClienteSoftware>();
@@ -33,5 +34,6 @@ namespace RotoGestionClientes
         public ICollection<ClienteBisagraPuertaSec> ClienteBisagraPuertasSec { get; set; } = new List<ClienteBisagraPuertaSec>();
         public ICollection<ClienteAgujasModeloPerfil> ClienteAgujasModelos{ get; set; } = new List<ClienteAgujasModeloPerfil>();
         public ICollection<ClienteCerraduraPuertaSec> ClienteCerradurasPuertaSec { get; set; } = new List<ClienteCerraduraPuertaSec>();
+        public ICollection<ClienteCerraduraPuerta> ClienteCerradurasPuerta { get; set; } = new List<ClienteCerraduraPuerta>();
     }
 }

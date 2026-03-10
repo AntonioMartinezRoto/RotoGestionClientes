@@ -16,6 +16,9 @@ namespace RotoGestionClientes
         [Required]
         public string Nombre { get; set; } = null!;
 
+        [Required]
+        public bool Activa { get; set; } = true;
+
         public ICollection<ClienteManilla> ClienteManillas { get; set; } = new List<ClienteManilla>();
 
     }

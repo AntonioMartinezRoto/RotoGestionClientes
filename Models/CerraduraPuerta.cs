@@ -6,8 +6,8 @@ using System.Text;
 
 namespace RotoGestionClientes
 {
-    [Table("CerraduraPuertaSec", Schema = "dbo")]
-    public class CerraduraPuertaSec
+    [Table("CerraduraPuerta", Schema = "dbo")]
+    public class CerraduraPuerta
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
@@ -19,6 +19,6 @@ namespace RotoGestionClientes
         [Required]
         public bool Activa { get; set; } = true;
 
-        public ICollection<ClienteCerraduraPuertaSec> ClienteCerradurasPuertaSec { get; set; } = new List<ClienteCerraduraPuertaSec>();
+        public ICollection<ClienteCerraduraPuerta> ClienteCerradurasPuerta { get; set; } = new List<ClienteCerraduraPuerta>();
     }
 }

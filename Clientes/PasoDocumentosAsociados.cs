@@ -8,30 +8,39 @@ using System.Windows.Forms;
 
 namespace RotoGestionClientes
 {
-    public partial class PasoElevables : UserControl
+    public partial class PasoDocumentosAsociados : UserControl
     {
         #region Private properties
 
         private readonly ClientWizardModel _model;
         private ApplicationDbContext _context;
-        private BindingSource _bindingSourcePerfilTipo = new BindingSource();
+        private BindingSource _bindingSourceDocumentosAsociados = new BindingSource();
 
         #endregion
 
-
-
         #region Constructors
-        public PasoElevables()
+        public PasoDocumentosAsociados()
         {
             InitializeComponent();
         }
-        public PasoElevables(ClientWizardModel model, ApplicationDbContext context)
+        public PasoDocumentosAsociados(ClientWizardModel model, ApplicationDbContext context)
         {
             InitializeComponent();
             _model = model;
             _context = context;
 
         }
+        #endregion
+
+        #region Events
+
+
+        #endregion
+
+        #region Private methods
+
+
+
         #endregion
     }
 }

@@ -270,6 +270,7 @@ namespace RotoGestionClientes
         private void RellenarGridPerFilTipo()
         {
             var lista = _context.PerfilTipos
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,
@@ -323,6 +324,7 @@ namespace RotoGestionClientes
         private void RellenarGridManillas()
         {
             var lista = _context.Manillas
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,
@@ -370,7 +372,7 @@ namespace RotoGestionClientes
             cmb_Software.SelectedValueChanged -= cmb_Software_SelectedValueChanged;
 
             List<Software> softwareList = new List<Software>();
-            softwareList = _context.Softwares.OrderBy(s => s.Id).ToList();
+            softwareList = _context.Softwares.Where(f => f.Activa).OrderBy(s => s.Id).ToList();
 
             cmb_Software.DataSource = null;
             cmb_Software.DataSource = softwareList;

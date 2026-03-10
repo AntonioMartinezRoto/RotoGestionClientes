@@ -198,6 +198,7 @@ namespace RotoGestionClientes
         private void RellenarGridSeguridadVentana()
         {
             var lista = _context.SeguridadVentanas
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,
@@ -213,6 +214,7 @@ namespace RotoGestionClientes
         private void RellenarGridCremonaPasivas()
         {
             var lista = _context.CremonaPasivaVentanaTipos
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,
@@ -228,7 +230,7 @@ namespace RotoGestionClientes
         private void RellenarGridCremonaPasivasPract()
         {
             var lista = _context.CremonaPasivaVentanaTipos
-                        .Where(f => !f.Nombre.Contains("Perimetral"))
+                        .Where(f => !f.Nombre.Contains("Perimetral") && f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,

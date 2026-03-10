@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace RotoGestionClientes
@@ -9,6 +10,9 @@ namespace RotoGestionClientes
         public int Id { get; set; }
 
         public string Nombre { get; set; } = null!;
+
+        [Required]
+        public bool Activa { get; set; } = true;
 
         public int PerfilTipoId { get; set; }
 

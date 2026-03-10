@@ -77,6 +77,12 @@ namespace RotoGestionClientes
             rb_AgujaPuertaSecGenerica.CheckedChanged += rb_AgujaPuertaSecGenerica_CheckedChanged;
             rb_AgujaPuertaSecPerfil.CheckedChanged += rb_AgujaPuertaSecPerfil_CheckedChanged;
 
+            if(_model.AgujaBalconeraTipo == 0)
+                _model.AgujaBalconeraTipo = (int)AgujaMode.Todos;
+
+            if (_model.AgujaPuertaSecTipo == 0)
+                _model.AgujaPuertaSecTipo = (int)AgujaMode.Todos;
+
             #endregion
         }
 
@@ -230,7 +236,7 @@ namespace RotoGestionClientes
             cmb_AgujaBalconeras.SelectedValueChanged -= cmb_AgujaBalconeras_SelectedValueChanged;
 
             List<Aguja> agujaList = new List<Aguja>();
-            agujaList = _context.Agujas.OrderBy(s => s.Id).ToList();
+            agujaList = _context.Agujas.Where(f => f.Activa).OrderBy(s => s.Id).ToList();
 
             cmb_AgujaBalconeras.DataSource = null;
             cmb_AgujaBalconeras.DataSource = agujaList;
@@ -244,7 +250,7 @@ namespace RotoGestionClientes
         private void RellenarAgujasPuertaSec()
         {
             List<Aguja> agujaList = new List<Aguja>();
-            agujaList = _context.Agujas.OrderBy(s => s.Id).ToList();
+            agujaList = _context.Agujas.Where(f => f.Activa).OrderBy(s => s.Id).ToList();
 
             cmb_AgujaPuertaSec.SelectedValueChanged -= cmb_AgujaPuertaSec_SelectedValueChanged;
 
@@ -314,6 +320,7 @@ namespace RotoGestionClientes
         private void RellenarGridSeguridadBalconera()
         {
             var lista = _context.SeguridadVentanas
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,
@@ -329,6 +336,7 @@ namespace RotoGestionClientes
         private void RellenarGridCremonaPasivas()
         {
             var lista = _context.CremonaPasivaVentanaTipos
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,
@@ -398,6 +406,7 @@ namespace RotoGestionClientes
         private void RellenarGridBisagras()
         {
             var lista = _context.Bisagras
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,
@@ -410,10 +419,10 @@ namespace RotoGestionClientes
             _bindingSourceBisagras.DataSource = lista;
             dgvBisagras.DataSource = _bindingSourceBisagras;
         }
-
         private void RellenarGridCerraduraPuertaSec()
         {
             var lista = _context.CerradurasPuertaSec
+                        .Where(f => f.Activa)
                         .Select(f => new GridItem
                         {
                             Id = f.Id,

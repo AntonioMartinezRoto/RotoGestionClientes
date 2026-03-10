@@ -34,6 +34,8 @@ namespace RotoGestionClientes
         public DbSet<ClienteAgujasModeloPerfil> ClienteAgujasModeloPerfil { get; set; } = null!;
         public DbSet<CerraduraPuertaSec> CerradurasPuertaSec { get; set; } = null!;
         public DbSet<ClienteCerraduraPuertaSec> ClienteCerradurasPuertaSec { get; set; } = null!;
+        public DbSet<CerraduraPuerta> CerradurasPuerta { get; set; } = null!;
+        public DbSet<ClienteCerraduraPuerta> ClienteCerradurasPuerta { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -56,6 +58,7 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Comentarios);
                 entity.Property(e => e.ObservacionesVentanas);
                 entity.Property(e => e.ObservacionesBalconeras);
+                entity.Property(e => e.ObservacionesPuertas);
             });
             modelBuilder.Entity<PerfilTipo>(entity =>
             {
@@ -70,6 +73,9 @@ namespace RotoGestionClientes
                       .IsRequired();
 
                 entity.Property(e => e.NombreAbreviado);
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();    
             });
             modelBuilder.Entity<CremonaPasivaVentanaTipos>(entity =>
             {
@@ -94,6 +100,10 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Nombre)
                       .IsRequired();
+
+                entity.Property(e => e.Activa)
+                        .IsRequired();
+
             });
             modelBuilder.Entity<ClienteSeguridadVentana>(entity =>
             {
@@ -136,6 +146,9 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Nombre)
                       .IsRequired();
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
             });
             modelBuilder.Entity<ClienteSoftware>(entity =>
             {
@@ -163,6 +176,9 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Nombre)
                       .IsRequired();
+
+                entity.Property(e => e.Activa)
+                    .IsRequired();
             });
             modelBuilder.Entity<ClienteManilla>(entity =>
             {
@@ -190,6 +206,9 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Nombre)
                       .IsRequired();
+
+                entity.Property(e => e.Activa)
+                        .IsRequired();
 
                 entity.HasOne(e => e.PerfilTipo)
                       .WithMany(p => p.SoporteCompases)
@@ -222,6 +241,9 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Nombre)
                       .IsRequired();
+
+                entity.Property(e => e.Activa)
+                    .IsRequired();
             });
             modelBuilder.Entity<ClienteCremonaPasivaVentana>(entity =>
             {
@@ -264,6 +286,9 @@ namespace RotoGestionClientes
                       .IsRequired()
                       .HasMaxLength(50);
 
+                entity.Property(e => e.Activa)
+                        .IsRequired();
+
                 entity.HasOne(e => e.PerfilTipo)
                       .WithMany(p => p.Perfiles)
                       .HasForeignKey(e => e.PerfilTipoId)
@@ -294,6 +319,9 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired()
                       .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                    .IsRequired();
             });
             modelBuilder.Entity<AgujasModelo>(entity =>
             {
@@ -310,7 +338,7 @@ namespace RotoGestionClientes
             {
                 entity.ToTable("ClienteAgujasModeloPerfil", "dbo");
 
-                entity.HasKey(e => new { e.ClienteId, e.AgujaModeloTipoId, e.AgujaId });
+                entity.HasKey(e => new { e.ClienteId, e.AgujaModeloTipoId, e.PerfilId });
 
                 entity.HasOne(e => e.Cliente)
                       .WithMany(c => c.ClienteAgujasModelos)
@@ -368,6 +396,9 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired()
                       .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                        .IsRequired();
             });
             modelBuilder.Entity<ClienteBisagraPuerta>(entity =>
             {
@@ -409,6 +440,9 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired()
                       .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                        .IsRequired();
             });
             modelBuilder.Entity<ClienteCerraduraPuertaSec>(entity =>
             {
@@ -424,6 +458,35 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.CerraduraPuertaSec)
                       .WithMany(s => s.ClienteCerradurasPuertaSec)
                       .HasForeignKey(e => e.CerraduraPuertaSecId);
+            });
+            modelBuilder.Entity<CerraduraPuerta>(entity =>
+            {
+                entity.ToTable("CerraduraPuerta");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_CerraduraPuerta");
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
+            });
+            modelBuilder.Entity<ClienteCerraduraPuerta>(entity =>
+            {
+                entity.ToTable("ClienteCerraduraPuerta", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.CerraduraPuertaId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteCerradurasPuerta)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.CerraduraPuerta)
+                      .WithMany(s => s.ClienteCerradurasPuerta)
+                      .HasForeignKey(e => e.CerraduraPuertaId);
             });
         }
     }
