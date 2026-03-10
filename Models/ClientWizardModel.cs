@@ -32,6 +32,9 @@ namespace RotoGestionClientes
         public List<AgujaModeloPerfilItem> AgujasModeloPerfilList { get; set; } = new();
         public List<int> CerradurasPuertaSecList { get; set; } = new();
         public List<int> CerradurasPuertaList { get; set; } = new();
+        public bool PorteroElectrico { get; set; } = true;
+        public bool Cilindro { get; set; } = true;
+        public int? CilindroMedida { get; set; }
     }
     public class AgujaModeloPerfilItem
     {

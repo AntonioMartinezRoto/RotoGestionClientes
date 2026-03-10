@@ -740,3 +740,15 @@ CREATE TABLE dbo.ClienteCerraduraPuerta
         REFERENCES dbo.CerraduraPuerta(Id)
 );
 GO
+
+CREATE TABLE dbo.ClienteConfiguracionPuerta
+(
+    ClienteId INT NOT NULL,
+	PorteroElectrico BIT NOT NULL,
+    Cilindro BIT NOT NULL,
+	CilindroMedida INT NULL
+
+    CONSTRAINT PK_ClienteConfiguracionPuerta
+        PRIMARY KEY CLUSTERED (ClienteId),
+);
+GO

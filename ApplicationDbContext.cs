@@ -36,12 +36,13 @@ namespace RotoGestionClientes
         public DbSet<ClienteCerraduraPuertaSec> ClienteCerradurasPuertaSec { get; set; } = null!;
         public DbSet<CerraduraPuerta> CerradurasPuerta { get; set; } = null!;
         public DbSet<ClienteCerraduraPuerta> ClienteCerradurasPuerta { get; set; } = null!;
+        public DbSet<ClienteConfiguracionPuerta> ClienteConfiguracionPuerta { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            // Configuración de Cliente (Fluent API)
+            // Configuración  (Fluent API)
             modelBuilder.Entity<Cliente>(entity =>
             {
                 entity.ToTable("Cliente", "dbo");
@@ -487,6 +488,25 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.CerraduraPuerta)
                       .WithMany(s => s.ClienteCerradurasPuerta)
                       .HasForeignKey(e => e.CerraduraPuertaId);
+            });
+            modelBuilder.Entity<ClienteConfiguracionPuerta>(entity =>
+            {
+                entity.ToTable("ClienteConfiguracionPuerta", "dbo");
+
+                entity.HasKey(e => e.ClienteId);
+
+                entity.HasOne(e => e.Cliente)
+                      .WithOne(c => c.ClienteConfiguracionPuerta)
+                      .HasForeignKey<ClienteConfiguracionPuerta>(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(e => e.PorteroElectrico)
+                    .IsRequired();
+
+                entity.Property(e => e.Cilindro)
+                    .IsRequired();
+
+                entity.Property(e => e.CilindroMedida);
             });
         }
     }

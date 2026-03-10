@@ -105,6 +105,7 @@
             txt_CilindroMedida.Name = "txt_CilindroMedida";
             txt_CilindroMedida.Size = new Size(56, 23);
             txt_CilindroMedida.TabIndex = 7;
+            txt_CilindroMedida.TextChanged += txt_CilindroMedida_TextChanged;
             // 
             // rb_CilindrosSi
             // 
@@ -116,6 +117,7 @@
             rb_CilindrosSi.TabStop = true;
             rb_CilindrosSi.Text = "Sí";
             rb_CilindrosSi.UseVisualStyleBackColor = true;
+            rb_CilindrosSi.CheckedChanged += rb_CilindrosSi_CheckedChanged;
             // 
             // rb_CilindrosNo
             // 
@@ -127,6 +129,7 @@
             rb_CilindrosNo.TabStop = true;
             rb_CilindrosNo.Text = "No";
             rb_CilindrosNo.UseVisualStyleBackColor = true;
+            rb_CilindrosNo.CheckedChanged += rb_CilindrosNo_CheckedChanged;
             // 
             // groupBox3
             // 
@@ -149,6 +152,7 @@
             rb_PorteroSi.TabStop = true;
             rb_PorteroSi.Text = "Sí";
             rb_PorteroSi.UseVisualStyleBackColor = true;
+            rb_PorteroSi.CheckedChanged += rb_PorteroSi_CheckedChanged;
             // 
             // rb_PorteroNo
             // 
@@ -160,6 +164,7 @@
             rb_PorteroNo.TabStop = true;
             rb_PorteroNo.Text = "No";
             rb_PorteroNo.UseVisualStyleBackColor = true;
+            rb_PorteroNo.CheckedChanged += rb_PorteroNo_CheckedChanged;
             // 
             // groupBox2
             // 

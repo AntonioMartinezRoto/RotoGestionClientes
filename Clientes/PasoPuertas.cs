@@ -58,6 +58,27 @@ namespace RotoGestionClientes
 
             if (_model.AgujaPuertaTipo == 0)
                 _model.AgujaPuertaTipo = (int)AgujaMode.Todos;
+
+            if (_model.PorteroElectrico)
+            {
+                rb_PorteroSi.Checked = true;
+            }
+            else
+            {
+                rb_PorteroNo.Checked = true;
+            }
+
+
+            if (_model.Cilindro)
+            {
+                rb_CilindrosSi.Checked = true;
+            }
+            else
+            {
+                rb_CilindrosNo.Checked = true;
+            }
+
+            txt_CilindroMedida.Text = _model.CilindroMedida.ToString();
         }
         private void dgvBisagras_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -121,6 +142,44 @@ namespace RotoGestionClientes
         private void txt_ObservacionesPuertas_TextChanged(object sender, EventArgs e)
         {
             _model.ObservacionesPuertas = txt_ObservacionesPuertas.Text;
+        }
+
+        private void rb_PorteroSi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_PorteroSi.Checked)
+                _model.PorteroElectrico = true;
+        }
+
+        private void rb_PorteroNo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_PorteroNo.Checked)
+                _model.PorteroElectrico = false;
+        }
+
+        private void rb_CilindrosSi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_CilindrosSi.Checked)
+            {
+                _model.Cilindro = true;
+                txt_CilindroMedida.Enabled = true;
+            }
+        }
+
+        private void rb_CilindrosNo_CheckedChanged(object sender, EventArgs e)
+        {
+            if (rb_CilindrosNo.Checked)
+            {
+                _model.Cilindro = false;
+                _model.CilindroMedida = null;
+
+                txt_CilindroMedida.Text = string.Empty;
+                txt_CilindroMedida.Enabled = false;
+            }
+        }
+
+        private void txt_CilindroMedida_TextChanged(object sender, EventArgs e)
+        {
+            _model.CilindroMedida = int.TryParse(txt_CilindroMedida.Text, out int medida) ? medida : (int?)null;
         }
         #endregion
 
@@ -263,5 +322,6 @@ namespace RotoGestionClientes
 
         }
         #endregion
+
     }
 }

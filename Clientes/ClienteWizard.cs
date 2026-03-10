@@ -306,6 +306,12 @@ namespace RotoGestionClientes
             model.AgujaPuertaTipo = clienteAgujas?.AgujaPuertaTipoId ?? 1;
             model.AgujaPuerta = clienteAgujas?.AgujaPuertaId;
 
+            var clienteConfiguracionPuertas = _context.ClienteConfiguracionPuerta.FirstOrDefault(ccp => ccp.ClienteId == clienteId);
+
+            model.PorteroElectrico = clienteConfiguracionPuertas?.PorteroElectrico ?? false;
+            model.Cilindro = clienteConfiguracionPuertas?.Cilindro ?? false;
+            model.CilindroMedida = clienteConfiguracionPuertas?.CilindroMedida;
+
             return model;
         }
         private void InitializeTitulo()
@@ -366,7 +372,19 @@ namespace RotoGestionClientes
 
             CrearClienteCerraduraPuerta(cliente.Id);
 
+            CrearClienteConfiguacionPuerta(cliente.Id);
+
             _context.SaveChanges();
+        }
+        private void CrearClienteConfiguacionPuerta(int clienteId)
+        {
+            _context.ClienteConfiguracionPuerta.Add(new ClienteConfiguracionPuerta
+            {
+                ClienteId = clienteId,
+                PorteroElectrico = _model.PorteroElectrico,
+                Cilindro = _model.Cilindro,
+                CilindroMedida = _model.CilindroMedida
+            });
         }
         private void CrearClienteCerraduraPuerta(int clienteId)
         {
@@ -570,6 +588,7 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteBisagraPuertasSec)
                 .Include(c => c.ClienteCerradurasPuertaSec)
                 .Include(c => c.ClienteCerradurasPuerta)
+                .Include(c => c.ClienteConfiguracionPuerta)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -607,7 +626,29 @@ namespace RotoGestionClientes
 
             UpdateCerraduraPuerta(cliente);
 
+            UpdateConfiguracionPuerta(cliente);
+
             _context.SaveChanges();
+        }
+        private void UpdateConfiguracionPuerta(Cliente cliente)
+        {
+            var clienteConfiguracionPuerta = _context.ClienteConfiguracionPuerta
+                .FirstOrDefault(ca => ca.ClienteId == cliente.Id);
+
+            if (clienteConfiguracionPuerta == null)
+            {
+                clienteConfiguracionPuerta = new ClienteConfiguracionPuerta
+                {
+                    ClienteId = cliente.Id
+                };
+
+                _context.ClienteConfiguracionPuerta.Add(clienteConfiguracionPuerta);
+            }
+
+            // actualizar configuración general
+            clienteConfiguracionPuerta.PorteroElectrico = _model.PorteroElectrico;
+            clienteConfiguracionPuerta.Cilindro = _model.Cilindro;
+            clienteConfiguracionPuerta.CilindroMedida = _model.CilindroMedida;
         }
         private void UpdateCerraduraPuerta(Cliente cliente)
         {
