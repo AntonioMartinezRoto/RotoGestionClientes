@@ -32,7 +32,6 @@ namespace RotoGestionClientes
             InitializeComponent();
             _model = model;
             _context = context;
-
         }
         #endregion
 
@@ -77,8 +76,6 @@ namespace RotoGestionClientes
             {
                 rb_CilindrosNo.Checked = true;
             }
-
-            txt_CilindroMedida.Text = _model.CilindroMedida.ToString();
         }
         private void dgvBisagras_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -143,43 +140,42 @@ namespace RotoGestionClientes
         {
             _model.ObservacionesPuertas = txt_ObservacionesPuertas.Text;
         }
-
         private void rb_PorteroSi_CheckedChanged(object sender, EventArgs e)
         {
             if (rb_PorteroSi.Checked)
                 _model.PorteroElectrico = true;
         }
-
         private void rb_PorteroNo_CheckedChanged(object sender, EventArgs e)
         {
             if (rb_PorteroNo.Checked)
                 _model.PorteroElectrico = false;
         }
-
         private void rb_CilindrosSi_CheckedChanged(object sender, EventArgs e)
         {
             if (rb_CilindrosSi.Checked)
             {
                 _model.Cilindro = true;
-                txt_CilindroMedida.Enabled = true;
+                btn_Cilindros.Enabled = true;
             }
         }
-
         private void rb_CilindrosNo_CheckedChanged(object sender, EventArgs e)
         {
             if (rb_CilindrosNo.Checked)
             {
                 _model.Cilindro = false;
-                _model.CilindroMedida = null;
+                btn_Cilindros.Enabled = false;
 
-                txt_CilindroMedida.Text = string.Empty;
-                txt_CilindroMedida.Enabled = false;
             }
         }
-
-        private void txt_CilindroMedida_TextChanged(object sender, EventArgs e)
+        private void cmb_AgujaPuerta_SelectedValueChanged(object sender, EventArgs e)
         {
-            _model.CilindroMedida = int.TryParse(txt_CilindroMedida.Text, out int medida) ? medida : (int?)null;
+            if (cmb_AgujaPuerta.SelectedIndex != -1 && cmb_AgujaPuerta.SelectedValue != null)
+            {
+                if (int.TryParse(cmb_AgujaPuerta.SelectedValue.ToString(), out int id))
+                {
+                    this._model.AgujaPuerta = id;
+                }
+            }
         }
         #endregion
 
@@ -200,16 +196,7 @@ namespace RotoGestionClientes
 
             cmb_AgujaPuerta.SelectedValueChanged += cmb_AgujaPuerta_SelectedValueChanged;
         }
-        private void cmb_AgujaPuerta_SelectedValueChanged(object sender, EventArgs e)
-        {
-            if (cmb_AgujaPuerta.SelectedIndex != -1 && cmb_AgujaPuerta.SelectedValue != null)
-            {
-                if (int.TryParse(cmb_AgujaPuerta.SelectedValue.ToString(), out int id))
-                {
-                    this._model.AgujaPuerta = id;
-                }
-            }
-        }
+
         private void CrearGridBisagras()
         {
             dgvBisagras.AutoGenerateColumns = false;
@@ -323,5 +310,10 @@ namespace RotoGestionClientes
         }
         #endregion
 
+        private void btn_Cilindros_Click(object sender, EventArgs e)
+        {
+            Cilindros cilindrosForm = new Cilindros(_model, _context);
+            cilindrosForm.ShowDialog();
+        }
     }
 }

@@ -32,7 +32,7 @@
             pictureBox1 = new PictureBox();
             groupBox1 = new GroupBox();
             groupBox4 = new GroupBox();
-            txt_CilindroMedida = new TextBox();
+            btn_Cilindros = new Button();
             rb_CilindrosSi = new RadioButton();
             rb_CilindrosNo = new RadioButton();
             groupBox3 = new GroupBox();
@@ -89,7 +89,7 @@
             // 
             // groupBox4
             // 
-            groupBox4.Controls.Add(txt_CilindroMedida);
+            groupBox4.Controls.Add(btn_Cilindros);
             groupBox4.Controls.Add(rb_CilindrosSi);
             groupBox4.Controls.Add(rb_CilindrosNo);
             groupBox4.Location = new Point(284, 159);
@@ -99,13 +99,15 @@
             groupBox4.TabStop = false;
             groupBox4.Text = "Cilindros";
             // 
-            // txt_CilindroMedida
+            // btn_Cilindros
             // 
-            txt_CilindroMedida.Location = new Point(104, 22);
-            txt_CilindroMedida.Name = "txt_CilindroMedida";
-            txt_CilindroMedida.Size = new Size(56, 23);
-            txt_CilindroMedida.TabIndex = 7;
-            txt_CilindroMedida.TextChanged += txt_CilindroMedida_TextChanged;
+            btn_Cilindros.Image = (Image)resources.GetObject("btn_Cilindros.Image");
+            btn_Cilindros.Location = new Point(135, 11);
+            btn_Cilindros.Name = "btn_Cilindros";
+            btn_Cilindros.Size = new Size(48, 42);
+            btn_Cilindros.TabIndex = 8;
+            btn_Cilindros.UseVisualStyleBackColor = true;
+            btn_Cilindros.Click += btn_Cilindros_Click;
             // 
             // rb_CilindrosSi
             // 
@@ -336,11 +338,11 @@
         private GroupBox group_Comentarios;
         private TextBox txt_ObservacionesPuertas;
         private GroupBox groupBox4;
-        private TextBox txt_CilindroMedida;
         private RadioButton rb_CilindrosSi;
         private RadioButton rb_CilindrosNo;
         private GroupBox groupBox3;
         private RadioButton rb_PorteroSi;
         private RadioButton rb_PorteroNo;
+        private Button btn_Cilindros;
     }
 }

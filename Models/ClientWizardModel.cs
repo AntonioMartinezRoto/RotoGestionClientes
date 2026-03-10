@@ -34,7 +34,7 @@ namespace RotoGestionClientes
         public List<int> CerradurasPuertaList { get; set; } = new();
         public bool PorteroElectrico { get; set; } = true;
         public bool Cilindro { get; set; } = true;
-        public int? CilindroMedida { get; set; }
+        public List<int> CilindroList { get; set; } = new();
     }
     public class AgujaModeloPerfilItem
     {

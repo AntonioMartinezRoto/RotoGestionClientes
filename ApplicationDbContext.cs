@@ -37,6 +37,9 @@ namespace RotoGestionClientes
         public DbSet<CerraduraPuerta> CerradurasPuerta { get; set; } = null!;
         public DbSet<ClienteCerraduraPuerta> ClienteCerradurasPuerta { get; set; } = null!;
         public DbSet<ClienteConfiguracionPuerta> ClienteConfiguracionPuerta { get; set; } = null!;
+        public DbSet<Cilindro> Cilindros { get; set; } = null!;
+        public DbSet<CilindroTipo> CilindroTipos { get; set; } = null!;
+        public DbSet<ClienteCilindro> ClienteCilindros { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -506,7 +509,59 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Cilindro)
                     .IsRequired();
 
-                entity.Property(e => e.CilindroMedida);
+            });
+            modelBuilder.Entity<CilindroTipo>(entity =>
+            {
+                entity.ToTable("CilindroTipo");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_CilindroTipo");
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
+            });
+            modelBuilder.Entity<Cilindro>(entity =>
+            {
+                entity.ToTable("Cilindro");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_Cilindro");
+
+                entity.Property(e => e.MedidaInterior)
+                        .IsRequired();
+
+                entity.Property(e => e.MedidaExterior)
+                        .IsRequired();
+
+                entity.Property(e => e.Nomenclatura)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Activa);
+
+                entity.HasOne(e => e.CilindroTipo)
+                      .WithMany(p => p.Cilindros)
+                      .HasForeignKey(e => e.CilindroTipoId)
+                      .HasConstraintName("FK_Cilindro_CilindroTipo");
+            });
+            modelBuilder.Entity<ClienteCilindro>(entity =>
+            {
+                entity.ToTable("ClienteCilindro", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.CilindroId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteCilindros)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Cilindro)
+                      .WithMany(s => s.ClienteCilindros)
+                      .HasForeignKey(e => e.CilindroId);
             });
         }
     }

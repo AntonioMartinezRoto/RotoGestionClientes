@@ -10,7 +10,6 @@ namespace RotoGestionClientes
 
         public bool PorteroElectrico { get; set; } = true;
         public bool Cilindro { get; set; } = true;
-        public int? CilindroMedida { get; set; }
         public virtual Cliente Cliente { get; set; } = null!;
     }
 }

@@ -36,5 +36,6 @@ namespace RotoGestionClientes
         public ICollection<ClienteCerraduraPuertaSec> ClienteCerradurasPuertaSec { get; set; } = new List<ClienteCerraduraPuertaSec>();
         public ICollection<ClienteCerraduraPuerta> ClienteCerradurasPuerta { get; set; } = new List<ClienteCerraduraPuerta>();
         public ClienteConfiguracionPuerta? ClienteConfiguracionPuerta { get; set; }
+        public ICollection<ClienteCilindro> ClienteCilindros { get; set; } = new List<ClienteCilindro>();
     }
 }

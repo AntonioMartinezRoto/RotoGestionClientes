@@ -284,6 +284,11 @@ namespace RotoGestionClientes
                     .Select(cb => cb.CerraduraPuertaId)
                     .ToList(),
 
+                CilindroList = _context.ClienteCilindros
+                    .Where(cb => cb.ClienteId == clienteId)
+                    .Select(cb => cb.CilindroId)
+                    .ToList(),
+
                 AgujasModeloPerfilList = _context.ClienteAgujasModeloPerfil
                     .Where(cam => cam.ClienteId == clienteId)
                     .Select(cam => new AgujaModeloPerfilItem
@@ -310,7 +315,6 @@ namespace RotoGestionClientes
 
             model.PorteroElectrico = clienteConfiguracionPuertas?.PorteroElectrico ?? false;
             model.Cilindro = clienteConfiguracionPuertas?.Cilindro ?? false;
-            model.CilindroMedida = clienteConfiguracionPuertas?.CilindroMedida;
 
             return model;
         }
@@ -374,7 +378,21 @@ namespace RotoGestionClientes
 
             CrearClienteConfiguacionPuerta(cliente.Id);
 
+            CrearClienteCilindro(cliente.Id);
+
             _context.SaveChanges();
+        }
+        private void CrearClienteCilindro(int clienteId)
+        {
+            foreach (var cilindroId in _model.CilindroList)
+            {
+                _context.ClienteCilindros.Add(new ClienteCilindro
+                {
+                    ClienteId = clienteId,
+                    CilindroId = cilindroId
+                });
+
+            }
         }
         private void CrearClienteConfiguacionPuerta(int clienteId)
         {
@@ -382,8 +400,7 @@ namespace RotoGestionClientes
             {
                 ClienteId = clienteId,
                 PorteroElectrico = _model.PorteroElectrico,
-                Cilindro = _model.Cilindro,
-                CilindroMedida = _model.CilindroMedida
+                Cilindro = _model.Cilindro
             });
         }
         private void CrearClienteCerraduraPuerta(int clienteId)
@@ -589,6 +606,9 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteCerradurasPuertaSec)
                 .Include(c => c.ClienteCerradurasPuerta)
                 .Include(c => c.ClienteConfiguracionPuerta)
+                .Include(c => c.ClienteCilindros)
+                    .ThenInclude(cc => cc.Cilindro)
+                        .ThenInclude(c => c.CilindroTipo)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -628,7 +648,41 @@ namespace RotoGestionClientes
 
             UpdateConfiguracionPuerta(cliente);
 
+            UpdateCilindros(cliente);
+
             _context.SaveChanges();
+        }
+        private void UpdateCilindros(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteCilindros
+                .Select(cp => cp.CilindroId)
+                .ToList();
+
+            var itemSeleccionadas = _model.CilindroList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteCilindros
+                .Where(cp => !itemSeleccionadas.Contains(cp.CilindroId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteCilindros.Add(new ClienteCilindro
+                {
+                    ClienteId = cliente.Id,
+                    CilindroId = itemId
+                });
+            }
         }
         private void UpdateConfiguracionPuerta(Cliente cliente)
         {
@@ -648,7 +702,6 @@ namespace RotoGestionClientes
             // actualizar configuración general
             clienteConfiguracionPuerta.PorteroElectrico = _model.PorteroElectrico;
             clienteConfiguracionPuerta.Cilindro = _model.Cilindro;
-            clienteConfiguracionPuerta.CilindroMedida = _model.CilindroMedida;
         }
         private void UpdateCerraduraPuerta(Cliente cliente)
         {
