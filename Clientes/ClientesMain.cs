@@ -190,7 +190,7 @@ namespace RotoGestionClientes
         }
         private void DeleteCliente(ClienteGridItem cliente)
         {
-            if (MessageBox.Show("¿Está seguro que desea eliminar el cliente " + cliente.Nombre + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Se eliminará al cliente y todos los datos relacionado con él." + Environment.NewLine + "¿Está seguro que desea eliminar el cliente " + cliente.Nombre + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Cliente clienteBD = _context.Clientes
                       .First(c => c.Id == cliente.Id);

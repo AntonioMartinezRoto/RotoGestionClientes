@@ -15,7 +15,7 @@ namespace RotoGestionClientes
 
         private readonly ClientWizardModel _model;
         private ApplicationDbContext _context;
-        private BindingSource _bindingSourceSeguridadVentana = new BindingSource();
+        private BindingSource _bindingSourceSeguridadBalconera = new BindingSource();
         private BindingSource _bindingSourceCremonaPasiva = new BindingSource();
         private BindingSource _bindingSourceBisagras = new BindingSource();
         private BindingSource _bindingSourceCerradurasPuertaSec = new BindingSource();
@@ -121,11 +121,11 @@ namespace RotoGestionClientes
 
                 if (item.Selected)
                 {
-                    _model.CremonaPasivaVentanaList.Add(item.Id);
+                    _model.CremonaPasivaBalconeraList.Add(item.Id);
                 }
                 else
                 {
-                    _model.CremonaPasivaVentanaList.Remove(item.Id);
+                    _model.CremonaPasivaBalconeraList.Remove(item.Id);
                 }
             }
         }
@@ -140,11 +140,11 @@ namespace RotoGestionClientes
 
                 if (item.Selected)
                 {
-                    _model.SeguridadVentanaList.Add(item.Id);
+                    _model.SeguridadBalconeraList.Add(item.Id);
                 }
                 else
                 {
-                    _model.SeguridadVentanaList.Remove(item.Id);
+                    _model.SeguridadBalconeraList.Remove(item.Id);
                 }
             }
         }
@@ -325,13 +325,13 @@ namespace RotoGestionClientes
                         {
                             Id = f.Id,
                             Nombre = f.Nombre,
-                            Selected = _model.SeguridadVentanaList.Contains(f.Id)
+                            Selected = _model.SeguridadBalconeraList.Contains(f.Id)
                         })
                         .OrderBy(f => f.Id)
                         .ToList();
 
-            _bindingSourceSeguridadVentana.DataSource = lista;
-            dgvSeguridad.DataSource = _bindingSourceSeguridadVentana;
+            _bindingSourceSeguridadBalconera.DataSource = lista;
+            dgvSeguridad.DataSource = _bindingSourceSeguridadBalconera;
         }
         private void RellenarGridCremonaPasivas()
         {
@@ -341,7 +341,7 @@ namespace RotoGestionClientes
                         {
                             Id = f.Id,
                             Nombre = f.Nombre,
-                            Selected = _model.CremonaPasivaVentanaList.Contains(f.Id)
+                            Selected = _model.CremonaPasivaBalconeraList.Contains(f.Id)
                         })
                         .OrderBy(f => f.Id)
                         .ToList();

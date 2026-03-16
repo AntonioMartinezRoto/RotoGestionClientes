@@ -249,6 +249,11 @@ namespace RotoGestionClientes
                     .Select(cp => cp.SeguridadVentanaId)
                     .ToList(),
 
+                SeguridadBalconeraList = _context.ClienteSeguridadBalconeras
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.SeguridadBalconeraId)
+                    .ToList(),
+
                 CremonaPasivaVentanaList = _context.ClienteCremonaPasivaVentanas
                     .Where(cp => cp.ClienteId == clienteId)
                     .Select(cp => cp.CremonaPasivaVentanaId)
@@ -257,6 +262,11 @@ namespace RotoGestionClientes
                 CremonaPasivaVentanaPractList = _context.ClienteCremonaPasivaVentanasPract
                     .Where(cp => cp.ClienteId == clienteId)
                     .Select(cp => cp.CremonaPasivaVentanaId)
+                    .ToList(),
+
+                CremonaPasivaBalconeraList = _context.ClienteCremonaPasivaBalconeras
+                    .Where(cp => cp.ClienteId == clienteId)
+                    .Select(cp => cp.CremonaPasivaBalconeraId)
                     .ToList(),
 
                 PerfilesList = _context.ClientePerfiles
@@ -365,6 +375,10 @@ namespace RotoGestionClientes
             CrearClienteCremonaPasivaVentana(cliente.Id);
 
             CrearClienteCremonaPasivaVentanaPract(cliente.Id);
+
+            CrearClienteCremonaPasivaBalconera(cliente.Id);
+
+            CrearClienteSeguridadBalconera(cliente.Id);
 
             CrearClienteAgujas(cliente.Id);
 
@@ -504,6 +518,18 @@ namespace RotoGestionClientes
 
             }
         }
+        private void CrearClienteSeguridadBalconera(int clienteId)
+        {
+            foreach (var seguridadBalconeraId in _model.SeguridadBalconeraList)
+            {
+                _context.ClienteSeguridadBalconeras.Add(new ClienteSeguridadBalconera
+                {
+                    ClienteId = clienteId,
+                    SeguridadBalconeraId = seguridadBalconeraId
+                });
+
+            }
+        }
         private void CrearClienteSoporteCompas(int clienteId)
         {
             foreach (var soporteCompasId in _model.SoporteCompasList)
@@ -574,6 +600,18 @@ namespace RotoGestionClientes
 
             }
         }
+        private void CrearClienteCremonaPasivaBalconera(int clienteId)
+        {
+            foreach (var cremonaPasivaBalconeraTipoId in _model.CremonaPasivaBalconeraList)
+            {
+                _context.ClienteCremonaPasivaBalconeras.Add(new ClienteCremonaPasivaBalconera
+                {
+                    ClienteId = clienteId,
+                    CremonaPasivaBalconeraId = cremonaPasivaBalconeraTipoId
+                });
+
+            }
+        }
         private void CrearClienteCremonaPasivaVentanaPract(int clienteId)
         {
             foreach (var cremonaPasivaVentanaTipoId in _model.CremonaPasivaVentanaPractList)
@@ -597,7 +635,9 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteManillas)
                 .Include(c => c.ClienteSoporteCompases)
                 .Include(c => c.ClienteSeguridadVentanas)
+                .Include(c => c.ClienteSeguridadBalconeras)
                 .Include(c => c.ClienteCremonaPasivaVentanas)
+                .Include(c => c.ClienteCremonaPasivaBalconeras)
                 .Include(c => c.ClienteCremonaPasivaVentanasPract)
                 .Include(c => c.ClientePerfiles)
                 .Include(c => c.ClienteAgujases)
@@ -634,7 +674,11 @@ namespace RotoGestionClientes
 
             UpdateCremonaPasivaVentanas(cliente);
 
+            UpdateCremonaPasivaBalconeras(cliente);
+
             UpdateCremonaPasivaVentanasPract(cliente);
+
+            UpdateSeguridadBalconeras(cliente);
 
             UpdateAgujas(cliente);
 
@@ -927,6 +971,38 @@ namespace RotoGestionClientes
                 });
             }
         }
+        private void UpdateSeguridadBalconeras(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteSeguridadBalconeras
+                .Select(cp => cp.SeguridadBalconeraId)
+                .ToList();
+
+            var itemSeleccionadas = _model.SeguridadBalconeraList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteSeguridadBalconeras
+                .Where(cp => !itemSeleccionadas.Contains(cp.SeguridadBalconeraId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteSeguridadBalconeras.Add(new ClienteSeguridadBalconera
+                {
+                    ClienteId = cliente.Id,
+                    SeguridadBalconeraId = itemId
+                });
+            }
+        }
         private void UpdateClientePerfil(Cliente cliente)
         {
             var itemActuales = cliente.ClientePerfiles
@@ -988,6 +1064,38 @@ namespace RotoGestionClientes
                 {
                     ClienteId = cliente.Id,
                     CremonaPasivaVentanaId = itemId
+                });
+            }
+        }
+        private void UpdateCremonaPasivaBalconeras(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteCremonaPasivaBalconeras
+                .Select(cp => cp.CremonaPasivaBalconeraId)
+                .ToList();
+
+            var itemSeleccionadas = _model.CremonaPasivaBalconeraList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteCremonaPasivaBalconeras
+                .Where(cp => !itemSeleccionadas.Contains(cp.CremonaPasivaBalconeraId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteCremonaPasivaBalconeras.Add(new ClienteCremonaPasivaBalconera
+                {
+                    ClienteId = cliente.Id,
+                    CremonaPasivaBalconeraId = itemId
                 });
             }
         }

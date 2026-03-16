@@ -385,6 +385,25 @@ GO
 );
 GO
 
+ CREATE TABLE dbo.ClienteCremonaPasivaBalconera
+(
+    ClienteId INT NOT NULL,
+    CremonaPasivaBalconeraId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteCremonaPasivaBalconera
+        PRIMARY KEY CLUSTERED (ClienteId, CremonaPasivaBalconeraId),
+
+    CONSTRAINT FK_ClienteCremonaPasivaBalconera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteCremonaPasivaBalconera_CremonaPasivaVentana
+        FOREIGN KEY (CremonaPasivaBalconeraId)
+        REFERENCES dbo.CremonaPasivaVentanaTipos(Id)
+);
+GO
+
 
  CREATE TABLE dbo.ClienteSeguridadVentana
 (
@@ -401,6 +420,25 @@ GO
 
     CONSTRAINT FK_ClienteSeguridadVentana_SeguridadVentana
         FOREIGN KEY (SeguridadVentanaId)
+        REFERENCES dbo.SeguridadVentana(Id)
+);
+GO
+
+ CREATE TABLE dbo.ClienteSeguridadBalconera
+(
+    ClienteId INT NOT NULL,
+    SeguridadBalconeraId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteSeguridadBalconera
+        PRIMARY KEY CLUSTERED (ClienteId, SeguridadBalconeraId),
+
+    CONSTRAINT FK_ClienteSeguridadBalconera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteSeguridadBalconera_SeguridadVentana
+        FOREIGN KEY (SeguridadBalconeraId)
         REFERENCES dbo.SeguridadVentana(Id)
 );
 GO

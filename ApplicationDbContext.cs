@@ -14,6 +14,7 @@ namespace RotoGestionClientes
         public DbSet<SeguridadVentana> SeguridadVentanas { get; set; } = null!;
         public DbSet<CremonaPasivaVentanaTipos> CremonaPasivaVentanaTipos { get; set; } = null!;
         public DbSet<ClienteSeguridadVentana> ClienteSeguridadVentanas { get; set; } = null!;
+        public DbSet<ClienteSeguridadBalconera> ClienteSeguridadBalconeras { get; set; } = null!;
         public DbSet<ClientePerfilTipo> ClientePerfilTipos { get; set; } = null!;
         public DbSet<Software> Softwares { get; set; } = null!;
         public DbSet<ClienteSoftware> ClienteSoftwares { get; set; } = null!;
@@ -22,6 +23,7 @@ namespace RotoGestionClientes
         public DbSet<SoporteCompas> SoporteCompases{ get; set; } = null!;
         public DbSet<ClienteSoporteCompas> ClienteSoporteCompases { get; set; } = null!;
         public DbSet<ClienteCremonaPasivaVentana> ClienteCremonaPasivaVentanas { get; set; } = null!;
+        public DbSet<ClienteCremonaPasivaBalconera> ClienteCremonaPasivaBalconeras { get; set; } = null!;
         public DbSet<ClienteCremonaPasivaVentanaPract> ClienteCremonaPasivaVentanasPract { get; set; } = null!;
         public DbSet<Perfil> Perfiles { get; set; } = null!;
         public DbSet<ClientePerfil> ClientePerfiles { get; set; } = null!;
@@ -123,6 +125,21 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.SeguridadVentana)
                       .WithMany(s => s.ClienteSeguridadVentanas)
                       .HasForeignKey(e => e.SeguridadVentanaId);
+            });
+            modelBuilder.Entity<ClienteSeguridadBalconera>(entity =>
+            {
+                entity.ToTable("ClienteSeguridadBalconera", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.SeguridadBalconeraId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteSeguridadBalconeras)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.SeguridadBalconera)
+                      .WithMany(s => s.ClienteSeguridadBalconeras)
+                      .HasForeignKey(e => e.SeguridadBalconeraId);
             });
             modelBuilder.Entity<ClientePerfilTipo>(entity =>
             {
@@ -263,6 +280,21 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.CremonaPasivaVentanaTipo)
                       .WithMany(s => s.ClienteCremonaPasivaVentanas)
                       .HasForeignKey(e => e.CremonaPasivaVentanaId);
+            });
+            modelBuilder.Entity<ClienteCremonaPasivaBalconera>(entity =>
+            {
+                entity.ToTable("ClienteCremonaPasivaBalconera", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.CremonaPasivaBalconeraId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteCremonaPasivaBalconeras)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.CremonaPasivaBalconeraTipo)
+                      .WithMany(s => s.ClienteCremonaPasivaBalconeras)
+                      .HasForeignKey(e => e.CremonaPasivaBalconeraId);
             });
             modelBuilder.Entity<ClienteCremonaPasivaVentanaPract>(entity =>
             {

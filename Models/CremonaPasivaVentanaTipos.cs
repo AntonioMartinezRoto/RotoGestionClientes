@@ -21,6 +21,6 @@ namespace RotoGestionClientes
 
         public ICollection<ClienteCremonaPasivaVentana> ClienteCremonaPasivaVentanas { get; set; } = new List<ClienteCremonaPasivaVentana>();
         public ICollection<ClienteCremonaPasivaVentanaPract> ClienteCremonaPasivaVentanasPract { get; set; } = new List<ClienteCremonaPasivaVentanaPract>();
-
+        public ICollection<ClienteCremonaPasivaBalconera> ClienteCremonaPasivaBalconeras { get; set; } = new List<ClienteCremonaPasivaBalconera>();
     }
 }
