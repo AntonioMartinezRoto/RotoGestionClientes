@@ -13,6 +13,7 @@ namespace RotoGestionClientes
         public string? ObservacionesVentanas { get; set; }
         public string? ObservacionesBalconeras { get; set; }
         public string? ObservacionesPuertas { get; set; }
+        public string? ObservacionesParalelas { get; set; }
         public List<int> PerfilTipoList { get; set; } = new();
         public List<int> SoftwareList { get; set; } = new();
         public List<int> ManillasList { get; set; } = new();

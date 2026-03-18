@@ -65,9 +65,9 @@
             // 
             pictureBox1.BackgroundImageLayout = ImageLayout.None;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(41, 75);
+            pictureBox1.Location = new Point(46, 58);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(153, 327);
+            pictureBox1.Size = new Size(173, 359);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
@@ -92,7 +92,7 @@
             groupBox4.Controls.Add(btn_Cilindros);
             groupBox4.Controls.Add(rb_CilindrosSi);
             groupBox4.Controls.Add(rb_CilindrosNo);
-            groupBox4.Location = new Point(284, 159);
+            groupBox4.Location = new Point(265, 123);
             groupBox4.Name = "groupBox4";
             groupBox4.Size = new Size(584, 59);
             groupBox4.TabIndex = 16;
@@ -137,17 +137,18 @@
             // 
             groupBox3.Controls.Add(rb_PorteroSi);
             groupBox3.Controls.Add(rb_PorteroNo);
-            groupBox3.Location = new Point(284, 89);
+            groupBox3.Location = new Point(265, 22);
             groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(584, 59);
+            groupBox3.Size = new Size(141, 30);
             groupBox3.TabIndex = 15;
             groupBox3.TabStop = false;
             groupBox3.Text = "Portero eléctrico";
+            groupBox3.Visible = false;
             // 
             // rb_PorteroSi
             // 
             rb_PorteroSi.AutoSize = true;
-            rb_PorteroSi.Location = new Point(23, 23);
+            rb_PorteroSi.Location = new Point(16, 11);
             rb_PorteroSi.Name = "rb_PorteroSi";
             rb_PorteroSi.Size = new Size(34, 19);
             rb_PorteroSi.TabIndex = 5;
@@ -159,7 +160,7 @@
             // rb_PorteroNo
             // 
             rb_PorteroNo.AutoSize = true;
-            rb_PorteroNo.Location = new Point(313, 23);
+            rb_PorteroNo.Location = new Point(78, 11);
             rb_PorteroNo.Name = "rb_PorteroNo";
             rb_PorteroNo.Size = new Size(41, 19);
             rb_PorteroNo.TabIndex = 6;
@@ -174,7 +175,7 @@
             groupBox2.Controls.Add(btn_DefinirAgujaPuertaPerfil);
             groupBox2.Controls.Add(rb_AgujaPuertaGenerica);
             groupBox2.Controls.Add(rb_AgujaPuertaPerfil);
-            groupBox2.Location = new Point(284, 17);
+            groupBox2.Location = new Point(265, 58);
             groupBox2.Name = "groupBox2";
             groupBox2.Size = new Size(584, 59);
             groupBox2.TabIndex = 14;
@@ -228,7 +229,7 @@
             // group_Cerraduras
             // 
             group_Cerraduras.Controls.Add(dgvCerraduras);
-            group_Cerraduras.Location = new Point(579, 231);
+            group_Cerraduras.Location = new Point(560, 194);
             group_Cerraduras.Name = "group_Cerraduras";
             group_Cerraduras.Size = new Size(289, 223);
             group_Cerraduras.TabIndex = 7;
@@ -253,7 +254,7 @@
             // group_Bisagras
             // 
             group_Bisagras.Controls.Add(dgvBisagras);
-            group_Bisagras.Location = new Point(284, 231);
+            group_Bisagras.Location = new Point(265, 194);
             group_Bisagras.Name = "group_Bisagras";
             group_Bisagras.Size = new Size(289, 223);
             group_Bisagras.TabIndex = 6;

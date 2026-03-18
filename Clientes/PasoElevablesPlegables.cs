@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace RotoGestionClientes
 {
-    public partial class PasoElevables : UserControl
+    public partial class PasoElevablesPlegables : UserControl
     {
         #region Private properties
 
@@ -21,11 +21,11 @@ namespace RotoGestionClientes
 
 
         #region Constructors
-        public PasoElevables()
+        public PasoElevablesPlegables()
         {
             InitializeComponent();
         }
-        public PasoElevables(ClientWizardModel model, ApplicationDbContext context)
+        public PasoElevablesPlegables(ClientWizardModel model, ApplicationDbContext context)
         {
             InitializeComponent();
             _model = model;

@@ -21,6 +21,7 @@ namespace RotoGestionClientes
         public string? ObservacionesVentanas { get; set; }
         public string? ObservacionesBalconeras { get; set; }
         public string? ObservacionesPuertas { get; set; }
+        public string? ObservacionesParalelas { get; set; }
         public ICollection<ClienteSeguridadVentana> ClienteSeguridadVentanas { get; set; } = new List<ClienteSeguridadVentana>();
         public ICollection<ClienteSeguridadBalconera> ClienteSeguridadBalconeras { get; set; } = new List<ClienteSeguridadBalconera>();
         public ICollection<ClientePerfilTipo> ClientePerfilTipos { get; set; } = new List<ClientePerfilTipo>();

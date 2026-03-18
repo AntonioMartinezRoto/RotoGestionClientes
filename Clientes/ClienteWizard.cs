@@ -102,10 +102,10 @@ namespace RotoGestionClientes
                     new PasoVentanas(_model, _context),
                     new PasoBalconeras(_model, _context),
                     new PasoPuertas(_model, _context),
-                    new PasoParalelas(_model, _context),
+                    //new PasoParalelas(_model, _context),
                     new PasoCorrederas(_model, _context),
-                    new PasoElevables(_model, _context),
-                    new PasoEspeciales(_model, _context),
+                    new PasoElevablesPlegables(_model, _context),
+                    //new PasoEspeciales(_model, _context),
                     new PasoMaquinas(_model, _context),
                     new PasoDocumentosAsociados(_model, _context)
                 };
@@ -223,6 +223,7 @@ namespace RotoGestionClientes
                 ObservacionesVentanas = cliente.ObservacionesVentanas,
                 ObservacionesBalconeras = cliente.ObservacionesBalconeras,
                 ObservacionesPuertas = cliente.ObservacionesPuertas,
+                ObservacionesParalelas = cliente.ObservacionesParalelas,
 
                 SoftwareList = _context.ClienteSoftwares
                     .Where(cs => cs.ClienteId == clienteId)
@@ -354,7 +355,8 @@ namespace RotoGestionClientes
                 Comentarios = _model.Comentarios,
                 ObservacionesVentanas = _model.ObservacionesVentanas,
                 ObservacionesBalconeras = _model.ObservacionesBalconeras,
-                ObservacionesPuertas = _model.ObservacionesPuertas
+                ObservacionesPuertas = _model.ObservacionesPuertas,
+                ObservacionesParalelas = _model.ObservacionesParalelas
             };
 
             _context.Clientes.Add(cliente);
@@ -569,11 +571,14 @@ namespace RotoGestionClientes
         {
             if (_model.PerfilesList.Any())
             {
-                _context.ClientePerfiles.Add(new ClientePerfil
+                foreach (var perfilId in _model.PerfilesList)
                 {
-                    ClienteId = clienteId,
-                    PerfilId = _model.PerfilesList.FirstOrDefault()
-                });
+                    _context.ClientePerfiles.Add(new ClientePerfil
+                    {
+                        ClienteId = clienteId,
+                        PerfilId = perfilId
+                    });
+                }
             }
         }
         private void CrearClientePerfilTipo(int clienteId)
@@ -659,6 +664,7 @@ namespace RotoGestionClientes
             cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
             cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
             cliente.ObservacionesPuertas = _model.ObservacionesPuertas;
+            cliente.ObservacionesParalelas = _model.ObservacionesParalelas;
 
             UpdateClientePerfilTipo(cliente);
 

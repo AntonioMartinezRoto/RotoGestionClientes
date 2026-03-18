@@ -65,6 +65,7 @@ namespace RotoGestionClientes
                 entity.Property(e => e.ObservacionesVentanas);
                 entity.Property(e => e.ObservacionesBalconeras);
                 entity.Property(e => e.ObservacionesPuertas);
+                entity.Property(e => e.ObservacionesParalelas);
             });
             modelBuilder.Entity<PerfilTipo>(entity =>
             {

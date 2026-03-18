@@ -43,6 +43,7 @@
             pictureBox4 = new PictureBox();
             groupBox2 = new GroupBox();
             groupBox3 = new GroupBox();
+            pictureBox5 = new PictureBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Seguridad.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSeguridad).BeginInit();
@@ -56,6 +57,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             groupBox2.SuspendLayout();
             groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
             SuspendLayout();
             // 
             // pictureBox1
@@ -72,9 +74,9 @@
             // group_Seguridad
             // 
             group_Seguridad.Controls.Add(dgvSeguridad);
-            group_Seguridad.Location = new Point(622, 33);
+            group_Seguridad.Location = new Point(713, 31);
             group_Seguridad.Name = "group_Seguridad";
-            group_Seguridad.Size = new Size(289, 154);
+            group_Seguridad.Size = new Size(185, 154);
             group_Seguridad.TabIndex = 4;
             group_Seguridad.TabStop = false;
             group_Seguridad.Text = "Seguridad";
@@ -90,16 +92,16 @@
             dgvSeguridad.Location = new Point(17, 22);
             dgvSeguridad.Name = "dgvSeguridad";
             dgvSeguridad.ReadOnly = true;
-            dgvSeguridad.Size = new Size(252, 113);
+            dgvSeguridad.Size = new Size(151, 115);
             dgvSeguridad.TabIndex = 2;
             dgvSeguridad.CellMouseUp += dgvSeguridad_CellMouseUp;
             // 
             // group_Pasivas
             // 
             group_Pasivas.Controls.Add(dgvPasivas);
-            group_Pasivas.Location = new Point(321, 33);
+            group_Pasivas.Location = new Point(503, 31);
             group_Pasivas.Name = "group_Pasivas";
-            group_Pasivas.Size = new Size(289, 154);
+            group_Pasivas.Size = new Size(185, 154);
             group_Pasivas.TabIndex = 5;
             group_Pasivas.TabStop = false;
             group_Pasivas.Text = "Hoja Pasiva";
@@ -116,7 +118,7 @@
             dgvPasivas.Name = "dgvPasivas";
             dgvPasivas.ReadOnly = true;
             dgvPasivas.RowHeadersVisible = false;
-            dgvPasivas.Size = new Size(254, 115);
+            dgvPasivas.Size = new Size(151, 115);
             dgvPasivas.TabIndex = 2;
             dgvPasivas.CellMouseUp += dgvPasivas_CellMouseUp;
             // 
@@ -200,6 +202,7 @@
             // 
             // groupBox2
             // 
+            groupBox2.Controls.Add(pictureBox5);
             groupBox2.Controls.Add(group_Seguridad);
             groupBox2.Controls.Add(group_Pasivas);
             groupBox2.Controls.Add(pictureBox1);
@@ -222,6 +225,17 @@
             groupBox3.TabIndex = 17;
             groupBox3.TabStop = false;
             groupBox3.Text = "Practicables";
+            // 
+            // pictureBox5
+            // 
+            pictureBox5.BackgroundImageLayout = ImageLayout.None;
+            pictureBox5.Image = (Image)resources.GetObject("pictureBox5.Image");
+            pictureBox5.Location = new Point(317, 31);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(156, 156);
+            pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox5.TabIndex = 12;
+            pictureBox5.TabStop = false;
             // 
             // PasoVentanas
             // 
@@ -248,6 +262,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
             groupBox2.ResumeLayout(false);
             groupBox3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
             ResumeLayout(false);
         }
 
@@ -267,5 +282,6 @@
         private PictureBox pictureBox4;
         private GroupBox groupBox2;
         private GroupBox groupBox3;
+        private PictureBox pictureBox5;
     }
 }

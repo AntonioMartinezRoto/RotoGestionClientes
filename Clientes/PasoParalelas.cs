@@ -14,16 +14,15 @@ namespace RotoGestionClientes
 
         private readonly ClientWizardModel _model;
         private ApplicationDbContext _context;
-        private BindingSource _bindingSourcePerfilTipo = new BindingSource();
+        private BindingSource _bindingSource = new BindingSource();
 
         #endregion
 
+        #region Constructors
         public PasoParalelas()
         {
             InitializeComponent();
         }
-
-        #region Constructors
         public PasoParalelas(ClientWizardModel model, ApplicationDbContext context)
         {
             InitializeComponent();
@@ -32,5 +31,28 @@ namespace RotoGestionClientes
 
         }
         #endregion
+
+        #region Events
+        private void PasoParalelas_Load(object sender, EventArgs e)
+        {
+            txt_ObservacionesParalelas.Text = _model.ObservacionesParalelas;
+            rb_PSCV.Checked = true;
+            rb_PSAirCV.Checked = true;
+        }
+        private void txt_ObservacionesParalelas_TextChanged(object sender, EventArgs e)
+        {
+            _model.ObservacionesParalelas = txt_ObservacionesParalelas.Text;
+        }
+
+
+        #endregion
+
+        #region Private methods
+
+
+
+        #endregion
+
+
     }
 }

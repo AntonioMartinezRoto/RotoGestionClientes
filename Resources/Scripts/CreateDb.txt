@@ -9,6 +9,7 @@ CREATE TABLE dbo.Cliente
 	ObservacionesVentanas NVARCHAR(1000) NULL,
 	ObservacionesBalconeras NVARCHAR(1000) NULL,
 	ObservacionesPuertas NVARCHAR(1000) NULL,
+	ObservacionesParalelas NVARCHAR(1000) NULL,
 
     CONSTRAINT PK_Cliente
         PRIMARY KEY CLUSTERED (Id),
@@ -319,7 +320,7 @@ GO
 INSERT INTO dbo.SeguridadVentana (Id, Nombre, Activa)
 VALUES 
 (1, 'Básica', 1),
-(2, 'RC1', 1),
+(2, 'RC1', 0),
 (3, 'RC2', 1)
 GO
 
@@ -342,7 +343,8 @@ INSERT INTO dbo.CremonaPasivaVentanaTipos (Id, Nombre, Activa)
 VALUES 
 (1, 'Cremona', 1),
 (2, 'Perimetral', 1),
-(3, 'Click y pasador', 1)
+(3, 'Click y pasador', 1),
+(4, 'Falso compás', 1)
 GO
 
  
@@ -647,7 +649,7 @@ VALUES
 (2, 'PS27', 1),
 (3, 'PS23', 1),
 (4, 'PB10', 1),
-(5, '150P', 1),
+(5, '150P', 0),
 (6, 'SCR', 1),
 (7, 'SIN BISAGRAS', 1);
 
