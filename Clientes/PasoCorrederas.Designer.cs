@@ -35,11 +35,15 @@
             groupBox1 = new GroupBox();
             group_Agujas = new GroupBox();
             dgvAgujas = new DataGridView();
+            groupBombillo = new GroupBox();
+            rb_BombilloSi = new RadioButton();
+            rb_BombilloNo = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Comentarios.SuspendLayout();
             groupBox1.SuspendLayout();
             group_Agujas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAgujas).BeginInit();
+            groupBombillo.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox1
@@ -79,6 +83,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(groupBombillo);
             groupBox1.Controls.Add(group_Agujas);
             groupBox1.Controls.Add(pictureBox1);
             groupBox1.Location = new Point(33, 4);
@@ -93,11 +98,11 @@
             // group_Agujas
             // 
             group_Agujas.Controls.Add(dgvAgujas);
-            group_Agujas.Location = new Point(437, 108);
+            group_Agujas.Location = new Point(537, 219);
             group_Agujas.Margin = new Padding(3, 4, 3, 4);
             group_Agujas.Name = "group_Agujas";
             group_Agujas.Padding = new Padding(3, 4, 3, 4);
-            group_Agujas.Size = new Size(134, 204);
+            group_Agujas.Size = new Size(134, 148);
             group_Agujas.TabIndex = 7;
             group_Agujas.TabStop = false;
             group_Agujas.Text = "Agujas";
@@ -115,9 +120,47 @@
             dgvAgujas.Name = "dgvAgujas";
             dgvAgujas.ReadOnly = true;
             dgvAgujas.RowHeadersWidth = 51;
-            dgvAgujas.Size = new Size(120, 167);
+            dgvAgujas.Size = new Size(120, 111);
             dgvAgujas.TabIndex = 2;
             dgvAgujas.CellMouseUp += dgvAgujas_CellMouseUp;
+            // 
+            // groupBombillo
+            // 
+            groupBombillo.Controls.Add(rb_BombilloSi);
+            groupBombillo.Controls.Add(rb_BombilloNo);
+            groupBombillo.Location = new Point(700, 219);
+            groupBombillo.Margin = new Padding(3, 4, 3, 4);
+            groupBombillo.Name = "groupBombillo";
+            groupBombillo.Padding = new Padding(3, 4, 3, 4);
+            groupBombillo.Size = new Size(138, 148);
+            groupBombillo.TabIndex = 16;
+            groupBombillo.TabStop = false;
+            groupBombillo.Text = "Bombillo";
+            groupBombillo.Visible = false;
+            // 
+            // rb_BombilloSi
+            // 
+            rb_BombilloSi.AutoSize = true;
+            rb_BombilloSi.Location = new Point(19, 45);
+            rb_BombilloSi.Margin = new Padding(3, 4, 3, 4);
+            rb_BombilloSi.Name = "rb_BombilloSi";
+            rb_BombilloSi.Size = new Size(42, 24);
+            rb_BombilloSi.TabIndex = 5;
+            rb_BombilloSi.TabStop = true;
+            rb_BombilloSi.Text = "Sí";
+            rb_BombilloSi.UseVisualStyleBackColor = true;
+            // 
+            // rb_BombilloNo
+            // 
+            rb_BombilloNo.AutoSize = true;
+            rb_BombilloNo.Location = new Point(19, 95);
+            rb_BombilloNo.Margin = new Padding(3, 4, 3, 4);
+            rb_BombilloNo.Name = "rb_BombilloNo";
+            rb_BombilloNo.Size = new Size(50, 24);
+            rb_BombilloNo.TabIndex = 6;
+            rb_BombilloNo.TabStop = true;
+            rb_BombilloNo.Text = "No";
+            rb_BombilloNo.UseVisualStyleBackColor = true;
             // 
             // PasoCorrederas
             // 
@@ -136,6 +179,8 @@
             groupBox1.ResumeLayout(false);
             group_Agujas.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvAgujas).EndInit();
+            groupBombillo.ResumeLayout(false);
+            groupBombillo.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -147,5 +192,8 @@
         private GroupBox groupBox1;
         private GroupBox group_Agujas;
         private DataGridView dgvAgujas;
+        private GroupBox groupBombillo;
+        private RadioButton rb_BombilloSi;
+        private RadioButton rb_BombilloNo;
     }
 }

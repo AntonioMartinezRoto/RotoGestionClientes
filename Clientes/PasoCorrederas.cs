@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using static System.Net.WebRequestMethods;
 
 namespace RotoGestionClientes
 {
@@ -37,6 +38,12 @@ namespace RotoGestionClientes
         private void PasoCorrederas_Load(object sender, EventArgs e)
         {
             txt_ObservacionesCorrederas.Text = _model.ObservacionesCorrederas;
+
+            //Vigilar id = 2. Si se añade otro tipo de aguja que también active el bombillo, habrá que cambiar esta lógica.
+            if (_model.AgujasCorrederaList.Contains(2))
+            {
+                groupBombillo.Visible = true;
+            }
             CrearGridAgujasCorredera();
             RellenarGridAgujasCorredera();
         }
@@ -52,10 +59,18 @@ namespace RotoGestionClientes
                 if (item.Selected)
                 {
                     _model.AgujasCorrederaList.Add(item.Id);
+                    if (item.Nombre.Contains("17", StringComparison.OrdinalIgnoreCase))
+                    {
+                        groupBombillo.Visible = true;
+                    }
                 }
                 else
                 {
                     _model.AgujasCorrederaList.Remove(item.Id);
+                    if (item.Nombre.Contains("17", StringComparison.OrdinalIgnoreCase))
+                    {
+                        groupBombillo.Visible = false;
+                    }
                 }
             }
         }
