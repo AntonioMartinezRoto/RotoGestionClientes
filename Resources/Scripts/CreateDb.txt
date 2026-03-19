@@ -10,6 +10,10 @@ CREATE TABLE dbo.Cliente
 	ObservacionesBalconeras NVARCHAR(1000) NULL,
 	ObservacionesPuertas NVARCHAR(1000) NULL,
 	ObservacionesParalelas NVARCHAR(1000) NULL,
+	ObservacionesCorrederas NVARCHAR(1000) NULL,
+	ObservacionesElevables NVARCHAR(1000) NULL,
+	ObservacionesPlegables NVARCHAR(1000) NULL,
+	ObservacionesMaquinas NVARCHAR(1000) NULL,
 
     CONSTRAINT PK_Cliente
         PRIMARY KEY CLUSTERED (Id),
@@ -514,6 +518,45 @@ VALUES
 (7, '45', 1),
 (8, '50', 1),
 (9, '55', 1);
+GO
+
+CREATE TABLE dbo.AgujasCorredera
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_AgujasCorredera
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_AgujasCorredera
+        UNIQUE (Nombre),);
+GO
+
+
+INSERT INTO dbo.AgujasCorredera (Id, Nombre, Activa)
+VALUES 
+(1, '7', 1),
+(2, '17', 1);
+GO
+
+CREATE TABLE dbo.ClienteAgujasCorredera
+(
+    ClienteId INT NOT NULL,
+    AgujaCorrederaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteAgujasCorredera
+        PRIMARY KEY CLUSTERED (ClienteId, AgujaCorrederaId),
+
+    CONSTRAINT FK_ClienteAgujasCorredera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteAgujasCorredera_Aguja
+        FOREIGN KEY (AgujaCorrederaId)
+        REFERENCES dbo.AgujasCorredera(Id)
+);
 GO
 
 CREATE TABLE dbo.AgujasDefinicion

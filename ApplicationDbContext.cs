@@ -28,6 +28,7 @@ namespace RotoGestionClientes
         public DbSet<Perfil> Perfiles { get; set; } = null!;
         public DbSet<ClientePerfil> ClientePerfiles { get; set; } = null!;
         public DbSet<Aguja> Agujas { get; set; } = null!;
+        public DbSet<AgujasCorredera> AgujasCorredera { get; set; } = null!;
         public DbSet<AgujasModelo> AgujasModelo { get; set; } = null!;
         public DbSet<ClienteAgujas> ClienteAgujases { get; set; } = null!;
         public DbSet<Bisagra> Bisagras { get; set; } = null!;
@@ -42,6 +43,7 @@ namespace RotoGestionClientes
         public DbSet<Cilindro> Cilindros { get; set; } = null!;
         public DbSet<CilindroTipo> CilindroTipos { get; set; } = null!;
         public DbSet<ClienteCilindro> ClienteCilindros { get; set; } = null!;
+        public DbSet<ClienteAgujasCorredera> ClienteAgujasCorrederas { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,6 +68,10 @@ namespace RotoGestionClientes
                 entity.Property(e => e.ObservacionesBalconeras);
                 entity.Property(e => e.ObservacionesPuertas);
                 entity.Property(e => e.ObservacionesParalelas);
+                entity.Property(e => e.ObservacionesCorrederas);
+                entity.Property(e => e.ObservacionesPlegables);
+                entity.Property(e => e.ObservacionesElevables);
+                entity.Property(e => e.ObservacionesMaquinas);
             });
             modelBuilder.Entity<PerfilTipo>(entity =>
             {
@@ -595,6 +601,35 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.Cilindro)
                       .WithMany(s => s.ClienteCilindros)
                       .HasForeignKey(e => e.CilindroId);
+            });
+            modelBuilder.Entity<AgujasCorredera>(entity =>
+            {
+                entity.ToTable("AgujasCorredera");
+
+                entity.HasKey(e => e.Id)
+                      .HasName("PK_AgujasCorredera");
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                    .IsRequired();
+            });
+            modelBuilder.Entity<ClienteAgujasCorredera>(entity =>
+            {
+                entity.ToTable("ClienteAgujasCorredera", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId, e.AgujaCorrederaId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteAgujasCorredera)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.AgujasCorredera)
+                      .WithMany(s => s.ClienteAgujasCorredera)
+                      .HasForeignKey(e => e.AgujaCorrederaId);
             });
         }
     }

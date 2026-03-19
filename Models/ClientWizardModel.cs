@@ -14,6 +14,10 @@ namespace RotoGestionClientes
         public string? ObservacionesBalconeras { get; set; }
         public string? ObservacionesPuertas { get; set; }
         public string? ObservacionesParalelas { get; set; }
+        public string? ObservacionesCorrederas { get; set; }
+        public string? ObservacionesElevables { get; set; }
+        public string? ObservacionesPlegables { get; set; }
+        public string? ObservacionesMaquinas { get; set; }
         public List<int> PerfilTipoList { get; set; } = new();
         public List<int> SoftwareList { get; set; } = new();
         public List<int> ManillasList { get; set; } = new();
@@ -38,6 +42,7 @@ namespace RotoGestionClientes
         public bool PorteroElectrico { get; set; } = true;
         public bool Cilindro { get; set; } = true;
         public List<int> CilindroList { get; set; } = new();
+        public List<int> AgujasCorrederaList { get; set; } = new();
     }
     public class AgujaModeloPerfilItem
     {

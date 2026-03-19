@@ -121,13 +121,13 @@ namespace RotoGestionClientes
             string[] titles =
                             {
                                 "Datos generales",
-                                "Ventanas OB-PRAC",
+                                "Ventanas",
                                 "Balconeras",
                                 "Puertas",
-                                "Paralelas",
+                                //"Paralelas",
                                 "Inline",
-                                "Elevables",
-                                "Especiales",
+                                "Elevables/Plegables",
+                                //"Especiales",
                                 "Máquinas",
                                 "Documentos asociados"
                             };
@@ -224,6 +224,10 @@ namespace RotoGestionClientes
                 ObservacionesBalconeras = cliente.ObservacionesBalconeras,
                 ObservacionesPuertas = cliente.ObservacionesPuertas,
                 ObservacionesParalelas = cliente.ObservacionesParalelas,
+                ObservacionesCorrederas = cliente.ObservacionesCorrederas,
+                ObservacionesElevables = cliente.ObservacionesElevables,
+                ObservacionesMaquinas = cliente.ObservacionesMaquinas,
+                ObservacionesPlegables = cliente.ObservacionesPlegables,
 
                 SoftwareList = _context.ClienteSoftwares
                     .Where(cs => cs.ClienteId == clienteId)
@@ -300,6 +304,11 @@ namespace RotoGestionClientes
                     .Select(cb => cb.CilindroId)
                     .ToList(),
 
+                AgujasCorrederaList = _context.ClienteAgujasCorrederas
+                    .Where(cb => cb.ClienteId == clienteId)
+                    .Select(cb => cb.AgujaCorrederaId)
+                    .ToList(),
+
                 AgujasModeloPerfilList = _context.ClienteAgujasModeloPerfil
                     .Where(cam => cam.ClienteId == clienteId)
                     .Select(cam => new AgujaModeloPerfilItem
@@ -356,7 +365,11 @@ namespace RotoGestionClientes
                 ObservacionesVentanas = _model.ObservacionesVentanas,
                 ObservacionesBalconeras = _model.ObservacionesBalconeras,
                 ObservacionesPuertas = _model.ObservacionesPuertas,
-                ObservacionesParalelas = _model.ObservacionesParalelas
+                ObservacionesParalelas = _model.ObservacionesParalelas,
+                ObservacionesCorrederas = _model.ObservacionesCorrederas,
+                ObservacionesElevables = _model.ObservacionesElevables,
+                ObservacionesPlegables = _model.ObservacionesPlegables,
+                ObservacionesMaquinas = _model.ObservacionesMaquinas
             };
 
             _context.Clientes.Add(cliente);
@@ -396,7 +409,21 @@ namespace RotoGestionClientes
 
             CrearClienteCilindro(cliente.Id);
 
+            CrearClienteAgujasCorredera(cliente.Id);
+
             _context.SaveChanges();
+        }
+        private void CrearClienteAgujasCorredera(int clienteId)
+        {
+            foreach (var cilindroId in _model.AgujasCorrederaList)
+            {
+                _context.ClienteAgujasCorrederas.Add(new ClienteAgujasCorredera
+                {
+                    ClienteId = clienteId,
+                    AgujaCorrederaId = cilindroId
+                });
+
+            }
         }
         private void CrearClienteCilindro(int clienteId)
         {
@@ -654,6 +681,7 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteCilindros)
                     .ThenInclude(cc => cc.Cilindro)
                         .ThenInclude(c => c.CilindroTipo)
+                .Include(c => c.ClienteAgujasCorredera)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -665,6 +693,10 @@ namespace RotoGestionClientes
             cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
             cliente.ObservacionesPuertas = _model.ObservacionesPuertas;
             cliente.ObservacionesParalelas = _model.ObservacionesParalelas;
+            cliente.ObservacionesCorrederas = _model.ObservacionesCorrederas;
+            cliente.ObservacionesElevables = _model.ObservacionesElevables;
+            cliente.ObservacionesPlegables = _model.ObservacionesPlegables;
+            cliente.ObservacionesMaquinas = _model.ObservacionesMaquinas;
 
             UpdateClientePerfilTipo(cliente);
 
@@ -700,7 +732,41 @@ namespace RotoGestionClientes
 
             UpdateCilindros(cliente);
 
+            UpdateAgujasCorredera(cliente);
+
             _context.SaveChanges();
+        }
+        private void UpdateAgujasCorredera(Cliente cliente)
+        {
+            var itemActuales = cliente.ClienteAgujasCorredera
+                .Select(cp => cp.AgujaCorrederaId)
+                .ToList();
+
+            var itemSeleccionadas = _model.AgujasCorrederaList;
+
+            //1. Eliminar los que ya no están seleccionados
+            var itemsAEliminar = cliente.ClienteAgujasCorredera
+                .Where(cp => !itemSeleccionadas.Contains(cp.AgujaCorrederaId))
+                .ToList();
+
+            foreach (var item in itemsAEliminar)
+            {
+                _context.Remove(item);
+            }
+
+            //2. Agregar los nuevos
+            var itemsAAgregar = itemSeleccionadas
+                .Where(id => !itemActuales.Contains(id))
+                .ToList();
+
+            foreach (var itemId in itemsAAgregar)
+            {
+                cliente.ClienteAgujasCorredera.Add(new ClienteAgujasCorredera
+                {
+                    ClienteId = cliente.Id,
+                    AgujaCorrederaId = itemId
+                });
+            }
         }
         private void UpdateCilindros(Cliente cliente)
         {
