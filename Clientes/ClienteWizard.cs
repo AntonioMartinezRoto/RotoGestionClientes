@@ -336,6 +336,13 @@ namespace RotoGestionClientes
             model.PorteroElectrico = clienteConfiguracionPuertas?.PorteroElectrico ?? false;
             model.Cilindro = clienteConfiguracionPuertas?.Cilindro ?? false;
 
+            var clienteCilindroCorredera = _context.ClienteCilindrosCorredera.FirstOrDefault(ccp => ccp.ClienteId == clienteId);
+            model.CilindroCorredera = clienteCilindroCorredera?.Cilindro ?? false;
+
+            var clienteConfiguracionElevalePlegable = _context.ClienteConfiguracionElevablePlegables.FirstOrDefault(ccp => ccp.ClienteId == clienteId);
+            model.Plegable_Consumen = clienteConfiguracionElevalePlegable?.Plegable_Consumen ?? false;
+            model.Elevable_Dlo = clienteConfiguracionElevalePlegable?.Elevable_Dlo ?? false;
+
             return model;
         }
         private void InitializeTitulo()
@@ -411,7 +418,28 @@ namespace RotoGestionClientes
 
             CrearClienteAgujasCorredera(cliente.Id);
 
+            CrearClienteCilindroCorredera(cliente.Id);
+
+            CrearClienteConfigElevablesPlegables(cliente.Id);
+
             _context.SaveChanges();
+        }
+        private void CrearClienteConfigElevablesPlegables(int clienteId)
+        {
+            _context.ClienteConfiguracionElevablePlegables.Add(new ClienteConfiguracionElevablePlegable
+            {
+                ClienteId = clienteId,
+                Elevable_Dlo = _model.Elevable_Dlo,
+                Plegable_Consumen = _model.Plegable_Consumen
+            });
+        }
+        private void CrearClienteCilindroCorredera(int clienteId)
+        {
+            _context.ClienteCilindrosCorredera.Add(new ClienteCilindroCorredera
+            {
+                ClienteId = clienteId,
+                Cilindro = _model.CilindroCorredera
+            });
         }
         private void CrearClienteAgujasCorredera(int clienteId)
         {
@@ -682,6 +710,8 @@ namespace RotoGestionClientes
                     .ThenInclude(cc => cc.Cilindro)
                         .ThenInclude(c => c.CilindroTipo)
                 .Include(c => c.ClienteAgujasCorredera)
+                .Include(c => c.ClienteCilindrosCorredera)
+                .Include(c => c.ClienteConfiguracionElevablePlegable)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -734,7 +764,52 @@ namespace RotoGestionClientes
 
             UpdateAgujasCorredera(cliente);
 
+            UpdateCilindrosCorredera(cliente);
+
+            UpdateConfiguracionElevablesPlegables(cliente);
+
             _context.SaveChanges();
+        }
+
+        private void UpdateConfiguracionElevablesPlegables(Cliente cliente)
+        {
+            var clienteConfigElevablesPlegables = _context.ClienteConfiguracionElevablePlegables
+                .FirstOrDefault(ca => ca.ClienteId == cliente.Id);
+
+            if (clienteConfigElevablesPlegables == null)
+            {
+                clienteConfigElevablesPlegables = new ClienteConfiguracionElevablePlegable
+                {
+                    ClienteId = cliente.Id,
+                    Elevable_Dlo = _model.Elevable_Dlo,
+                    Plegable_Consumen = _model.Plegable_Consumen
+                };
+
+                _context.ClienteConfiguracionElevablePlegables.Add(clienteConfigElevablesPlegables);
+            }
+
+            // actualizar configuración general
+            clienteConfigElevablesPlegables.Elevable_Dlo = _model.Elevable_Dlo;
+            clienteConfigElevablesPlegables.Plegable_Consumen = _model.Plegable_Consumen;
+        }
+        private void UpdateCilindrosCorredera(Cliente cliente)
+        {
+            var clienteCilindrosCorredera = _context.ClienteCilindrosCorredera
+                .FirstOrDefault(ca => ca.ClienteId == cliente.Id);
+
+            if (clienteCilindrosCorredera == null)
+            {
+                clienteCilindrosCorredera = new ClienteCilindroCorredera
+                {
+                    ClienteId = cliente.Id,
+                    Cilindro = _model.CilindroCorredera
+                };
+
+                _context.ClienteCilindrosCorredera.Add(clienteCilindrosCorredera);
+            }
+
+            // actualizar configuración general
+            clienteCilindrosCorredera.Cilindro = _model.CilindroCorredera;
         }
         private void UpdateAgujasCorredera(Cliente cliente)
         {

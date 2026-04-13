@@ -544,7 +544,8 @@ CREATE TABLE dbo.ClienteAgujasCorredera
 (
     ClienteId INT NOT NULL,
     AgujaCorrederaId INT NOT NULL,
-
+	Bombillo BIT NOT NULL,
+	
     CONSTRAINT PK_ClienteAgujasCorredera
         PRIMARY KEY CLUSTERED (ClienteId, AgujaCorrederaId),
 
@@ -932,5 +933,37 @@ CREATE TABLE dbo.ClienteCilindro
     CONSTRAINT FK_ClienteCilindro_Cilindro
         FOREIGN KEY (CilindroId)
         REFERENCES dbo.Cilindro(Id)
+);
+GO
+
+CREATE TABLE dbo.ClienteCilindroCorredera
+(
+    ClienteId INT NOT NULL,
+    Cilindro BIT NOT NULL,
+
+    CONSTRAINT PK_ClienteCilindroCorredera
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteCilindroCorredera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+);
+GO
+
+
+CREATE TABLE dbo.ClienteConfiguracionElevablePlegable
+(
+    ClienteId INT NOT NULL,
+    Elevable_Dlo BIT NOT NULL,
+	Plegable_Consumen BIT NOT NULL,
+
+    CONSTRAINT PK_ClienteConfiguracionElevablePlegable
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteConfiguracionElevablePlegable_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
 );
 GO

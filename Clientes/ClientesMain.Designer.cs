@@ -49,6 +49,7 @@
             dgvClientes.AllowUserToAddRows = false;
             dgvClientes.AllowUserToDeleteRows = false;
             dgvClientes.AllowUserToOrderColumns = true;
+            dgvClientes.AllowUserToResizeRows = false;
             dgvClientes.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvClientes.BackgroundColor = SystemColors.ActiveCaption;
             dgvClientes.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -87,7 +88,7 @@
             lbl_Total.BackColor = Color.Transparent;
             lbl_Total.Location = new Point(303, 86);
             lbl_Total.Name = "lbl_Total";
-            lbl_Total.Size = new Size(44, 15);
+            lbl_Total.Size = new Size(45, 15);
             lbl_Total.TabIndex = 32;
             lbl_Total.Text = "Total: 0";
             // 

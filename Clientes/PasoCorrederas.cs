@@ -29,7 +29,6 @@ namespace RotoGestionClientes
             InitializeComponent();
             _model = model;
             _context = context;
-
         }
 
         #endregion
@@ -46,6 +45,15 @@ namespace RotoGestionClientes
             }
             CrearGridAgujasCorredera();
             RellenarGridAgujasCorredera();
+
+            if (_model.CilindroCorredera)
+            {
+                rb_BombilloSi.Checked = true;
+            }
+            else
+            {
+                rb_BombilloNo.Checked = true;
+            }
         }
         private void dgvAgujas_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -127,5 +135,14 @@ namespace RotoGestionClientes
         }
         #endregion
 
+        private void rb_BombilloSi_CheckedChanged(object sender, EventArgs e)
+        {
+            _model.CilindroCorredera = rb_BombilloSi.Checked;
+        }
+
+        private void rb_BombilloNo_CheckedChanged(object sender, EventArgs e)
+        {
+            _model.CilindroCorredera = rb_BombilloSi.Checked;
+        }
     }
 }

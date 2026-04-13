@@ -44,6 +44,8 @@ namespace RotoGestionClientes
         public DbSet<CilindroTipo> CilindroTipos { get; set; } = null!;
         public DbSet<ClienteCilindro> ClienteCilindros { get; set; } = null!;
         public DbSet<ClienteAgujasCorredera> ClienteAgujasCorrederas { get; set; } = null!;
+        public DbSet<ClienteCilindroCorredera> ClienteCilindrosCorredera { get; set; } = null!;
+        public DbSet<ClienteConfiguracionElevablePlegable> ClienteConfiguracionElevablePlegables { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -630,6 +632,28 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.AgujasCorredera)
                       .WithMany(s => s.ClienteAgujasCorredera)
                       .HasForeignKey(e => e.AgujaCorrederaId);
+            });
+            modelBuilder.Entity<ClienteCilindroCorredera>(entity =>
+            {
+                entity.ToTable("ClienteCilindroCorredera", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithOne(c => c.ClienteCilindrosCorredera)
+                      .HasForeignKey<ClienteCilindroCorredera>(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<ClienteConfiguracionElevablePlegable>(entity =>
+            {
+                entity.ToTable("ClienteConfiguracionElevablePlegable", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithOne(c => c.ClienteConfiguracionElevablePlegable)
+                      .HasForeignKey<ClienteConfiguracionElevablePlegable>(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
