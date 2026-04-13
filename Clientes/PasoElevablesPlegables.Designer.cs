@@ -43,6 +43,9 @@
             rb_DloNo = new RadioButton();
             group_Comentarios = new GroupBox();
             txt_ObservacionesElevables = new TextBox();
+            groupBox3 = new GroupBox();
+            rb_EstandarSi = new RadioButton();
+            rb_EstandarNo = new RadioButton();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             group_Plegables.SuspendLayout();
@@ -51,6 +54,7 @@
             groupBox1.SuspendLayout();
             groupDLO.SuspendLayout();
             group_Comentarios.SuspendLayout();
+            groupBox3.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox1
@@ -144,6 +148,7 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(groupBox3);
             groupBox1.Controls.Add(groupDLO);
             groupBox1.Controls.Add(group_Comentarios);
             groupBox1.Controls.Add(pictureBox1);
@@ -158,7 +163,7 @@
             // 
             groupDLO.Controls.Add(rb_DloSi);
             groupDLO.Controls.Add(rb_DloNo);
-            groupDLO.Location = new Point(396, 30);
+            groupDLO.Location = new Point(548, 34);
             groupDLO.Name = "groupDLO";
             groupDLO.Size = new Size(121, 111);
             groupDLO.TabIndex = 17;
@@ -209,6 +214,41 @@
             txt_ObservacionesElevables.TabIndex = 8;
             txt_ObservacionesElevables.TextChanged += txt_ObservacionesElevables_TextChanged;
             // 
+            // groupBox3
+            // 
+            groupBox3.Controls.Add(rb_EstandarSi);
+            groupBox3.Controls.Add(rb_EstandarNo);
+            groupBox3.Location = new Point(396, 34);
+            groupBox3.Name = "groupBox3";
+            groupBox3.Size = new Size(121, 111);
+            groupBox3.TabIndex = 18;
+            groupBox3.TabStop = false;
+            groupBox3.Text = "Estándar";
+            // 
+            // rb_EstandarSi
+            // 
+            rb_EstandarSi.AutoSize = true;
+            rb_EstandarSi.Location = new Point(17, 34);
+            rb_EstandarSi.Name = "rb_EstandarSi";
+            rb_EstandarSi.Size = new Size(34, 19);
+            rb_EstandarSi.TabIndex = 5;
+            rb_EstandarSi.TabStop = true;
+            rb_EstandarSi.Text = "Sí";
+            rb_EstandarSi.UseVisualStyleBackColor = true;
+            rb_EstandarSi.CheckedChanged += rb_EstandarSi_CheckedChanged;
+            // 
+            // rb_EstandarNo
+            // 
+            rb_EstandarNo.AutoSize = true;
+            rb_EstandarNo.Location = new Point(17, 72);
+            rb_EstandarNo.Name = "rb_EstandarNo";
+            rb_EstandarNo.Size = new Size(41, 19);
+            rb_EstandarNo.TabIndex = 6;
+            rb_EstandarNo.TabStop = true;
+            rb_EstandarNo.Text = "No";
+            rb_EstandarNo.UseVisualStyleBackColor = true;
+            rb_EstandarNo.CheckedChanged += rb_EstandarNo_CheckedChanged;
+            // 
             // PasoElevablesPlegables
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -231,6 +271,8 @@
             groupDLO.PerformLayout();
             group_Comentarios.ResumeLayout(false);
             group_Comentarios.PerformLayout();
+            groupBox3.ResumeLayout(false);
+            groupBox3.PerformLayout();
             ResumeLayout(false);
         }
 
@@ -250,5 +292,8 @@
         private GroupBox groupConsumoPlegable;
         private RadioButton rb_ConsumoSi;
         private RadioButton rb_ConsumoNo;
+        private GroupBox groupBox3;
+        private RadioButton rb_EstandarSi;
+        private RadioButton rb_EstandarNo;
     }
 }

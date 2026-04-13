@@ -33,6 +33,9 @@ namespace RotoGestionClientes
             rb_DloSi.Checked = _model.Elevable_Dlo;
             rb_DloNo.Checked = !_model.Elevable_Dlo;
 
+            rb_EstandarNo.Checked = !_model.Elevable_Estandar;
+            rb_EstandarSi.Checked = _model.Elevable_Estandar;
+
             rb_ConsumoSi.Checked = _model.Plegable_Consumen;
             rb_ConsumoNo.Checked = !_model.Plegable_Consumen;
         }
@@ -60,8 +63,21 @@ namespace RotoGestionClientes
         {
             _model.Plegable_Consumen = !rb_ConsumoNo.Checked;
         }
+        private void rb_EstandarSi_CheckedChanged(object sender, EventArgs e)
+        {
+            _model.Elevable_Estandar = rb_EstandarSi.Checked;
+        }
+        private void rb_EstandarNo_CheckedChanged(object sender, EventArgs e)
+        {
+            _model.Elevable_Estandar = !rb_EstandarNo.Checked;
+        }
 
         #endregion
-        
+
+        #region Private methods
+
+        #endregion
+
+
     }
 }

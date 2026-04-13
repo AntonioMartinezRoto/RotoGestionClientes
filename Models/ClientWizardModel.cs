@@ -44,6 +44,7 @@ namespace RotoGestionClientes
         public bool CilindroCorredera { get; set; } = false;
         public List<int> CilindroList { get; set; } = new();
         public List<int> AgujasCorrederaList { get; set; } = new();
+        public bool Elevable_Estandar { get; set; } = false;
         public bool Elevable_Dlo { get; set; } = false;
         public bool Plegable_Consumen { get; set; } = false;
 

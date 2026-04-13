@@ -955,6 +955,7 @@ GO
 CREATE TABLE dbo.ClienteConfiguracionElevablePlegable
 (
     ClienteId INT NOT NULL,
+	Elevable_Estandar BIT NOT NULL,
     Elevable_Dlo BIT NOT NULL,
 	Plegable_Consumen BIT NOT NULL,
 

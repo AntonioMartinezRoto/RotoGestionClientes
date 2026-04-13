@@ -340,8 +340,9 @@ namespace RotoGestionClientes
             model.CilindroCorredera = clienteCilindroCorredera?.Cilindro ?? false;
 
             var clienteConfiguracionElevalePlegable = _context.ClienteConfiguracionElevablePlegables.FirstOrDefault(ccp => ccp.ClienteId == clienteId);
-            model.Plegable_Consumen = clienteConfiguracionElevalePlegable?.Plegable_Consumen ?? false;
+            model.Elevable_Estandar = clienteConfiguracionElevalePlegable?.Elevable_Estandar ?? false;
             model.Elevable_Dlo = clienteConfiguracionElevalePlegable?.Elevable_Dlo ?? false;
+            model.Plegable_Consumen = clienteConfiguracionElevalePlegable?.Plegable_Consumen ?? false;
 
             return model;
         }
@@ -429,6 +430,7 @@ namespace RotoGestionClientes
             _context.ClienteConfiguracionElevablePlegables.Add(new ClienteConfiguracionElevablePlegable
             {
                 ClienteId = clienteId,
+                Elevable_Estandar = _model.Elevable_Estandar,
                 Elevable_Dlo = _model.Elevable_Dlo,
                 Plegable_Consumen = _model.Plegable_Consumen
             });
@@ -781,6 +783,7 @@ namespace RotoGestionClientes
                 clienteConfigElevablesPlegables = new ClienteConfiguracionElevablePlegable
                 {
                     ClienteId = cliente.Id,
+                    Elevable_Estandar = _model.Elevable_Estandar,
                     Elevable_Dlo = _model.Elevable_Dlo,
                     Plegable_Consumen = _model.Plegable_Consumen
                 };
@@ -789,6 +792,7 @@ namespace RotoGestionClientes
             }
 
             // actualizar configuración general
+            clienteConfigElevablesPlegables.Elevable_Estandar = _model.Elevable_Estandar;
             clienteConfigElevablesPlegables.Elevable_Dlo = _model.Elevable_Dlo;
             clienteConfigElevablesPlegables.Plegable_Consumen = _model.Plegable_Consumen;
         }
