@@ -7,7 +7,6 @@ namespace RotoGestionClientes
 
         private readonly ClientWizardModel _model;
         private ApplicationDbContext _context;
-        private BindingSource _bindingSourcePerfilTipo = new BindingSource();
 
         #endregion
 

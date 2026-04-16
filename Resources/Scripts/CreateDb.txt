@@ -214,7 +214,7 @@ CREATE TABLE dbo.ClienteSoporteCompas
 );
 GO
 
-CREATE TABLE dbo.MaquinaTipo
+CREATE TABLE dbo.MaquinaTipos
 (
     Id INT NOT NULL,    
     Descripcion NVARCHAR(50) NOT NULL,    
@@ -230,13 +230,14 @@ CREATE TABLE dbo.MaquinaTipo
 );
 GO
 
-INSERT INTO dbo.MaquinaTipo (Id, Descripcion, Mecaniza, Automatica, Activa)
+INSERT INTO dbo.MaquinaTipos (Id, Descripcion, Mecaniza, Automatica, Activa)
 VALUES 
 (1, 'Tronzadora', 0, 0, 1),
 (2, 'Centro de mecanizado', 1, 0, 1),
 (3, 'Mesa de herraje', 0, 0, 1),
 (4, 'Mesa de herraje (Autómatica)', 0, 1, 1),
-(5, 'Soldadora', 0, 0, 1);
+(5, 'Soldadora', 0, 0, 1),
+(6, 'Robot cerraderos', 0, 0, 1);
 GO
 
 
@@ -260,6 +261,57 @@ VALUES
 (4, 'Kaban', NULL),
 (5, 'Thorwersten', NULL),
 (6, 'Graf', NULL);
+GO
+
+CREATE TABLE dbo.MaquinaMantenimiento
+(
+    Id INT NOT NULL,    
+    Nombre NVARCHAR(50) NOT NULL
+
+    CONSTRAINT PK_MaquinaMantenimiento
+        PRIMARY KEY CLUSTERED (Id)
+);
+GO
+
+INSERT INTO dbo.MaquinaMantenimiento (Id, Nombre)
+VALUES 
+(1, 'Disomac'),
+(2, 'Mantenimiento 2'),
+(3, 'Mantenimiento 3'),
+(4, 'Mantenimiento 4'),
+(5, 'Mantenimiento 5'),
+(6, 'Mantenimiento 6');
+GO
+
+CREATE TABLE dbo.ClienteMaquina
+(
+	Id INT IDENTITY(1,1) NOT NULL, 
+    ClienteId INT NOT NULL,
+	MaquinaTipoId INT NOT NULL,
+    MaquinaMarcaId INT NULL,
+	MaquinaMantenimientoId INT NOT NULL,
+    Observaciones VARCHAR(100) NULL,
+
+    CONSTRAINT PK_ClienteMaquina
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_ClienteMaquina_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+	CONSTRAINT FK_ClienteMaquina_MaquinaTipos
+		FOREIGN KEY (MaquinaTipoId)
+		REFERENCES dbo.MaquinaTipos(Id),
+
+    CONSTRAINT FK_ClienteMaquina_MaquinaMarcas
+        FOREIGN KEY (MaquinaMarcaId)
+        REFERENCES dbo.MaquinaMarcas(Id),
+		
+	CONSTRAINT FK_ClienteAgujas_MaquinaMantenimiento
+		FOREIGN KEY (MaquinaMantenimientoId)
+		REFERENCES dbo.MaquinaMantenimiento(Id)
+);
 GO
 
 
@@ -544,7 +596,6 @@ CREATE TABLE dbo.ClienteAgujasCorredera
 (
     ClienteId INT NOT NULL,
     AgujaCorrederaId INT NOT NULL,
-	Bombillo BIT NOT NULL,
 	
     CONSTRAINT PK_ClienteAgujasCorredera
         PRIMARY KEY CLUSTERED (ClienteId, AgujaCorrederaId),
