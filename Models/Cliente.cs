@@ -47,5 +47,6 @@ namespace RotoGestionClientes
         public ICollection<ClienteAgujasCorredera> ClienteAgujasCorredera { get; set; } = new List<ClienteAgujasCorredera>();
         public ClienteCilindroCorredera? ClienteCilindrosCorredera { get; set; }
         public ClienteConfiguracionElevablePlegable? ClienteConfiguracionElevablePlegable { get; set; }
+        public ICollection<ClienteMaquina> ClienteMaquinas { get; set; } = new List<ClienteMaquina>();
     }
 }

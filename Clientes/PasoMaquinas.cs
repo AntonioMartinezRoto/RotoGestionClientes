@@ -14,7 +14,7 @@ namespace RotoGestionClientes
 
         private readonly ClientWizardModel _model;
         private ApplicationDbContext _context;
-        private BindingSource _bindingSourcePerfilTipo = new BindingSource();
+        private BindingSource _bindingSource = new BindingSource();
 
         #endregion
 
@@ -36,12 +36,13 @@ namespace RotoGestionClientes
         private void PasoMaquinas_Load(object sender, EventArgs e)
         {
             CrearGrid();
+            CargarMaquinasGrid();
+            txt_ObservacionesMaquinas.Text = _model.ObservacionesMaquinas;
         }
         private void txt_ObservacionesMaquinas_TextChanged(object sender, EventArgs e)
         {
             _model.ObservacionesMaquinas = txt_ObservacionesMaquinas.Text;
         }
-
         private void CrearGrid()
         {
             dgvMaquinas.AutoGenerateColumns = false;
@@ -55,23 +56,21 @@ namespace RotoGestionClientes
                 Name = "Descripcion",
                 HeaderText = "Tipo",
                 DataPropertyName = "Descripcion",
-                //Width = 250,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
             dgvMaquinas.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "Nombre",
+                Name = "MarcaNombre",
                 HeaderText = "Marca",
-                DataPropertyName = "Nombre",
+                DataPropertyName = "MarcaNombre",
                 Width = 200
             });
             dgvMaquinas.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "MantenimientoNombre",
                 HeaderText = "Mantenimiento",
-                DataPropertyName = "MantenimientNombre",
+                DataPropertyName = "MantenimientoNombre",
                 Width = 200
-                //AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
             dgvMaquinas.Columns.Add(new DataGridViewImageColumn
             {
@@ -91,9 +90,64 @@ namespace RotoGestionClientes
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             });
         }
+        private void CargarMaquinasGrid()
+        {
+            _bindingSource.DataSource = _model.MaquinasList;
+            dgvMaquinas.DataSource = _bindingSource;
+        }
+        private void btn_AddMaquina_Click(object sender, EventArgs e)
+        {
+            var maquinasForm = new DefinicionMaquinas(_context);
+
+            if (maquinasForm.ShowDialog() == DialogResult.OK)
+            {
+                _model.MaquinasList.Add(maquinasForm.Result);
+                CargarMaquinasGrid();
+            }
+        }
+        private void dgvMaquinas_CellClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+
+            var item = (ClienteMaquinaItem)dgvMaquinas.Rows[e.RowIndex].DataBoundItem;
+            if (item == null) return;
+
+            if (dgvMaquinas.Columns[e.ColumnIndex].Name == "Edit")
+            {
+                var form = new DefinicionMaquinas(_context, item);
+
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    _model.MaquinasList[e.RowIndex] = form.Result;
+                    CargarMaquinasGrid();
+                }
+            }
+
+            if (dgvMaquinas.Columns[e.ColumnIndex].Name == "Delete")
+            {
+                if (MessageBox.Show("Se va a eliminar la máquina seleccionada. ¿Desea continuar?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    _model.MaquinasList.RemoveAt(e.RowIndex);
+                    CargarMaquinasGrid();
+                }
+            }
+        }
         #endregion
+    }
 
+    public class ClienteMaquinaItem
+    {
+        public int? Id { get; set; } // null = nuevo
 
+        public int MaquinaTipoId { get; set; }
+        public string Descripcion { get; set; } = null!;
 
+        public int? MaquinaMarcaId { get; set; }
+        public string? MarcaNombre { get; set; }
+
+        public int MaquinaMantenimientoId { get; set; }
+        public string MantenimientoNombre { get; set; } = null!;
+
+        public string? Observaciones { get; set; }
     }
 }

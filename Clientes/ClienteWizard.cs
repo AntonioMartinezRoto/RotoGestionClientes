@@ -317,7 +317,24 @@ namespace RotoGestionClientes
                         AgujaId = cam.AgujaId,
                         PerfilId = cam.PerfilId
                     })
-                    .ToList()
+                    .ToList(),
+
+                MaquinasList = new BindingList<ClienteMaquinaItem>(
+                            _context.ClienteMaquinas
+                                .Where(cm => cm.ClienteId == clienteId)
+                                .Select(cm => new ClienteMaquinaItem
+                                {
+                                    MaquinaMarcaId = cm.MaquinaMarcaId,
+                                    MarcaNombre = cm.MaquinaMarca != null ? cm.MaquinaMarca.Nombre : string.Empty,
+                                    MaquinaTipoId = cm.MaquinaTipoId,
+                                    Descripcion = cm.MaquinaTipo.Descripcion,
+                                    MaquinaMantenimientoId = cm.MaquinaMantenimientoId,
+                                    MantenimientoNombre = cm.MaquinaMantenimiento.Nombre,
+                                    Observaciones = cm.Observaciones
+                                })
+                                        .ToList()
+                                )
+
             };
 
             var clienteAgujas = _context.ClienteAgujases.FirstOrDefault(ca => ca.ClienteId == clienteId);
@@ -423,7 +440,28 @@ namespace RotoGestionClientes
 
             CrearClienteConfigElevablesPlegables(cliente.Id);
 
+            CrearClienteMaquina(cliente.Id);
+
             _context.SaveChanges();
+        }
+
+        private void CrearClienteMaquina(int clienteId)
+        {
+            if (_model.MaquinasList != null)
+            {
+                foreach (var maquina in _model.MaquinasList)
+                {
+                    var clienteMaquina = new ClienteMaquina
+                    {
+                        ClienteId = clienteId,
+                        MaquinaMarcaId = maquina.MaquinaMarcaId,
+                        MaquinaTipoId = maquina.MaquinaTipoId,
+                        MaquinaMantenimientoId = maquina.MaquinaMantenimientoId,
+                        Observaciones = maquina.Observaciones
+                    };
+                    _context.ClienteMaquinas.Add(clienteMaquina);
+                }
+            }
         }
         private void CrearClienteConfigElevablesPlegables(int clienteId)
         {
@@ -714,6 +752,7 @@ namespace RotoGestionClientes
                 .Include(c => c.ClienteAgujasCorredera)
                 .Include(c => c.ClienteCilindrosCorredera)
                 .Include(c => c.ClienteConfiguracionElevablePlegable)
+                .Include(c => c.ClienteMaquinas)
                 .First(c => c.Id == _clienteId);
 
             //Guardar el nombre
@@ -770,9 +809,29 @@ namespace RotoGestionClientes
 
             UpdateConfiguracionElevablesPlegables(cliente);
 
+            UpdateClienteMaquinas(cliente);
+
             _context.SaveChanges();
         }
+        private void UpdateClienteMaquinas(Cliente cliente)
+        {
+            var existentes = _context.ClienteMaquinas
+                .Where(x => x.ClienteId == cliente.Id)
+                .ToList();
 
+            _context.ClienteMaquinas.RemoveRange(existentes);
+
+            var nuevas = _model.MaquinasList.Select(x => new ClienteMaquina
+            {
+                ClienteId = cliente.Id,
+                MaquinaTipoId = x.MaquinaTipoId,
+                MaquinaMarcaId = x.MaquinaMarcaId,
+                MaquinaMantenimientoId = x.MaquinaMantenimientoId,
+                Observaciones = x.Observaciones
+            });
+
+            _context.ClienteMaquinas.AddRange(nuevas);
+        }
         private void UpdateConfiguracionElevablesPlegables(Cliente cliente)
         {
             var clienteConfigElevablesPlegables = _context.ClienteConfiguracionElevablePlegables

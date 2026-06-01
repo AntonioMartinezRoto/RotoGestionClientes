@@ -58,9 +58,10 @@
             // 
             pictureBox1.BackgroundImageLayout = ImageLayout.None;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(10, 80);
+            pictureBox1.Location = new Point(11, 107);
+            pictureBox1.Margin = new Padding(3, 4, 3, 4);
             pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(212, 216);
+            pictureBox1.Size = new Size(242, 288);
             pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox1.TabIndex = 3;
             pictureBox1.TabStop = false;
@@ -68,20 +69,23 @@
             // group_Comentarios
             // 
             group_Comentarios.Controls.Add(txt_ObservacionesMaquinas);
-            group_Comentarios.Location = new Point(25, 483);
+            group_Comentarios.Location = new Point(29, 644);
+            group_Comentarios.Margin = new Padding(3, 4, 3, 4);
             group_Comentarios.Name = "group_Comentarios";
-            group_Comentarios.Size = new Size(884, 104);
+            group_Comentarios.Padding = new Padding(3, 4, 3, 4);
+            group_Comentarios.Size = new Size(1010, 139);
             group_Comentarios.TabIndex = 16;
             group_Comentarios.TabStop = false;
             group_Comentarios.Text = "Observaciones";
             // 
             // txt_ObservacionesMaquinas
             // 
-            txt_ObservacionesMaquinas.Location = new Point(17, 22);
+            txt_ObservacionesMaquinas.Location = new Point(19, 29);
+            txt_ObservacionesMaquinas.Margin = new Padding(3, 4, 3, 4);
             txt_ObservacionesMaquinas.MaxLength = 1000;
             txt_ObservacionesMaquinas.Multiline = true;
             txt_ObservacionesMaquinas.Name = "txt_ObservacionesMaquinas";
-            txt_ObservacionesMaquinas.Size = new Size(851, 66);
+            txt_ObservacionesMaquinas.Size = new Size(972, 87);
             txt_ObservacionesMaquinas.TabIndex = 8;
             txt_ObservacionesMaquinas.TextChanged += txt_ObservacionesMaquinas_TextChanged;
             // 
@@ -93,9 +97,11 @@
             groupBox1.Controls.Add(btn_AddMaquina);
             groupBox1.Controls.Add(dgvMaquinas);
             groupBox1.Controls.Add(pictureBox1);
-            groupBox1.Location = new Point(25, 3);
+            groupBox1.Location = new Point(29, 4);
+            groupBox1.Margin = new Padding(3, 4, 3, 4);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(884, 474);
+            groupBox1.Padding = new Padding(3, 4, 3, 4);
+            groupBox1.Size = new Size(1010, 632);
             groupBox1.TabIndex = 17;
             groupBox1.TabStop = false;
             groupBox1.Text = "Máquinas";
@@ -105,20 +111,22 @@
             groupSoporteMarco.Controls.Add(radioButton5);
             groupSoporteMarco.Controls.Add(radioButton3);
             groupSoporteMarco.Controls.Add(radioButton4);
-            groupSoporteMarco.Location = new Point(614, 336);
+            groupSoporteMarco.Location = new Point(702, 448);
+            groupSoporteMarco.Margin = new Padding(3, 4, 3, 4);
             groupSoporteMarco.Name = "groupSoporteMarco";
-            groupSoporteMarco.Size = new Size(238, 111);
+            groupSoporteMarco.Padding = new Padding(3, 4, 3, 4);
+            groupSoporteMarco.Size = new Size(272, 148);
             groupSoporteMarco.TabIndex = 19;
             groupSoporteMarco.TabStop = false;
             groupSoporteMarco.Text = "Soporte de marco";
-            groupSoporteMarco.Visible = false;
             // 
             // radioButton5
             // 
             radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(17, 79);
+            radioButton5.Location = new Point(19, 105);
+            radioButton5.Margin = new Padding(3, 4, 3, 4);
             radioButton5.Name = "radioButton5";
-            radioButton5.Size = new Size(116, 19);
+            radioButton5.Size = new Size(144, 24);
             radioButton5.TabIndex = 7;
             radioButton5.TabStop = true;
             radioButton5.Text = "Banco de marcos";
@@ -127,9 +135,10 @@
             // radioButton3
             // 
             radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(17, 22);
+            radioButton3.Location = new Point(19, 29);
+            radioButton3.Margin = new Padding(3, 4, 3, 4);
             radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(144, 19);
+            radioButton3.Size = new Size(180, 24);
             radioButton3.TabIndex = 5;
             radioButton3.TabStop = true;
             radioButton3.Text = "Centro de mecanizado";
@@ -138,9 +147,10 @@
             // radioButton4
             // 
             radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(17, 51);
+            radioButton4.Location = new Point(19, 68);
+            radioButton4.Margin = new Padding(3, 4, 3, 4);
             radioButton4.Name = "radioButton4";
-            radioButton4.Size = new Size(67, 19);
+            radioButton4.Size = new Size(83, 24);
             radioButton4.TabIndex = 6;
             radioButton4.TabStop = true;
             radioButton4.Text = "Plantilla";
@@ -150,20 +160,22 @@
             // 
             groupCentroTripleTaladro.Controls.Add(radioButton1);
             groupCentroTripleTaladro.Controls.Add(radioButton2);
-            groupCentroTripleTaladro.Location = new Point(312, 336);
+            groupCentroTripleTaladro.Location = new Point(357, 448);
+            groupCentroTripleTaladro.Margin = new Padding(3, 4, 3, 4);
             groupCentroTripleTaladro.Name = "groupCentroTripleTaladro";
-            groupCentroTripleTaladro.Size = new Size(238, 111);
+            groupCentroTripleTaladro.Padding = new Padding(3, 4, 3, 4);
+            groupCentroTripleTaladro.Size = new Size(272, 148);
             groupCentroTripleTaladro.TabIndex = 18;
             groupCentroTripleTaladro.TabStop = false;
             groupCentroTripleTaladro.Text = "Triple taladro en centro mecanizado";
-            groupCentroTripleTaladro.Visible = false;
             // 
             // radioButton1
             // 
             radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(17, 33);
+            radioButton1.Location = new Point(19, 44);
+            radioButton1.Margin = new Padding(3, 4, 3, 4);
             radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(34, 19);
+            radioButton1.Size = new Size(42, 24);
             radioButton1.TabIndex = 5;
             radioButton1.TabStop = true;
             radioButton1.Text = "Sí";
@@ -172,9 +184,10 @@
             // radioButton2
             // 
             radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(17, 58);
+            radioButton2.Location = new Point(19, 77);
+            radioButton2.Margin = new Padding(3, 4, 3, 4);
             radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(41, 19);
+            radioButton2.Size = new Size(50, 24);
             radioButton2.TabIndex = 6;
             radioButton2.TabStop = true;
             radioButton2.Text = "No";
@@ -184,20 +197,22 @@
             // 
             groupSoldadoraBisagras.Controls.Add(rb_BisagraSoldadoraSi);
             groupSoldadoraBisagras.Controls.Add(rb_BombilloNo);
-            groupSoldadoraBisagras.Location = new Point(22, 336);
+            groupSoldadoraBisagras.Location = new Point(25, 448);
+            groupSoldadoraBisagras.Margin = new Padding(3, 4, 3, 4);
             groupSoldadoraBisagras.Name = "groupSoldadoraBisagras";
-            groupSoldadoraBisagras.Size = new Size(238, 111);
+            groupSoldadoraBisagras.Padding = new Padding(3, 4, 3, 4);
+            groupSoldadoraBisagras.Size = new Size(272, 148);
             groupSoldadoraBisagras.TabIndex = 17;
             groupSoldadoraBisagras.TabStop = false;
             groupSoldadoraBisagras.Text = "Bisagras en soldadora";
-            groupSoldadoraBisagras.Visible = false;
             // 
             // rb_BisagraSoldadoraSi
             // 
             rb_BisagraSoldadoraSi.AutoSize = true;
-            rb_BisagraSoldadoraSi.Location = new Point(20, 33);
+            rb_BisagraSoldadoraSi.Location = new Point(23, 44);
+            rb_BisagraSoldadoraSi.Margin = new Padding(3, 4, 3, 4);
             rb_BisagraSoldadoraSi.Name = "rb_BisagraSoldadoraSi";
-            rb_BisagraSoldadoraSi.Size = new Size(34, 19);
+            rb_BisagraSoldadoraSi.Size = new Size(42, 24);
             rb_BisagraSoldadoraSi.TabIndex = 5;
             rb_BisagraSoldadoraSi.TabStop = true;
             rb_BisagraSoldadoraSi.Text = "Sí";
@@ -206,9 +221,10 @@
             // rb_BombilloNo
             // 
             rb_BombilloNo.AutoSize = true;
-            rb_BombilloNo.Location = new Point(20, 58);
+            rb_BombilloNo.Location = new Point(23, 77);
+            rb_BombilloNo.Margin = new Padding(3, 4, 3, 4);
             rb_BombilloNo.Name = "rb_BombilloNo";
-            rb_BombilloNo.Size = new Size(41, 19);
+            rb_BombilloNo.Size = new Size(50, 24);
             rb_BombilloNo.TabIndex = 6;
             rb_BombilloNo.TabStop = true;
             rb_BombilloNo.Text = "No";
@@ -216,12 +232,14 @@
             // 
             // btn_AddMaquina
             // 
-            btn_AddMaquina.Location = new Point(228, 22);
+            btn_AddMaquina.Location = new Point(261, 29);
+            btn_AddMaquina.Margin = new Padding(3, 4, 3, 4);
             btn_AddMaquina.Name = "btn_AddMaquina";
-            btn_AddMaquina.Size = new Size(32, 32);
+            btn_AddMaquina.Size = new Size(37, 43);
             btn_AddMaquina.TabIndex = 5;
             btn_AddMaquina.Text = " +";
             btn_AddMaquina.UseVisualStyleBackColor = true;
+            btn_AddMaquina.Click += btn_AddMaquina_Click;
             // 
             // dgvMaquinas
             // 
@@ -231,22 +249,26 @@
             dgvMaquinas.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvMaquinas.BackgroundColor = Color.White;
             dgvMaquinas.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvMaquinas.Location = new Point(228, 60);
+            dgvMaquinas.Location = new Point(261, 80);
+            dgvMaquinas.Margin = new Padding(3, 4, 3, 4);
             dgvMaquinas.Name = "dgvMaquinas";
             dgvMaquinas.ReadOnly = true;
             dgvMaquinas.RowHeadersVisible = false;
-            dgvMaquinas.Size = new Size(644, 236);
+            dgvMaquinas.RowHeadersWidth = 51;
+            dgvMaquinas.Size = new Size(736, 315);
             dgvMaquinas.TabIndex = 4;
+            dgvMaquinas.CellClick += dgvMaquinas_CellClick;
             // 
             // PasoMaquinas
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             Controls.Add(groupBox1);
             Controls.Add(group_Comentarios);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "PasoMaquinas";
-            Size = new Size(946, 604);
+            Size = new Size(1081, 805);
             Load += PasoMaquinas_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             group_Comentarios.ResumeLayout(false);

@@ -46,6 +46,10 @@ namespace RotoGestionClientes
         public DbSet<ClienteAgujasCorredera> ClienteAgujasCorrederas { get; set; } = null!;
         public DbSet<ClienteCilindroCorredera> ClienteCilindrosCorredera { get; set; } = null!;
         public DbSet<ClienteConfiguracionElevablePlegable> ClienteConfiguracionElevablePlegables { get; set; } = null!;
+        public DbSet<ClienteMaquina> ClienteMaquinas { get; set; } = null!;
+        public DbSet<MaquinaTipo> MaquinasTipos { get; set; } = null!;
+        public DbSet<MaquinaMarca> MaquinasMarcas { get; set; } = null!;
+        public DbSet<MaquinaMantenimiento> MaquinasMantenimiento { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -654,6 +658,72 @@ namespace RotoGestionClientes
                       .WithOne(c => c.ClienteConfiguracionElevablePlegable)
                       .HasForeignKey<ClienteConfiguracionElevablePlegable>(e => e.ClienteId)
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<ClienteMaquina>(entity =>
+            {
+                entity.ToTable("ClienteMaquina", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteMaquinas)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.MaquinaTipo)
+                      .WithMany(t => t.ClienteMaquinas)
+                      .HasForeignKey(e => e.MaquinaTipoId);
+
+                entity.HasOne(e => e.MaquinaMarca)
+                      .WithMany(m => m.ClienteMaquinas)
+                      .HasForeignKey(e => e.MaquinaMarcaId)
+                      .IsRequired(false);
+
+                entity.HasOne(e => e.MaquinaMantenimiento)
+                      .WithMany(m => m.ClienteMaquinas)
+                      .HasForeignKey(e => e.MaquinaMantenimientoId);
+            });
+            modelBuilder.Entity<MaquinaTipo>(entity =>
+            {
+                entity.ToTable("MaquinaTipos");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Descripcion)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Mecaniza)
+                    .IsRequired();
+
+                entity.Property(e => e.Automatica)
+                    .IsRequired();
+
+                entity.Property(e => e.Activa)
+                    .IsRequired();
+            });
+            modelBuilder.Entity<MaquinaMarca>(entity =>
+            {
+                entity.ToTable("MaquinaMarcas");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Modelo)
+                      .HasMaxLength(50);
+            });
+            modelBuilder.Entity<MaquinaMantenimiento>(entity =>
+            {
+                entity.ToTable("MaquinaMantenimiento");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
             });
         }
     }

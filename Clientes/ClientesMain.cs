@@ -65,24 +65,34 @@ namespace RotoGestionClientes
         }
         private void dgvClientes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0)
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
                 return;
 
-            var cliente = (ClienteGridItem)dgvClientes.Rows[e.RowIndex].DataBoundItem;
+            if (e.ColumnIndex >= dgvClientes.Columns.Count)
+                return;
 
+            dgvClientes.EndEdit();
+            dgvClientes.CommitEdit(DataGridViewDataErrorContexts.Commit);
+
+            if (dgvClientes.DataSource is BindingSource bs)
+            {
+                bs.EndEdit();
+            }
+
+            var cliente = dgvClientes.Rows[e.RowIndex].DataBoundItem as ClienteGridItem;
             if (cliente == null)
                 return;
 
             if (dgvClientes.Columns[e.ColumnIndex].Name == "Edit")
             {
-                //ClientesEditForm clientesEditForm = new ClientesEditForm(cliente, _context);
-                ClienteWizard clienteWizard = new ClienteWizard(WizardMode.Edit, this._context, cliente.Id);
+                using var clienteWizard = new ClienteWizard(WizardMode.Edit, _context, cliente.Id);
                 clienteWizard.ShowDialog();
             }
             else if (dgvClientes.Columns[e.ColumnIndex].Name == "Delete")
             {
                 DeleteCliente(cliente);
             }
+
             LoadClientesFromDB();
         }
         private void btn_AddCliente_Click(object sender, EventArgs e)

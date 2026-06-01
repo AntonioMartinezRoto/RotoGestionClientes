@@ -1,4 +1,4 @@
-﻿namespace RotoGestionClientes.Clientes
+﻿namespace RotoGestionClientes
 {
     partial class DefinicionMaquinas
     {
@@ -47,9 +47,11 @@
             // group_TipoMaquina
             // 
             group_TipoMaquina.Controls.Add(cmb_TipoMaquina);
-            group_TipoMaquina.Location = new Point(22, 42);
+            group_TipoMaquina.Location = new Point(25, 56);
+            group_TipoMaquina.Margin = new Padding(3, 4, 3, 4);
             group_TipoMaquina.Name = "group_TipoMaquina";
-            group_TipoMaquina.Size = new Size(289, 71);
+            group_TipoMaquina.Padding = new Padding(3, 4, 3, 4);
+            group_TipoMaquina.Size = new Size(330, 95);
             group_TipoMaquina.TabIndex = 7;
             group_TipoMaquina.TabStop = false;
             group_TipoMaquina.Text = "Tipo";
@@ -58,17 +60,20 @@
             // 
             cmb_TipoMaquina.DropDownStyle = ComboBoxStyle.DropDownList;
             cmb_TipoMaquina.FormattingEnabled = true;
-            cmb_TipoMaquina.Location = new Point(16, 31);
+            cmb_TipoMaquina.Location = new Point(18, 41);
+            cmb_TipoMaquina.Margin = new Padding(3, 4, 3, 4);
             cmb_TipoMaquina.Name = "cmb_TipoMaquina";
-            cmb_TipoMaquina.Size = new Size(250, 23);
+            cmb_TipoMaquina.Size = new Size(285, 28);
             cmb_TipoMaquina.TabIndex = 0;
             // 
             // group_MarcaMaquina
             // 
             group_MarcaMaquina.Controls.Add(cmb_MarcaMaquina);
-            group_MarcaMaquina.Location = new Point(333, 42);
+            group_MarcaMaquina.Location = new Point(381, 56);
+            group_MarcaMaquina.Margin = new Padding(3, 4, 3, 4);
             group_MarcaMaquina.Name = "group_MarcaMaquina";
-            group_MarcaMaquina.Size = new Size(289, 71);
+            group_MarcaMaquina.Padding = new Padding(3, 4, 3, 4);
+            group_MarcaMaquina.Size = new Size(330, 95);
             group_MarcaMaquina.TabIndex = 8;
             group_MarcaMaquina.TabStop = false;
             group_MarcaMaquina.Text = "Marca";
@@ -77,17 +82,20 @@
             // 
             cmb_MarcaMaquina.DropDownStyle = ComboBoxStyle.DropDownList;
             cmb_MarcaMaquina.FormattingEnabled = true;
-            cmb_MarcaMaquina.Location = new Point(16, 31);
+            cmb_MarcaMaquina.Location = new Point(18, 41);
+            cmb_MarcaMaquina.Margin = new Padding(3, 4, 3, 4);
             cmb_MarcaMaquina.Name = "cmb_MarcaMaquina";
-            cmb_MarcaMaquina.Size = new Size(250, 23);
+            cmb_MarcaMaquina.Size = new Size(285, 28);
             cmb_MarcaMaquina.TabIndex = 0;
             // 
             // group_EmpresaMaquina
             // 
             group_EmpresaMaquina.Controls.Add(cmb_MantenimientoMaquina);
-            group_EmpresaMaquina.Location = new Point(22, 122);
+            group_EmpresaMaquina.Location = new Point(25, 163);
+            group_EmpresaMaquina.Margin = new Padding(3, 4, 3, 4);
             group_EmpresaMaquina.Name = "group_EmpresaMaquina";
-            group_EmpresaMaquina.Size = new Size(289, 71);
+            group_EmpresaMaquina.Padding = new Padding(3, 4, 3, 4);
+            group_EmpresaMaquina.Size = new Size(330, 95);
             group_EmpresaMaquina.TabIndex = 9;
             group_EmpresaMaquina.TabStop = false;
             group_EmpresaMaquina.Text = "Mantenimiento";
@@ -96,28 +104,32 @@
             // 
             cmb_MantenimientoMaquina.DropDownStyle = ComboBoxStyle.DropDownList;
             cmb_MantenimientoMaquina.FormattingEnabled = true;
-            cmb_MantenimientoMaquina.Location = new Point(17, 31);
+            cmb_MantenimientoMaquina.Location = new Point(19, 41);
+            cmb_MantenimientoMaquina.Margin = new Padding(3, 4, 3, 4);
             cmb_MantenimientoMaquina.Name = "cmb_MantenimientoMaquina";
-            cmb_MantenimientoMaquina.Size = new Size(250, 23);
+            cmb_MantenimientoMaquina.Size = new Size(285, 28);
             cmb_MantenimientoMaquina.TabIndex = 0;
             // 
             // group_Comentarios
             // 
             group_Comentarios.Controls.Add(txt_Observaciones);
-            group_Comentarios.Location = new Point(333, 122);
+            group_Comentarios.Location = new Point(381, 163);
+            group_Comentarios.Margin = new Padding(3, 4, 3, 4);
             group_Comentarios.Name = "group_Comentarios";
-            group_Comentarios.Size = new Size(289, 71);
+            group_Comentarios.Padding = new Padding(3, 4, 3, 4);
+            group_Comentarios.Size = new Size(330, 95);
             group_Comentarios.TabIndex = 11;
             group_Comentarios.TabStop = false;
             group_Comentarios.Text = "Observaciones";
             // 
             // txt_Observaciones
             // 
-            txt_Observaciones.Location = new Point(17, 22);
+            txt_Observaciones.Location = new Point(19, 29);
+            txt_Observaciones.Margin = new Padding(3, 4, 3, 4);
             txt_Observaciones.MaxLength = 1000;
             txt_Observaciones.Multiline = true;
             txt_Observaciones.Name = "txt_Observaciones";
-            txt_Observaciones.Size = new Size(250, 43);
+            txt_Observaciones.Size = new Size(285, 56);
             txt_Observaciones.TabIndex = 8;
             // 
             // btn_Aceptar
@@ -126,10 +138,11 @@
             btn_Aceptar.FlatStyle = FlatStyle.Flat;
             btn_Aceptar.Image = (Image)resources.GetObject("btn_Aceptar.Image");
             btn_Aceptar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Aceptar.Location = new Point(512, 220);
+            btn_Aceptar.Location = new Point(585, 293);
+            btn_Aceptar.Margin = new Padding(3, 4, 3, 4);
             btn_Aceptar.Name = "btn_Aceptar";
-            btn_Aceptar.Padding = new Padding(10, 0, 0, 0);
-            btn_Aceptar.Size = new Size(110, 34);
+            btn_Aceptar.Padding = new Padding(11, 0, 0, 0);
+            btn_Aceptar.Size = new Size(126, 45);
             btn_Aceptar.TabIndex = 12;
             btn_Aceptar.Text = "Guardar";
             btn_Aceptar.UseVisualStyleBackColor = true;
@@ -137,10 +150,10 @@
             // 
             // DefinicionMaquinas
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(661, 277);
+            ClientSize = new Size(755, 369);
             Controls.Add(btn_Aceptar);
             Controls.Add(group_Comentarios);
             Controls.Add(group_EmpresaMaquina);
@@ -148,9 +161,11 @@
             Controls.Add(group_TipoMaquina);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 4, 3, 4);
             MaximizeBox = false;
             Name = "DefinicionMaquinas";
             StartPosition = FormStartPosition.CenterScreen;
+            Load += DefinicionMaquinas_Load;
             group_TipoMaquina.ResumeLayout(false);
             group_MarcaMaquina.ResumeLayout(false);
             group_EmpresaMaquina.ResumeLayout(false);
