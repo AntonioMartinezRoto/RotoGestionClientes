@@ -59,7 +59,7 @@ namespace RotoGestionClientes
             cmb_MarcaMaquina.DisplayMember = "Nombre";
             cmb_MarcaMaquina.ValueMember = "Id";
 
-            cmb_MantenimientoMaquina.DataSource = _context.MaquinasMantenimiento.ToList();
+            cmb_MantenimientoMaquina.DataSource = _context.MaquinasMantenimiento.OrderBy(x => x.Nombre).ToList();
             cmb_MantenimientoMaquina.DisplayMember = "Nombre";
             cmb_MantenimientoMaquina.ValueMember = "Id";
 
