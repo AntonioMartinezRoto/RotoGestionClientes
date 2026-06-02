@@ -34,15 +34,15 @@
             txt_ObservacionesMaquinas = new TextBox();
             groupBox1 = new GroupBox();
             groupSoporteMarco = new GroupBox();
-            radioButton5 = new RadioButton();
-            radioButton3 = new RadioButton();
-            radioButton4 = new RadioButton();
+            rb_SoporteBanco = new RadioButton();
+            rb_SoporteCentro = new RadioButton();
+            rb_SoportePlantilla = new RadioButton();
             groupCentroTripleTaladro = new GroupBox();
-            radioButton1 = new RadioButton();
-            radioButton2 = new RadioButton();
+            rb_TripleTaladroCentroSi = new RadioButton();
+            rb_TripleTaladroCentroNo = new RadioButton();
             groupSoldadoraBisagras = new GroupBox();
             rb_BisagraSoldadoraSi = new RadioButton();
-            rb_BombilloNo = new RadioButton();
+            rb_BisagraSoldadoraNo = new RadioButton();
             btn_AddMaquina = new Button();
             dgvMaquinas = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -108,9 +108,9 @@
             // 
             // groupSoporteMarco
             // 
-            groupSoporteMarco.Controls.Add(radioButton5);
-            groupSoporteMarco.Controls.Add(radioButton3);
-            groupSoporteMarco.Controls.Add(radioButton4);
+            groupSoporteMarco.Controls.Add(rb_SoporteBanco);
+            groupSoporteMarco.Controls.Add(rb_SoporteCentro);
+            groupSoporteMarco.Controls.Add(rb_SoportePlantilla);
             groupSoporteMarco.Location = new Point(702, 448);
             groupSoporteMarco.Margin = new Padding(3, 4, 3, 4);
             groupSoporteMarco.Name = "groupSoporteMarco";
@@ -120,46 +120,49 @@
             groupSoporteMarco.TabStop = false;
             groupSoporteMarco.Text = "Soporte de marco";
             // 
-            // radioButton5
+            // rb_SoporteBanco
             // 
-            radioButton5.AutoSize = true;
-            radioButton5.Location = new Point(19, 105);
-            radioButton5.Margin = new Padding(3, 4, 3, 4);
-            radioButton5.Name = "radioButton5";
-            radioButton5.Size = new Size(144, 24);
-            radioButton5.TabIndex = 7;
-            radioButton5.TabStop = true;
-            radioButton5.Text = "Banco de marcos";
-            radioButton5.UseVisualStyleBackColor = true;
+            rb_SoporteBanco.AutoSize = true;
+            rb_SoporteBanco.Location = new Point(19, 105);
+            rb_SoporteBanco.Margin = new Padding(3, 4, 3, 4);
+            rb_SoporteBanco.Name = "rb_SoporteBanco";
+            rb_SoporteBanco.Size = new Size(144, 24);
+            rb_SoporteBanco.TabIndex = 7;
+            rb_SoporteBanco.TabStop = true;
+            rb_SoporteBanco.Text = "Banco de marcos";
+            rb_SoporteBanco.UseVisualStyleBackColor = true;
+            rb_SoporteBanco.CheckedChanged += rb_SoporteBanco_CheckedChanged;
             // 
-            // radioButton3
+            // rb_SoporteCentro
             // 
-            radioButton3.AutoSize = true;
-            radioButton3.Location = new Point(19, 29);
-            radioButton3.Margin = new Padding(3, 4, 3, 4);
-            radioButton3.Name = "radioButton3";
-            radioButton3.Size = new Size(180, 24);
-            radioButton3.TabIndex = 5;
-            radioButton3.TabStop = true;
-            radioButton3.Text = "Centro de mecanizado";
-            radioButton3.UseVisualStyleBackColor = true;
+            rb_SoporteCentro.AutoSize = true;
+            rb_SoporteCentro.Location = new Point(19, 29);
+            rb_SoporteCentro.Margin = new Padding(3, 4, 3, 4);
+            rb_SoporteCentro.Name = "rb_SoporteCentro";
+            rb_SoporteCentro.Size = new Size(180, 24);
+            rb_SoporteCentro.TabIndex = 5;
+            rb_SoporteCentro.TabStop = true;
+            rb_SoporteCentro.Text = "Centro de mecanizado";
+            rb_SoporteCentro.UseVisualStyleBackColor = true;
+            rb_SoporteCentro.CheckedChanged += rb_SoporteCentro_CheckedChanged;
             // 
-            // radioButton4
+            // rb_SoportePlantilla
             // 
-            radioButton4.AutoSize = true;
-            radioButton4.Location = new Point(19, 68);
-            radioButton4.Margin = new Padding(3, 4, 3, 4);
-            radioButton4.Name = "radioButton4";
-            radioButton4.Size = new Size(83, 24);
-            radioButton4.TabIndex = 6;
-            radioButton4.TabStop = true;
-            radioButton4.Text = "Plantilla";
-            radioButton4.UseVisualStyleBackColor = true;
+            rb_SoportePlantilla.AutoSize = true;
+            rb_SoportePlantilla.Location = new Point(19, 68);
+            rb_SoportePlantilla.Margin = new Padding(3, 4, 3, 4);
+            rb_SoportePlantilla.Name = "rb_SoportePlantilla";
+            rb_SoportePlantilla.Size = new Size(83, 24);
+            rb_SoportePlantilla.TabIndex = 6;
+            rb_SoportePlantilla.TabStop = true;
+            rb_SoportePlantilla.Text = "Plantilla";
+            rb_SoportePlantilla.UseVisualStyleBackColor = true;
+            rb_SoportePlantilla.CheckedChanged += rb_SoportePlantilla_CheckedChanged;
             // 
             // groupCentroTripleTaladro
             // 
-            groupCentroTripleTaladro.Controls.Add(radioButton1);
-            groupCentroTripleTaladro.Controls.Add(radioButton2);
+            groupCentroTripleTaladro.Controls.Add(rb_TripleTaladroCentroSi);
+            groupCentroTripleTaladro.Controls.Add(rb_TripleTaladroCentroNo);
             groupCentroTripleTaladro.Location = new Point(357, 448);
             groupCentroTripleTaladro.Margin = new Padding(3, 4, 3, 4);
             groupCentroTripleTaladro.Name = "groupCentroTripleTaladro";
@@ -169,34 +172,36 @@
             groupCentroTripleTaladro.TabStop = false;
             groupCentroTripleTaladro.Text = "Triple taladro en centro mecanizado";
             // 
-            // radioButton1
+            // rb_TripleTaladroCentroSi
             // 
-            radioButton1.AutoSize = true;
-            radioButton1.Location = new Point(19, 44);
-            radioButton1.Margin = new Padding(3, 4, 3, 4);
-            radioButton1.Name = "radioButton1";
-            radioButton1.Size = new Size(42, 24);
-            radioButton1.TabIndex = 5;
-            radioButton1.TabStop = true;
-            radioButton1.Text = "Sí";
-            radioButton1.UseVisualStyleBackColor = true;
+            rb_TripleTaladroCentroSi.AutoSize = true;
+            rb_TripleTaladroCentroSi.Location = new Point(19, 44);
+            rb_TripleTaladroCentroSi.Margin = new Padding(3, 4, 3, 4);
+            rb_TripleTaladroCentroSi.Name = "rb_TripleTaladroCentroSi";
+            rb_TripleTaladroCentroSi.Size = new Size(42, 24);
+            rb_TripleTaladroCentroSi.TabIndex = 5;
+            rb_TripleTaladroCentroSi.TabStop = true;
+            rb_TripleTaladroCentroSi.Text = "Sí";
+            rb_TripleTaladroCentroSi.UseVisualStyleBackColor = true;
+            rb_TripleTaladroCentroSi.CheckedChanged += rb_TripleTaladroCentroSi_CheckedChanged;
             // 
-            // radioButton2
+            // rb_TripleTaladroCentroNo
             // 
-            radioButton2.AutoSize = true;
-            radioButton2.Location = new Point(19, 77);
-            radioButton2.Margin = new Padding(3, 4, 3, 4);
-            radioButton2.Name = "radioButton2";
-            radioButton2.Size = new Size(50, 24);
-            radioButton2.TabIndex = 6;
-            radioButton2.TabStop = true;
-            radioButton2.Text = "No";
-            radioButton2.UseVisualStyleBackColor = true;
+            rb_TripleTaladroCentroNo.AutoSize = true;
+            rb_TripleTaladroCentroNo.Location = new Point(19, 77);
+            rb_TripleTaladroCentroNo.Margin = new Padding(3, 4, 3, 4);
+            rb_TripleTaladroCentroNo.Name = "rb_TripleTaladroCentroNo";
+            rb_TripleTaladroCentroNo.Size = new Size(50, 24);
+            rb_TripleTaladroCentroNo.TabIndex = 6;
+            rb_TripleTaladroCentroNo.TabStop = true;
+            rb_TripleTaladroCentroNo.Text = "No";
+            rb_TripleTaladroCentroNo.UseVisualStyleBackColor = true;
+            rb_TripleTaladroCentroNo.CheckedChanged += rb_TripleTaladroCentroNo_CheckedChanged;
             // 
             // groupSoldadoraBisagras
             // 
             groupSoldadoraBisagras.Controls.Add(rb_BisagraSoldadoraSi);
-            groupSoldadoraBisagras.Controls.Add(rb_BombilloNo);
+            groupSoldadoraBisagras.Controls.Add(rb_BisagraSoldadoraNo);
             groupSoldadoraBisagras.Location = new Point(25, 448);
             groupSoldadoraBisagras.Margin = new Padding(3, 4, 3, 4);
             groupSoldadoraBisagras.Name = "groupSoldadoraBisagras";
@@ -217,18 +222,20 @@
             rb_BisagraSoldadoraSi.TabStop = true;
             rb_BisagraSoldadoraSi.Text = "Sí";
             rb_BisagraSoldadoraSi.UseVisualStyleBackColor = true;
+            rb_BisagraSoldadoraSi.CheckedChanged += rb_BisagraSoldadoraSi_CheckedChanged;
             // 
-            // rb_BombilloNo
+            // rb_BisagraSoldadoraNo
             // 
-            rb_BombilloNo.AutoSize = true;
-            rb_BombilloNo.Location = new Point(23, 77);
-            rb_BombilloNo.Margin = new Padding(3, 4, 3, 4);
-            rb_BombilloNo.Name = "rb_BombilloNo";
-            rb_BombilloNo.Size = new Size(50, 24);
-            rb_BombilloNo.TabIndex = 6;
-            rb_BombilloNo.TabStop = true;
-            rb_BombilloNo.Text = "No";
-            rb_BombilloNo.UseVisualStyleBackColor = true;
+            rb_BisagraSoldadoraNo.AutoSize = true;
+            rb_BisagraSoldadoraNo.Location = new Point(23, 77);
+            rb_BisagraSoldadoraNo.Margin = new Padding(3, 4, 3, 4);
+            rb_BisagraSoldadoraNo.Name = "rb_BisagraSoldadoraNo";
+            rb_BisagraSoldadoraNo.Size = new Size(50, 24);
+            rb_BisagraSoldadoraNo.TabIndex = 6;
+            rb_BisagraSoldadoraNo.TabStop = true;
+            rb_BisagraSoldadoraNo.Text = "No";
+            rb_BisagraSoldadoraNo.UseVisualStyleBackColor = true;
+            rb_BisagraSoldadoraNo.CheckedChanged += rb_BisagraSoldadoraNo_CheckedChanged;
             // 
             // btn_AddMaquina
             // 
@@ -293,14 +300,14 @@
         private DataGridView dgvMaquinas;
         private Button btn_AddMaquina;
         private GroupBox groupCentroTripleTaladro;
-        private RadioButton radioButton1;
-        private RadioButton radioButton2;
+        private RadioButton rb_TripleTaladroCentroSi;
+        private RadioButton rb_TripleTaladroCentroNo;
         private GroupBox groupSoldadoraBisagras;
         private RadioButton rb_BisagraSoldadoraSi;
-        private RadioButton rb_BombilloNo;
+        private RadioButton rb_BisagraSoldadoraNo;
         private GroupBox groupSoporteMarco;
-        private RadioButton radioButton3;
-        private RadioButton radioButton4;
-        private RadioButton radioButton5;
+        private RadioButton rb_SoporteCentro;
+        private RadioButton rb_SoportePlantilla;
+        private RadioButton rb_SoporteBanco;
     }
 }

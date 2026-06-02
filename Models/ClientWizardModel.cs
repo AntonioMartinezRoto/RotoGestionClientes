@@ -53,6 +53,9 @@ namespace RotoGestionClientes
         //public List<ClienteMaquinaItem> MaquinasList { get; set; } = new();
         public BindingList<ClienteMaquinaItem> MaquinasList { get; set; } = new();
         public BindingList<ClienteDocumentoItem> DocumentosList { get; set; } = new();
+        public bool BisagraEnSoldadora { get; set; } = false;
+        public bool TripleTaladroCentro { get; set; } = false;
+        public int SoporteMarcoConfigId { get; set; } = 1;
 
 
     }

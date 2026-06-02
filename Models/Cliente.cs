@@ -50,5 +50,6 @@ namespace RotoGestionClientes
         public ClienteConfiguracionElevablePlegable? ClienteConfiguracionElevablePlegable { get; set; }
         public ICollection<ClienteMaquina> ClienteMaquinas { get; set; } = new List<ClienteMaquina>();
         public ICollection<ClienteDocumento> ClienteDocumentos { get; set; } = new List<ClienteDocumento>();
+        public ClienteConfiguracionMaquinas? ClienteConfiguracionMaquinas { get; set; }
     }
 }

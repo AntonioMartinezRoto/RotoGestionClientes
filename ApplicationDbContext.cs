@@ -51,6 +51,8 @@ namespace RotoGestionClientes
         public DbSet<MaquinaMarca> MaquinasMarcas { get; set; } = null!;
         public DbSet<MaquinaMantenimiento> MaquinasMantenimiento { get; set; } = null!;
         public DbSet<ClienteDocumento> ClienteDocumentos { get; set; } = null!;
+        public DbSet<SoporteMarcoConfig> SoporteMarcoConfigs { get; set; } = null!;
+        public DbSet<ClienteConfiguracionMaquinas> ClienteConfiguracionMaquinas { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -754,6 +756,42 @@ namespace RotoGestionClientes
                     .WithMany(c => c.ClienteDocumentos)
                     .HasForeignKey(e => e.ClienteId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+            modelBuilder.Entity<SoporteMarcoConfig>(entity =>
+            {
+                entity.ToTable("SoporteMarcoConfig", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedNever();
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired();
+
+                entity.Property(e => e.Activa)
+                        .IsRequired();
+            });
+            modelBuilder.Entity<ClienteConfiguracionMaquinas>(entity =>
+            {
+                entity.ToTable("ClienteConfiguracionMaquinas", "dbo");
+
+                entity.HasKey(e => new { e.ClienteId });
+
+                entity.HasOne(e => e.Cliente)
+                      .WithOne(c => c.ClienteConfiguracionMaquinas)
+                      .HasForeignKey<ClienteConfiguracionMaquinas>(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.Property(e => e.BisagrasSoldadora)
+                    .IsRequired();
+
+                entity.Property(e => e.TripleTaladroCentro)
+                    .IsRequired();
+
+                entity.HasOne(e => e.SoporteMarcoConfig)
+                  .WithMany(s => s.ClienteConfiguracionMaquinas)
+                  .HasForeignKey(e => e.SoporteMarcoId);
             });
         }
     }

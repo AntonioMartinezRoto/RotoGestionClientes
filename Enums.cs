@@ -20,5 +20,11 @@ namespace RotoGestionClientes
             Puerta = 3,
             Ventana = 4
         }
+        public enum SoporteMarcoConfig
+        {
+            CentroMecanizado = 1,
+            Plantilla = 2,
+            BancoMarcos = 3
+        }   
     }
 }

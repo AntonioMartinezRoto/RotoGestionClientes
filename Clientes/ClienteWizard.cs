@@ -373,6 +373,11 @@ namespace RotoGestionClientes
             model.Elevable_Dlo = clienteConfiguracionElevalePlegable?.Elevable_Dlo ?? false;
             model.Plegable_Consumen = clienteConfiguracionElevalePlegable?.Plegable_Consumen ?? false;
 
+            var clienteConfiguracionMaquinas = _context.ClienteConfiguracionMaquinas.FirstOrDefault(ccm => ccm.ClienteId == clienteId);
+            model.BisagraEnSoldadora = clienteConfiguracionMaquinas?.BisagrasSoldadora ?? false;
+            model.TripleTaladroCentro = clienteConfiguracionMaquinas?.TripleTaladroCentro ?? false;
+            model.SoporteMarcoConfigId = clienteConfiguracionMaquinas?.SoporteMarcoId ?? 1;
+
             return model;
         }
         private void InitializeTitulo()
@@ -455,11 +460,12 @@ namespace RotoGestionClientes
 
             CrearClienteMaquina(cliente.Id);
 
+            CrearClienteConfiguracionMaquina(cliente.Id);
+
             CrearClienteDocumentos(cliente.Id); 
 
             _context.SaveChanges();
         }
-
         private void CrearClienteDocumentos(int clienteId)
         {
             foreach (var item in _model.DocumentosList)
@@ -475,6 +481,16 @@ namespace RotoGestionClientes
                     FechaAlta = DateTime.Now
                 });
             }
+        }
+        private void CrearClienteConfiguracionMaquina(int clienteId)
+        {
+            _context.ClienteConfiguracionMaquinas.Add(new ClienteConfiguracionMaquinas
+            {
+                ClienteId = clienteId,
+                BisagrasSoldadora = _model.BisagraEnSoldadora,
+                TripleTaladroCentro = _model.TripleTaladroCentro,
+                SoporteMarcoId = _model.SoporteMarcoConfigId
+            });
         }
         private void CrearClienteMaquina(int clienteId)
         {
@@ -843,6 +859,8 @@ namespace RotoGestionClientes
 
             UpdateClienteMaquinas(cliente);
 
+            UpdateClienteConfiguracionMaquinas(cliente);
+
             UpdateClienteDocumentos(cliente);
 
             _context.SaveChanges();
@@ -900,6 +918,30 @@ namespace RotoGestionClientes
 
                 documentoDb.Nombre = item.Nombre;
             }
+        }
+
+        private void UpdateClienteConfiguracionMaquinas(Cliente cliente)
+        {
+            var clienteConfiguracionMaquinas = _context.ClienteConfiguracionMaquinas
+                .FirstOrDefault(ca => ca.ClienteId == cliente.Id);
+
+            if (clienteConfiguracionMaquinas == null)
+            {
+                clienteConfiguracionMaquinas = new ClienteConfiguracionMaquinas
+                {
+                    ClienteId = cliente.Id,
+                    BisagrasSoldadora = _model.BisagraEnSoldadora,
+                    TripleTaladroCentro = _model.TripleTaladroCentro,
+                    SoporteMarcoId = _model.SoporteMarcoConfigId
+                };
+
+                _context.ClienteConfiguracionMaquinas.Add(clienteConfiguracionMaquinas);
+            }
+
+            // actualizar configuración general
+            clienteConfiguracionMaquinas.BisagrasSoldadora = _model.BisagraEnSoldadora;
+            clienteConfiguracionMaquinas.TripleTaladroCentro = _model.TripleTaladroCentro;
+            clienteConfiguracionMaquinas.SoporteMarcoId = _model.SoporteMarcoConfigId;
         }
         private void UpdateClienteMaquinas(Cliente cliente)
         {

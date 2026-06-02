@@ -885,6 +885,11 @@ CREATE TABLE dbo.ClienteConfiguracionPuerta
 
     CONSTRAINT PK_ClienteConfiguracionPuerta
         PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteConfiguracionPuerta_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
 );
 GO
 
@@ -1047,5 +1052,50 @@ CREATE TABLE dbo.ClienteDocumento
 
 CREATE INDEX IX_ClienteDocumento_ClienteId
 ON dbo.ClienteDocumento(ClienteId);
+
+
+CREATE TABLE dbo.SoporteMarcoConfig
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_SoporteMarcoConfig
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_SoporteMarcoConfig
+        UNIQUE (Nombre),);
+GO
+
+
+INSERT INTO dbo.SoporteMarcoConfig (Id, Nombre, Activa)
+VALUES 
+(1, 'Centro de mecanizado', 1),
+(2, 'Plantilla', 1),
+(3, 'Banco de marcos', 1);
+
+GO
+
+
+CREATE TABLE dbo.ClienteConfiguracionMaquinas
+(
+    ClienteId INT NOT NULL,
+	BisagrasSoldadora BIT NOT NULL,
+    TripleTaladroCentro BIT NOT NULL,
+	SoporteMarcoId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteConfiguracionMaquinas
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteConfiguracionMaquinas_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+	
+	CONSTRAINT FK_ClienteConfiguracionMaquinas_SoporteMarco
+        FOREIGN KEY (SoporteMarcoId)
+        REFERENCES dbo.SoporteMarcoConfig(Id)
+);
+GO
 
 
