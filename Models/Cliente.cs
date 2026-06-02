@@ -26,6 +26,7 @@ namespace RotoGestionClientes
         public string? ObservacionesPlegables { get; set; }
         public string? ObservacionesElevables { get; set; }
         public string? ObservacionesMaquinas { get; set; }
+        public string? ObservacionesDocumentos { get; set; }
         public ICollection<ClienteSeguridadVentana> ClienteSeguridadVentanas { get; set; } = new List<ClienteSeguridadVentana>();
         public ICollection<ClienteSeguridadBalconera> ClienteSeguridadBalconeras { get; set; } = new List<ClienteSeguridadBalconera>();
         public ICollection<ClientePerfilTipo> ClientePerfilTipos { get; set; } = new List<ClientePerfilTipo>();
@@ -48,5 +49,6 @@ namespace RotoGestionClientes
         public ClienteCilindroCorredera? ClienteCilindrosCorredera { get; set; }
         public ClienteConfiguracionElevablePlegable? ClienteConfiguracionElevablePlegable { get; set; }
         public ICollection<ClienteMaquina> ClienteMaquinas { get; set; } = new List<ClienteMaquina>();
+        public ICollection<ClienteDocumento> ClienteDocumentos { get; set; } = new List<ClienteDocumento>();
     }
 }

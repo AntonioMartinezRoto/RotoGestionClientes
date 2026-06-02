@@ -7,6 +7,7 @@ namespace RotoGestionClientes
 {
     public class ClientWizardModel
     {
+        public int Id { get; set; }
         public string Nombre { get; set; }
         public string? Comentarios { get; set; }
         public string? SapId { get; set; }
@@ -19,6 +20,7 @@ namespace RotoGestionClientes
         public string? ObservacionesElevables { get; set; }
         public string? ObservacionesPlegables { get; set; }
         public string? ObservacionesMaquinas { get; set; }
+        public string? ObservacionesDocumentos { get; set; }
         public List<int> PerfilTipoList { get; set; } = new();
         public List<int> SoftwareList { get; set; } = new();
         public List<int> ManillasList { get; set; } = new();
@@ -50,6 +52,8 @@ namespace RotoGestionClientes
         public bool Plegable_Consumen { get; set; } = false;
         //public List<ClienteMaquinaItem> MaquinasList { get; set; } = new();
         public BindingList<ClienteMaquinaItem> MaquinasList { get; set; } = new();
+        public BindingList<ClienteDocumentoItem> DocumentosList { get; set; } = new();
+
 
     }
     public class AgujaModeloPerfilItem

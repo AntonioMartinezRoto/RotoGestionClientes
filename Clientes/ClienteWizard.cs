@@ -216,6 +216,7 @@ namespace RotoGestionClientes
 
             ClientWizardModel model = new()
             {
+                Id = clienteId.Value,
                 Nombre = cliente.Nombre,
                 SapId = cliente.SapId,
                 Alias = cliente.Alias,
@@ -228,6 +229,7 @@ namespace RotoGestionClientes
                 ObservacionesElevables = cliente.ObservacionesElevables,
                 ObservacionesMaquinas = cliente.ObservacionesMaquinas,
                 ObservacionesPlegables = cliente.ObservacionesPlegables,
+                ObservacionesDocumentos = cliente.ObservacionesDocumentos,
 
                 SoftwareList = _context.ClienteSoftwares
                     .Where(cs => cs.ClienteId == clienteId)
@@ -321,20 +323,30 @@ namespace RotoGestionClientes
 
                 MaquinasList = new BindingList<ClienteMaquinaItem>(
                             _context.ClienteMaquinas
-                                .Where(cm => cm.ClienteId == clienteId)
-                                .Select(cm => new ClienteMaquinaItem
-                                {
-                                    MaquinaMarcaId = cm.MaquinaMarcaId,
-                                    MarcaNombre = cm.MaquinaMarca != null ? cm.MaquinaMarca.Nombre : string.Empty,
-                                    MaquinaTipoId = cm.MaquinaTipoId,
-                                    Descripcion = cm.MaquinaTipo.Descripcion,
-                                    MaquinaMantenimientoId = cm.MaquinaMantenimientoId,
-                                    MantenimientoNombre = cm.MaquinaMantenimiento.Nombre,
-                                    Observaciones = cm.Observaciones
-                                })
-                                        .ToList()
-                                )
-
+                            .Where(cm => cm.ClienteId == clienteId)
+                            .Select(cm => new ClienteMaquinaItem
+                            {
+                                MaquinaMarcaId = cm.MaquinaMarcaId,
+                                MarcaNombre = cm.MaquinaMarca != null ? cm.MaquinaMarca.Nombre : string.Empty,
+                                MaquinaTipoId = cm.MaquinaTipoId,
+                                Descripcion = cm.MaquinaTipo.Descripcion,
+                                MaquinaMantenimientoId = cm.MaquinaMantenimientoId,
+                                MantenimientoNombre = cm.MaquinaMantenimiento.Nombre,
+                                Observaciones = cm.Observaciones
+                            })
+                            .ToList()
+                            ),
+                DocumentosList = new BindingList<ClienteDocumentoItem>(
+                            _context.ClienteDocumentos
+                            .Where(d => d.ClienteId == clienteId)
+                            .Select(d => new ClienteDocumentoItem
+                            {
+                                Id = d.Id,
+                                Nombre = d.Nombre,
+                                NombreFicheroOriginal = d.NombreFicheroOriginal
+                            })
+                            .ToList()
+                            )
             };
 
             var clienteAgujas = _context.ClienteAgujases.FirstOrDefault(ca => ca.ClienteId == clienteId);
@@ -394,7 +406,8 @@ namespace RotoGestionClientes
                 ObservacionesCorrederas = _model.ObservacionesCorrederas,
                 ObservacionesElevables = _model.ObservacionesElevables,
                 ObservacionesPlegables = _model.ObservacionesPlegables,
-                ObservacionesMaquinas = _model.ObservacionesMaquinas
+                ObservacionesMaquinas = _model.ObservacionesMaquinas,
+                ObservacionesDocumentos = _model.ObservacionesDocumentos
             };
 
             _context.Clientes.Add(cliente);
@@ -442,9 +455,27 @@ namespace RotoGestionClientes
 
             CrearClienteMaquina(cliente.Id);
 
+            CrearClienteDocumentos(cliente.Id); 
+
             _context.SaveChanges();
         }
 
+        private void CrearClienteDocumentos(int clienteId)
+        {
+            foreach (var item in _model.DocumentosList)
+            {
+                _context.ClienteDocumentos.Add(new ClienteDocumento
+                {
+                    ClienteId = clienteId,
+                    Nombre = item.Nombre,
+                    NombreFicheroOriginal = item.NombreFicheroOriginal,
+                    Extension = item.Extension,
+                    Contenido = item.Contenido,
+                    TamañoBytes = item.TamañoBytes,
+                    FechaAlta = DateTime.Now
+                });
+            }
+        }
         private void CrearClienteMaquina(int clienteId)
         {
             if (_model.MaquinasList != null)
@@ -768,6 +799,7 @@ namespace RotoGestionClientes
             cliente.ObservacionesElevables = _model.ObservacionesElevables;
             cliente.ObservacionesPlegables = _model.ObservacionesPlegables;
             cliente.ObservacionesMaquinas = _model.ObservacionesMaquinas;
+            cliente.ObservacionesDocumentos = _model.ObservacionesDocumentos;
 
             UpdateClientePerfilTipo(cliente);
 
@@ -811,7 +843,63 @@ namespace RotoGestionClientes
 
             UpdateClienteMaquinas(cliente);
 
+            UpdateClienteDocumentos(cliente);
+
             _context.SaveChanges();
+        }
+        private void UpdateClienteDocumentos(Cliente cliente)
+        {
+            // Documentos actuales en base de datos
+            var documentosDb = _context.ClienteDocumentos
+                .Where(cd => cd.ClienteId == cliente.Id)
+                .ToList();
+
+            // IDs actuales del modelo
+            var modelIds = _model.DocumentosList
+                .Where(d => d.Id.HasValue)
+                .Select(d => d.Id!.Value)
+                .ToHashSet();
+
+            // Eliminar documentos borrados en UI
+            var documentosEliminar = documentosDb
+                .Where(d => !modelIds.Contains(d.Id))
+                .ToList();
+
+            if (documentosEliminar.Any())
+            {
+                _context.ClienteDocumentos.RemoveRange(documentosEliminar);
+            }
+
+            // Insertar nuevos documentos
+            var documentosNuevos = _model.DocumentosList
+                .Where(d => !d.Id.HasValue)
+                .ToList();
+
+            foreach (var item in documentosNuevos)
+            {
+                _context.ClienteDocumentos.Add(new ClienteDocumento
+                {
+                    ClienteId = cliente.Id,
+                    Nombre = item.Nombre,
+                    NombreFicheroOriginal = item.NombreFicheroOriginal,
+                    Extension = item.Extension,
+                    Contenido = item.Contenido,
+                    TamañoBytes = item.TamañoBytes,
+                    FechaAlta = DateTime.Now
+                });
+            }
+
+            // Actualizar metadatos de documentos existentes
+            foreach (var item in _model.DocumentosList.Where(d => d.Id.HasValue))
+            {
+                var documentoDb = documentosDb
+                    .FirstOrDefault(d => d.Id == item.Id);
+
+                if (documentoDb == null)
+                    continue;
+
+                documentoDb.Nombre = item.Nombre;
+            }
         }
         private void UpdateClienteMaquinas(Cliente cliente)
         {

@@ -14,6 +14,7 @@ CREATE TABLE dbo.Cliente
 	ObservacionesElevables NVARCHAR(1000) NULL,
 	ObservacionesPlegables NVARCHAR(1000) NULL,
 	ObservacionesMaquinas NVARCHAR(1000) NULL,
+	ObservacionesDocumentos NVARCHAR(1000) NULL,
 
     CONSTRAINT PK_Cliente
         PRIMARY KEY CLUSTERED (Id),
@@ -1019,3 +1020,32 @@ CREATE TABLE dbo.ClienteConfiguracionElevablePlegable
         ON DELETE CASCADE,
 );
 GO
+
+CREATE TABLE dbo.ClienteDocumento
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    ClienteId INT NOT NULL,
+
+    Nombre NVARCHAR(255) NOT NULL,
+
+    NombreFicheroOriginal NVARCHAR(255) NOT NULL,
+    Extension NVARCHAR(10) NOT NULL,
+
+    Contenido VARBINARY(MAX) NOT NULL,
+    TamañoBytes BIGINT NOT NULL,
+
+    FechaAlta DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+
+    CONSTRAINT PK_ClienteDocumento
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_ClienteDocumento_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IX_ClienteDocumento_ClienteId
+ON dbo.ClienteDocumento(ClienteId);
+
+

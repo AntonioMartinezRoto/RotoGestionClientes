@@ -50,6 +50,7 @@ namespace RotoGestionClientes
         public DbSet<MaquinaTipo> MaquinasTipos { get; set; } = null!;
         public DbSet<MaquinaMarca> MaquinasMarcas { get; set; } = null!;
         public DbSet<MaquinaMantenimiento> MaquinasMantenimiento { get; set; } = null!;
+        public DbSet<ClienteDocumento> ClienteDocumentos { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -724,6 +725,35 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired()
                       .HasMaxLength(50);
+            });
+            modelBuilder.Entity<ClienteDocumento>(entity =>
+            {
+                entity.ToTable("ClienteDocumento", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Nombre)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.NombreFicheroOriginal)
+                    .IsRequired()
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.Extension)
+                    .IsRequired()
+                    .HasMaxLength(10);
+
+                entity.Property(e => e.Contenido)
+                    .IsRequired();
+
+                entity.Property(e => e.TamañoBytes)
+                    .IsRequired();
+
+                entity.HasOne(e => e.Cliente)
+                    .WithMany(c => c.ClienteDocumentos)
+                    .HasForeignKey(e => e.ClienteId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
