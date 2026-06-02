@@ -34,9 +34,10 @@
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_Perfiles = new Button();
+            btn_Software = new Button();
+            btn_MaquinaMarcas = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
-            btn_Software = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -82,6 +83,7 @@
             flowLayoutPanel_Sidebar.AutoScroll = true;
             flowLayoutPanel_Sidebar.Controls.Add(btn_Perfiles);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Software);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMarcas);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -105,6 +107,36 @@
             btn_Perfiles.Text = "Perfiles";
             btn_Perfiles.UseVisualStyleBackColor = true;
             btn_Perfiles.Click += btn_Perfiles_Click;
+            // 
+            // btn_Software
+            // 
+            btn_Software.Font = new Font("Calibri", 9F);
+            btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
+            btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Software.Location = new Point(3, 87);
+            btn_Software.Margin = new Padding(3, 4, 3, 4);
+            btn_Software.Name = "btn_Software";
+            btn_Software.Padding = new Padding(11, 0, 0, 0);
+            btn_Software.Size = new Size(256, 75);
+            btn_Software.TabIndex = 33;
+            btn_Software.Text = "Softwares";
+            btn_Software.UseVisualStyleBackColor = true;
+            btn_Software.Click += btn_Software_Click;
+            // 
+            // btn_MaquinaMarcas
+            // 
+            btn_MaquinaMarcas.Font = new Font("Calibri", 9F);
+            btn_MaquinaMarcas.Image = (Image)resources.GetObject("btn_MaquinaMarcas.Image");
+            btn_MaquinaMarcas.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_MaquinaMarcas.Location = new Point(3, 170);
+            btn_MaquinaMarcas.Margin = new Padding(3, 4, 3, 4);
+            btn_MaquinaMarcas.Name = "btn_MaquinaMarcas";
+            btn_MaquinaMarcas.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaMarcas.Size = new Size(256, 75);
+            btn_MaquinaMarcas.TabIndex = 34;
+            btn_MaquinaMarcas.Text = "Marcas de máquinas";
+            btn_MaquinaMarcas.UseVisualStyleBackColor = true;
+            btn_MaquinaMarcas.Click += btn_MaquinaMarcas_Click;
             // 
             // dgvMaestros
             // 
@@ -135,21 +167,6 @@
             btn_Add.Text = " +";
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
-            // 
-            // btn_Software
-            // 
-            btn_Software.Font = new Font("Calibri", 9F);
-            btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
-            btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(3, 87);
-            btn_Software.Margin = new Padding(3, 4, 3, 4);
-            btn_Software.Name = "btn_Software";
-            btn_Software.Padding = new Padding(11, 0, 0, 0);
-            btn_Software.Size = new Size(256, 75);
-            btn_Software.TabIndex = 33;
-            btn_Software.Text = "Softwares";
-            btn_Software.UseVisualStyleBackColor = true;
-            btn_Software.Click += btn_Software_Click;
             // 
             // MantenimientoMain
             // 
@@ -184,5 +201,6 @@
         private DataGridView dgvMaestros;
         private Button btn_Add;
         private Button btn_Software;
+        private Button btn_MaquinaMarcas;
     }
 }

@@ -717,6 +717,9 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Modelo)
                       .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
             });
             modelBuilder.Entity<MaquinaMantenimiento>(entity =>
             {

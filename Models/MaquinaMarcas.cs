@@ -18,6 +18,9 @@ namespace RotoGestionClientes
 
         public string? Modelo { get; set; }
 
+        [Required]
+        public bool Activa { get; set; } = true;
+
         public ICollection<ClienteMaquina> ClienteMaquinas { get; set; } = new List<ClienteMaquina>();
     }
 }

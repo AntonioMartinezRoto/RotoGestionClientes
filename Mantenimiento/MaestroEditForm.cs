@@ -97,6 +97,13 @@ namespace RotoGestionClientes
                         txt_Nombre.Text = e.Nombre;
                     }
                     break;
+                case MaestroTipo.MaquinaMarcas:
+                    {
+                        var e = _context.MaquinasMarcas.First(x => x.Id == _id);
+                        txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
+                    }
+                    break;
             }
         }
         private void btn_Aceptar_Click(object sender, EventArgs e)
@@ -112,6 +119,11 @@ namespace RotoGestionClientes
 
             Guardado = true;
             DialogResult = DialogResult.OK;
+            Close();
+        }
+        private void btn_Cancelar_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
             Close();
         }
         private void Guardar()
@@ -140,6 +152,10 @@ namespace RotoGestionClientes
 
                 case MaestroTipo.MaquinaMantenimiento:
                     GuardarMaquinaMantenimiento();
+                    break;
+
+                case MaestroTipo.MaquinaMarcas:
+                    GuardarMaquinaMarcas();
                     break;
             }
         }
@@ -231,6 +247,21 @@ namespace RotoGestionClientes
             }
 
             entity.Nombre = txt_Nombre.Text.Trim();
+        }
+        private void GuardarMaquinaMarcas()
+        {
+            var entity = _id == null
+                ? new MaquinaMarca()
+                : _context.MaquinasMarcas.First(x => x.Id == _id);
+
+            if (_id == null)
+            {
+                entity.Id = NuevoId<MaquinaMarca>();
+                _context.MaquinasMarcas.Add(entity);
+            }
+
+            entity.Nombre = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
         }
         private int NuevoId<T>() where T : class
         {

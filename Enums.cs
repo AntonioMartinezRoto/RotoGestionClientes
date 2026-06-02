@@ -37,7 +37,8 @@ namespace RotoGestionClientes
             CremonaPasivaVentana,
             BisagraPuerta,
             CilindroTipo,
-            MaquinaMantenimiento
+            MaquinaMantenimiento,
+            MaquinaMarcas
         }
     }
 }

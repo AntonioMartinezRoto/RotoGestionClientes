@@ -49,7 +49,7 @@ namespace RotoGestionClientes
             cmb_TipoMaquina.ValueMember = "Id";
 
 
-            var marcas = _context.MaquinasMarcas.OrderBy(x => x.Nombre).ToList();
+            var marcas = _context.MaquinasMarcas.Where(x => x.Activa).OrderBy(x => x.Nombre).ToList();
             marcas.Insert(0, new MaquinaMarca
             {
                 Id = 0,
@@ -117,7 +117,8 @@ namespace RotoGestionClientes
                 MaquinaTipoId = tipo.Id,
                 Descripcion = tipo.Descripcion,
 
-                MaquinaMarcaId = marca?.Id,
+
+                MaquinaMarcaId = marca == null || marca?.Id == 0 ? null : marca?.Id,
                 MarcaNombre = marca?.Nombre,
 
                 MaquinaMantenimientoId = mantenimiento.Id,
