@@ -152,44 +152,6 @@ namespace RotoGestionClientes
             _bindingSourceDocumentosAsociados.DataSource = _model.DocumentosList;
             dgvDocumentos.DataSource = _bindingSourceDocumentosAsociados;
         }
-        private byte[] CargarFichero(string path)
-        {
-            return File.ReadAllBytes(path);
-        }
-        private void AddDocumento(int clienteId, ClienteDocumentoItem item, string filePath)
-        {
-            var bytes = File.ReadAllBytes(filePath);
-
-            _context.ClienteDocumentos.Add(new ClienteDocumento
-            {
-                ClienteId = clienteId,
-                Nombre = item.Nombre,
-                NombreFicheroOriginal = Path.GetFileName(filePath),
-                Extension = Path.GetExtension(filePath),
-                Contenido = bytes,
-                TamañoBytes = bytes.Length,
-                FechaAlta = DateTime.Now
-            });
-        }
-        private void AbrirDocumento(int documentoId)
-        {
-            var doc = _context.ClienteDocumentos
-                .Where(d => d.Id == documentoId)
-                .Select(d => new { d.Contenido, d.NombreFicheroOriginal, d.Extension })
-                .First();
-
-            string tempPath = Path.Combine(
-                Path.GetTempPath(),
-                $"{Guid.NewGuid()}{doc.Extension}");
-
-            File.WriteAllBytes(tempPath, doc.Contenido);
-
-            Process.Start(new ProcessStartInfo
-            {
-                FileName = tempPath,
-                UseShellExecute = true
-            });
-        }
         private void DescargarDocumento(ClienteDocumentoItem item)
         {
             var documento = _context.ClienteDocumentos
