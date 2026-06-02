@@ -25,6 +25,19 @@ namespace RotoGestionClientes
             CentroMecanizado = 1,
             Plantilla = 2,
             BancoMarcos = 3
-        }   
+        }
+        public enum MaestroTipo
+        {
+            Perfil,
+            PerfilTipo,
+            Software,
+            Manilla,
+            SoporteCompas,
+            SeguridadVentana,
+            CremonaPasivaVentana,
+            BisagraPuerta,
+            CilindroTipo,
+            MaquinaMantenimiento
+        }
     }
 }

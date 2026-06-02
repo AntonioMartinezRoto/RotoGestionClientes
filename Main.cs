@@ -24,7 +24,7 @@ namespace RotoGestionClientes
 
         #region Events
         private void Main_Load(object sender, EventArgs e)
-        {            
+        {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
             this.Text = $"RotoGestiónClientes v{version?.Major}.{version?.Minor}";
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
@@ -33,15 +33,18 @@ namespace RotoGestionClientes
         private void btn_Clientes_Click(object sender, EventArgs e)
         {
             ClientesMain clientesMainForm = new(_allClientes, _context);
-            //ClientesMain clientesMainForm = new(_context);
             clientesMainForm.ShowDialog();
             LoadClientesFromDB();
+        }
+        private void btn_Mantenimiento_Click(object sender, EventArgs e)
+        {
+            MantenimientoMain mantenimientoMainForm = new(_context);
+            mantenimientoMainForm.ShowDialog();
         }
 
         #endregion
 
         #region Private methods
-
         private void LoadClientesFromDB()
         {
             _allClientes = _context.Clientes
@@ -58,7 +61,9 @@ namespace RotoGestionClientes
                 .OrderBy(f => f.Nombre)
                 .ToList();
         }
+
         #endregion
+
 
 
     }
