@@ -38,6 +38,7 @@
             btn_MaquinaMarcas = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
+            btn_MaquinaMantenimiento = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -84,6 +85,7 @@
             flowLayoutPanel_Sidebar.Controls.Add(btn_Perfiles);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Software);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMarcas);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMantenimiento);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -168,6 +170,21 @@
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
             // 
+            // btn_MaquinaMantenimiento
+            // 
+            btn_MaquinaMantenimiento.Font = new Font("Calibri", 9F);
+            btn_MaquinaMantenimiento.Image = (Image)resources.GetObject("btn_MaquinaMantenimiento.Image");
+            btn_MaquinaMantenimiento.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_MaquinaMantenimiento.Location = new Point(3, 253);
+            btn_MaquinaMantenimiento.Margin = new Padding(3, 4, 3, 4);
+            btn_MaquinaMantenimiento.Name = "btn_MaquinaMantenimiento";
+            btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaMantenimiento.Size = new Size(256, 75);
+            btn_MaquinaMantenimiento.TabIndex = 35;
+            btn_MaquinaMantenimiento.Text = "Mantenimiento máquinas";
+            btn_MaquinaMantenimiento.UseVisualStyleBackColor = true;
+            btn_MaquinaMantenimiento.Click += btn_MaquinaMantenimiento_Click;
+            // 
             // MantenimientoMain
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -202,5 +219,6 @@
         private Button btn_Add;
         private Button btn_Software;
         private Button btn_MaquinaMarcas;
+        private Button btn_MaquinaMantenimiento;
     }
 }

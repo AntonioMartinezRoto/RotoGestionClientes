@@ -730,6 +730,9 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired()
                       .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                    .IsRequired();
             });
             modelBuilder.Entity<ClienteDocumento>(entity =>
             {

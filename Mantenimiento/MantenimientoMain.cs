@@ -48,6 +48,10 @@ namespace RotoGestionClientes
         {
             LoadMaestro(MaestroTipo.MaquinaMarcas);
         }
+        private void btn_MaquinaMantenimiento_Click(object sender, EventArgs e)
+        {
+            LoadMaestro(MaestroTipo.MaquinaMantenimiento);
+        }
         private void btn_Add_Click(object sender, EventArgs e)
         {
             using var form = new MaestroEditForm(_context, _tablaActual);
@@ -214,7 +218,7 @@ namespace RotoGestionClientes
                         {
                             Id = x.Id,
                             Nombre = x.Nombre,
-                            Activa = true
+                            Activa = x.Activa
                         })
                         .ToList();
                     break;
@@ -234,6 +238,7 @@ namespace RotoGestionClientes
             dgvMaestros.Refresh();
         }
         #endregion
+
 
 
 

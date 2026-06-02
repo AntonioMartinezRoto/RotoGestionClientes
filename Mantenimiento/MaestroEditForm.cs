@@ -95,6 +95,7 @@ namespace RotoGestionClientes
                     {
                         var e = _context.MaquinasMantenimiento.First(x => x.Id == _id);
                         txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
                     }
                     break;
                 case MaestroTipo.MaquinaMarcas:
@@ -247,6 +248,7 @@ namespace RotoGestionClientes
             }
 
             entity.Nombre = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
         }
         private void GuardarMaquinaMarcas()
         {
