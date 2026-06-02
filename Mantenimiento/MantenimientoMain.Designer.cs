@@ -36,9 +36,10 @@
             btn_Perfiles = new Button();
             btn_Software = new Button();
             btn_MaquinaMarcas = new Button();
+            btn_MaquinaMantenimiento = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
-            btn_MaquinaMantenimiento = new Button();
+            btn_MaquinaTipo = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -86,6 +87,7 @@
             flowLayoutPanel_Sidebar.Controls.Add(btn_Software);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMarcas);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMantenimiento);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaTipo);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -140,6 +142,21 @@
             btn_MaquinaMarcas.UseVisualStyleBackColor = true;
             btn_MaquinaMarcas.Click += btn_MaquinaMarcas_Click;
             // 
+            // btn_MaquinaMantenimiento
+            // 
+            btn_MaquinaMantenimiento.Font = new Font("Calibri", 9F);
+            btn_MaquinaMantenimiento.Image = (Image)resources.GetObject("btn_MaquinaMantenimiento.Image");
+            btn_MaquinaMantenimiento.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_MaquinaMantenimiento.Location = new Point(3, 253);
+            btn_MaquinaMantenimiento.Margin = new Padding(3, 4, 3, 4);
+            btn_MaquinaMantenimiento.Name = "btn_MaquinaMantenimiento";
+            btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaMantenimiento.Size = new Size(256, 75);
+            btn_MaquinaMantenimiento.TabIndex = 35;
+            btn_MaquinaMantenimiento.Text = "Mantenimiento máquinas";
+            btn_MaquinaMantenimiento.UseVisualStyleBackColor = true;
+            btn_MaquinaMantenimiento.Click += btn_MaquinaMantenimiento_Click;
+            // 
             // dgvMaestros
             // 
             dgvMaestros.AllowUserToAddRows = false;
@@ -170,20 +187,20 @@
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
             // 
-            // btn_MaquinaMantenimiento
+            // btn_MaquinaTipo
             // 
-            btn_MaquinaMantenimiento.Font = new Font("Calibri", 9F);
-            btn_MaquinaMantenimiento.Image = (Image)resources.GetObject("btn_MaquinaMantenimiento.Image");
-            btn_MaquinaMantenimiento.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaMantenimiento.Location = new Point(3, 253);
-            btn_MaquinaMantenimiento.Margin = new Padding(3, 4, 3, 4);
-            btn_MaquinaMantenimiento.Name = "btn_MaquinaMantenimiento";
-            btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 0, 0);
-            btn_MaquinaMantenimiento.Size = new Size(256, 75);
-            btn_MaquinaMantenimiento.TabIndex = 35;
-            btn_MaquinaMantenimiento.Text = "Mantenimiento máquinas";
-            btn_MaquinaMantenimiento.UseVisualStyleBackColor = true;
-            btn_MaquinaMantenimiento.Click += btn_MaquinaMantenimiento_Click;
+            btn_MaquinaTipo.Font = new Font("Calibri", 9F);
+            btn_MaquinaTipo.Image = (Image)resources.GetObject("btn_MaquinaTipo.Image");
+            btn_MaquinaTipo.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_MaquinaTipo.Location = new Point(3, 336);
+            btn_MaquinaTipo.Margin = new Padding(3, 4, 3, 4);
+            btn_MaquinaTipo.Name = "btn_MaquinaTipo";
+            btn_MaquinaTipo.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaTipo.Size = new Size(256, 75);
+            btn_MaquinaTipo.TabIndex = 36;
+            btn_MaquinaTipo.Text = "Tipos de máquinas";
+            btn_MaquinaTipo.UseVisualStyleBackColor = true;
+            btn_MaquinaTipo.Click += btn_MaquinaTipo_Click;
             // 
             // MantenimientoMain
             // 
@@ -220,5 +237,6 @@
         private Button btn_Software;
         private Button btn_MaquinaMarcas;
         private Button btn_MaquinaMantenimiento;
+        private Button btn_MaquinaTipo;
     }
 }

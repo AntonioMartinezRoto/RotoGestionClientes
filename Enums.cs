@@ -38,7 +38,8 @@ namespace RotoGestionClientes
             BisagraPuerta,
             CilindroTipo,
             MaquinaMantenimiento,
-            MaquinaMarcas
+            MaquinaMarcas,
+            MaquinaTipo
         }
     }
 }
