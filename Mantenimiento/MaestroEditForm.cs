@@ -69,6 +69,14 @@ namespace RotoGestionClientes
                     }
                     break;
 
+                case MaestroTipo.CerraduraPuerta:
+                    {
+                        var e = _context.CerradurasPuerta.First(x => x.Id == _id);
+                        txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
+                    }
+                    break;
+
                 case MaestroTipo.BisagraPuerta:
                     {
                         var e = _context.Bisagras.First(x => x.Id == _id);
@@ -169,6 +177,10 @@ namespace RotoGestionClientes
                     GuardarManilla();
                     break;
 
+                case MaestroTipo.CerraduraPuerta:
+                    GuardarCerraduraPuerta();
+                    break;
+
                 case MaestroTipo.BisagraPuerta:
                     GuardarBisagraPuerta();
                     break;
@@ -250,6 +262,21 @@ namespace RotoGestionClientes
             {
                 entity.Id = NuevoId<Manilla>();
                 _context.Manillas.Add(entity);
+            }
+
+            entity.Nombre = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
+        }
+        private void GuardarCerraduraPuerta()
+        {
+            var entity = _id == null
+                ? new CerraduraPuerta()
+                : _context.CerradurasPuerta.First(x => x.Id == _id);
+
+            if (_id == null)
+            {
+                entity.Id = NuevoId<CerraduraPuerta>();
+                _context.CerradurasPuerta.Add(entity);
             }
 
             entity.Nombre = txt_Nombre.Text.Trim();

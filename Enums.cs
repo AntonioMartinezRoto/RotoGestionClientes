@@ -39,7 +39,8 @@ namespace RotoGestionClientes
             CilindroTipo,
             MaquinaMantenimiento,
             MaquinaMarcas,
-            MaquinaTipo
+            MaquinaTipo,
+            CerraduraPuerta
         }
     }
 }

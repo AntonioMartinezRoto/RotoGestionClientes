@@ -74,6 +74,11 @@ namespace RotoGestionClientes
         {
             LoadMaestro(MaestroTipo.BisagraPuerta);
         }
+
+        private void btn_Cerraduras_Click(object sender, EventArgs e)
+        {
+            LoadMaestro(MaestroTipo.CerraduraPuerta);
+        }
         private void btn_Add_Click(object sender, EventArgs e)
         {
             using var form = new MaestroEditForm(_context, _tablaActual);
@@ -187,6 +192,18 @@ namespace RotoGestionClientes
 
                 case MaestroTipo.Manilla:
                     dgvMaestros.DataSource = _context.Manillas
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new MaestroGridItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre,
+                            Activa = x.Activa
+                        })
+                        .ToList();
+                    break;
+
+                case MaestroTipo.CerraduraPuerta:
+                    dgvMaestros.DataSource = _context.CerradurasPuerta
                         .OrderBy(x => x.Nombre)
                         .Select(x => new MaestroGridItem
                         {
