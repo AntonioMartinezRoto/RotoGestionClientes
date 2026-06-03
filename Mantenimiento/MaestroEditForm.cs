@@ -80,6 +80,7 @@ namespace RotoGestionClientes
                     {
                         var e = _context.SeguridadVentanas.First(x => x.Id == _id);
                         txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
                     }
                     break;
 
@@ -167,6 +168,9 @@ namespace RotoGestionClientes
                     break;
                 case MaestroTipo.MaquinaTipo:
                     GuardarMaquinaTipos();
+                    break;
+                case MaestroTipo.SeguridadVentana:
+                    GuardarSeguridadVentana();
                     break;
             }
         }
@@ -288,6 +292,21 @@ namespace RotoGestionClientes
             }
 
             entity.Descripcion = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
+        }
+        private void GuardarSeguridadVentana()
+        {
+            var entity = _id == null
+                ? new SeguridadVentana()
+                : _context.SeguridadVentanas.First(x => x.Id == _id);
+
+            if (_id == null)
+            {
+                entity.Id = NuevoId<SeguridadVentana>();
+                _context.SeguridadVentanas.Add(entity);
+            }
+
+            entity.Nombre = txt_Nombre.Text.Trim();
             entity.Activa = chk_Activo.Checked;
         }
         private int NuevoId<T>() where T : class

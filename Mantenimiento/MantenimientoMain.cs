@@ -56,6 +56,11 @@ namespace RotoGestionClientes
         {
             LoadMaestro(MaestroTipo.MaquinaTipo);
         }
+
+        private void btn_TipoSeguridad_Click(object sender, EventArgs e)
+        {
+            LoadMaestro(MaestroTipo.SeguridadVentana);
+        }
         private void btn_Add_Click(object sender, EventArgs e)
         {
             using var form = new MaestroEditForm(_context, _tablaActual);
@@ -198,7 +203,7 @@ namespace RotoGestionClientes
                         {
                             Id = x.Id,
                             Nombre = x.Nombre,
-                            Activa = true
+                            Activa = x.Activa
                         })
                         .ToList();
                     break;
@@ -253,5 +258,6 @@ namespace RotoGestionClientes
             dgvMaestros.Refresh();
         }
         #endregion
+
     }
 }
