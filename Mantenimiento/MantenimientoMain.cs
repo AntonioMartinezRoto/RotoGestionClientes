@@ -66,6 +66,10 @@ namespace RotoGestionClientes
         {
             LoadMaestro(MaestroTipo.CremonaPasivaVentana);
         }
+        private void btn_Manillas_Click(object sender, EventArgs e)
+        {
+            LoadMaestro(MaestroTipo.Manilla);
+        }
         private void btn_Add_Click(object sender, EventArgs e)
         {
             using var form = new MaestroEditForm(_context, _tablaActual);
@@ -275,6 +279,5 @@ namespace RotoGestionClientes
             dgvMaestros.Refresh();
         }
         #endregion
-
     }
 }
