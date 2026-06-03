@@ -34,13 +34,14 @@
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_Perfiles = new Button();
+            btn_TipoSeguridad = new Button();
             btn_Software = new Button();
+            btn_MaquinaTipo = new Button();
             btn_MaquinaMarcas = new Button();
             btn_MaquinaMantenimiento = new Button();
-            btn_MaquinaTipo = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
-            btn_TipoSeguridad = new Button();
+            btn_Pasivas = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -86,6 +87,7 @@
             flowLayoutPanel_Sidebar.AutoScroll = true;
             flowLayoutPanel_Sidebar.Controls.Add(btn_Perfiles);
             flowLayoutPanel_Sidebar.Controls.Add(btn_TipoSeguridad);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_Pasivas);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Software);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaTipo);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMarcas);
@@ -114,12 +116,27 @@
             btn_Perfiles.UseVisualStyleBackColor = true;
             btn_Perfiles.Click += btn_Perfiles_Click;
             // 
+            // btn_TipoSeguridad
+            // 
+            btn_TipoSeguridad.Font = new Font("Calibri", 9F);
+            btn_TipoSeguridad.Image = (Image)resources.GetObject("btn_TipoSeguridad.Image");
+            btn_TipoSeguridad.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_TipoSeguridad.Location = new Point(3, 87);
+            btn_TipoSeguridad.Margin = new Padding(3, 4, 3, 4);
+            btn_TipoSeguridad.Name = "btn_TipoSeguridad";
+            btn_TipoSeguridad.Padding = new Padding(11, 0, 0, 0);
+            btn_TipoSeguridad.Size = new Size(256, 75);
+            btn_TipoSeguridad.TabIndex = 37;
+            btn_TipoSeguridad.Text = "Tipo seguridad";
+            btn_TipoSeguridad.UseVisualStyleBackColor = true;
+            btn_TipoSeguridad.Click += btn_TipoSeguridad_Click;
+            // 
             // btn_Software
             // 
             btn_Software.Font = new Font("Calibri", 9F);
             btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
             btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(3, 170);
+            btn_Software.Location = new Point(3, 253);
             btn_Software.Margin = new Padding(3, 4, 3, 4);
             btn_Software.Name = "btn_Software";
             btn_Software.Padding = new Padding(11, 0, 0, 0);
@@ -129,12 +146,27 @@
             btn_Software.UseVisualStyleBackColor = true;
             btn_Software.Click += btn_Software_Click;
             // 
+            // btn_MaquinaTipo
+            // 
+            btn_MaquinaTipo.Font = new Font("Calibri", 9F);
+            btn_MaquinaTipo.Image = (Image)resources.GetObject("btn_MaquinaTipo.Image");
+            btn_MaquinaTipo.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_MaquinaTipo.Location = new Point(3, 336);
+            btn_MaquinaTipo.Margin = new Padding(3, 4, 3, 4);
+            btn_MaquinaTipo.Name = "btn_MaquinaTipo";
+            btn_MaquinaTipo.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaTipo.Size = new Size(256, 75);
+            btn_MaquinaTipo.TabIndex = 36;
+            btn_MaquinaTipo.Text = "Tipos de máquinas";
+            btn_MaquinaTipo.UseVisualStyleBackColor = true;
+            btn_MaquinaTipo.Click += btn_MaquinaTipo_Click;
+            // 
             // btn_MaquinaMarcas
             // 
             btn_MaquinaMarcas.Font = new Font("Calibri", 9F);
             btn_MaquinaMarcas.Image = (Image)resources.GetObject("btn_MaquinaMarcas.Image");
             btn_MaquinaMarcas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaMarcas.Location = new Point(3, 336);
+            btn_MaquinaMarcas.Location = new Point(3, 419);
             btn_MaquinaMarcas.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMarcas.Name = "btn_MaquinaMarcas";
             btn_MaquinaMarcas.Padding = new Padding(11, 0, 0, 0);
@@ -149,7 +181,7 @@
             btn_MaquinaMantenimiento.Font = new Font("Calibri", 9F);
             btn_MaquinaMantenimiento.Image = (Image)resources.GetObject("btn_MaquinaMantenimiento.Image");
             btn_MaquinaMantenimiento.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaMantenimiento.Location = new Point(3, 419);
+            btn_MaquinaMantenimiento.Location = new Point(3, 502);
             btn_MaquinaMantenimiento.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMantenimiento.Name = "btn_MaquinaMantenimiento";
             btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 0, 0);
@@ -158,21 +190,6 @@
             btn_MaquinaMantenimiento.Text = "Mantenimiento máquinas";
             btn_MaquinaMantenimiento.UseVisualStyleBackColor = true;
             btn_MaquinaMantenimiento.Click += btn_MaquinaMantenimiento_Click;
-            // 
-            // btn_MaquinaTipo
-            // 
-            btn_MaquinaTipo.Font = new Font("Calibri", 9F);
-            btn_MaquinaTipo.Image = (Image)resources.GetObject("btn_MaquinaTipo.Image");
-            btn_MaquinaTipo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaTipo.Location = new Point(3, 253);
-            btn_MaquinaTipo.Margin = new Padding(3, 4, 3, 4);
-            btn_MaquinaTipo.Name = "btn_MaquinaTipo";
-            btn_MaquinaTipo.Padding = new Padding(11, 0, 0, 0);
-            btn_MaquinaTipo.Size = new Size(256, 75);
-            btn_MaquinaTipo.TabIndex = 36;
-            btn_MaquinaTipo.Text = "Tipos de máquinas";
-            btn_MaquinaTipo.UseVisualStyleBackColor = true;
-            btn_MaquinaTipo.Click += btn_MaquinaTipo_Click;
             // 
             // dgvMaestros
             // 
@@ -204,20 +221,20 @@
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
             // 
-            // btn_TipoSeguridad
+            // btn_Pasivas
             // 
-            btn_TipoSeguridad.Font = new Font("Calibri", 9F);
-            btn_TipoSeguridad.Image = (Image)resources.GetObject("btn_TipoSeguridad.Image");
-            btn_TipoSeguridad.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_TipoSeguridad.Location = new Point(3, 87);
-            btn_TipoSeguridad.Margin = new Padding(3, 4, 3, 4);
-            btn_TipoSeguridad.Name = "btn_TipoSeguridad";
-            btn_TipoSeguridad.Padding = new Padding(11, 0, 0, 0);
-            btn_TipoSeguridad.Size = new Size(256, 75);
-            btn_TipoSeguridad.TabIndex = 37;
-            btn_TipoSeguridad.Text = "Tipo seguridad";
-            btn_TipoSeguridad.UseVisualStyleBackColor = true;
-            btn_TipoSeguridad.Click += btn_TipoSeguridad_Click;
+            btn_Pasivas.Font = new Font("Calibri", 9F);
+            btn_Pasivas.Image = (Image)resources.GetObject("btn_Pasivas.Image");
+            btn_Pasivas.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Pasivas.Location = new Point(3, 170);
+            btn_Pasivas.Margin = new Padding(3, 4, 3, 4);
+            btn_Pasivas.Name = "btn_Pasivas";
+            btn_Pasivas.Padding = new Padding(11, 0, 0, 0);
+            btn_Pasivas.Size = new Size(256, 75);
+            btn_Pasivas.TabIndex = 38;
+            btn_Pasivas.Text = "Pasivas";
+            btn_Pasivas.UseVisualStyleBackColor = true;
+            btn_Pasivas.Click += btn_Pasivas_Click;
             // 
             // MantenimientoMain
             // 
@@ -256,5 +273,6 @@
         private Button btn_MaquinaMantenimiento;
         private Button btn_MaquinaTipo;
         private Button btn_TipoSeguridad;
+        private Button btn_Pasivas;
     }
 }

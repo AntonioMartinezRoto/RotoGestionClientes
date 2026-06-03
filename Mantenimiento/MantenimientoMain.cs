@@ -61,6 +61,11 @@ namespace RotoGestionClientes
         {
             LoadMaestro(MaestroTipo.SeguridadVentana);
         }
+
+        private void btn_Pasivas_Click(object sender, EventArgs e)
+        {
+            LoadMaestro(MaestroTipo.CremonaPasivaVentana);
+        }
         private void btn_Add_Click(object sender, EventArgs e)
         {
             using var form = new MaestroEditForm(_context, _tablaActual);
@@ -198,6 +203,18 @@ namespace RotoGestionClientes
 
                 case MaestroTipo.SeguridadVentana:
                     dgvMaestros.DataSource = _context.SeguridadVentanas
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new MaestroGridItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre,
+                            Activa = x.Activa
+                        })
+                        .ToList();
+                    break;
+
+                case MaestroTipo.CremonaPasivaVentana:
+                    dgvMaestros.DataSource = _context.CremonaPasivaVentanaTipos
                         .OrderBy(x => x.Nombre)
                         .Select(x => new MaestroGridItem
                         {

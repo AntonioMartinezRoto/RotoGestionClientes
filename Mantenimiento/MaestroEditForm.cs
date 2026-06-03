@@ -83,7 +83,13 @@ namespace RotoGestionClientes
                         chk_Activo.Checked = e.Activa;
                     }
                     break;
-
+                case MaestroTipo.CremonaPasivaVentana:
+                    {
+                        var e = _context.CremonaPasivaVentanaTipos.First(x => x.Id == _id);
+                        txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
+                    }
+                    break;
                 case MaestroTipo.CilindroTipo:
                     {
                         var e = _context.CilindroTipos.First(x => x.Id == _id);
@@ -171,6 +177,9 @@ namespace RotoGestionClientes
                     break;
                 case MaestroTipo.SeguridadVentana:
                     GuardarSeguridadVentana();
+                    break;
+                case MaestroTipo.CremonaPasivaVentana:
+                    GuardarCremonaPasivaVentana();
                     break;
             }
         }
@@ -304,6 +313,21 @@ namespace RotoGestionClientes
             {
                 entity.Id = NuevoId<SeguridadVentana>();
                 _context.SeguridadVentanas.Add(entity);
+            }
+
+            entity.Nombre = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
+        }
+        private void GuardarCremonaPasivaVentana()
+        {
+            var entity = _id == null
+                ? new CremonaPasivaVentanaTipos()
+                : _context.CremonaPasivaVentanaTipos.First(x => x.Id == _id);
+
+            if (_id == null)
+            {
+                entity.Id = NuevoId<CremonaPasivaVentanaTipos>();
+                _context.CremonaPasivaVentanaTipos.Add(entity);
             }
 
             entity.Nombre = txt_Nombre.Text.Trim();
