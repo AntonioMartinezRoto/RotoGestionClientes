@@ -83,6 +83,11 @@ namespace RotoGestionClientes
             //    return;
 
             //}
+            //Validación de los datos antes de guardar
+            if (!IsModelValid())
+            {
+                return;
+            }
             SaveCliente();
             DialogResult = DialogResult.OK;
             Close();
@@ -203,6 +208,85 @@ namespace RotoGestionClientes
                 UpdateCliente();
             }
         }
+
+        private bool IsModelValid()
+        {
+            //Validación de datos generales
+            if (_model == null)
+            {
+                MessageBox.Show(
+                    "Datos corruptos. Cierre y reabra la aplicación",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return false;
+            }
+
+            //Validación de datos obligatorios
+            if (String.IsNullOrEmpty(_model.Nombre))
+            {
+                MessageBox.Show(
+                    "Nombre del cliente obligatorio",
+                    "Validación",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+
+                return false;
+            }
+
+            //Validación de nombre de cliente nuevo existente
+            if (_mode == WizardMode.Create && _model != null && !String.IsNullOrEmpty(_model.Nombre))
+            {
+                Cliente cliente = _context.Clientes.Where(c => c.Nombre.ToUpper().Trim() == _model.Nombre.ToUpper().Trim()).FirstOrDefault();
+                if (cliente != null)
+                {
+                    MessageBox.Show(
+                        "Ya existe un cliente con ese nombre",
+                        "Validación",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return false;
+                }
+            }
+
+            //Validación de nombre de edición de cliente existente
+            if (_mode == WizardMode.Edit && _model != null && _model.Id != 0)
+            {
+                Cliente cliente = _context.Clientes.Where(c => c.Id == _model.Id).FirstOrDefault();
+
+                if (cliente == null)
+                {
+                    MessageBox.Show(
+                        "Datos corruptos editando el cliente. Cierre y reabra la aplicación",
+                        "Validación",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+
+                    return false;
+                }
+
+                //Se está modificando el nombre del cliente en la edición
+                if (cliente.Nombre.ToUpper().Trim() != _model.Nombre.ToUpper().Trim())
+                {
+                    Cliente clienteNombre = _context.Clientes.Where(c => c.Nombre.ToUpper().Trim() == _model.Nombre.ToUpper().Trim()).FirstOrDefault();
+                    if (clienteNombre != null)
+                    {
+                        MessageBox.Show(
+                            "Ya existe un cliente con ese nombre",
+                            "Validación",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+
+                        return false;
+                    }
+                }               
+            }
+
+            return true;
+        }
+
         private ClientWizardModel? MapClienteToModel(int? clienteId)
         {
             if (clienteId == null)
