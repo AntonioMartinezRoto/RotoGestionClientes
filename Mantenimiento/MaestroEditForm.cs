@@ -69,6 +69,14 @@ namespace RotoGestionClientes
                     }
                     break;
 
+                case MaestroTipo.BisagraPuerta:
+                    {
+                        var e = _context.Bisagras.First(x => x.Id == _id);
+                        txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
+                    }
+                    break;
+
                 case MaestroTipo.SoporteCompas:
                     {
                         var e = _context.SoporteCompases.First(x => x.Id == _id);
@@ -161,6 +169,10 @@ namespace RotoGestionClientes
                     GuardarManilla();
                     break;
 
+                case MaestroTipo.BisagraPuerta:
+                    GuardarBisagraPuerta();
+                    break;
+
                 case MaestroTipo.CilindroTipo:
                     GuardarCilindroTipo();
                     break;
@@ -238,6 +250,21 @@ namespace RotoGestionClientes
             {
                 entity.Id = NuevoId<Manilla>();
                 _context.Manillas.Add(entity);
+            }
+
+            entity.Nombre = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
+        }
+        private void GuardarBisagraPuerta()
+        {
+            var entity = _id == null
+                ? new Bisagra()
+                : _context.Bisagras.First(x => x.Id == _id);
+
+            if (_id == null)
+            {
+                entity.Id = NuevoId<Bisagra>();
+                _context.Bisagras.Add(entity);
             }
 
             entity.Nombre = txt_Nombre.Text.Trim();

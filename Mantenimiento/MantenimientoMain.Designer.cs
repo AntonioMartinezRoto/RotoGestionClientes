@@ -36,13 +36,14 @@
             btn_Perfiles = new Button();
             btn_TipoSeguridad = new Button();
             btn_Pasivas = new Button();
+            btn_Manillas = new Button();
             btn_Software = new Button();
             btn_MaquinaTipo = new Button();
             btn_MaquinaMarcas = new Button();
             btn_MaquinaMantenimiento = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
-            btn_Manillas = new Button();
+            btn_Bisagras = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -90,6 +91,7 @@
             flowLayoutPanel_Sidebar.Controls.Add(btn_TipoSeguridad);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Pasivas);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Manillas);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_Bisagras);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Software);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaTipo);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMarcas);
@@ -148,12 +150,27 @@
             btn_Pasivas.UseVisualStyleBackColor = true;
             btn_Pasivas.Click += btn_Pasivas_Click;
             // 
+            // btn_Manillas
+            // 
+            btn_Manillas.Font = new Font("Calibri", 9F);
+            btn_Manillas.Image = (Image)resources.GetObject("btn_Manillas.Image");
+            btn_Manillas.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Manillas.Location = new Point(3, 253);
+            btn_Manillas.Margin = new Padding(3, 4, 3, 4);
+            btn_Manillas.Name = "btn_Manillas";
+            btn_Manillas.Padding = new Padding(11, 0, 0, 0);
+            btn_Manillas.Size = new Size(256, 75);
+            btn_Manillas.TabIndex = 39;
+            btn_Manillas.Text = "Manillas";
+            btn_Manillas.UseVisualStyleBackColor = true;
+            btn_Manillas.Click += btn_Manillas_Click;
+            // 
             // btn_Software
             // 
             btn_Software.Font = new Font("Calibri", 9F);
             btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
             btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(3, 336);
+            btn_Software.Location = new Point(3, 419);
             btn_Software.Margin = new Padding(3, 4, 3, 4);
             btn_Software.Name = "btn_Software";
             btn_Software.Padding = new Padding(11, 0, 0, 0);
@@ -168,7 +185,7 @@
             btn_MaquinaTipo.Font = new Font("Calibri", 9F);
             btn_MaquinaTipo.Image = (Image)resources.GetObject("btn_MaquinaTipo.Image");
             btn_MaquinaTipo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaTipo.Location = new Point(3, 419);
+            btn_MaquinaTipo.Location = new Point(3, 502);
             btn_MaquinaTipo.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaTipo.Name = "btn_MaquinaTipo";
             btn_MaquinaTipo.Padding = new Padding(11, 0, 0, 0);
@@ -183,7 +200,7 @@
             btn_MaquinaMarcas.Font = new Font("Calibri", 9F);
             btn_MaquinaMarcas.Image = (Image)resources.GetObject("btn_MaquinaMarcas.Image");
             btn_MaquinaMarcas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaMarcas.Location = new Point(3, 502);
+            btn_MaquinaMarcas.Location = new Point(3, 585);
             btn_MaquinaMarcas.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMarcas.Name = "btn_MaquinaMarcas";
             btn_MaquinaMarcas.Padding = new Padding(11, 0, 0, 0);
@@ -198,7 +215,7 @@
             btn_MaquinaMantenimiento.Font = new Font("Calibri", 9F);
             btn_MaquinaMantenimiento.Image = (Image)resources.GetObject("btn_MaquinaMantenimiento.Image");
             btn_MaquinaMantenimiento.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaMantenimiento.Location = new Point(3, 585);
+            btn_MaquinaMantenimiento.Location = new Point(3, 668);
             btn_MaquinaMantenimiento.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMantenimiento.Name = "btn_MaquinaMantenimiento";
             btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 0, 0);
@@ -238,20 +255,20 @@
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
             // 
-            // btn_Manillas
+            // btn_Bisagras
             // 
-            btn_Manillas.Font = new Font("Calibri", 9F);
-            btn_Manillas.Image = (Image)resources.GetObject("btn_Manillas.Image");
-            btn_Manillas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Manillas.Location = new Point(3, 253);
-            btn_Manillas.Margin = new Padding(3, 4, 3, 4);
-            btn_Manillas.Name = "btn_Manillas";
-            btn_Manillas.Padding = new Padding(11, 0, 0, 0);
-            btn_Manillas.Size = new Size(256, 75);
-            btn_Manillas.TabIndex = 39;
-            btn_Manillas.Text = "Manillas";
-            btn_Manillas.UseVisualStyleBackColor = true;
-            btn_Manillas.Click += btn_Manillas_Click;
+            btn_Bisagras.Font = new Font("Calibri", 9F);
+            btn_Bisagras.Image = (Image)resources.GetObject("btn_Bisagras.Image");
+            btn_Bisagras.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Bisagras.Location = new Point(3, 336);
+            btn_Bisagras.Margin = new Padding(3, 4, 3, 4);
+            btn_Bisagras.Name = "btn_Bisagras";
+            btn_Bisagras.Padding = new Padding(11, 0, 0, 0);
+            btn_Bisagras.Size = new Size(256, 75);
+            btn_Bisagras.TabIndex = 40;
+            btn_Bisagras.Text = "Bisagras";
+            btn_Bisagras.UseVisualStyleBackColor = true;
+            btn_Bisagras.Click += btn_Bisagras_Click;
             // 
             // MantenimientoMain
             // 
@@ -292,5 +309,6 @@
         private Button btn_TipoSeguridad;
         private Button btn_Pasivas;
         private Button btn_Manillas;
+        private Button btn_Bisagras;
     }
 }

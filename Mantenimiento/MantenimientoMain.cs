@@ -70,6 +70,10 @@ namespace RotoGestionClientes
         {
             LoadMaestro(MaestroTipo.Manilla);
         }
+        private void btn_Bisagras_Click(object sender, EventArgs e)
+        {
+            LoadMaestro(MaestroTipo.BisagraPuerta);
+        }
         private void btn_Add_Click(object sender, EventArgs e)
         {
             using var form = new MaestroEditForm(_context, _tablaActual);
@@ -229,6 +233,18 @@ namespace RotoGestionClientes
                         .ToList();
                     break;
 
+                case MaestroTipo.BisagraPuerta:
+                    dgvMaestros.DataSource = _context.Bisagras
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new MaestroGridItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre,
+                            Activa = x.Activa
+                        })
+                        .ToList();
+                    break;
+
                 case MaestroTipo.CilindroTipo:
                     dgvMaestros.DataSource = _context.CilindroTipos
                         .OrderBy(x => x.Nombre)
@@ -279,5 +295,6 @@ namespace RotoGestionClientes
             dgvMaestros.Refresh();
         }
         #endregion
+
     }
 }
