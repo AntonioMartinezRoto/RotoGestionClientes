@@ -133,6 +133,7 @@
             btn_Informes.TabIndex = 2;
             btn_Informes.Text = "Informes";
             btn_Informes.UseVisualStyleBackColor = true;
+            btn_Informes.Click += btn_Informes_Click;
             // 
             // Main
             // 

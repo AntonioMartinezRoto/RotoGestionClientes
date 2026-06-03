@@ -42,6 +42,12 @@ namespace RotoGestionClientes
             mantenimientoMainForm.ShowDialog();
         }
 
+        private void btn_Informes_Click(object sender, EventArgs e)
+        {
+            InformesMain informesMainForm = new(_context);
+            informesMainForm.ShowDialog();
+        }
+
         #endregion
 
         #region Private methods
@@ -63,8 +69,5 @@ namespace RotoGestionClientes
         }
 
         #endregion
-
-
-
     }
 }
