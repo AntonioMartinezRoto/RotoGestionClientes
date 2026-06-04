@@ -42,5 +42,15 @@ namespace RotoGestionClientes
             MaquinaTipo,
             CerraduraPuerta
         }
+        public enum InformeFiltroTipo
+        {
+            Software,
+            Manilla,
+            Bisagra,
+            //Perfil,
+            //PerfilTipo,
+            //Maquina,
+            //Cilindro
+        }
     }
 }

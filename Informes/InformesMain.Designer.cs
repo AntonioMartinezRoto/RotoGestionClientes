@@ -39,7 +39,12 @@
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_ExportExcel = new Button();
             panel1 = new Panel();
+            btn_LimpiarFiltros = new Button();
+            btn_Buscar = new Button();
+            btn_Manillas = new Button();
+            btn_Software = new Button();
             label2 = new Label();
+            btn_Bisagras = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvResultados).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -161,6 +166,11 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btn_Bisagras);
+            panel1.Controls.Add(btn_LimpiarFiltros);
+            panel1.Controls.Add(btn_Buscar);
+            panel1.Controls.Add(btn_Manillas);
+            panel1.Controls.Add(btn_Software);
             panel1.Controls.Add(label2);
             panel1.Dock = DockStyle.Top;
             panel1.Location = new Point(286, 80);
@@ -168,6 +178,70 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(1138, 151);
             panel1.TabIndex = 35;
+            // 
+            // btn_LimpiarFiltros
+            // 
+            btn_LimpiarFiltros.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_LimpiarFiltros.FlatStyle = FlatStyle.Flat;
+            btn_LimpiarFiltros.Image = (Image)resources.GetObject("btn_LimpiarFiltros.Image");
+            btn_LimpiarFiltros.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_LimpiarFiltros.Location = new Point(910, 29);
+            btn_LimpiarFiltros.Margin = new Padding(3, 4, 3, 4);
+            btn_LimpiarFiltros.Name = "btn_LimpiarFiltros";
+            btn_LimpiarFiltros.Padding = new Padding(11, 0, 0, 0);
+            btn_LimpiarFiltros.Size = new Size(161, 41);
+            btn_LimpiarFiltros.TabIndex = 14;
+            btn_LimpiarFiltros.Text = "Limpiar Filtros";
+            btn_LimpiarFiltros.UseVisualStyleBackColor = true;
+            btn_LimpiarFiltros.Click += btn_LimpiarFiltros_Click;
+            // 
+            // btn_Buscar
+            // 
+            btn_Buscar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Buscar.FlatStyle = FlatStyle.Flat;
+            btn_Buscar.Image = (Image)resources.GetObject("btn_Buscar.Image");
+            btn_Buscar.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Buscar.Location = new Point(910, 89);
+            btn_Buscar.Margin = new Padding(3, 4, 3, 4);
+            btn_Buscar.Name = "btn_Buscar";
+            btn_Buscar.Padding = new Padding(11, 0, 0, 0);
+            btn_Buscar.Size = new Size(161, 41);
+            btn_Buscar.TabIndex = 13;
+            btn_Buscar.Text = "Buscar";
+            btn_Buscar.UseVisualStyleBackColor = true;
+            btn_Buscar.Click += btn_Buscar_Click;
+            // 
+            // btn_Manillas
+            // 
+            btn_Manillas.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Manillas.FlatStyle = FlatStyle.Flat;
+            btn_Manillas.Image = (Image)resources.GetObject("btn_Manillas.Image");
+            btn_Manillas.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Manillas.Location = new Point(130, 89);
+            btn_Manillas.Margin = new Padding(3, 4, 3, 4);
+            btn_Manillas.Name = "btn_Manillas";
+            btn_Manillas.Padding = new Padding(11, 0, 0, 0);
+            btn_Manillas.Size = new Size(137, 41);
+            btn_Manillas.TabIndex = 12;
+            btn_Manillas.Text = "Manillas";
+            btn_Manillas.UseVisualStyleBackColor = true;
+            btn_Manillas.Click += btn_Manillas_Click;
+            // 
+            // btn_Software
+            // 
+            btn_Software.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Software.FlatStyle = FlatStyle.Flat;
+            btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
+            btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Software.Location = new Point(130, 29);
+            btn_Software.Margin = new Padding(3, 4, 3, 4);
+            btn_Software.Name = "btn_Software";
+            btn_Software.Padding = new Padding(11, 0, 0, 0);
+            btn_Software.Size = new Size(137, 41);
+            btn_Software.TabIndex = 11;
+            btn_Software.Text = "Sofware";
+            btn_Software.UseVisualStyleBackColor = true;
+            btn_Software.Click += btn_Software_Click;
             // 
             // label2
             // 
@@ -178,6 +252,22 @@
             label2.Size = new Size(85, 32);
             label2.TabIndex = 0;
             label2.Text = "Filtros";
+            // 
+            // btn_Bisagras
+            // 
+            btn_Bisagras.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Bisagras.FlatStyle = FlatStyle.Flat;
+            btn_Bisagras.Image = (Image)resources.GetObject("btn_Bisagras.Image");
+            btn_Bisagras.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Bisagras.Location = new Point(303, 89);
+            btn_Bisagras.Margin = new Padding(3, 4, 3, 4);
+            btn_Bisagras.Name = "btn_Bisagras";
+            btn_Bisagras.Padding = new Padding(11, 0, 0, 0);
+            btn_Bisagras.Size = new Size(137, 41);
+            btn_Bisagras.TabIndex = 15;
+            btn_Bisagras.Text = "Bisagras";
+            btn_Bisagras.UseVisualStyleBackColor = true;
+            btn_Bisagras.Click += btn_Bisagras_Click;
             // 
             // InformesMain
             // 
@@ -222,5 +312,10 @@
         private Button btn_ExportExcel;
         private Panel panel1;
         private Label label2;
+        private Button btn_Manillas;
+        private Button btn_Software;
+        private Button btn_Buscar;
+        private Button btn_LimpiarFiltros;
+        private Button btn_Bisagras;
     }
 }

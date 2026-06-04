@@ -16,6 +16,7 @@ namespace RotoGestionClientes
         #region Private properties
 
         private readonly ApplicationDbContext _context;
+        private readonly Dictionary<InformeFiltroTipo, List<int>> _filtrosSeleccionados = new();
         #endregion
 
         #region Constructors
@@ -35,7 +36,15 @@ namespace RotoGestionClientes
         }
         private void txt_Filtro_TextChanged(object sender, EventArgs e)
         {
+            var texto = txt_Filtro.Text.Trim().ToLower();
 
+            if (dgvResultados.DataSource is not List<ClienteInformeItem> lista)
+                return;
+
+            dgvResultados.DataSource = lista
+                .Where(x =>
+                    x.Nombre.ToLower().Contains(texto))
+                .ToList();
         }
         private void btn_ExportExcel_Click(object sender, EventArgs e)
         {
@@ -46,11 +55,191 @@ namespace RotoGestionClientes
         #region Private methods
         private void ConfigureGrid()
         {
-            
+
+        }
+        private void AbrirFiltro(InformeFiltroTipo tipo)
+        {
+            var items = ObtenerItemsFiltro(tipo);
+
+            if (_filtrosSeleccionados.TryGetValue(tipo, out var ids))
+            {
+                foreach (var item in items)
+                {
+                    item.Selected = ids.Contains(item.Id);
+                }
+            }
+
+            using var form = new FiltroForm(items);
+
+            if (form.ShowDialog() != DialogResult.OK)
+                return;
+
+            _filtrosSeleccionados[tipo] = form.SelectedIds;
+
+            ActualizarEstadoBoton(tipo);
+        }
+        private List<FiltroItem> ObtenerItemsFiltro(InformeFiltroTipo tipo)
+        {
+            switch (tipo)
+            {
+                case InformeFiltroTipo.Software:
+                    return _context.Softwares
+                        //.Where(x => x.Activa)
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new FiltroItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre
+                        })
+                        .ToList();
+
+                case InformeFiltroTipo.Manilla:
+                    return _context.Manillas
+                        //.Where(x => x.Activa)
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new FiltroItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre
+                        })
+                        .ToList();
+
+                case InformeFiltroTipo.Bisagra:
+                    return _context.Bisagras
+                        //.Where(x => x.Activa)
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new FiltroItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre
+                        })
+                        .ToList();
+            }
+
+            return new List<FiltroItem>();
         }
 
         #endregion
 
 
+        private void btn_Software_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Software);
+        }
+
+        private void btn_Manillas_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Manilla);
+        }
+
+        private void btn_Bisagras_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Bisagra);
+        }
+        private void ActualizarEstadoBoton(InformeFiltroTipo tipo)
+        {
+            var button = ObtenerBotonFiltro(tipo);
+
+            bool tieneSeleccion =
+                _filtrosSeleccionados.ContainsKey(tipo) &&
+                _filtrosSeleccionados[tipo].Any();
+
+            button.BackColor = tieneSeleccion
+                ? Color.LightSteelBlue
+                : Color.White;
+
+            button.Font = new Font(
+                button.Font,
+                tieneSeleccion ? FontStyle.Bold : FontStyle.Regular);
+        }
+        private Button ObtenerBotonFiltro(InformeFiltroTipo tipo)
+        {
+            return tipo switch
+            {
+                InformeFiltroTipo.Software => btn_Software,
+                InformeFiltroTipo.Manilla => btn_Manillas,
+                InformeFiltroTipo.Bisagra => btn_Bisagras,
+                //InformeFiltroTipo.Perfil => btn_Perfil,
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        private void btn_Buscar_Click(object sender, EventArgs e)
+        {
+            CargarResultados();
+        }
+        private void CargarResultados()
+        {
+            IQueryable<Cliente> query = _context.Clientes;
+
+            if (_filtrosSeleccionados.TryGetValue(
+                InformeFiltroTipo.Software,
+                out var softwares)
+                && softwares.Any())
+            {
+                query = query.Where(c =>
+                    c.ClienteSoftwares.Any(cs =>
+                        softwares.Contains(cs.SoftwareId)));
+            }
+
+            if (_filtrosSeleccionados.TryGetValue(
+                InformeFiltroTipo.Manilla,
+                out var manillas)
+                && manillas.Any())
+            {
+                query = query.Where(c =>
+                    c.ClienteManillas.Any(cm =>
+                        manillas.Contains(cm.ManillaId)));
+            }
+
+            if (_filtrosSeleccionados.TryGetValue(
+                InformeFiltroTipo.Bisagra,
+                out var bisagras)
+                && bisagras.Any())
+            {
+                query = query.Where(c =>
+                    c.ClienteBisagraPuertas.Any(cm =>
+                        bisagras.Contains(cm.BisagraPuertaId)));
+            }
+
+            var resultado = query
+                .Select(c => new ClienteInformeItem
+                {
+                    Id = c.Id,
+                    Nombre = c.Nombre
+                })
+                .ToList();
+
+            dgvResultados.DataSource = resultado;
+
+            lbl_Total.Text = $"Total registros: {resultado.Count}";
+        }
+
+        private void btn_LimpiarFiltros_Click(object sender, EventArgs e)
+        {
+            _filtrosSeleccionados.Clear();
+
+            ActualizarTodosBotones();
+
+            dgvResultados.DataSource = null;
+
+            lbl_Total.Text = "Total registros: 0";
+        }
+        private void ActualizarTodosBotones()
+        {
+            foreach (InformeFiltroTipo tipo in Enum.GetValues(typeof(InformeFiltroTipo)))
+            {
+                ActualizarEstadoBoton(tipo);
+            }
+        }
+    }
+
+    public class ClienteInformeItem
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Software { get; set; }
+        public string Perfil { get; set; }
+        public string Manillas { get; set; }
     }
 }
