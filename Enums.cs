@@ -50,7 +50,7 @@ namespace RotoGestionClientes
             //Perfil,
             //PerfilTipo,
             Maquina,
-            //Cilindro
+            Cerradura
         }
     }
 }

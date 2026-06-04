@@ -133,6 +133,16 @@
         1gnzqJcYvczsoFZOB5FOZxciN2ZOYqV1TAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="btn_Cerraduras.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
+        cAAAAHABznhikwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAADLSURBVDhPxZPN
+        DcIwDIXDAsARpoAVEEcGKUzAMPxsghADsARXEDAB4ns0rkyTSPTEkz7FteMnq60DWsEN7vCKZwnVrzCD
+        Rmoe1WF4xLMk1adwgcbEN5UMzvG0+gRkMtfDLwaW93VNoum/kk/o1eGXFqC86l6fXm9whB2sM+zhAF6J
+        wQAqyBko3wevxKCrEoMh6L/ITSBU05SmxOAEG8g1iy3oPZkSg9JXMLW/RGLg45KS+/836LJMkt0ZgzYz
+        LGNg69pe4TZ2h55QvQFOQVmV5pREPwAAAABJRU5ErkJggg==
+</value>
+  </data>
   <data name="btn_MaquinasTipo.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA

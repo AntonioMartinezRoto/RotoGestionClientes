@@ -39,13 +39,14 @@
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_ExportExcel = new Button();
             panel1 = new Panel();
+            btn_MaquinasTipo = new Button();
             btn_Bisagras = new Button();
             btn_LimpiarFiltros = new Button();
             btn_Buscar = new Button();
             btn_Manillas = new Button();
             btn_Software = new Button();
             label2 = new Label();
-            btn_MaquinasTipo = new Button();
+            btn_Cerraduras = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvResultados).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -167,6 +168,7 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btn_Cerraduras);
             panel1.Controls.Add(btn_MaquinasTipo);
             panel1.Controls.Add(btn_Bisagras);
             panel1.Controls.Add(btn_LimpiarFiltros);
@@ -178,8 +180,24 @@
             panel1.Location = new Point(286, 80);
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1138, 176);
+            panel1.Size = new Size(1138, 146);
             panel1.TabIndex = 35;
+            // 
+            // btn_MaquinasTipo
+            // 
+            btn_MaquinasTipo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_MaquinasTipo.FlatStyle = FlatStyle.Flat;
+            btn_MaquinasTipo.Image = (Image)resources.GetObject("btn_MaquinasTipo.Image");
+            btn_MaquinasTipo.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_MaquinasTipo.Location = new Point(731, 51);
+            btn_MaquinasTipo.Margin = new Padding(3, 4, 3, 4);
+            btn_MaquinasTipo.Name = "btn_MaquinasTipo";
+            btn_MaquinasTipo.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinasTipo.Size = new Size(137, 41);
+            btn_MaquinasTipo.TabIndex = 16;
+            btn_MaquinasTipo.Text = "Máquinas";
+            btn_MaquinasTipo.UseVisualStyleBackColor = true;
+            btn_MaquinasTipo.Click += btn_MaquinasTipo_Click;
             // 
             // btn_Bisagras
             // 
@@ -251,7 +269,7 @@
             btn_Software.FlatStyle = FlatStyle.Flat;
             btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
             btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(60, 116);
+            btn_Software.Location = new Point(566, 51);
             btn_Software.Margin = new Padding(3, 4, 3, 4);
             btn_Software.Name = "btn_Software";
             btn_Software.Padding = new Padding(11, 0, 0, 0);
@@ -271,21 +289,21 @@
             label2.TabIndex = 0;
             label2.Text = "Filtros";
             // 
-            // btn_MaquinasTipo
+            // btn_Cerraduras
             // 
-            btn_MaquinasTipo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btn_MaquinasTipo.FlatStyle = FlatStyle.Flat;
-            btn_MaquinasTipo.Image = (Image)resources.GetObject("btn_MaquinasTipo.Image");
-            btn_MaquinasTipo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinasTipo.Location = new Point(233, 116);
-            btn_MaquinasTipo.Margin = new Padding(3, 4, 3, 4);
-            btn_MaquinasTipo.Name = "btn_MaquinasTipo";
-            btn_MaquinasTipo.Padding = new Padding(11, 0, 0, 0);
-            btn_MaquinasTipo.Size = new Size(137, 41);
-            btn_MaquinasTipo.TabIndex = 16;
-            btn_MaquinasTipo.Text = "Máquinas";
-            btn_MaquinasTipo.UseVisualStyleBackColor = true;
-            btn_MaquinasTipo.Click += btn_MaquinasTipo_Click;
+            btn_Cerraduras.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Cerraduras.FlatStyle = FlatStyle.Flat;
+            btn_Cerraduras.Image = (Image)resources.GetObject("btn_Cerraduras.Image");
+            btn_Cerraduras.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Cerraduras.Location = new Point(402, 51);
+            btn_Cerraduras.Margin = new Padding(3, 4, 3, 4);
+            btn_Cerraduras.Name = "btn_Cerraduras";
+            btn_Cerraduras.Padding = new Padding(11, 0, 0, 0);
+            btn_Cerraduras.Size = new Size(137, 41);
+            btn_Cerraduras.TabIndex = 17;
+            btn_Cerraduras.Text = "Cerraduras";
+            btn_Cerraduras.UseVisualStyleBackColor = true;
+            btn_Cerraduras.Click += btn_Cerraduras_Click;
             // 
             // InformesMain
             // 
@@ -336,5 +354,6 @@
         private Button btn_LimpiarFiltros;
         private Button btn_Bisagras;
         private Button btn_MaquinasTipo;
+        private Button btn_Cerraduras;
     }
 }

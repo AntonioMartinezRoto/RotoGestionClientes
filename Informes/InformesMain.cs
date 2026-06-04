@@ -65,6 +65,10 @@ namespace RotoGestionClientes
         {
             AbrirFiltro(InformeFiltroTipo.Maquina);
         }
+        private void btn_Cerraduras_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Cerradura);
+        }
         private void btn_Buscar_Click(object sender, EventArgs e)
         {
             CargarResultados();
@@ -149,6 +153,16 @@ namespace RotoGestionClientes
                             Nombre = x.Descripcion
                         })
                         .ToList();
+                case InformeFiltroTipo.Cerradura:
+                    return _context.CerradurasPuerta
+                        //.Where(x => x.Activa)
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new FiltroItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre
+                        })
+                        .ToList();
             }
 
             return new List<FiltroItem>();
@@ -177,6 +191,7 @@ namespace RotoGestionClientes
                 InformeFiltroTipo.Manilla => btn_Manillas,
                 InformeFiltroTipo.Bisagra => btn_Bisagras,
                 InformeFiltroTipo.Maquina => btn_MaquinasTipo,
+                InformeFiltroTipo.Cerradura => btn_Cerraduras,
                 _ => throw new NotImplementedException()
             };
         }
@@ -224,6 +239,16 @@ namespace RotoGestionClientes
                         maquinas.Contains(cm.MaquinaTipoId)));
             }
 
+            if (_filtrosSeleccionados.TryGetValue(
+                InformeFiltroTipo.Cerradura,
+                out var cerraduras)
+                && cerraduras.Any())
+            {
+                query = query.Where(c =>
+                    c.ClienteCerradurasPuerta.Any(cc =>
+                        cerraduras.Contains(cc.CerraduraPuertaId)));
+            }
+
             var resultado = query
                 .Select(c => new ClienteInformeItem
                 {
@@ -248,7 +273,6 @@ namespace RotoGestionClientes
         }
 
         #endregion
-
 
     }
 }
