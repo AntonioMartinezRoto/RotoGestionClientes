@@ -17,6 +17,8 @@ namespace RotoGestionClientes
 
         private readonly ApplicationDbContext _context;
         private readonly Dictionary<InformeFiltroTipo, List<int>> _filtrosSeleccionados = new();
+        private List<ClienteInformeItem> _resultadoActual = new();
+        private readonly BindingSource _bindingResultados = new();
         #endregion
 
         #region Constructors
@@ -37,14 +39,23 @@ namespace RotoGestionClientes
         {
             var texto = txt_Filtro.Text.Trim().ToLower();
 
-            if (dgvResultados.DataSource is not List<ClienteInformeItem> lista)
-                return;
+            IEnumerable<ClienteInformeItem> query = _resultadoActual;
 
-            dgvResultados.DataSource = lista
-                .Where(x =>
-                    x.Nombre.ToLower().Contains(texto))
-                .ToList();
+            if (!string.IsNullOrWhiteSpace(texto))
+            {
+                query = query.Where(x =>
+                    (x.Nombre ?? "").ToLower().Contains(texto)
+                    || (x.Software ?? "").ToLower().Contains(texto));
+            }
+
+            var resultado = query.ToList();
+
+            _bindingResultados.DataSource = resultado;
+            dgvResultados.DataSource = _bindingResultados;
+
+            lbl_Total.Text = $"Total registros: {resultado.Count}";
         }
+
         private void btn_ExportExcel_Click(object sender, EventArgs e)
         {
 
@@ -249,20 +260,22 @@ namespace RotoGestionClientes
                         cerraduras.Contains(cc.CerraduraPuertaId)));
             }
 
-            var resultado = query
+            _resultadoActual = query
                 .Select(c => new ClienteInformeItem
                 {
                     Id = c.Id,
                     Nombre = c.Nombre,
+
                     Software = c.ClienteSoftwares
                                 .Select(cs => cs.Software.Nombre)
                                 .FirstOrDefault() ?? string.Empty
                 })
                 .ToList();
 
-            dgvResultados.DataSource = resultado;
+            _bindingResultados.DataSource = _resultadoActual;
+            dgvResultados.DataSource = _bindingResultados;
 
-            lbl_Total.Text = $"Total registros: {resultado.Count}";
+            lbl_Total.Text = $"Total registros: {_resultadoActual.Count}";
         }
         private void ActualizarTodosBotones()
         {
