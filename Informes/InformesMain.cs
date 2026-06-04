@@ -34,6 +34,9 @@ namespace RotoGestionClientes
         private void InformesMain_Load(object sender, EventArgs e)
         {
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
+            CrearGrid();
+
+            //CargarResultados();
         }
         private void txt_Filtro_TextChanged(object sender, EventArgs e)
         {
@@ -264,11 +267,22 @@ namespace RotoGestionClientes
                 .Select(c => new ClienteInformeItem
                 {
                     Id = c.Id,
+
                     Nombre = c.Nombre,
 
-                    Software = c.ClienteSoftwares
-                                .Select(cs => cs.Software.Nombre)
-                                .FirstOrDefault() ?? string.Empty
+                    Software = string.Join(
+                        " - ",
+                        c.ClienteSoftwares
+                         .Select(cs => cs.Software.Nombre)),
+
+                    Perfiles = string.Join(
+                        " - ",
+                        c.ClientePerfiles
+                         .Select(cp =>
+                            cp.Perfil.Nombre +
+                            " (" +
+                            cp.Perfil.PerfilTipo.NombreAbreviado +
+                            ")"))
                 })
                 .ToList();
 
@@ -283,6 +297,66 @@ namespace RotoGestionClientes
             {
                 ActualizarEstadoBoton(tipo);
             }
+        }
+        private void CrearGrid()
+        {
+            dgvResultados.AutoGenerateColumns = false;
+
+            dgvResultados.Columns.Clear();
+
+            dgvResultados.AllowUserToAddRows = false;
+            dgvResultados.ReadOnly = true;
+            dgvResultados.RowHeadersVisible = false;
+            
+            dgvResultados.DefaultCellStyle.WrapMode =
+                DataGridViewTriState.True;
+
+            dgvResultados.AutoSizeRowsMode =
+                DataGridViewAutoSizeRowsMode.AllCells;
+
+            // =========================
+            // HEADER
+            // =========================
+
+            //dgvResultados.ColumnHeadersDefaultCellStyle.BackColor = Color.LightSteelBlue;
+            //dgvResultados.ColumnHeadersDefaultCellStyle.ForeColor = Color.LightSteelBlue;
+            dgvResultados.ColumnHeadersDefaultCellStyle.Font =
+                new Font(
+                    "Segoe UI",
+                    10,
+                    FontStyle.Bold);
+
+            dgvResultados.ColumnHeadersDefaultCellStyle.Alignment =
+                DataGridViewContentAlignment.MiddleLeft;
+
+            dgvResultados.ColumnHeadersHeight = 38;
+
+            dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Nombre",
+                HeaderText = "Cliente",
+                DataPropertyName = "Nombre",
+                //AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+                Width = 250
+            });
+
+            dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Software",
+                HeaderText = "Software",
+                DataPropertyName = "Software",
+
+                Width = 180
+            });
+
+            dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Perfiles",
+                HeaderText = "Perfiles",
+                DataPropertyName = "Perfiles",
+
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
         }
 
         #endregion

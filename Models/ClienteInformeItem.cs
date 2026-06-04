@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace RotoGestionClientes
-{    public class ClienteInformeItem
+{
+    public class ClienteInformeItem
     {
         public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Software { get; set; }
-        public string Perfil { get; set; }
-        public string Manillas { get; set; }
+
+        public string Nombre { get; set; } = string.Empty;
+
+        public string Software { get; set; } = string.Empty;
+
+        public string Perfiles { get; set; } = string.Empty;
+
     }
 }
