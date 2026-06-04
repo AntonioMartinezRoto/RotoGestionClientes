@@ -49,7 +49,7 @@ namespace RotoGestionClientes
             Bisagra,
             //Perfil,
             //PerfilTipo,
-            //Maquina,
+            Maquina,
             //Cilindro
         }
     }

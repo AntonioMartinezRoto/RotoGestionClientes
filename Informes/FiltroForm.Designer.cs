@@ -72,11 +72,13 @@
             dgvItems.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             dgvItems.BackgroundColor = Color.White;
             dgvItems.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvItems.Location = new Point(7, 30);
+            dgvItems.ColumnHeadersVisible = false;
+            dgvItems.Location = new Point(7, 28);
             dgvItems.Margin = new Padding(3, 4, 3, 4);
             dgvItems.Name = "dgvItems";
+            dgvItems.RowHeadersVisible = false;
             dgvItems.RowHeadersWidth = 51;
-            dgvItems.Size = new Size(428, 308);
+            dgvItems.Size = new Size(428, 325);
             dgvItems.TabIndex = 2;
             // 
             // FiltroForm

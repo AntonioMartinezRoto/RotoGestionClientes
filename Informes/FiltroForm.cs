@@ -10,14 +10,21 @@ namespace RotoGestionClientes
 {
     public partial class FiltroForm : Form
     {
+        #region Private properties
+
         private readonly BindingList<FiltroItem> _items;
 
-        public List<int> SelectedIds =>
-            _items
-                .Where(x => x.Selected)
-                .Select(x => x.Id)
-                .ToList();
+        #endregion
 
+        #region Public properties
+        public List<int> SelectedIds =>
+                        _items
+                            .Where(x => x.Selected)
+                            .Select(x => x.Id)
+                            .ToList();
+        #endregion
+
+        #region Constructors
         public FiltroForm()
         {
             InitializeComponent();
@@ -32,6 +39,17 @@ namespace RotoGestionClientes
 
             dgvItems.DataSource = _items;
         }
+        #endregion
+
+        #region Events
+        private void btn_Aceptar_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+        #endregion
+
+        #region Private methods
         private void CrearGrid()
         {
             dgvItems.AutoGenerateColumns = false;
@@ -51,19 +69,6 @@ namespace RotoGestionClientes
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
         }
-
-        private void btn_Aceptar_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-            Close();
-        }
-    }
-    public class FiltroItem
-    {
-        public int Id { get; set; }
-
-        public string Nombre { get; set; } = string.Empty;
-
-        public bool Selected { get; set; }
+        #endregion
     }
 }

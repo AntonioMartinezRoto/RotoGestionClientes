@@ -39,12 +39,13 @@
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_ExportExcel = new Button();
             panel1 = new Panel();
+            btn_Bisagras = new Button();
             btn_LimpiarFiltros = new Button();
             btn_Buscar = new Button();
             btn_Manillas = new Button();
             btn_Software = new Button();
             label2 = new Label();
-            btn_Bisagras = new Button();
+            btn_MaquinasTipo = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvResultados).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -166,6 +167,7 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btn_MaquinasTipo);
             panel1.Controls.Add(btn_Bisagras);
             panel1.Controls.Add(btn_LimpiarFiltros);
             panel1.Controls.Add(btn_Buscar);
@@ -176,8 +178,24 @@
             panel1.Location = new Point(286, 80);
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1138, 151);
+            panel1.Size = new Size(1138, 176);
             panel1.TabIndex = 35;
+            // 
+            // btn_Bisagras
+            // 
+            btn_Bisagras.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Bisagras.FlatStyle = FlatStyle.Flat;
+            btn_Bisagras.Image = (Image)resources.GetObject("btn_Bisagras.Image");
+            btn_Bisagras.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Bisagras.Location = new Point(233, 51);
+            btn_Bisagras.Margin = new Padding(3, 4, 3, 4);
+            btn_Bisagras.Name = "btn_Bisagras";
+            btn_Bisagras.Padding = new Padding(11, 0, 0, 0);
+            btn_Bisagras.Size = new Size(137, 41);
+            btn_Bisagras.TabIndex = 15;
+            btn_Bisagras.Text = "Bisagras";
+            btn_Bisagras.UseVisualStyleBackColor = true;
+            btn_Bisagras.Click += btn_Bisagras_Click;
             // 
             // btn_LimpiarFiltros
             // 
@@ -217,7 +235,7 @@
             btn_Manillas.FlatStyle = FlatStyle.Flat;
             btn_Manillas.Image = (Image)resources.GetObject("btn_Manillas.Image");
             btn_Manillas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Manillas.Location = new Point(130, 89);
+            btn_Manillas.Location = new Point(60, 51);
             btn_Manillas.Margin = new Padding(3, 4, 3, 4);
             btn_Manillas.Name = "btn_Manillas";
             btn_Manillas.Padding = new Padding(11, 0, 0, 0);
@@ -233,7 +251,7 @@
             btn_Software.FlatStyle = FlatStyle.Flat;
             btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
             btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(130, 29);
+            btn_Software.Location = new Point(60, 116);
             btn_Software.Margin = new Padding(3, 4, 3, 4);
             btn_Software.Name = "btn_Software";
             btn_Software.Padding = new Padding(11, 0, 0, 0);
@@ -253,21 +271,21 @@
             label2.TabIndex = 0;
             label2.Text = "Filtros";
             // 
-            // btn_Bisagras
+            // btn_MaquinasTipo
             // 
-            btn_Bisagras.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btn_Bisagras.FlatStyle = FlatStyle.Flat;
-            btn_Bisagras.Image = (Image)resources.GetObject("btn_Bisagras.Image");
-            btn_Bisagras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Bisagras.Location = new Point(303, 89);
-            btn_Bisagras.Margin = new Padding(3, 4, 3, 4);
-            btn_Bisagras.Name = "btn_Bisagras";
-            btn_Bisagras.Padding = new Padding(11, 0, 0, 0);
-            btn_Bisagras.Size = new Size(137, 41);
-            btn_Bisagras.TabIndex = 15;
-            btn_Bisagras.Text = "Bisagras";
-            btn_Bisagras.UseVisualStyleBackColor = true;
-            btn_Bisagras.Click += btn_Bisagras_Click;
+            btn_MaquinasTipo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_MaquinasTipo.FlatStyle = FlatStyle.Flat;
+            btn_MaquinasTipo.Image = (Image)resources.GetObject("btn_MaquinasTipo.Image");
+            btn_MaquinasTipo.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_MaquinasTipo.Location = new Point(233, 116);
+            btn_MaquinasTipo.Margin = new Padding(3, 4, 3, 4);
+            btn_MaquinasTipo.Name = "btn_MaquinasTipo";
+            btn_MaquinasTipo.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinasTipo.Size = new Size(137, 41);
+            btn_MaquinasTipo.TabIndex = 16;
+            btn_MaquinasTipo.Text = "Máquinas";
+            btn_MaquinasTipo.UseVisualStyleBackColor = true;
+            btn_MaquinasTipo.Click += btn_MaquinasTipo_Click;
             // 
             // InformesMain
             // 
@@ -317,5 +335,6 @@
         private Button btn_Buscar;
         private Button btn_LimpiarFiltros;
         private Button btn_Bisagras;
+        private Button btn_MaquinasTipo;
     }
 }

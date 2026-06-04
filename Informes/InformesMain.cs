@@ -24,7 +24,6 @@ namespace RotoGestionClientes
         {
             InitializeComponent();
             _context = context;
-            ConfigureGrid();
         }
 
         #endregion
@@ -50,13 +49,39 @@ namespace RotoGestionClientes
         {
 
         }
+        private void btn_Software_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Software);
+        }
+        private void btn_Manillas_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Manilla);
+        }
+        private void btn_Bisagras_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Bisagra);
+        }
+        private void btn_MaquinasTipo_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Maquina);
+        }
+        private void btn_Buscar_Click(object sender, EventArgs e)
+        {
+            CargarResultados();
+        }
+        private void btn_LimpiarFiltros_Click(object sender, EventArgs e)
+        {
+            _filtrosSeleccionados.Clear();
+
+            ActualizarTodosBotones();
+
+            dgvResultados.DataSource = null;
+
+            lbl_Total.Text = "Total registros: 0";
+        }
         #endregion
 
         #region Private methods
-        private void ConfigureGrid()
-        {
-
-        }
         private void AbrirFiltro(InformeFiltroTipo tipo)
         {
             var items = ObtenerItemsFiltro(tipo);
@@ -114,27 +139,19 @@ namespace RotoGestionClientes
                             Nombre = x.Nombre
                         })
                         .ToList();
+                case InformeFiltroTipo.Maquina:
+                    return _context.MaquinasTipos
+                        //.Where(x => x.Activa)
+                        .OrderBy(x => x.Descripcion)
+                        .Select(x => new FiltroItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Descripcion
+                        })
+                        .ToList();
             }
 
             return new List<FiltroItem>();
-        }
-
-        #endregion
-
-
-        private void btn_Software_Click(object sender, EventArgs e)
-        {
-            AbrirFiltro(InformeFiltroTipo.Software);
-        }
-
-        private void btn_Manillas_Click(object sender, EventArgs e)
-        {
-            AbrirFiltro(InformeFiltroTipo.Manilla);
-        }
-
-        private void btn_Bisagras_Click(object sender, EventArgs e)
-        {
-            AbrirFiltro(InformeFiltroTipo.Bisagra);
         }
         private void ActualizarEstadoBoton(InformeFiltroTipo tipo)
         {
@@ -159,14 +176,9 @@ namespace RotoGestionClientes
                 InformeFiltroTipo.Software => btn_Software,
                 InformeFiltroTipo.Manilla => btn_Manillas,
                 InformeFiltroTipo.Bisagra => btn_Bisagras,
-                //InformeFiltroTipo.Perfil => btn_Perfil,
+                InformeFiltroTipo.Maquina => btn_MaquinasTipo,
                 _ => throw new NotImplementedException()
             };
-        }
-
-        private void btn_Buscar_Click(object sender, EventArgs e)
-        {
-            CargarResultados();
         }
         private void CargarResultados()
         {
@@ -202,28 +214,30 @@ namespace RotoGestionClientes
                         bisagras.Contains(cm.BisagraPuertaId)));
             }
 
+            if (_filtrosSeleccionados.TryGetValue(
+                InformeFiltroTipo.Maquina,
+                out var maquinas)
+                && maquinas.Any())
+            {
+                query = query.Where(c =>
+                    c.ClienteMaquinas.Any(cm =>
+                        maquinas.Contains(cm.MaquinaTipoId)));
+            }
+
             var resultado = query
                 .Select(c => new ClienteInformeItem
                 {
                     Id = c.Id,
-                    Nombre = c.Nombre
+                    Nombre = c.Nombre,
+                    Software = c.ClienteSoftwares
+                                .Select(cs => cs.Software.Nombre)
+                                .FirstOrDefault() ?? string.Empty
                 })
                 .ToList();
 
             dgvResultados.DataSource = resultado;
 
             lbl_Total.Text = $"Total registros: {resultado.Count}";
-        }
-
-        private void btn_LimpiarFiltros_Click(object sender, EventArgs e)
-        {
-            _filtrosSeleccionados.Clear();
-
-            ActualizarTodosBotones();
-
-            dgvResultados.DataSource = null;
-
-            lbl_Total.Text = "Total registros: 0";
         }
         private void ActualizarTodosBotones()
         {
@@ -232,14 +246,9 @@ namespace RotoGestionClientes
                 ActualizarEstadoBoton(tipo);
             }
         }
-    }
 
-    public class ClienteInformeItem
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; }
-        public string Software { get; set; }
-        public string Perfil { get; set; }
-        public string Manillas { get; set; }
+        #endregion
+
+
     }
 }
