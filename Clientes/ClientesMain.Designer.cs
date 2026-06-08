@@ -62,7 +62,6 @@
             dgvClientes.Size = new Size(1011, 845);
             dgvClientes.TabIndex = 1;
             dgvClientes.CellClick += dgvClientes_CellClick;
-            dgvClientes.CellContentClick += dgvClientes_CellContentClick;
             // 
             // lbl_Filtro
             // 

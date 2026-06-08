@@ -48,21 +48,6 @@ namespace RotoGestionClientes
         {
             ApplyFilter();
         }
-        private void dgvClientes_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            //if (e.RowIndex < 0)
-            //    return;
-
-            //if (dgvClientes.Columns[e.ColumnIndex].Name == "Edit")
-            //{
-            //    int clienteId = (int)dgvClientes.Rows[e.RowIndex].Cells["Id"].Value;
-            //    string clienteName = dgvClientes.Rows[e.RowIndex].Cells["Nombre"].ToString();
-
-            //    ClientesEditForm clientesEditForm = new ClientesEditForm(clienteName, clienteId, _context);
-            //    clientesEditForm.ShowDialog();
-
-            //}
-        }
         private void dgvClientes_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.ColumnIndex < 0)
@@ -87,13 +72,13 @@ namespace RotoGestionClientes
             {
                 using var clienteWizard = new ClienteWizard(WizardMode.Edit, _context, cliente.Id);
                 clienteWizard.ShowDialog();
+                LoadClientesFromDB();
             }
             else if (dgvClientes.Columns[e.ColumnIndex].Name == "Delete")
             {
                 DeleteCliente(cliente);
+                LoadClientesFromDB();
             }
-
-            LoadClientesFromDB();
         }
         private void btn_AddCliente_Click(object sender, EventArgs e)
         {
