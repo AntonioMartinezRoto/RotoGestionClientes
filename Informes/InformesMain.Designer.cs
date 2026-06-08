@@ -328,7 +328,6 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "InformesMain";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Infomes";
             Load += InformesMain_Load;
             ((System.ComponentModel.ISupportInitialize)dgvResultados).EndInit();
             panel_Header.ResumeLayout(false);

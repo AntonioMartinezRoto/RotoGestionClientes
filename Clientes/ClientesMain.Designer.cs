@@ -173,7 +173,6 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "ClientesMain";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Clientes";
             Load += ClientesMain_Load;
             ((System.ComponentModel.ISupportInitialize)dgvClientes).EndInit();
             panel_Header.ResumeLayout(false);
