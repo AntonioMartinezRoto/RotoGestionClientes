@@ -246,7 +246,7 @@
             btn_LimpiarFiltros.Padding = new Padding(7, 0, 5, 0);
             btn_LimpiarFiltros.Size = new Size(161, 41);
             btn_LimpiarFiltros.TabIndex = 14;
-            btn_LimpiarFiltros.Text = "Limpiar Filtros";
+            btn_LimpiarFiltros.Text = "Limpiar filtros";
             btn_LimpiarFiltros.TextAlign = ContentAlignment.MiddleRight;
             btn_LimpiarFiltros.UseVisualStyleBackColor = true;
             btn_LimpiarFiltros.Click += btn_LimpiarFiltros_Click;

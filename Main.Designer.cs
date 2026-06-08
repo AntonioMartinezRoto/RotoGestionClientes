@@ -36,9 +36,13 @@
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_Informes = new Button();
+            picture_Main = new PictureBox();
+            pictureBox1 = new PictureBox();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picture_Main).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // btn_Clientes
@@ -135,6 +139,26 @@
             btn_Informes.UseVisualStyleBackColor = true;
             btn_Informes.Click += btn_Informes_Click;
             // 
+            // picture_Main
+            // 
+            picture_Main.Image = (Image)resources.GetObject("picture_Main.Image");
+            picture_Main.Location = new Point(310, 87);
+            picture_Main.Name = "picture_Main";
+            picture_Main.Size = new Size(965, 722);
+            picture_Main.SizeMode = PictureBoxSizeMode.AutoSize;
+            picture_Main.TabIndex = 36;
+            picture_Main.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(1120, 842);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(293, 157);
+            pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
+            pictureBox1.TabIndex = 37;
+            pictureBox1.TabStop = false;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -142,6 +166,8 @@
             BackColor = Color.White;
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(1424, 1032);
+            Controls.Add(pictureBox1);
+            Controls.Add(picture_Main);
             Controls.Add(panel_Sidebar);
             Controls.Add(panel_Header);
             DoubleBuffered = true;
@@ -157,7 +183,10 @@
             panel_Header.PerformLayout();
             panel_Sidebar.ResumeLayout(false);
             flowLayoutPanel_Sidebar.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picture_Main).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
@@ -169,5 +198,7 @@
         private Panel panel_Sidebar;
         private FlowLayoutPanel flowLayoutPanel_Sidebar;
         private Button btn_Informes;
+        private PictureBox picture_Main;
+        private PictureBox pictureBox1;
     }
 }
