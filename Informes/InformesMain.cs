@@ -290,6 +290,7 @@ namespace RotoGestionClientes
                             cp.Perfil.PerfilTipo.NombreAbreviado +
                             ")"))
                 })
+                .OrderBy(c => c.Nombre)
                 .ToList();
 
             _bindingResultados.DataSource = _resultadoActual;
