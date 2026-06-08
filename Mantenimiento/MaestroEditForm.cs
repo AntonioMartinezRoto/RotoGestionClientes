@@ -35,6 +35,27 @@ namespace RotoGestionClientes
             txt_Nombre.Text = string.Empty;
             chk_Activo.Checked = true;
 
+            if (_tipo == MaestroTipo.Perfil)
+            {
+                lbl_PerfilTipo.Visible = true;
+                cmb_PerfilTipo.Visible = true;
+
+                var perfilesTipos = _context.PerfilTipos
+                                        .OrderBy(x => x.Nombre)
+                                        .ToList();
+
+                cmb_PerfilTipo.DataSource = perfilesTipos;
+                cmb_PerfilTipo.DisplayMember = "Nombre";
+                cmb_PerfilTipo.ValueMember = "Id";
+
+                cmb_PerfilTipo.SelectedIndex = -1;
+            }
+            else
+            {
+                lbl_PerfilTipo.Visible = false;
+                cmb_PerfilTipo.Visible = false;
+            }
+
             if (_id == null)
                 return;
 
@@ -44,6 +65,9 @@ namespace RotoGestionClientes
                     {
                         var e = _context.Perfiles.First(x => x.Id == _id);
                         txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
+
+                        cmb_PerfilTipo.SelectedValue = e.PerfilTipoId;
                     }
                     break;
                 case MaestroTipo.PerfilTipo:
@@ -222,6 +246,8 @@ namespace RotoGestionClientes
             }
 
             entity.Nombre = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
+            entity.PerfilTipoId = (int)cmb_PerfilTipo.SelectedValue;
         }
         private void GuardarPerfilTipo()
         {

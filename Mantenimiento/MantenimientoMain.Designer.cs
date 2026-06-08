@@ -38,13 +38,13 @@
             btn_Pasivas = new Button();
             btn_Manillas = new Button();
             btn_Bisagras = new Button();
+            btn_Cerraduras = new Button();
             btn_Software = new Button();
             btn_MaquinaTipo = new Button();
             btn_MaquinaMarcas = new Button();
             btn_MaquinaMantenimiento = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
-            btn_Cerraduras = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -182,6 +182,21 @@
             btn_Bisagras.UseVisualStyleBackColor = true;
             btn_Bisagras.Click += btn_Bisagras_Click;
             // 
+            // btn_Cerraduras
+            // 
+            btn_Cerraduras.Font = new Font("Calibri", 9F);
+            btn_Cerraduras.Image = (Image)resources.GetObject("btn_Cerraduras.Image");
+            btn_Cerraduras.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Cerraduras.Location = new Point(3, 419);
+            btn_Cerraduras.Margin = new Padding(3, 4, 3, 4);
+            btn_Cerraduras.Name = "btn_Cerraduras";
+            btn_Cerraduras.Padding = new Padding(11, 0, 0, 0);
+            btn_Cerraduras.Size = new Size(256, 75);
+            btn_Cerraduras.TabIndex = 41;
+            btn_Cerraduras.Text = "Cerraduras";
+            btn_Cerraduras.UseVisualStyleBackColor = true;
+            btn_Cerraduras.Click += btn_Cerraduras_Click;
+            // 
             // btn_Software
             // 
             btn_Software.Font = new Font("Calibri", 9F);
@@ -249,7 +264,7 @@
             dgvMaestros.AllowUserToOrderColumns = true;
             dgvMaestros.AllowUserToResizeRows = false;
             dgvMaestros.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvMaestros.BackgroundColor = SystemColors.ActiveCaption;
+            dgvMaestros.BackgroundColor = Color.White;
             dgvMaestros.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvMaestros.Location = new Point(328, 150);
             dgvMaestros.Margin = new Padding(3, 4, 3, 4);
@@ -272,21 +287,6 @@
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
             // 
-            // btn_Cerraduras
-            // 
-            btn_Cerraduras.Font = new Font("Calibri", 9F);
-            btn_Cerraduras.Image = (Image)resources.GetObject("btn_Cerraduras.Image");
-            btn_Cerraduras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Cerraduras.Location = new Point(3, 419);
-            btn_Cerraduras.Margin = new Padding(3, 4, 3, 4);
-            btn_Cerraduras.Name = "btn_Cerraduras";
-            btn_Cerraduras.Padding = new Padding(11, 0, 0, 0);
-            btn_Cerraduras.Size = new Size(256, 75);
-            btn_Cerraduras.TabIndex = 41;
-            btn_Cerraduras.Text = "Cerraduras";
-            btn_Cerraduras.UseVisualStyleBackColor = true;
-            btn_Cerraduras.Click += btn_Cerraduras_Click;
-            // 
             // MantenimientoMain
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -302,7 +302,7 @@
             Name = "MantenimientoMain";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Mantenimiento";
-            Load += ClientesMain_Load;
+            Load += MantenimientoMain_Load;
             panel_Header.ResumeLayout(false);
             panel_Header.PerformLayout();
             panel_Sidebar.ResumeLayout(false);

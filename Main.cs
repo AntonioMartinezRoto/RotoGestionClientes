@@ -26,7 +26,7 @@ namespace RotoGestionClientes
         private void Main_Load(object sender, EventArgs e)
         {
             var version = Assembly.GetExecutingAssembly().GetName().Version;
-            this.Text = $"RotoGestiónClientes v{version?.Major}.{version?.Minor}";
+            this.Text = $"RGC v{version?.Major}.{version?.Minor}";
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
             LoadClientesFromDB();
         }

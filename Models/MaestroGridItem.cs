@@ -9,7 +9,7 @@ namespace RotoGestionClientes
         public int Id { get; set; }
 
         public string Nombre { get; set; } = null!;
-
+        public string? Tipo { get; set; } = null!;
         public bool Activa { get; set; }
     }
 }

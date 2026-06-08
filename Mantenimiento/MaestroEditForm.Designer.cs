@@ -34,6 +34,8 @@
             btn_Cancelar = new Button();
             btn_Aceptar = new Button();
             chk_Activo = new CheckBox();
+            cmb_PerfilTipo = new ComboBox();
+            lbl_PerfilTipo = new Label();
             SuspendLayout();
             // 
             // lbl_Nombre
@@ -57,7 +59,7 @@
             btn_Cancelar.FlatStyle = FlatStyle.Flat;
             btn_Cancelar.Image = (Image)resources.GetObject("btn_Cancelar.Image");
             btn_Cancelar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Cancelar.Location = new Point(236, 186);
+            btn_Cancelar.Location = new Point(236, 246);
             btn_Cancelar.Margin = new Padding(3, 4, 3, 4);
             btn_Cancelar.Name = "btn_Cancelar";
             btn_Cancelar.Padding = new Padding(11, 0, 0, 0);
@@ -73,7 +75,7 @@
             btn_Aceptar.FlatStyle = FlatStyle.Flat;
             btn_Aceptar.Image = (Image)resources.GetObject("btn_Aceptar.Image");
             btn_Aceptar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Aceptar.Location = new Point(368, 186);
+            btn_Aceptar.Location = new Point(368, 246);
             btn_Aceptar.Margin = new Padding(3, 4, 3, 4);
             btn_Aceptar.Name = "btn_Aceptar";
             btn_Aceptar.Padding = new Padding(11, 0, 0, 0);
@@ -93,12 +95,35 @@
             chk_Activo.Text = "Activo";
             chk_Activo.UseVisualStyleBackColor = true;
             // 
+            // cmb_PerfilTipo
+            // 
+            cmb_PerfilTipo.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmb_PerfilTipo.FormattingEnabled = true;
+            cmb_PerfilTipo.Location = new Point(200, 167);
+            cmb_PerfilTipo.Margin = new Padding(3, 4, 3, 4);
+            cmb_PerfilTipo.Name = "cmb_PerfilTipo";
+            cmb_PerfilTipo.Size = new Size(229, 28);
+            cmb_PerfilTipo.TabIndex = 23;
+            cmb_PerfilTipo.Visible = false;
+            // 
+            // lbl_PerfilTipo
+            // 
+            lbl_PerfilTipo.AutoSize = true;
+            lbl_PerfilTipo.Location = new Point(85, 170);
+            lbl_PerfilTipo.Name = "lbl_PerfilTipo";
+            lbl_PerfilTipo.Size = new Size(39, 20);
+            lbl_PerfilTipo.TabIndex = 24;
+            lbl_PerfilTipo.Text = "Tipo";
+            lbl_PerfilTipo.Visible = false;
+            // 
             // MaestroEditForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(524, 273);
+            ClientSize = new Size(524, 325);
+            Controls.Add(lbl_PerfilTipo);
+            Controls.Add(cmb_PerfilTipo);
             Controls.Add(chk_Activo);
             Controls.Add(lbl_Nombre);
             Controls.Add(txt_Nombre);
@@ -121,5 +146,7 @@
         private Button btn_Cancelar;
         private Button btn_Aceptar;
         private CheckBox chk_Activo;
+        private ComboBox cmb_PerfilTipo;
+        private Label lbl_PerfilTipo;
     }
 }

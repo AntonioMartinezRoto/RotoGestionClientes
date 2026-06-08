@@ -61,7 +61,7 @@
             dgvResultados.AllowUserToOrderColumns = true;
             dgvResultados.AllowUserToResizeRows = false;
             dgvResultados.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            dgvResultados.BackgroundColor = SystemColors.ActiveCaption;
+            dgvResultados.BackgroundColor = Color.White;
             dgvResultados.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvResultados.Location = new Point(346, 268);
             dgvResultados.Margin = new Padding(3, 4, 3, 4);

@@ -30,8 +30,7 @@ namespace RotoGestionClientes
         #endregion
 
         #region Events
-
-        private void ClientesMain_Load(object sender, EventArgs e)
+        private void MantenimientoMain_Load(object sender, EventArgs e)
         {
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
             CrearGrid();
@@ -140,7 +139,7 @@ namespace RotoGestionClientes
                 Name = "Edit",
                 HeaderText = "",
                 Image = Properties.Resources.edit,
-                Width = 25
+                Width = 30
             });
         }
         private void LoadMaestro(MaestroTipo tipo)
@@ -150,7 +149,44 @@ namespace RotoGestionClientes
         }
         private void RecargarGridActual()
         {
+            dgvMaestros.Columns.Clear();
             dgvMaestros.AutoGenerateColumns = false;
+
+            dgvMaestros.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Nombre",
+                HeaderText = "Nombre",
+                DataPropertyName = "Nombre",
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            if (_tablaActual == MaestroTipo.Perfil)
+            {
+                dgvMaestros.Columns.Add(new DataGridViewTextBoxColumn
+                {
+                    Name = "Tipo",
+                    HeaderText = "Tipo",
+                    DataPropertyName = "Tipo",
+                    Width = 200
+                });
+            }
+
+            dgvMaestros.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                Name = "Activa",
+                HeaderText = "Activa",
+                DataPropertyName = "Activa",
+                Width = 80,
+                ReadOnly = true
+            });
+
+            dgvMaestros.Columns.Add(new DataGridViewImageColumn
+            {
+                Name = "Edit",
+                HeaderText = "",
+                Image = Properties.Resources.edit,
+                Width = 30
+            });
 
             switch (_tablaActual)
             {
@@ -161,6 +197,7 @@ namespace RotoGestionClientes
                         {
                             Id = x.Id,
                             Nombre = x.Nombre,
+                            Tipo = x.PerfilTipo.Nombre,
                             Activa = x.Activa
                         })
                         .ToList();
