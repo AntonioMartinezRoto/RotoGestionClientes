@@ -13,6 +13,9 @@
 	<AssemblyName>RGC</AssemblyName>
 	<AssemblyVersion>1.1</AssemblyVersion>
 	<FileVersion>1.1</FileVersion>
+	<ApplicationIcon>Images\roto_icon.ico</ApplicationIcon>
+	<Company>Roto-Frank S.A.</Company>
+	<PackageIcon>logo-Main.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -54,6 +57,10 @@
     </None>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Images\logo-Main.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
 

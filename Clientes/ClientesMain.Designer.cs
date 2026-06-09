@@ -62,6 +62,7 @@
             dgvClientes.Size = new Size(1011, 845);
             dgvClientes.TabIndex = 1;
             dgvClientes.CellClick += dgvClientes_CellClick;
+            dgvClientes.CellDoubleClick += dgvClientes_CellDoubleClick;
             // 
             // lbl_Filtro
             // 
@@ -172,6 +173,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "ClientesMain";
             StartPosition = FormStartPosition.CenterScreen;
+            WindowState = FormWindowState.Maximized;
             Load += ClientesMain_Load;
             ((System.ComponentModel.ISupportInitialize)dgvClientes).EndInit();
             panel_Header.ResumeLayout(false);

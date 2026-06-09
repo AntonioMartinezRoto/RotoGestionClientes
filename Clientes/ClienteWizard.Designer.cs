@@ -52,8 +52,9 @@
             panel_Header.Controls.Add(lbl_Titulo);
             panel_Header.Dock = DockStyle.Top;
             panel_Header.Location = new Point(0, 0);
+            panel_Header.Margin = new Padding(3, 4, 3, 4);
             panel_Header.Name = "panel_Header";
-            panel_Header.Size = new Size(1246, 60);
+            panel_Header.Size = new Size(1424, 80);
             panel_Header.TabIndex = 0;
             // 
             // lbl_Subtitulo
@@ -61,9 +62,9 @@
             lbl_Subtitulo.AutoSize = true;
             lbl_Subtitulo.Font = new Font("Segoe UI", 9F);
             lbl_Subtitulo.ForeColor = Color.DimGray;
-            lbl_Subtitulo.Location = new Point(28, 33);
+            lbl_Subtitulo.Location = new Point(32, 44);
             lbl_Subtitulo.Name = "lbl_Subtitulo";
-            lbl_Subtitulo.Size = new Size(214, 15);
+            lbl_Subtitulo.Size = new Size(273, 20);
             lbl_Subtitulo.TabIndex = 1;
             lbl_Subtitulo.Text = "Completa los datos para crear el cliente";
             // 
@@ -71,9 +72,9 @@
             // 
             lbl_Titulo.AutoSize = true;
             lbl_Titulo.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            lbl_Titulo.Location = new Point(25, 8);
+            lbl_Titulo.Location = new Point(29, 11);
             lbl_Titulo.Name = "lbl_Titulo";
-            lbl_Titulo.Size = new Size(134, 25);
+            lbl_Titulo.Size = new Size(172, 32);
             lbl_Titulo.TabIndex = 0;
             lbl_Titulo.Text = "Nuevo cliente";
             // 
@@ -85,9 +86,10 @@
             panel_Footer.Controls.Add(btn_Siguiente);
             panel_Footer.Controls.Add(btn_Finalizar);
             panel_Footer.Dock = DockStyle.Bottom;
-            panel_Footer.Location = new Point(0, 714);
+            panel_Footer.Location = new Point(0, 952);
+            panel_Footer.Margin = new Padding(3, 4, 3, 4);
             panel_Footer.Name = "panel_Footer";
-            panel_Footer.Size = new Size(1246, 60);
+            panel_Footer.Size = new Size(1424, 80);
             panel_Footer.TabIndex = 1;
             // 
             // btn_Atras
@@ -95,10 +97,11 @@
             btn_Atras.FlatStyle = FlatStyle.Flat;
             btn_Atras.Image = (Image)resources.GetObject("btn_Atras.Image");
             btn_Atras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Atras.Location = new Point(128, 14);
+            btn_Atras.Location = new Point(146, 19);
+            btn_Atras.Margin = new Padding(3, 4, 3, 4);
             btn_Atras.Name = "btn_Atras";
-            btn_Atras.Padding = new Padding(10, 0, 0, 0);
-            btn_Atras.Size = new Size(110, 34);
+            btn_Atras.Padding = new Padding(11, 0, 0, 0);
+            btn_Atras.Size = new Size(126, 45);
             btn_Atras.TabIndex = 3;
             btn_Atras.Text = "Atrás";
             btn_Atras.UseVisualStyleBackColor = true;
@@ -109,10 +112,11 @@
             btn_Cancelar.FlatStyle = FlatStyle.Flat;
             btn_Cancelar.Image = (Image)resources.GetObject("btn_Cancelar.Image");
             btn_Cancelar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Cancelar.Location = new Point(12, 14);
+            btn_Cancelar.Location = new Point(14, 19);
+            btn_Cancelar.Margin = new Padding(3, 4, 3, 4);
             btn_Cancelar.Name = "btn_Cancelar";
-            btn_Cancelar.Padding = new Padding(10, 0, 0, 0);
-            btn_Cancelar.Size = new Size(110, 34);
+            btn_Cancelar.Padding = new Padding(11, 0, 0, 0);
+            btn_Cancelar.Size = new Size(126, 45);
             btn_Cancelar.TabIndex = 2;
             btn_Cancelar.Text = "Cancelar";
             btn_Cancelar.UseVisualStyleBackColor = true;
@@ -124,10 +128,11 @@
             btn_Siguiente.FlatStyle = FlatStyle.Flat;
             btn_Siguiente.Image = (Image)resources.GetObject("btn_Siguiente.Image");
             btn_Siguiente.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Siguiente.Location = new Point(1008, 14);
+            btn_Siguiente.Location = new Point(1152, 19);
+            btn_Siguiente.Margin = new Padding(3, 4, 3, 4);
             btn_Siguiente.Name = "btn_Siguiente";
-            btn_Siguiente.Padding = new Padding(10, 0, 0, 0);
-            btn_Siguiente.Size = new Size(110, 34);
+            btn_Siguiente.Padding = new Padding(11, 0, 0, 0);
+            btn_Siguiente.Size = new Size(126, 45);
             btn_Siguiente.TabIndex = 1;
             btn_Siguiente.Text = "Siguiente";
             btn_Siguiente.UseVisualStyleBackColor = true;
@@ -139,10 +144,11 @@
             btn_Finalizar.FlatStyle = FlatStyle.Flat;
             btn_Finalizar.Image = (Image)resources.GetObject("btn_Finalizar.Image");
             btn_Finalizar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Finalizar.Location = new Point(1124, 14);
+            btn_Finalizar.Location = new Point(1285, 19);
+            btn_Finalizar.Margin = new Padding(3, 4, 3, 4);
             btn_Finalizar.Name = "btn_Finalizar";
-            btn_Finalizar.Padding = new Padding(10, 0, 0, 0);
-            btn_Finalizar.Size = new Size(110, 34);
+            btn_Finalizar.Padding = new Padding(11, 0, 0, 0);
+            btn_Finalizar.Size = new Size(126, 45);
             btn_Finalizar.TabIndex = 0;
             btn_Finalizar.Text = "Finalizar";
             btn_Finalizar.UseVisualStyleBackColor = true;
@@ -154,10 +160,11 @@
             panel_Sidebar.BackColor = Color.White;
             panel_Sidebar.Controls.Add(flowLayoutPanel_Sidebar);
             panel_Sidebar.Dock = DockStyle.Left;
-            panel_Sidebar.Location = new Point(0, 60);
+            panel_Sidebar.Location = new Point(0, 80);
+            panel_Sidebar.Margin = new Padding(3, 4, 3, 4);
             panel_Sidebar.Name = "panel_Sidebar";
-            panel_Sidebar.Padding = new Padding(10);
-            panel_Sidebar.Size = new Size(250, 654);
+            panel_Sidebar.Padding = new Padding(11, 13, 11, 13);
+            panel_Sidebar.Size = new Size(286, 872);
             panel_Sidebar.TabIndex = 2;
             // 
             // flowLayoutPanel_Sidebar
@@ -165,9 +172,10 @@
             flowLayoutPanel_Sidebar.AutoScroll = true;
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel_Sidebar.Location = new Point(10, 10);
+            flowLayoutPanel_Sidebar.Location = new Point(11, 13);
+            flowLayoutPanel_Sidebar.Margin = new Padding(3, 4, 3, 4);
             flowLayoutPanel_Sidebar.Name = "flowLayoutPanel_Sidebar";
-            flowLayoutPanel_Sidebar.Size = new Size(230, 634);
+            flowLayoutPanel_Sidebar.Size = new Size(264, 846);
             flowLayoutPanel_Sidebar.TabIndex = 0;
             flowLayoutPanel_Sidebar.WrapContents = false;
             // 
@@ -175,24 +183,27 @@
             // 
             panel_Content.BackColor = Color.White;
             panel_Content.Dock = DockStyle.Fill;
-            panel_Content.Location = new Point(250, 60);
+            panel_Content.Location = new Point(286, 80);
+            panel_Content.Margin = new Padding(3, 4, 3, 4);
             panel_Content.Name = "panel_Content";
-            panel_Content.Padding = new Padding(25);
-            panel_Content.Size = new Size(996, 654);
+            panel_Content.Padding = new Padding(29, 33, 29, 33);
+            panel_Content.Size = new Size(1138, 872);
             panel_Content.TabIndex = 3;
             // 
             // ClienteWizard
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1246, 774);
+            ClientSize = new Size(1424, 1032);
             Controls.Add(panel_Content);
             Controls.Add(panel_Sidebar);
             Controls.Add(panel_Footer);
             Controls.Add(panel_Header);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            Margin = new Padding(3, 4, 3, 4);
             Name = "ClienteWizard";
             StartPosition = FormStartPosition.CenterScreen;
+            WindowState = FormWindowState.Maximized;
             Load += ClienteWizard_Load;
             panel_Header.ResumeLayout(false);
             panel_Header.PerformLayout();

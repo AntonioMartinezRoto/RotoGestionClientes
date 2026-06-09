@@ -38,11 +38,15 @@
             btn_Informes = new Button();
             picture_Main = new PictureBox();
             pictureBox1 = new PictureBox();
+            panel_Inferior = new Panel();
+            panel_Central = new Panel();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)picture_Main).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            panel_Inferior.SuspendLayout();
+            panel_Central.SuspendLayout();
             SuspendLayout();
             // 
             // btn_Clientes
@@ -141,23 +145,45 @@
             // 
             // picture_Main
             // 
+            picture_Main.Anchor = AnchorStyles.None;
             picture_Main.Image = (Image)resources.GetObject("picture_Main.Image");
-            picture_Main.Location = new Point(310, 87);
+            picture_Main.Location = new Point(6, 7);
             picture_Main.Name = "picture_Main";
-            picture_Main.Size = new Size(965, 722);
-            picture_Main.SizeMode = PictureBoxSizeMode.AutoSize;
+            picture_Main.Padding = new Padding(80);
+            picture_Main.Size = new Size(1120, 765);
+            picture_Main.SizeMode = PictureBoxSizeMode.Zoom;
             picture_Main.TabIndex = 36;
             picture_Main.TabStop = false;
             // 
             // pictureBox1
             // 
+            pictureBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             pictureBox1.Image = (Image)resources.GetObject("pictureBox1.Image");
-            pictureBox1.Location = new Point(1120, 842);
+            pictureBox1.Location = new Point(833, 14);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(293, 157);
             pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             pictureBox1.TabIndex = 37;
             pictureBox1.TabStop = false;
+            // 
+            // panel_Inferior
+            // 
+            panel_Inferior.Controls.Add(pictureBox1);
+            panel_Inferior.Dock = DockStyle.Bottom;
+            panel_Inferior.Location = new Point(286, 858);
+            panel_Inferior.Name = "panel_Inferior";
+            panel_Inferior.Size = new Size(1138, 174);
+            panel_Inferior.TabIndex = 38;
+            // 
+            // panel_Central
+            // 
+            panel_Central.Controls.Add(picture_Main);
+            panel_Central.Dock = DockStyle.Fill;
+            panel_Central.Location = new Point(286, 80);
+            panel_Central.Name = "panel_Central";
+            panel_Central.Padding = new Padding(80);
+            panel_Central.Size = new Size(1138, 778);
+            panel_Central.TabIndex = 39;
             // 
             // Main
             // 
@@ -166,18 +192,18 @@
             BackColor = Color.White;
             BackgroundImageLayout = ImageLayout.None;
             ClientSize = new Size(1424, 1032);
-            Controls.Add(pictureBox1);
-            Controls.Add(picture_Main);
+            Controls.Add(panel_Central);
+            Controls.Add(panel_Inferior);
             Controls.Add(panel_Sidebar);
             Controls.Add(panel_Header);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
-            MaximizeBox = false;
             Name = "Main";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "RGC";
+            WindowState = FormWindowState.Maximized;
             Load += Main_Load;
             panel_Header.ResumeLayout(false);
             panel_Header.PerformLayout();
@@ -185,8 +211,9 @@
             flowLayoutPanel_Sidebar.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)picture_Main).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            panel_Inferior.ResumeLayout(false);
+            panel_Central.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -200,5 +227,7 @@
         private Button btn_Informes;
         private PictureBox picture_Main;
         private PictureBox pictureBox1;
+        private Panel panel_Inferior;
+        private Panel panel_Central;
     }
 }

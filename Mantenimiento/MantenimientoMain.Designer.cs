@@ -301,6 +301,7 @@
             Margin = new Padding(3, 4, 3, 4);
             Name = "MantenimientoMain";
             StartPosition = FormStartPosition.CenterScreen;
+            WindowState = FormWindowState.Maximized;
             Load += MantenimientoMain_Load;
             panel_Header.ResumeLayout(false);
             panel_Header.PerformLayout();

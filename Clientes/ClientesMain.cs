@@ -80,6 +80,28 @@ namespace RotoGestionClientes
                 LoadClientesFromDB();
             }
         }
+
+        private void dgvClientes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0)
+                return;
+
+            var cliente =
+                (ClienteGridItem)dgvClientes.Rows[e.RowIndex].DataBoundItem;
+
+            if (cliente == null)
+                return;
+
+            using ClienteWizard clienteWizard =
+                new ClienteWizard(
+                    WizardMode.Edit,
+                    _context,
+                    cliente.Id);
+
+            clienteWizard.ShowDialog();
+
+            LoadClientesFromDB();
+        }
         private void btn_AddCliente_Click(object sender, EventArgs e)
         {
             ClienteWizard clienteWizard = new ClienteWizard(WizardMode.Create, this._context);
@@ -195,7 +217,6 @@ namespace RotoGestionClientes
             }
         }
         #endregion
-
 
     }
 }
