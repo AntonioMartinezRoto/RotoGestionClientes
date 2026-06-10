@@ -74,13 +74,17 @@ namespace RotoGestionClientes
                 clienteWizard.ShowDialog();
                 LoadClientesFromDB();
             }
+            else if (dgvClientes.Columns[e.ColumnIndex].Name == "View")
+            {
+                using var clienteResumen = new ClienteResumen(_context, cliente.Id);
+                clienteResumen.ShowDialog();
+            }
             else if (dgvClientes.Columns[e.ColumnIndex].Name == "Delete")
             {
                 DeleteCliente(cliente);
                 LoadClientesFromDB();
             }
         }
-
         private void dgvClientes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)
@@ -147,6 +151,14 @@ namespace RotoGestionClientes
                 HeaderText = "Alias",
                 DataPropertyName = "Alias",
                 Width = 300,
+            });
+            dgvClientes.Columns.Add(new DataGridViewImageColumn
+            {
+                Name = "View",
+                HeaderText = "",
+                Image = Properties.Resources.eye,
+                Width = 25,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             });
             dgvClientes.Columns.Add(new DataGridViewImageColumn
             {
