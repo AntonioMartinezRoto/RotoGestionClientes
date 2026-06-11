@@ -152,6 +152,13 @@ namespace RotoGestionClientes
                 DataPropertyName = "Alias",
                 Width = 300,
             });
+            dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Comentarios",
+                HeaderText = "Comentarios",
+                DataPropertyName = "Comentarios",
+                Width = 300,
+            });
             dgvClientes.Columns.Add(new DataGridViewImageColumn
             {
                 Name = "View",
