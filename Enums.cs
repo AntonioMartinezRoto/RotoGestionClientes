@@ -47,7 +47,7 @@ namespace RotoGestionClientes
             Software,
             Manilla,
             Bisagra,
-            //Perfil,
+            Perfil,
             //PerfilTipo,
             Maquina,
             Cerradura

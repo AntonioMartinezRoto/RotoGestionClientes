@@ -89,6 +89,10 @@ namespace RotoGestionClientes
         {
             AbrirFiltro(InformeFiltroTipo.Cerradura);
         }
+        private void btn_Perfiles_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Perfil);
+        }
         private void btn_Buscar_Click(object sender, EventArgs e)
         {
             CargarResultados();
@@ -153,6 +157,17 @@ namespace RotoGestionClientes
                         })
                         .ToList();
 
+                case InformeFiltroTipo.Perfil:
+                    return _context.Perfiles
+                        //.Where(x => x.Activa)
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new FiltroItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre + " (" + x.PerfilTipo.NombreAbreviado + ")"
+                        })
+                        .ToList();
+
                 case InformeFiltroTipo.Bisagra:
                     return _context.Bisagras
                         //.Where(x => x.Activa)
@@ -212,6 +227,7 @@ namespace RotoGestionClientes
                 InformeFiltroTipo.Bisagra => btn_Bisagras,
                 InformeFiltroTipo.Maquina => btn_MaquinasTipo,
                 InformeFiltroTipo.Cerradura => btn_Cerraduras,
+                InformeFiltroTipo.Perfil => btn_Perfiles,
                 _ => throw new NotImplementedException()
             };
         }
@@ -269,6 +285,16 @@ namespace RotoGestionClientes
                         cerraduras.Contains(cc.CerraduraPuertaId)));
             }
 
+            if (_filtrosSeleccionados.TryGetValue(
+                InformeFiltroTipo.Perfil,
+                out var perfiles)
+                && perfiles.Any())
+                {
+                    query = query.Where(c =>
+                        c.ClientePerfiles.Any(cp =>
+                            perfiles.Contains(cp.PerfilId)));
+                }
+
             _resultadoActual = query
                 .Select(c => new ClienteInformeItem
                 {
@@ -314,7 +340,7 @@ namespace RotoGestionClientes
             dgvResultados.AllowUserToAddRows = false;
             dgvResultados.ReadOnly = true;
             dgvResultados.RowHeadersVisible = false;
-            
+
             dgvResultados.DefaultCellStyle.WrapMode =
                 DataGridViewTriState.True;
 

@@ -47,6 +47,7 @@
             btn_Manillas = new Button();
             btn_Software = new Button();
             label2 = new Label();
+            btn_Perfiles = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvResultados).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -168,6 +169,7 @@
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btn_Perfiles);
             panel1.Controls.Add(btn_Cerraduras);
             panel1.Controls.Add(btn_MaquinasTipo);
             panel1.Controls.Add(btn_Bisagras);
@@ -189,11 +191,11 @@
             btn_Cerraduras.FlatStyle = FlatStyle.Flat;
             btn_Cerraduras.Image = (Image)resources.GetObject("btn_Cerraduras.Image");
             btn_Cerraduras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Cerraduras.Location = new Point(404, 62);
+            btn_Cerraduras.Location = new Point(569, 17);
             btn_Cerraduras.Margin = new Padding(3, 4, 3, 4);
             btn_Cerraduras.Name = "btn_Cerraduras";
             btn_Cerraduras.Padding = new Padding(0, 0, 10, 0);
-            btn_Cerraduras.Size = new Size(137, 41);
+            btn_Cerraduras.Size = new Size(161, 53);
             btn_Cerraduras.TabIndex = 17;
             btn_Cerraduras.Text = "Cerraduras";
             btn_Cerraduras.TextAlign = ContentAlignment.MiddleRight;
@@ -206,11 +208,11 @@
             btn_MaquinasTipo.FlatStyle = FlatStyle.Flat;
             btn_MaquinasTipo.Image = (Image)resources.GetObject("btn_MaquinasTipo.Image");
             btn_MaquinasTipo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinasTipo.Location = new Point(733, 62);
+            btn_MaquinasTipo.Location = new Point(569, 78);
             btn_MaquinasTipo.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinasTipo.Name = "btn_MaquinasTipo";
             btn_MaquinasTipo.Padding = new Padding(11, 0, 10, 0);
-            btn_MaquinasTipo.Size = new Size(137, 41);
+            btn_MaquinasTipo.Size = new Size(161, 53);
             btn_MaquinasTipo.TabIndex = 16;
             btn_MaquinasTipo.Text = "Máquinas";
             btn_MaquinasTipo.TextAlign = ContentAlignment.MiddleRight;
@@ -223,11 +225,11 @@
             btn_Bisagras.FlatStyle = FlatStyle.Flat;
             btn_Bisagras.Image = (Image)resources.GetObject("btn_Bisagras.Image");
             btn_Bisagras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Bisagras.Location = new Point(235, 62);
+            btn_Bisagras.Location = new Point(387, 17);
             btn_Bisagras.Margin = new Padding(3, 4, 3, 4);
             btn_Bisagras.Name = "btn_Bisagras";
             btn_Bisagras.Padding = new Padding(11, 0, 10, 0);
-            btn_Bisagras.Size = new Size(137, 41);
+            btn_Bisagras.Size = new Size(161, 53);
             btn_Bisagras.TabIndex = 15;
             btn_Bisagras.Text = "Bisagras";
             btn_Bisagras.TextAlign = ContentAlignment.MiddleRight;
@@ -240,11 +242,11 @@
             btn_LimpiarFiltros.FlatStyle = FlatStyle.Flat;
             btn_LimpiarFiltros.Image = (Image)resources.GetObject("btn_LimpiarFiltros.Image");
             btn_LimpiarFiltros.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_LimpiarFiltros.Location = new Point(910, 29);
+            btn_LimpiarFiltros.Location = new Point(910, 17);
             btn_LimpiarFiltros.Margin = new Padding(3, 4, 3, 4);
             btn_LimpiarFiltros.Name = "btn_LimpiarFiltros";
             btn_LimpiarFiltros.Padding = new Padding(7, 0, 5, 0);
-            btn_LimpiarFiltros.Size = new Size(161, 41);
+            btn_LimpiarFiltros.Size = new Size(161, 53);
             btn_LimpiarFiltros.TabIndex = 14;
             btn_LimpiarFiltros.Text = "Limpiar filtros";
             btn_LimpiarFiltros.TextAlign = ContentAlignment.MiddleRight;
@@ -257,11 +259,11 @@
             btn_Buscar.FlatStyle = FlatStyle.Flat;
             btn_Buscar.Image = (Image)resources.GetObject("btn_Buscar.Image");
             btn_Buscar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Buscar.Location = new Point(910, 89);
+            btn_Buscar.Location = new Point(910, 78);
             btn_Buscar.Margin = new Padding(3, 4, 3, 4);
             btn_Buscar.Name = "btn_Buscar";
             btn_Buscar.Padding = new Padding(11, 0, 0, 0);
-            btn_Buscar.Size = new Size(161, 41);
+            btn_Buscar.Size = new Size(161, 52);
             btn_Buscar.TabIndex = 13;
             btn_Buscar.Text = "Buscar";
             btn_Buscar.UseVisualStyleBackColor = true;
@@ -273,11 +275,11 @@
             btn_Manillas.FlatStyle = FlatStyle.Flat;
             btn_Manillas.Image = (Image)resources.GetObject("btn_Manillas.Image");
             btn_Manillas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Manillas.Location = new Point(62, 62);
+            btn_Manillas.Location = new Point(203, 17);
             btn_Manillas.Margin = new Padding(3, 4, 3, 4);
             btn_Manillas.Name = "btn_Manillas";
             btn_Manillas.Padding = new Padding(11, 0, 10, 0);
-            btn_Manillas.Size = new Size(137, 41);
+            btn_Manillas.Size = new Size(161, 53);
             btn_Manillas.TabIndex = 12;
             btn_Manillas.Text = "Manillas";
             btn_Manillas.TextAlign = ContentAlignment.MiddleRight;
@@ -290,11 +292,11 @@
             btn_Software.FlatStyle = FlatStyle.Flat;
             btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
             btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(568, 62);
+            btn_Software.Location = new Point(203, 78);
             btn_Software.Margin = new Padding(3, 4, 3, 4);
             btn_Software.Name = "btn_Software";
             btn_Software.Padding = new Padding(11, 0, 10, 0);
-            btn_Software.Size = new Size(137, 41);
+            btn_Software.Size = new Size(161, 52);
             btn_Software.TabIndex = 11;
             btn_Software.Text = "Sofware";
             btn_Software.TextAlign = ContentAlignment.MiddleRight;
@@ -310,6 +312,23 @@
             label2.Size = new Size(85, 32);
             label2.TabIndex = 0;
             label2.Text = "Filtros";
+            // 
+            // btn_Perfiles
+            // 
+            btn_Perfiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Perfiles.FlatStyle = FlatStyle.Flat;
+            btn_Perfiles.Image = (Image)resources.GetObject("btn_Perfiles.Image");
+            btn_Perfiles.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Perfiles.Location = new Point(387, 78);
+            btn_Perfiles.Margin = new Padding(3, 4, 3, 4);
+            btn_Perfiles.Name = "btn_Perfiles";
+            btn_Perfiles.Padding = new Padding(11, 0, 10, 0);
+            btn_Perfiles.Size = new Size(161, 52);
+            btn_Perfiles.TabIndex = 18;
+            btn_Perfiles.Text = "Perfiles";
+            btn_Perfiles.TextAlign = ContentAlignment.MiddleRight;
+            btn_Perfiles.UseVisualStyleBackColor = true;
+            btn_Perfiles.Click += btn_Perfiles_Click;
             // 
             // InformesMain
             // 
@@ -361,5 +380,6 @@
         private Button btn_Bisagras;
         private Button btn_MaquinasTipo;
         private Button btn_Cerraduras;
+        private Button btn_Perfiles;
     }
 }
