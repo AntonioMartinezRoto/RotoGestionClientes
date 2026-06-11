@@ -314,7 +314,20 @@ namespace RotoGestionClientes
                             cp.Perfil.Nombre +
                             " (" +
                             cp.Perfil.PerfilTipo.NombreAbreviado +
-                            ")"))
+                            ")")),
+
+                    Bisagras = string.Join(
+                        " - ",
+                        c.ClienteBisagraPuertas
+                         .Select(cb =>
+                            cb.Bisagra.Nombre)),
+
+                    Cerraduras = string.Join(
+                        " - ",
+                        c.ClienteCerradurasPuerta
+                         .Select(cc =>
+                            cc.CerraduraPuerta.Nombre))
+
                 })
                 .OrderBy(c => c.Nombre)
                 .ToList();
@@ -347,12 +360,6 @@ namespace RotoGestionClientes
             dgvResultados.AutoSizeRowsMode =
                 DataGridViewAutoSizeRowsMode.AllCells;
 
-            // =========================
-            // HEADER
-            // =========================
-
-            //dgvResultados.ColumnHeadersDefaultCellStyle.BackColor = Color.LightSteelBlue;
-            //dgvResultados.ColumnHeadersDefaultCellStyle.ForeColor = Color.LightSteelBlue;
             dgvResultados.ColumnHeadersDefaultCellStyle.Font =
                 new System.Drawing.Font(
                     "Segoe UI",
@@ -369,7 +376,6 @@ namespace RotoGestionClientes
                 Name = "Nombre",
                 HeaderText = "Cliente",
                 DataPropertyName = "Nombre",
-                //AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
                 Width = 250
             });
 
@@ -378,7 +384,6 @@ namespace RotoGestionClientes
                 Name = "Software",
                 HeaderText = "Software",
                 DataPropertyName = "Software",
-
                 Width = 180
             });
 
@@ -389,6 +394,23 @@ namespace RotoGestionClientes
                 DataPropertyName = "Perfiles",
 
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
+            });
+
+            dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Cerraduras",
+                HeaderText = "Cerraduras",
+                DataPropertyName = "Cerraduras",
+                Width = 250
+            });
+
+
+            dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                Name = "Bisagras",
+                HeaderText = "Bisagras",
+                DataPropertyName = "Bisagras",
+                Width = 250
             });
         }
         private void ExportarExcel()
@@ -489,7 +511,8 @@ namespace RotoGestionClientes
             {
                 "Nombre",
                 "Software",
-                "Perfiles"
+                "Perfiles",
+                "Bisagras"
             };
 
             for (int i = 0; i < columnas.Length; i++)

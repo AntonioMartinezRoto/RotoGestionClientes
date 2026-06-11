@@ -39,6 +39,7 @@
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_ExportExcel = new Button();
             panel1 = new Panel();
+            btn_Perfiles = new Button();
             btn_Cerraduras = new Button();
             btn_MaquinasTipo = new Button();
             btn_Bisagras = new Button();
@@ -47,7 +48,6 @@
             btn_Manillas = new Button();
             btn_Software = new Button();
             label2 = new Label();
-            btn_Perfiles = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvResultados).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -70,7 +70,7 @@
             dgvResultados.ReadOnly = true;
             dgvResultados.RowHeadersVisible = false;
             dgvResultados.RowHeadersWidth = 51;
-            dgvResultados.Size = new Size(1011, 726);
+            dgvResultados.Size = new Size(1319, 726);
             dgvResultados.TabIndex = 1;
             // 
             // lbl_Filtro
@@ -78,7 +78,7 @@
             lbl_Filtro.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbl_Filtro.AutoSize = true;
             lbl_Filtro.BackColor = Color.Transparent;
-            lbl_Filtro.Location = new Point(1121, 237);
+            lbl_Filtro.Location = new Point(1429, 237);
             lbl_Filtro.Name = "lbl_Filtro";
             lbl_Filtro.Size = new Size(52, 20);
             lbl_Filtro.TabIndex = 29;
@@ -87,7 +87,7 @@
             // txt_Filtro
             // 
             txt_Filtro.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            txt_Filtro.Location = new Point(1176, 233);
+            txt_Filtro.Location = new Point(1484, 233);
             txt_Filtro.Margin = new Padding(3, 4, 3, 4);
             txt_Filtro.Name = "txt_Filtro";
             txt_Filtro.Size = new Size(181, 27);
@@ -112,7 +112,7 @@
             panel_Header.Location = new Point(0, 0);
             panel_Header.Margin = new Padding(3, 4, 3, 4);
             panel_Header.Name = "panel_Header";
-            panel_Header.Size = new Size(1424, 80);
+            panel_Header.Size = new Size(1732, 80);
             panel_Header.TabIndex = 33;
             // 
             // label1
@@ -182,8 +182,25 @@
             panel1.Location = new Point(286, 80);
             panel1.Margin = new Padding(3, 4, 3, 4);
             panel1.Name = "panel1";
-            panel1.Size = new Size(1138, 146);
+            panel1.Size = new Size(1446, 146);
             panel1.TabIndex = 35;
+            // 
+            // btn_Perfiles
+            // 
+            btn_Perfiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Perfiles.FlatStyle = FlatStyle.Flat;
+            btn_Perfiles.Image = (Image)resources.GetObject("btn_Perfiles.Image");
+            btn_Perfiles.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Perfiles.Location = new Point(695, 78);
+            btn_Perfiles.Margin = new Padding(3, 4, 3, 4);
+            btn_Perfiles.Name = "btn_Perfiles";
+            btn_Perfiles.Padding = new Padding(11, 0, 10, 0);
+            btn_Perfiles.Size = new Size(161, 52);
+            btn_Perfiles.TabIndex = 18;
+            btn_Perfiles.Text = "Perfiles";
+            btn_Perfiles.TextAlign = ContentAlignment.MiddleRight;
+            btn_Perfiles.UseVisualStyleBackColor = true;
+            btn_Perfiles.Click += btn_Perfiles_Click;
             // 
             // btn_Cerraduras
             // 
@@ -191,7 +208,7 @@
             btn_Cerraduras.FlatStyle = FlatStyle.Flat;
             btn_Cerraduras.Image = (Image)resources.GetObject("btn_Cerraduras.Image");
             btn_Cerraduras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Cerraduras.Location = new Point(569, 17);
+            btn_Cerraduras.Location = new Point(877, 17);
             btn_Cerraduras.Margin = new Padding(3, 4, 3, 4);
             btn_Cerraduras.Name = "btn_Cerraduras";
             btn_Cerraduras.Padding = new Padding(0, 0, 10, 0);
@@ -208,7 +225,7 @@
             btn_MaquinasTipo.FlatStyle = FlatStyle.Flat;
             btn_MaquinasTipo.Image = (Image)resources.GetObject("btn_MaquinasTipo.Image");
             btn_MaquinasTipo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinasTipo.Location = new Point(569, 78);
+            btn_MaquinasTipo.Location = new Point(877, 78);
             btn_MaquinasTipo.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinasTipo.Name = "btn_MaquinasTipo";
             btn_MaquinasTipo.Padding = new Padding(11, 0, 10, 0);
@@ -225,7 +242,7 @@
             btn_Bisagras.FlatStyle = FlatStyle.Flat;
             btn_Bisagras.Image = (Image)resources.GetObject("btn_Bisagras.Image");
             btn_Bisagras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Bisagras.Location = new Point(387, 17);
+            btn_Bisagras.Location = new Point(695, 17);
             btn_Bisagras.Margin = new Padding(3, 4, 3, 4);
             btn_Bisagras.Name = "btn_Bisagras";
             btn_Bisagras.Padding = new Padding(11, 0, 10, 0);
@@ -242,7 +259,7 @@
             btn_LimpiarFiltros.FlatStyle = FlatStyle.Flat;
             btn_LimpiarFiltros.Image = (Image)resources.GetObject("btn_LimpiarFiltros.Image");
             btn_LimpiarFiltros.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_LimpiarFiltros.Location = new Point(910, 17);
+            btn_LimpiarFiltros.Location = new Point(1218, 17);
             btn_LimpiarFiltros.Margin = new Padding(3, 4, 3, 4);
             btn_LimpiarFiltros.Name = "btn_LimpiarFiltros";
             btn_LimpiarFiltros.Padding = new Padding(7, 0, 5, 0);
@@ -259,7 +276,7 @@
             btn_Buscar.FlatStyle = FlatStyle.Flat;
             btn_Buscar.Image = (Image)resources.GetObject("btn_Buscar.Image");
             btn_Buscar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Buscar.Location = new Point(910, 78);
+            btn_Buscar.Location = new Point(1218, 78);
             btn_Buscar.Margin = new Padding(3, 4, 3, 4);
             btn_Buscar.Name = "btn_Buscar";
             btn_Buscar.Padding = new Padding(11, 0, 0, 0);
@@ -275,7 +292,7 @@
             btn_Manillas.FlatStyle = FlatStyle.Flat;
             btn_Manillas.Image = (Image)resources.GetObject("btn_Manillas.Image");
             btn_Manillas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Manillas.Location = new Point(203, 17);
+            btn_Manillas.Location = new Point(511, 17);
             btn_Manillas.Margin = new Padding(3, 4, 3, 4);
             btn_Manillas.Name = "btn_Manillas";
             btn_Manillas.Padding = new Padding(11, 0, 10, 0);
@@ -292,7 +309,7 @@
             btn_Software.FlatStyle = FlatStyle.Flat;
             btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
             btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(203, 78);
+            btn_Software.Location = new Point(511, 78);
             btn_Software.Margin = new Padding(3, 4, 3, 4);
             btn_Software.Name = "btn_Software";
             btn_Software.Padding = new Padding(11, 0, 10, 0);
@@ -313,29 +330,12 @@
             label2.TabIndex = 0;
             label2.Text = "Filtros";
             // 
-            // btn_Perfiles
-            // 
-            btn_Perfiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            btn_Perfiles.FlatStyle = FlatStyle.Flat;
-            btn_Perfiles.Image = (Image)resources.GetObject("btn_Perfiles.Image");
-            btn_Perfiles.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Perfiles.Location = new Point(387, 78);
-            btn_Perfiles.Margin = new Padding(3, 4, 3, 4);
-            btn_Perfiles.Name = "btn_Perfiles";
-            btn_Perfiles.Padding = new Padding(11, 0, 10, 0);
-            btn_Perfiles.Size = new Size(161, 52);
-            btn_Perfiles.TabIndex = 18;
-            btn_Perfiles.Text = "Perfiles";
-            btn_Perfiles.TextAlign = ContentAlignment.MiddleRight;
-            btn_Perfiles.UseVisualStyleBackColor = true;
-            btn_Perfiles.Click += btn_Perfiles_Click;
-            // 
             // InformesMain
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1424, 1032);
+            ClientSize = new Size(1732, 1032);
             Controls.Add(panel1);
             Controls.Add(panel_Sidebar);
             Controls.Add(panel_Header);
@@ -343,8 +343,10 @@
             Controls.Add(lbl_Filtro);
             Controls.Add(txt_Filtro);
             Controls.Add(dgvResultados);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1750, 0);
             Name = "InformesMain";
             StartPosition = FormStartPosition.CenterScreen;
             WindowState = FormWindowState.Maximized;

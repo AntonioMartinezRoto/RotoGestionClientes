@@ -14,5 +14,8 @@ namespace RotoGestionClientes
 
         public string Perfiles { get; set; } = string.Empty;
 
+        public string Bisagras { get; set; } = string.Empty;
+        public string Cerraduras { get; set; } = string.Empty;
+
     }
 }
