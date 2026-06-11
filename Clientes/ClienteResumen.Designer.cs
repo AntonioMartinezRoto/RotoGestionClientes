@@ -57,6 +57,7 @@
             txt_Perfiles = new TextBox();
             tlpCentral = new TableLayoutPanel();
             tlpCentral_Sup = new TableLayoutPanel();
+            picture_Ventana = new PictureBox();
             groupBox_PasivaPrac = new GroupBox();
             txt_PasivasPract = new TextBox();
             groupBox_PasivaOsc = new GroupBox();
@@ -64,6 +65,7 @@
             groupBox_SeguridadVent = new GroupBox();
             txt_SeguridadVentana = new TextBox();
             tlpCentral_Inf = new TableLayoutPanel();
+            picture_Balconera = new PictureBox();
             groupBox_PasivaBalc = new GroupBox();
             txt_PasivaBalc = new TextBox();
             groupBox_SeguridadBalc = new GroupBox();
@@ -80,13 +82,11 @@
             txt_Bisagras = new TextBox();
             groupBox_Cerraduras = new GroupBox();
             txt_Cerraduras = new TextBox();
+            picture_Puerta = new PictureBox();
             tlp_Footer = new TableLayoutPanel();
             panel_botons = new Panel();
             btn_Cerrar = new Button();
             btn_ExportarPdf = new Button();
-            picture_Puerta = new PictureBox();
-            picture_Ventana = new PictureBox();
-            picture_Balconera = new PictureBox();
             tlpRoot.SuspendLayout();
             tlpHeader.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -100,10 +100,12 @@
             groupBox_Perfiles.SuspendLayout();
             tlpCentral.SuspendLayout();
             tlpCentral_Sup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picture_Ventana).BeginInit();
             groupBox_PasivaPrac.SuspendLayout();
             groupBox_PasivaOsc.SuspendLayout();
             groupBox_SeguridadVent.SuspendLayout();
             tlpCentral_Inf.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picture_Balconera).BeginInit();
             groupBox_PasivaBalc.SuspendLayout();
             groupBox_SeguridadBalc.SuspendLayout();
             groupBox_AgujasBalc.SuspendLayout();
@@ -114,11 +116,9 @@
             groupbox_AgujasPuerta.SuspendLayout();
             groupbox_Bisagras.SuspendLayout();
             groupBox_Cerraduras.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picture_Puerta).BeginInit();
             tlp_Footer.SuspendLayout();
             panel_botons.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)picture_Puerta).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)picture_Ventana).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)picture_Balconera).BeginInit();
             SuspendLayout();
             // 
             // tlpRoot
@@ -325,7 +325,7 @@
             // 
             txt_Documentos.BackColor = Color.Gainsboro;
             txt_Documentos.BorderStyle = BorderStyle.None;
-            txt_Documentos.Font = new Font("Segoe UI", 9F);
+            txt_Documentos.Font = new Font("Segoe UI", 15F);
             txt_Documentos.Location = new Point(6, 26);
             txt_Documentos.Multiline = true;
             txt_Documentos.Name = "txt_Documentos";
@@ -392,10 +392,10 @@
             // lbl_Software
             // 
             lbl_Software.AutoSize = true;
-            lbl_Software.Font = new Font("Segoe UI", 9F);
+            lbl_Software.Font = new Font("Segoe UI", 15F);
             lbl_Software.Location = new Point(17, 41);
             lbl_Software.Name = "lbl_Software";
-            lbl_Software.Size = new Size(83, 20);
+            lbl_Software.Size = new Size(139, 35);
             lbl_Software.TabIndex = 1;
             lbl_Software.Text = "SOFTWARE";
             // 
@@ -415,7 +415,7 @@
             // 
             txt_Manillas.BackColor = Color.Gainsboro;
             txt_Manillas.BorderStyle = BorderStyle.None;
-            txt_Manillas.Font = new Font("Segoe UI", 9F);
+            txt_Manillas.Font = new Font("Segoe UI", 15F);
             txt_Manillas.Location = new Point(6, 26);
             txt_Manillas.Multiline = true;
             txt_Manillas.Name = "txt_Manillas";
@@ -439,7 +439,7 @@
             // 
             txt_Perfiles.BackColor = Color.Gainsboro;
             txt_Perfiles.BorderStyle = BorderStyle.None;
-            txt_Perfiles.Font = new Font("Segoe UI", 9F);
+            txt_Perfiles.Font = new Font("Segoe UI", 15F);
             txt_Perfiles.Location = new Point(6, 25);
             txt_Perfiles.Multiline = true;
             txt_Perfiles.Name = "txt_Perfiles";
@@ -481,6 +481,17 @@
             tlpCentral_Sup.Size = new Size(600, 407);
             tlpCentral_Sup.TabIndex = 0;
             // 
+            // picture_Ventana
+            // 
+            picture_Ventana.Dock = DockStyle.Fill;
+            picture_Ventana.Image = (Image)resources.GetObject("picture_Ventana.Image");
+            picture_Ventana.Location = new Point(3, 3);
+            picture_Ventana.Name = "picture_Ventana";
+            picture_Ventana.Size = new Size(294, 197);
+            picture_Ventana.SizeMode = PictureBoxSizeMode.Zoom;
+            picture_Ventana.TabIndex = 7;
+            picture_Ventana.TabStop = false;
+            // 
             // groupBox_PasivaPrac
             // 
             groupBox_PasivaPrac.Controls.Add(txt_PasivasPract);
@@ -497,7 +508,7 @@
             // 
             txt_PasivasPract.BackColor = Color.WhiteSmoke;
             txt_PasivasPract.BorderStyle = BorderStyle.None;
-            txt_PasivasPract.Font = new Font("Segoe UI", 9F);
+            txt_PasivasPract.Font = new Font("Segoe UI", 15F);
             txt_PasivasPract.Location = new Point(12, 29);
             txt_PasivasPract.Multiline = true;
             txt_PasivasPract.Name = "txt_PasivasPract";
@@ -521,7 +532,7 @@
             // 
             txt_PasivasOsc.BackColor = Color.WhiteSmoke;
             txt_PasivasOsc.BorderStyle = BorderStyle.None;
-            txt_PasivasOsc.Font = new Font("Segoe UI", 9F);
+            txt_PasivasOsc.Font = new Font("Segoe UI", 15F);
             txt_PasivasOsc.Location = new Point(12, 26);
             txt_PasivasOsc.Multiline = true;
             txt_PasivasOsc.Name = "txt_PasivasOsc";
@@ -545,7 +556,7 @@
             // 
             txt_SeguridadVentana.BackColor = Color.WhiteSmoke;
             txt_SeguridadVentana.BorderStyle = BorderStyle.None;
-            txt_SeguridadVentana.Font = new Font("Segoe UI", 9F);
+            txt_SeguridadVentana.Font = new Font("Segoe UI", 15F);
             txt_SeguridadVentana.Location = new Point(12, 26);
             txt_SeguridadVentana.Multiline = true;
             txt_SeguridadVentana.Name = "txt_SeguridadVentana";
@@ -572,6 +583,17 @@
             tlpCentral_Inf.Size = new Size(600, 408);
             tlpCentral_Inf.TabIndex = 1;
             // 
+            // picture_Balconera
+            // 
+            picture_Balconera.Dock = DockStyle.Fill;
+            picture_Balconera.Image = (Image)resources.GetObject("picture_Balconera.Image");
+            picture_Balconera.Location = new Point(3, 3);
+            picture_Balconera.Name = "picture_Balconera";
+            picture_Balconera.Size = new Size(294, 198);
+            picture_Balconera.SizeMode = PictureBoxSizeMode.Zoom;
+            picture_Balconera.TabIndex = 7;
+            picture_Balconera.TabStop = false;
+            // 
             // groupBox_PasivaBalc
             // 
             groupBox_PasivaBalc.Controls.Add(txt_PasivaBalc);
@@ -588,7 +610,7 @@
             // 
             txt_PasivaBalc.BackColor = Color.WhiteSmoke;
             txt_PasivaBalc.BorderStyle = BorderStyle.None;
-            txt_PasivaBalc.Font = new Font("Segoe UI", 9F);
+            txt_PasivaBalc.Font = new Font("Segoe UI", 15F);
             txt_PasivaBalc.Location = new Point(12, 26);
             txt_PasivaBalc.Multiline = true;
             txt_PasivaBalc.Name = "txt_PasivaBalc";
@@ -612,7 +634,7 @@
             // 
             txt_SeguridadBalc.BackColor = Color.WhiteSmoke;
             txt_SeguridadBalc.BorderStyle = BorderStyle.None;
-            txt_SeguridadBalc.Font = new Font("Segoe UI", 9F);
+            txt_SeguridadBalc.Font = new Font("Segoe UI", 15F);
             txt_SeguridadBalc.Location = new Point(12, 26);
             txt_SeguridadBalc.Multiline = true;
             txt_SeguridadBalc.Name = "txt_SeguridadBalc";
@@ -636,7 +658,7 @@
             // 
             txt_AgujasBalc.BackColor = Color.WhiteSmoke;
             txt_AgujasBalc.BorderStyle = BorderStyle.None;
-            txt_AgujasBalc.Font = new Font("Segoe UI", 9F);
+            txt_AgujasBalc.Font = new Font("Segoe UI", 15F);
             txt_AgujasBalc.Location = new Point(12, 26);
             txt_AgujasBalc.Multiline = true;
             txt_AgujasBalc.Name = "txt_AgujasBalc";
@@ -723,7 +745,7 @@
             // 
             txt_AgujasPuerta.BackColor = Color.WhiteSmoke;
             txt_AgujasPuerta.BorderStyle = BorderStyle.None;
-            txt_AgujasPuerta.Font = new Font("Segoe UI", 9F);
+            txt_AgujasPuerta.Font = new Font("Segoe UI", 15F);
             txt_AgujasPuerta.Location = new Point(12, 26);
             txt_AgujasPuerta.Multiline = true;
             txt_AgujasPuerta.Name = "txt_AgujasPuerta";
@@ -747,7 +769,7 @@
             // 
             txt_Bisagras.BackColor = Color.WhiteSmoke;
             txt_Bisagras.BorderStyle = BorderStyle.None;
-            txt_Bisagras.Font = new Font("Segoe UI", 9F);
+            txt_Bisagras.Font = new Font("Segoe UI", 15F);
             txt_Bisagras.Location = new Point(12, 26);
             txt_Bisagras.Multiline = true;
             txt_Bisagras.Name = "txt_Bisagras";
@@ -771,13 +793,24 @@
             // 
             txt_Cerraduras.BackColor = Color.WhiteSmoke;
             txt_Cerraduras.BorderStyle = BorderStyle.None;
-            txt_Cerraduras.Font = new Font("Segoe UI", 9F);
+            txt_Cerraduras.Font = new Font("Segoe UI", 15F);
             txt_Cerraduras.Location = new Point(12, 26);
             txt_Cerraduras.Multiline = true;
             txt_Cerraduras.Name = "txt_Cerraduras";
             txt_Cerraduras.ReadOnly = true;
             txt_Cerraduras.Size = new Size(270, 155);
             txt_Cerraduras.TabIndex = 28;
+            // 
+            // picture_Puerta
+            // 
+            picture_Puerta.Dock = DockStyle.Fill;
+            picture_Puerta.Image = (Image)resources.GetObject("picture_Puerta.Image");
+            picture_Puerta.Location = new Point(3, 3);
+            picture_Puerta.Name = "picture_Puerta";
+            picture_Puerta.Size = new Size(294, 197);
+            picture_Puerta.SizeMode = PictureBoxSizeMode.Zoom;
+            picture_Puerta.TabIndex = 6;
+            picture_Puerta.TabStop = false;
             // 
             // tlp_Footer
             // 
@@ -835,39 +868,6 @@
             btn_ExportarPdf.UseVisualStyleBackColor = true;
             btn_ExportarPdf.Click += btn_ExportarPdf_Click;
             // 
-            // picture_Puerta
-            // 
-            picture_Puerta.Dock = DockStyle.Fill;
-            picture_Puerta.Image = (Image)resources.GetObject("picture_Puerta.Image");
-            picture_Puerta.Location = new Point(3, 3);
-            picture_Puerta.Name = "picture_Puerta";
-            picture_Puerta.Size = new Size(294, 197);
-            picture_Puerta.SizeMode = PictureBoxSizeMode.Zoom;
-            picture_Puerta.TabIndex = 6;
-            picture_Puerta.TabStop = false;
-            // 
-            // picture_Ventana
-            // 
-            picture_Ventana.Dock = DockStyle.Fill;
-            picture_Ventana.Image = (Image)resources.GetObject("picture_Ventana.Image");
-            picture_Ventana.Location = new Point(3, 3);
-            picture_Ventana.Name = "picture_Ventana";
-            picture_Ventana.Size = new Size(294, 197);
-            picture_Ventana.SizeMode = PictureBoxSizeMode.Zoom;
-            picture_Ventana.TabIndex = 7;
-            picture_Ventana.TabStop = false;
-            // 
-            // picture_Balconera
-            // 
-            picture_Balconera.Dock = DockStyle.Fill;
-            picture_Balconera.Image = (Image)resources.GetObject("picture_Balconera.Image");
-            picture_Balconera.Location = new Point(3, 3);
-            picture_Balconera.Name = "picture_Balconera";
-            picture_Balconera.Size = new Size(294, 198);
-            picture_Balconera.SizeMode = PictureBoxSizeMode.Zoom;
-            picture_Balconera.TabIndex = 7;
-            picture_Balconera.TabStop = false;
-            // 
             // ClienteResumen
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -902,6 +902,7 @@
             groupBox_Perfiles.PerformLayout();
             tlpCentral.ResumeLayout(false);
             tlpCentral_Sup.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picture_Ventana).EndInit();
             groupBox_PasivaPrac.ResumeLayout(false);
             groupBox_PasivaPrac.PerformLayout();
             groupBox_PasivaOsc.ResumeLayout(false);
@@ -909,6 +910,7 @@
             groupBox_SeguridadVent.ResumeLayout(false);
             groupBox_SeguridadVent.PerformLayout();
             tlpCentral_Inf.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)picture_Balconera).EndInit();
             groupBox_PasivaBalc.ResumeLayout(false);
             groupBox_PasivaBalc.PerformLayout();
             groupBox_SeguridadBalc.ResumeLayout(false);
@@ -925,11 +927,9 @@
             groupbox_Bisagras.PerformLayout();
             groupBox_Cerraduras.ResumeLayout(false);
             groupBox_Cerraduras.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picture_Puerta).EndInit();
             tlp_Footer.ResumeLayout(false);
             panel_botons.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)picture_Puerta).EndInit();
-            ((System.ComponentModel.ISupportInitialize)picture_Ventana).EndInit();
-            ((System.ComponentModel.ISupportInitialize)picture_Balconera).EndInit();
             ResumeLayout(false);
         }
 
