@@ -815,8 +815,8 @@
             // tlp_Footer
             // 
             tlp_Footer.ColumnCount = 2;
-            tlp_Footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 70F));
-            tlp_Footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+            tlp_Footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 64.9903259F));
+            tlp_Footer.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35.00967F));
             tlp_Footer.Controls.Add(panel_botons, 1, 0);
             tlp_Footer.Dock = DockStyle.Fill;
             tlp_Footer.Location = new Point(18, 997);
@@ -831,9 +831,9 @@
             panel_botons.Controls.Add(btn_Cerrar);
             panel_botons.Controls.Add(btn_ExportarPdf);
             panel_botons.Dock = DockStyle.Fill;
-            panel_botons.Location = new Point(1088, 3);
+            panel_botons.Location = new Point(1010, 3);
             panel_botons.Name = "panel_botons";
-            panel_botons.Size = new Size(460, 55);
+            panel_botons.Size = new Size(538, 55);
             panel_botons.TabIndex = 0;
             // 
             // btn_Cerrar
@@ -842,7 +842,7 @@
             btn_Cerrar.FlatStyle = FlatStyle.Flat;
             btn_Cerrar.Image = (Image)resources.GetObject("btn_Cerrar.Image");
             btn_Cerrar.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Cerrar.Location = new Point(141, 6);
+            btn_Cerrar.Location = new Point(373, 6);
             btn_Cerrar.Margin = new Padding(3, 4, 3, 4);
             btn_Cerrar.Name = "btn_Cerrar";
             btn_Cerrar.Padding = new Padding(11, 0, 0, 0);
@@ -858,7 +858,7 @@
             btn_ExportarPdf.FlatStyle = FlatStyle.Flat;
             btn_ExportarPdf.Image = (Image)resources.GetObject("btn_ExportarPdf.Image");
             btn_ExportarPdf.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_ExportarPdf.Location = new Point(302, 6);
+            btn_ExportarPdf.Location = new Point(208, 6);
             btn_ExportarPdf.Margin = new Padding(3, 4, 3, 4);
             btn_ExportarPdf.Name = "btn_ExportarPdf";
             btn_ExportarPdf.Padding = new Padding(11, 0, 0, 0);
@@ -866,6 +866,7 @@
             btn_ExportarPdf.TabIndex = 17;
             btn_ExportarPdf.Text = "Exportar PDF";
             btn_ExportarPdf.UseVisualStyleBackColor = true;
+            btn_ExportarPdf.Visible = false;
             btn_ExportarPdf.Click += btn_ExportarPdf_Click;
             // 
             // ClienteResumen
