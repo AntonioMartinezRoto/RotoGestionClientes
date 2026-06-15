@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using RotoGestionClientes.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -84,6 +85,10 @@ namespace RotoGestionClientes
                 DeleteCliente(cliente);
                 LoadClientesFromDB();
             }
+            else if (dgvClientes.Columns[e.ColumnIndex].Name == "Export")
+            {
+                ExportarCliente(cliente.Id);
+            }
         }
         private void dgvClientes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -112,6 +117,12 @@ namespace RotoGestionClientes
             clienteWizard.ShowDialog();
             LoadClientesFromDB();
         }
+        private void btn_ImportCliente_Click(object sender, EventArgs e)
+        {
+            ImportarCliente();
+            LoadClientesFromDB();
+        }
+
         #endregion
 
         #region Private methods
@@ -175,7 +186,14 @@ namespace RotoGestionClientes
                 Width = 25,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.None
             });
-
+            dgvClientes.Columns.Add(new DataGridViewImageColumn
+            {
+                Name = "Export",
+                HeaderText = "",
+                Image = Properties.Resources.exportUser,
+                Width = 25,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            });
             dgvClientes.Columns.Add(new DataGridViewImageColumn
             {
                 Name = "Delete",
@@ -235,7 +253,18 @@ namespace RotoGestionClientes
                 _context.SaveChanges();
             }
         }
+        private void ExportarCliente(int clienteId)
+        {
+            var exportService = new ClienteExportService(_context);
+            exportService.ExportarCliente(clienteId);
+        }
+        private void ImportarCliente()
+        {
+            var importService = new ClienteImportService(_context);
+            importService.ImportarCliente();
+        }
         #endregion
+
 
     }
 }

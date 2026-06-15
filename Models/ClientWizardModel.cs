@@ -50,7 +50,6 @@ namespace RotoGestionClientes
         public bool Elevable_Estandar { get; set; } = false;
         public bool Elevable_Dlo { get; set; } = false;
         public bool Plegable_Consumen { get; set; } = false;
-        //public List<ClienteMaquinaItem> MaquinasList { get; set; } = new();
         public BindingList<ClienteMaquinaItem> MaquinasList { get; set; } = new();
         public BindingList<ClienteDocumentoItem> DocumentosList { get; set; } = new();
         public bool BisagraEnSoldadora { get; set; } = false;

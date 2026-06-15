@@ -38,6 +38,7 @@
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_AddCliente = new Button();
+            btn_ImportCliente = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClientes).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -133,6 +134,7 @@
             // 
             flowLayoutPanel_Sidebar.AutoScroll = true;
             flowLayoutPanel_Sidebar.Controls.Add(btn_AddCliente);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_ImportCliente);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -156,6 +158,21 @@
             btn_AddCliente.Text = "Nuevo cliente";
             btn_AddCliente.UseVisualStyleBackColor = true;
             btn_AddCliente.Click += btn_AddCliente_Click;
+            // 
+            // btn_ImportCliente
+            // 
+            btn_ImportCliente.Font = new Font("Calibri", 9F);
+            btn_ImportCliente.Image = (Image)resources.GetObject("btn_ImportCliente.Image");
+            btn_ImportCliente.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_ImportCliente.Location = new Point(3, 87);
+            btn_ImportCliente.Margin = new Padding(3, 4, 3, 4);
+            btn_ImportCliente.Name = "btn_ImportCliente";
+            btn_ImportCliente.Padding = new Padding(14, 0, 0, 0);
+            btn_ImportCliente.Size = new Size(256, 75);
+            btn_ImportCliente.TabIndex = 33;
+            btn_ImportCliente.Text = "Importar cliente";
+            btn_ImportCliente.UseVisualStyleBackColor = true;
+            btn_ImportCliente.Click += btn_ImportCliente_Click;
             // 
             // ClientesMain
             // 
@@ -195,5 +212,6 @@
         private Panel panel_Sidebar;
         private FlowLayoutPanel flowLayoutPanel_Sidebar;
         private Button btn_AddCliente;
+        private Button btn_ImportCliente;
     }
 }

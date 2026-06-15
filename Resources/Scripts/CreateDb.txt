@@ -289,7 +289,8 @@ VALUES
 (2, 'Mecal', 1),
 (3, 'Vema', 1),
 (4, 'Vraia', 1),
-(5, 'Maquintec', 1);
+(5, 'Maquintec', 1),
+(6, 'Daser', 1);
 GO
 
 CREATE TABLE dbo.ClienteMaquina
@@ -708,8 +709,8 @@ CREATE TABLE dbo.ClienteAgujasModeloPerfil
 (
     ClienteId INT NOT NULL,
 	AgujaModeloTipoId INT NOT NULL,
-    AgujaId INT NOT NULL,
     PerfilId INT NOT NULL,
+	AgujaId INT NOT NULL,
 
     CONSTRAINT PK_ClienteAgujasModeloPerfil
         PRIMARY KEY CLUSTERED (ClienteId, AgujaModeloTipoId, PerfilId),
