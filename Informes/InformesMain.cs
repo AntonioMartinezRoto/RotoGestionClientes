@@ -458,8 +458,10 @@ namespace RotoGestionClientes
             header.CreateCell(0).SetCellValue("Nombre");
             header.CreateCell(1).SetCellValue("Software");
             header.CreateCell(2).SetCellValue("Perfiles");
+            header.CreateCell(3).SetCellValue("Cerraduras");
+            header.CreateCell(4).SetCellValue("Bisagras");
 
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < 5; i++)
             {
                 header.Cells[i].CellStyle = headerStyle;
             }
@@ -477,6 +479,8 @@ namespace RotoGestionClientes
                 row.CreateCell(0).SetCellValue(item.Nombre ?? string.Empty);
                 row.CreateCell(1).SetCellValue(item.Software ?? string.Empty);
                 row.CreateCell(2).SetCellValue(item.Perfiles ?? string.Empty);
+                row.CreateCell(3).SetCellValue(item.Cerraduras ?? string.Empty);
+                row.CreateCell(4).SetCellValue(item.Bisagras ?? string.Empty);
             }
 
             // =========================
@@ -487,7 +491,7 @@ namespace RotoGestionClientes
 
             var area = new AreaReference(
                 new CellReference(0, 0),
-                new CellReference(totalRows - 1, 2),
+                new CellReference(totalRows - 1, 4),
                 SpreadsheetVersion.EXCEL2007);
 
             var xssfSheet = (XSSFSheet)sheet;
@@ -505,13 +509,14 @@ namespace RotoGestionClientes
 
             // Columnas
             ctTable.tableColumns = new CT_TableColumns();
-            ctTable.tableColumns.count = 3;
+            ctTable.tableColumns.count = 5;
 
             string[] columnas =
             {
                 "Nombre",
                 "Software",
                 "Perfiles",
+                "Cerraduras",
                 "Bisagras"
             };
 
@@ -550,6 +555,8 @@ namespace RotoGestionClientes
             sheet.SetColumnWidth(0, 9000);
             sheet.SetColumnWidth(1, 12000);
             sheet.SetColumnWidth(2, 25000);
+            sheet.SetColumnWidth(3, 25000);
+            sheet.SetColumnWidth(4, 25000);
 
             // =========================
             // GUARDAR
