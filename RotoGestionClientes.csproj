@@ -11,8 +11,8 @@
 	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 	<PublishTrimmed>false</PublishTrimmed>
 	<AssemblyName>RGC</AssemblyName>
-	<AssemblyVersion>1.6</AssemblyVersion>
-	<FileVersion>1.6</FileVersion>
+	<AssemblyVersion>1.7</AssemblyVersion>
+	<FileVersion>1.7</FileVersion>
 	<ApplicationIcon>Images\roto_icon.ico</ApplicationIcon>
 	<Company>Roto-Frank S.A.</Company>
 	<PackageIcon>logo-Main.png</PackageIcon>
