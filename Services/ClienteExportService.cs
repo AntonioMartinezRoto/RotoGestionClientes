@@ -22,7 +22,7 @@ namespace RotoGestionClientes
 
             sfd.Filter = "Roto (*.roto)|*.roto";
 
-            string? nombreCliente = _context.Clientes.Where(c => c.Id == clienteId).Select(c => c.Nombre).FirstOrDefault();
+            string? nombreCliente = _context.Clientes.Where(c => c.Id == clienteId).Select(c => c.Nombre.Trim()).FirstOrDefault();
             sfd.FileName = $"{nombreCliente}.roto";
 
             if (sfd.ShowDialog() != DialogResult.OK)
