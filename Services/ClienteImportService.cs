@@ -503,7 +503,7 @@ namespace RotoGestionClientes.Services
             }
         }
 
-        private string CheckNameDuplicates(string nombre)
+        private string CheckNameDuplicatesOld(string nombre)
         {
             Cliente cliente = _context.Clientes.Where(c => c.Nombre.ToUpper().Trim() == nombre.ToUpper().Trim()).FirstOrDefault();
             if (cliente != null)
@@ -517,6 +517,60 @@ namespace RotoGestionClientes.Services
                 return nombre + "_IMP";
             }
             return nombre;
+        }
+        private string CheckNameDuplicates(string nombre)
+        {
+            // 1. Limpiamos el nombre original
+            string nombreBase = nombre.Trim();
+            string nombreFinal = nombreBase;
+
+            // DEFINE AQUÍ EL LÍMITE DE TU COLUMNA EN LA BBDD (ej: 50 caracteres)
+            const int MAX_LENGTH = 50;
+
+            int contador = 0;
+            bool existe = true;
+
+            // 2. Bucle para encontrar un nombre que no esté repetido
+            while (existe)
+            {
+                if (contador > 0)
+                {
+                    // Creamos el sufijo, por ejemplo: "_IMP1", "_IMP2"...
+                    string sufijo = $"_IMP{contador}";
+
+                    // Si el nombre base + sufijo excede el límite, recortamos el nombre base
+                    if (nombreBase.Length + sufijo.Length > MAX_LENGTH)
+                    {
+                        int caracteresPermitidos = MAX_LENGTH - sufijo.Length;
+                        nombreFinal = nombreBase.Substring(0, caracteresPermitidos) + sufijo;
+                    }
+                    else
+                    {
+                        nombreFinal = nombreBase + sufijo;
+                    }
+                }
+
+                // Comprobamos si YA existe este nombre final en la base de datos (Case Insensitive nativo en la mayoría de BBDD)
+                string nombreBuscar = nombreFinal.ToUpper();
+                existe = _context.Clientes.Any(c => c.Nombre.ToUpper() == nombreBuscar);
+
+                if (existe)
+                {
+                    contador++; // Si existe, incrementamos el número y volvemos a evaluar
+                }
+            }
+
+            // 3. Si se tuvo que modificar el nombre, avisamos al usuario una sola vez
+            if (contador > 0)
+            {
+                MessageBox.Show(
+                    $"Ya existe un cliente con ese nombre o variantes. Se importará como:\n\n\"{nombreFinal}\"",
+                    "Validación de Nombre",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+            }
+
+            return nombreFinal;
         }
 
         private void AddRelations(IEnumerable<MaestroRefDto> items, Func<int, bool> existsFunc, Action<int> addAction)
