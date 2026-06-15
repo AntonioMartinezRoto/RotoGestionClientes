@@ -40,6 +40,7 @@
             pictureBox1 = new PictureBox();
             panel_Inferior = new Panel();
             panel_Central = new Panel();
+            btn_Salir = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -119,6 +120,7 @@
             flowLayoutPanel_Sidebar.Controls.Add(btn_Clientes);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Mantenimiento);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Informes);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_Salir);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -185,6 +187,22 @@
             panel_Central.Size = new Size(1138, 778);
             panel_Central.TabIndex = 39;
             // 
+            // btn_Salir
+            // 
+            btn_Salir.Dock = DockStyle.Bottom;
+            btn_Salir.Font = new Font("Calibri", 9F);
+            btn_Salir.Image = (Image)resources.GetObject("btn_Salir.Image");
+            btn_Salir.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Salir.Location = new Point(3, 253);
+            btn_Salir.Margin = new Padding(3, 4, 3, 4);
+            btn_Salir.Name = "btn_Salir";
+            btn_Salir.Padding = new Padding(11, 0, 0, 0);
+            btn_Salir.Size = new Size(256, 75);
+            btn_Salir.TabIndex = 3;
+            btn_Salir.Text = "Salir";
+            btn_Salir.UseVisualStyleBackColor = true;
+            btn_Salir.Click += btn_Salir_Click;
+            // 
             // Main
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -229,5 +247,6 @@
         private PictureBox pictureBox1;
         private Panel panel_Inferior;
         private Panel panel_Central;
+        private Button btn_Salir;
     }
 }
