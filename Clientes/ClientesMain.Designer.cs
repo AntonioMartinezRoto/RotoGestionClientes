@@ -39,6 +39,7 @@
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_AddCliente = new Button();
             btn_ImportCliente = new Button();
+            btn_ExporClientes = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClientes).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -135,6 +136,7 @@
             flowLayoutPanel_Sidebar.AutoScroll = true;
             flowLayoutPanel_Sidebar.Controls.Add(btn_AddCliente);
             flowLayoutPanel_Sidebar.Controls.Add(btn_ImportCliente);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_ExporClientes);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -173,6 +175,21 @@
             btn_ImportCliente.Text = "Importar cliente";
             btn_ImportCliente.UseVisualStyleBackColor = true;
             btn_ImportCliente.Click += btn_ImportCliente_Click;
+            // 
+            // btn_ExporClientes
+            // 
+            btn_ExporClientes.Font = new Font("Calibri", 9F);
+            btn_ExporClientes.Image = (Image)resources.GetObject("btn_ExporClientes.Image");
+            btn_ExporClientes.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_ExporClientes.Location = new Point(3, 170);
+            btn_ExporClientes.Margin = new Padding(3, 4, 3, 4);
+            btn_ExporClientes.Name = "btn_ExporClientes";
+            btn_ExporClientes.Padding = new Padding(14, 0, 0, 0);
+            btn_ExporClientes.Size = new Size(256, 75);
+            btn_ExporClientes.TabIndex = 34;
+            btn_ExporClientes.Text = "Exportar clientes";
+            btn_ExporClientes.UseVisualStyleBackColor = true;
+            btn_ExporClientes.Click += btn_ExporClientes_Click;
             // 
             // ClientesMain
             // 
@@ -213,5 +230,6 @@
         private FlowLayoutPanel flowLayoutPanel_Sidebar;
         private Button btn_AddCliente;
         private Button btn_ImportCliente;
+        private Button btn_ExporClientes;
     }
 }

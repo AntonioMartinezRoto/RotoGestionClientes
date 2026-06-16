@@ -122,6 +122,11 @@ namespace RotoGestionClientes
             ImportarCliente();
             LoadClientesFromDB();
         }
+        private void btn_ExporClientes_Click(object sender, EventArgs e)
+        {
+            ClienteExportacion clienteExportacionForm = new ClienteExportacion(_context);
+            clienteExportacionForm.ShowDialog();
+        }
 
         #endregion
 
@@ -264,7 +269,5 @@ namespace RotoGestionClientes
             importService.ImportarCliente();
         }
         #endregion
-
-
     }
 }
