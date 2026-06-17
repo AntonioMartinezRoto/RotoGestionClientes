@@ -1107,10 +1107,38 @@ CREATE TABLE dbo.ClienteConfiguracionMaquinas
 );
 GO
 
-CREATE TABLE ConfiguracionAplicacion
+CREATE TABLE dbo.Usuarios
 (
     Id INT NOT NULL PRIMARY KEY,
-    VersionMaestros NVARCHAR(10) NOT NULL
+    Nombre NVARCHAR(50) NOT NULL,
+	EsDistribuidor BIT NOT NULL DEFAULT (0),
+	Activa BIT NOT NULL DEFAULT (1),
+	
+);
+
+INSERT INTO dbo.Usuarios (Id, Nombre, EsDistribuidor, Activa)
+VALUES 
+(1, 'Sergio González', 0, 1),
+(2, 'Agustín Canepa', 0, 1),
+(3, 'Albert Blas', 0, 1),
+(4, 'Antonio Barba', 0, 1),
+(5, 'Miguel Pereira', 0, 1),
+(6, 'Rotofer', 1, 1),
+(7, 'Alcantarilla', 1, 1),
+(8, 'Ignacio', 1, 1),
+(9, 'AluYPvc', 1, 1),
+(10, 'Comalfer', 1, 1),
+(11, 'Sumpay', 1, 1),
+(12, 'Fernasol', 1, 1),
+(13, 'Mapeal', 1, 1),
+(14, 'Centro del Accesorio', 1, 1);
+
+
+CREATE TABLE dbo.ConfiguracionAplicacion
+(
+    Id INT NOT NULL PRIMARY KEY,
+    VersionMaestros NVARCHAR(10) NOT NULL,
+	
 );
 
 INSERT INTO dbo.ConfiguracionAplicacion
