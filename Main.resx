@@ -180,7 +180,7 @@
   <data name="btn_GenerarActualizacion.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        6gAAAOoB+Ss1JgAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANcSURBVFhH7ZdH
+        6QAAAOkBVJIUSwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAANcSURBVFhH7ZdH
         i9VQGIavvfdeF7pQFFHsIFZcKPaODcG2UHSjKwWxd1Gxg7pQsQv2ir1hFxTd+QP8FT5PkjOEOzNO7syd
         3bzwkJzc5Jwv52u5uRqVobrQB+bBVjgMZ+EaPEmOjr3u797n/T5XaTWG1fAIXsIJWAFjYSD0gDbQKDk6
         9rq/L4fj4HM+7zzOl1n94D24YAsvVEHNQYPeQX8vZNEN6BmfFk3d4VZ8WrGew1XoFo2qrq5wGd5EowzS
@@ -201,7 +201,7 @@
   <data name="btn_UpdateRotoData.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        6AAAAOgBhtX2rwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAO6SURBVFhHrZdH
+        5wAAAOcB8BtYtQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAO6SURBVFhHrZdH
         iBRBFIbHiAHMglkwYcK7ejEhggFBUC8GRNCjCoo5gFkMCGLEuwkvBsQM5gAeTJjFg1kxnAzg9/X0LD1t
         dTu76w8f+6a63szrqlev3haqocYwEtbABXgAb+Aj3INTsBmGQQP4b2oHq+E93IQlMBQ6QQtoC/1gBKyA
         a/AJNkIbSKph/Lci1YX58BW2Q2eoVF1gB3yApVAPDPAgVCTf7jwcg+4O1FAGfRrOwni4Av+U0T8D99pV

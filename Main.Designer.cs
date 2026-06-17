@@ -275,6 +275,7 @@
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1442, 1079);
             Name = "Main";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "RGC";
