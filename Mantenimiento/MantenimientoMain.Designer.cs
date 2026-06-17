@@ -45,6 +45,7 @@
             btn_MaquinaMantenimiento = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
+            btn_Volver = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -98,6 +99,7 @@
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaTipo);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMarcas);
             flowLayoutPanel_Sidebar.Controls.Add(btn_MaquinaMantenimiento);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_Volver);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -220,10 +222,11 @@
             btn_MaquinaTipo.Location = new Point(3, 585);
             btn_MaquinaTipo.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaTipo.Name = "btn_MaquinaTipo";
-            btn_MaquinaTipo.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaTipo.Padding = new Padding(11, 0, 45, 0);
             btn_MaquinaTipo.Size = new Size(256, 75);
             btn_MaquinaTipo.TabIndex = 36;
             btn_MaquinaTipo.Text = "Tipos de máquinas";
+            btn_MaquinaTipo.TextAlign = ContentAlignment.MiddleRight;
             btn_MaquinaTipo.UseVisualStyleBackColor = true;
             btn_MaquinaTipo.Click += btn_MaquinaTipo_Click;
             // 
@@ -235,10 +238,11 @@
             btn_MaquinaMarcas.Location = new Point(3, 668);
             btn_MaquinaMarcas.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMarcas.Name = "btn_MaquinaMarcas";
-            btn_MaquinaMarcas.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaMarcas.Padding = new Padding(11, 0, 40, 0);
             btn_MaquinaMarcas.Size = new Size(256, 75);
             btn_MaquinaMarcas.TabIndex = 34;
             btn_MaquinaMarcas.Text = "Marcas de máquinas";
+            btn_MaquinaMarcas.TextAlign = ContentAlignment.MiddleRight;
             btn_MaquinaMarcas.UseVisualStyleBackColor = true;
             btn_MaquinaMarcas.Click += btn_MaquinaMarcas_Click;
             // 
@@ -250,10 +254,11 @@
             btn_MaquinaMantenimiento.Location = new Point(3, 751);
             btn_MaquinaMantenimiento.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMantenimiento.Name = "btn_MaquinaMantenimiento";
-            btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 0, 0);
+            btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 15, 0);
             btn_MaquinaMantenimiento.Size = new Size(256, 75);
             btn_MaquinaMantenimiento.TabIndex = 35;
             btn_MaquinaMantenimiento.Text = "Mantenimiento máquinas";
+            btn_MaquinaMantenimiento.TextAlign = ContentAlignment.MiddleRight;
             btn_MaquinaMantenimiento.UseVisualStyleBackColor = true;
             btn_MaquinaMantenimiento.Click += btn_MaquinaMantenimiento_Click;
             // 
@@ -286,6 +291,22 @@
             btn_Add.Text = " +";
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
+            // 
+            // btn_Volver
+            // 
+            btn_Volver.Font = new Font("Calibri", 9F);
+            btn_Volver.Image = (Image)resources.GetObject("btn_Volver.Image");
+            btn_Volver.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Volver.Location = new Point(3, 834);
+            btn_Volver.Margin = new Padding(3, 4, 3, 4);
+            btn_Volver.Name = "btn_Volver";
+            btn_Volver.Padding = new Padding(11, 0, 20, 0);
+            btn_Volver.Size = new Size(256, 75);
+            btn_Volver.TabIndex = 42;
+            btn_Volver.Text = "Volver a menú principal";
+            btn_Volver.TextAlign = ContentAlignment.MiddleRight;
+            btn_Volver.UseVisualStyleBackColor = true;
+            btn_Volver.Click += btn_Volver_Click;
             // 
             // MantenimientoMain
             // 
@@ -328,5 +349,6 @@
         private Button btn_Manillas;
         private Button btn_Bisagras;
         private Button btn_Cerraduras;
+        private Button btn_Volver;
     }
 }

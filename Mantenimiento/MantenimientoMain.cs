@@ -87,6 +87,10 @@ namespace RotoGestionClientes
 
             RecargarGridActual();
         }
+        private void btn_Volver_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
         private void dgvMaestros_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0)

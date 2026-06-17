@@ -127,7 +127,10 @@ namespace RotoGestionClientes
             ClienteExportacion clienteExportacionForm = new ClienteExportacion(_context);
             clienteExportacionForm.ShowDialog();
         }
-
+        private void btn_Volver_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
         #endregion
 
         #region Private methods

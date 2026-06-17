@@ -69,6 +69,10 @@ namespace RotoGestionClientes
         {
             ExportarExcel();
         }
+        private void btn_Volver_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
         private void btn_Software_Click(object sender, EventArgs e)
         {
             AbrirFiltro(InformeFiltroTipo.Software);
@@ -289,11 +293,11 @@ namespace RotoGestionClientes
                 InformeFiltroTipo.Perfil,
                 out var perfiles)
                 && perfiles.Any())
-                {
-                    query = query.Where(c =>
-                        c.ClientePerfiles.Any(cp =>
-                            perfiles.Contains(cp.PerfilId)));
-                }
+            {
+                query = query.Where(c =>
+                    c.ClientePerfiles.Any(cp =>
+                        perfiles.Contains(cp.PerfilId)));
+            }
 
             _resultadoActual = query
                 .Select(c => new ClienteInformeItem

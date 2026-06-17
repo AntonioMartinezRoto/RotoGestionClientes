@@ -40,6 +40,7 @@
             btn_AddCliente = new Button();
             btn_ImportCliente = new Button();
             btn_ExporClientes = new Button();
+            btn_Volver = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvClientes).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -137,6 +138,7 @@
             flowLayoutPanel_Sidebar.Controls.Add(btn_AddCliente);
             flowLayoutPanel_Sidebar.Controls.Add(btn_ImportCliente);
             flowLayoutPanel_Sidebar.Controls.Add(btn_ExporClientes);
+            flowLayoutPanel_Sidebar.Controls.Add(btn_Volver);
             flowLayoutPanel_Sidebar.Dock = DockStyle.Fill;
             flowLayoutPanel_Sidebar.FlowDirection = FlowDirection.TopDown;
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
@@ -191,6 +193,22 @@
             btn_ExporClientes.UseVisualStyleBackColor = true;
             btn_ExporClientes.Click += btn_ExporClientes_Click;
             // 
+            // btn_Volver
+            // 
+            btn_Volver.Font = new Font("Calibri", 9F);
+            btn_Volver.Image = (Image)resources.GetObject("btn_Volver.Image");
+            btn_Volver.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Volver.Location = new Point(3, 253);
+            btn_Volver.Margin = new Padding(3, 4, 3, 4);
+            btn_Volver.Name = "btn_Volver";
+            btn_Volver.Padding = new Padding(14, 0, 20, 0);
+            btn_Volver.Size = new Size(256, 75);
+            btn_Volver.TabIndex = 35;
+            btn_Volver.Text = "Volver al menú principal";
+            btn_Volver.TextAlign = ContentAlignment.MiddleRight;
+            btn_Volver.UseVisualStyleBackColor = true;
+            btn_Volver.Click += btn_Volver_Click;
+            // 
             // ClientesMain
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
@@ -231,5 +249,6 @@
         private Button btn_AddCliente;
         private Button btn_ImportCliente;
         private Button btn_ExporClientes;
+        private Button btn_Volver;
     }
 }

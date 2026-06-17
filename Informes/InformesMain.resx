@@ -133,6 +133,18 @@
         1gnzqJcYvczsoFZOB5FOZxciN2ZOYqV1TAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="btn_Volver.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAAAOsAAADrASts18IAAAAZdEVYdFNvZnR3YXJlAHd3dy5pbmtzY2FwZS5vcmeb7jwa
+        AAABR0lEQVRYR+3WLUsEURTG8UHwpYim1Q8gCiKYTdbFIBhMgtgNYheLwaDBYjFYBBcsKgaDn8EoiE0E
+        0WJQFi2+/B/wwDLc2Rm8M6c4D/zKYfecMzs7dzepUycnfWihjQUVPKPh5/j+dQi3pIc/Ygwu0fAz2PAn
+        TMIl/3t45z3/xAYWI8xhCj3IzRZseNmesYcRZKbKBcwrMs+SKm7BCnZxD+v7hWUEk15Cz/4EYqO+m9BF
+        qe8HphFMVUsoq7C+VypkRUucwl5c5uOowda364WFPokyjmJ9Ca3nugrdkl7iALFpwPrtq5AXLXGMF8yr
+        EJl+2AJHKnhHt9EW0CPqnjXYAksqeGYQD9DwdwzDLQO4gF39Dtwyi2vY8FsMITe92MbJH13CPnKj34Vx
+        FEoTnW+OpT87OgcKZxR3CDUr4g030IEzgzp1AkmSH9V4yHssa994AAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="btn_Perfiles.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACgAAAAgCAYAAABgrToAAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAS
