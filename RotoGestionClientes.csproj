@@ -11,8 +11,8 @@
 	<IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
 	<PublishTrimmed>false</PublishTrimmed>
 	<AssemblyName>RGC</AssemblyName>
-	<AssemblyVersion>2.0</AssemblyVersion>
-	<FileVersion>2.0</FileVersion>
+	<AssemblyVersion>2.1</AssemblyVersion>
+	<FileVersion>2.1</FileVersion>
 	<ApplicationIcon>Images\RGC_Logo_JAC.ico</ApplicationIcon>
 	<Company>Roto-Frank S.A.</Company>
 	<PackageIcon>logo-Main.png</PackageIcon>
