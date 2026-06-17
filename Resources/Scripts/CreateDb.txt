@@ -1107,4 +1107,13 @@ CREATE TABLE dbo.ClienteConfiguracionMaquinas
 );
 GO
 
+CREATE TABLE ConfiguracionAplicacion
+(
+    Id INT NOT NULL PRIMARY KEY,
+    VersionMaestros NVARCHAR(10) NOT NULL
+);
+
+INSERT INTO dbo.ConfiguracionAplicacion
+VALUES (1,'1.0');
+
 

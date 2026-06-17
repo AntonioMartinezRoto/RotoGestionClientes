@@ -502,22 +502,6 @@ namespace RotoGestionClientes.Services
                 Cursor.Current = Cursors.Default;
             }
         }
-
-        private string CheckNameDuplicatesOld(string nombre)
-        {
-            Cliente cliente = _context.Clientes.Where(c => c.Nombre.ToUpper().Trim() == nombre.ToUpper().Trim()).FirstOrDefault();
-            if (cliente != null)
-            {
-                MessageBox.Show(
-                    "Ya existe un cliente con ese nombre. Cliente importado con un nombre modificado (_IMP)",
-                    "Validación",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-
-                return nombre + "_IMP";
-            }
-            return nombre;
-        }
         private string CheckNameDuplicates(string nombre)
         {
             // 1. Limpiamos el nombre original

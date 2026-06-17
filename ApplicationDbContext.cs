@@ -53,7 +53,7 @@ namespace RotoGestionClientes
         public DbSet<ClienteDocumento> ClienteDocumentos { get; set; } = null!;
         public DbSet<SoporteMarcoConfig> SoporteMarcoConfigs { get; set; } = null!;
         public DbSet<ClienteConfiguracionMaquinas> ClienteConfiguracionMaquinas { get; set; } = null!;
-
+        public DbSet<ConfiguracionAplicacion> ConfiguracionAplicacion { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -798,6 +798,15 @@ namespace RotoGestionClientes
                 entity.HasOne(e => e.SoporteMarcoConfig)
                   .WithMany(s => s.ClienteConfiguracionMaquinas)
                   .HasForeignKey(e => e.SoporteMarcoId);
+            });
+            modelBuilder.Entity<ConfiguracionAplicacion>(entity =>
+            {
+                entity.ToTable("ConfiguracionAplicacion", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.VersionMaestros)
+                    .IsRequired();
             });
         }
     }

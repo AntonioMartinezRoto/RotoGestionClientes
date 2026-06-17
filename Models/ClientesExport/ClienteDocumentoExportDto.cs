@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RotoGestionClientes.Models
+namespace RotoGestionClientes
 {
     public class ClienteDocumentoExportDto
     {

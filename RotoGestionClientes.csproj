@@ -13,10 +13,14 @@
 	<AssemblyName>RGC</AssemblyName>
 	<AssemblyVersion>2.0</AssemblyVersion>
 	<FileVersion>2.0</FileVersion>
-	<ApplicationIcon>Images\roto_icon.ico</ApplicationIcon>
+	<ApplicationIcon>Images\RGC_Logo_JAC.ico</ApplicationIcon>
 	<Company>Roto-Frank S.A.</Company>
 	<PackageIcon>logo-Main.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Images\RGC_Logo_JAC.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />

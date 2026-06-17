@@ -220,19 +220,43 @@ namespace RotoGestionClientes
                 case MaestroTipo.MaquinaMarcas:
                     GuardarMaquinaMarcas();
                     break;
+
                 case MaestroTipo.MaquinaTipo:
                     GuardarMaquinaTipos();
                     break;
+
                 case MaestroTipo.SeguridadVentana:
                     GuardarSeguridadVentana();
                     break;
+
                 case MaestroTipo.CremonaPasivaVentana:
                     GuardarCremonaPasivaVentana();
                     break;
             }
+            
+            IncrementarVersionDatos();
         }
 
         #region Guardados
+        private void IncrementarVersionDatos()
+        {
+            var configuracion = _context.ConfiguracionAplicacion.First();
+            var version = configuracion.VersionMaestros;
+
+            var partes = version.Split('.');
+
+            var mayor = int.Parse(partes[0]);
+            var menor = int.Parse(partes[1]);
+
+            menor++;
+
+            if (menor > 99)
+            {
+                mayor++;
+                menor = 0;
+            }
+            configuracion.VersionMaestros = $"{mayor}.{menor}";
+        }
         private void GuardarPerfil()
         {
             var entity = _id == null
