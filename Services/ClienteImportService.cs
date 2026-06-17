@@ -127,6 +127,19 @@ namespace RotoGestionClientes.Services
                 // ======================================================
 
                 AddRelations(
+                    data.PerfilTipos,
+                    id => _context.PerfilTipos.Any(x => x.Id == id),
+                    id =>
+                    {
+                        _context.ClientePerfilTipos.Add(
+                            new ClientePerfilTipo
+                            {
+                                ClienteId = cliente.Id,
+                                PerfilTipoId = id
+                            });
+                    });
+
+                AddRelations(
                     data.Perfiles,
                     id => _context.Perfiles.Any(x => x.Id == id),
                     id =>

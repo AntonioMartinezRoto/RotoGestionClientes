@@ -146,6 +146,15 @@ namespace RotoGestionClientes
                                 })
                                 .ToList(),
 
+                        PerfilTipos =
+                            cliente.ClientePerfilTipos
+                                .Select(x => new MaestroRefDto
+                                {
+                                    Id = x.PerfilTipo.Id,
+                                    Nombre = x.PerfilTipo.Nombre
+                                })
+                                .ToList(),
+
                         SoporteCompas =
                             cliente.ClienteSoporteCompases
                                 .Select(x => new MaestroRefDto
@@ -543,6 +552,15 @@ namespace RotoGestionClientes
                                 {
                                     Id = x.Perfil.Id,
                                     Nombre = x.Perfil.Nombre
+                                })
+                                .ToList(),
+
+                        PerfilTipos =
+                            cliente.ClientePerfilTipos
+                                .Select(x => new MaestroRefDto
+                                {
+                                    Id = x.PerfilTipo.Id,
+                                    Nombre = x.PerfilTipo.Nombre
                                 })
                                 .ToList(),
 
