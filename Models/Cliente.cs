@@ -17,6 +17,7 @@ namespace RotoGestionClientes
         public string Nombre { get; set; } = null!;
         public string? SapId { get; set; }
         public string? Alias { get; set; }
+        public int? ResponsableId { get; set; }
         public string? Comentarios { get; set; }
         public string? ObservacionesVentanas { get; set; }
         public string? ObservacionesBalconeras { get; set; }
@@ -51,5 +52,6 @@ namespace RotoGestionClientes
         public ICollection<ClienteMaquina> ClienteMaquinas { get; set; } = new List<ClienteMaquina>();
         public ICollection<ClienteDocumento> ClienteDocumentos { get; set; } = new List<ClienteDocumento>();
         public ClienteConfiguracionMaquinas? ClienteConfiguracionMaquinas { get; set; }
+        public Usuario? Responsable { get; set; }
     }
 }

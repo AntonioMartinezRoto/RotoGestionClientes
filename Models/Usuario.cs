@@ -22,5 +22,7 @@ namespace RotoGestionClientes
         [Required]
         public bool Activa { get; set; } = true;
 
+        public virtual ICollection<Cliente> Clientes { get; set; } = new List<Cliente>();
+
     }
 }

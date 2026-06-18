@@ -73,6 +73,12 @@ namespace RotoGestionClientes
                       .IsRequired();
                 entity.Property(e => e.Alias);
                 entity.Property(e => e.SapId);
+
+                entity.HasOne(e => e.Responsable)
+                      .WithMany(p => p.Clientes)
+                      .HasForeignKey(e => e.ResponsableId)
+                      .HasConstraintName("FK_Cliente_Usuario");
+
                 entity.Property(e => e.Comentarios);
                 entity.Property(e => e.ObservacionesVentanas);
                 entity.Property(e => e.ObservacionesBalconeras);

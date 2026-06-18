@@ -58,6 +58,7 @@ namespace RotoGestionClientes
             CrearGridPerfil();
             RellenarGridPerFilTipo();
             RellenarSoftwareList();
+            RellenarResponsablesList();
             RellenarGridManillas();
             CargarSoporteComprasFiltrado();
             CargarPerfilesFiltrados();
@@ -95,6 +96,17 @@ namespace RotoGestionClientes
                 {
                     this._model.SoftwareList.Clear();
                     this._model.SoftwareList.Add(id);
+                }
+            }
+        }
+        private void cmb_Responsable_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (cmb_Responsable.SelectedIndex != -1 && cmb_Responsable.SelectedValue != null)
+            {
+                // Si ValueMember es "Id", SelectedValue será el entero
+                if (int.TryParse(cmb_Responsable.SelectedValue.ToString(), out int id))
+                {
+                    this._model.ResponsableId = id;
                 }
             }
         }
@@ -383,6 +395,22 @@ namespace RotoGestionClientes
 
             cmb_Software.SelectedValueChanged += cmb_Software_SelectedValueChanged;
         }
+        private void RellenarResponsablesList()
+        {
+            cmb_Responsable.SelectedValueChanged -= cmb_Responsable_SelectedValueChanged;
+
+            List<Usuario> softwareList = new List<Usuario>();
+            softwareList = _context.Usuarios.Where(f => f.Activa).OrderBy(s => s.Nombre).ToList();
+
+            cmb_Responsable.DataSource = null;
+            cmb_Responsable.DataSource = softwareList;
+            cmb_Responsable.DisplayMember = "Nombre";
+            cmb_Responsable.ValueMember = "Id";
+
+            cmb_Responsable.SelectedIndex = -1;
+
+            cmb_Responsable.SelectedValueChanged += cmb_Responsable_SelectedValueChanged;
+        }
         private void InitializeData()
         {
             txt_NombreCliente.Text = _model.Nombre;
@@ -390,6 +418,11 @@ namespace RotoGestionClientes
             txt_Alias.Text = _model.Alias;
             txt_Comentarios.Text = _model.Comentarios;
             cmb_Software.SelectedValue = _model.SoftwareList.FirstOrDefault();
+
+            if (_model.ResponsableId != 0)
+            {
+                cmb_Responsable.SelectedValue = _model.ResponsableId;
+            }
         }
 
         #endregion

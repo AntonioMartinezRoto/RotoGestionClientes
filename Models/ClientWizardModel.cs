@@ -23,6 +23,7 @@ namespace RotoGestionClientes
         public string? ObservacionesDocumentos { get; set; }
         public List<int> PerfilTipoList { get; set; } = new();
         public List<int> SoftwareList { get; set; } = new();
+        public int? ResponsableId { get; set; } = new();
         public List<int> ManillasList { get; set; } = new();
         public List<int> SoporteCompasList { get; set; } = new();
         public List<int> SeguridadVentanaList { get; set; } = new();

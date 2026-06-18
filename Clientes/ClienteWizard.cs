@@ -305,6 +305,7 @@ namespace RotoGestionClientes
                 SapId = cliente.SapId,
                 Alias = cliente.Alias,
                 Comentarios = cliente.Comentarios,
+                ResponsableId = cliente.ResponsableId,
                 ObservacionesVentanas = cliente.ObservacionesVentanas,
                 ObservacionesBalconeras = cliente.ObservacionesBalconeras,
                 ObservacionesPuertas = cliente.ObservacionesPuertas,
@@ -488,6 +489,7 @@ namespace RotoGestionClientes
                 SapId = _model.SapId,
                 Alias = _model.Alias,
                 Comentarios = _model.Comentarios,
+                ResponsableId = _model.ResponsableId,
                 ObservacionesVentanas = _model.ObservacionesVentanas,
                 ObservacionesBalconeras = _model.ObservacionesBalconeras,
                 ObservacionesPuertas = _model.ObservacionesPuertas,
@@ -890,6 +892,7 @@ namespace RotoGestionClientes
             cliente.Nombre = _model.Nombre;
             cliente.Alias = _model.Alias;
             cliente.SapId = _model.SapId;
+            cliente.ResponsableId = _model.ResponsableId;
             cliente.Comentarios = _model.Comentarios;
             cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
             cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
