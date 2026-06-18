@@ -54,6 +54,7 @@ namespace RotoGestionClientes
         public DbSet<SoporteMarcoConfig> SoporteMarcoConfigs { get; set; } = null!;
         public DbSet<ClienteConfiguracionMaquinas> ClienteConfiguracionMaquinas { get; set; } = null!;
         public DbSet<ConfiguracionAplicacion> ConfiguracionAplicacion { get; set; } = null!;
+        public DbSet<Usuario> Usuarios { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -807,6 +808,21 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.VersionMaestros)
                     .IsRequired();
+            });
+            modelBuilder.Entity<Usuario>(entity =>
+            {
+                entity.ToTable("Usuario", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired();
+
+                entity.Property(e => e.EsDistribuidor)
+                      .IsRequired();
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
             });
         }
     }

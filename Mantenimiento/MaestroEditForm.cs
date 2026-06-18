@@ -39,6 +39,7 @@ namespace RotoGestionClientes
             {
                 lbl_PerfilTipo.Visible = true;
                 cmb_PerfilTipo.Visible = true;
+                chk_EsDistribuidor.Visible = false;
 
                 var perfilesTipos = _context.PerfilTipos
                                         .OrderBy(x => x.Nombre)
@@ -50,10 +51,15 @@ namespace RotoGestionClientes
 
                 cmb_PerfilTipo.SelectedIndex = -1;
             }
+            else if (_tipo == MaestroTipo.Usuario)
+            {
+                chk_EsDistribuidor.Visible = true;
+            }
             else
             {
                 lbl_PerfilTipo.Visible = false;
                 cmb_PerfilTipo.Visible = false;
+                chk_EsDistribuidor.Visible = false;
             }
 
             if (_id == null)
@@ -159,6 +165,14 @@ namespace RotoGestionClientes
                         chk_Activo.Checked = e.Activa;
                     }
                     break;
+                case MaestroTipo.Usuario:
+                    {
+                        var e = _context.Usuarios.First(x => x.Id == _id);
+                        txt_Nombre.Text = e.Nombre;
+                        chk_Activo.Checked = e.Activa;
+                        chk_EsDistribuidor.Checked = e.EsDistribuidor;
+                    }
+                    break;
             }
         }
         private void btn_Aceptar_Click(object sender, EventArgs e)
@@ -231,6 +245,10 @@ namespace RotoGestionClientes
 
                 case MaestroTipo.CremonaPasivaVentana:
                     GuardarCremonaPasivaVentana();
+                    break;
+
+                case MaestroTipo.Usuario:
+                    GuardarUsuario();
                     break;
             }
             
@@ -436,6 +454,22 @@ namespace RotoGestionClientes
 
             entity.Nombre = txt_Nombre.Text.Trim();
             entity.Activa = chk_Activo.Checked;
+        }
+        private void GuardarUsuario()
+        {
+            var entity = _id == null
+                ? new Usuario()
+                : _context.Usuarios.First(x => x.Id == _id);
+
+            if (_id == null)
+            {
+                entity.Id = NuevoId<Usuario>();
+                _context.Usuarios.Add(entity);
+            }
+
+            entity.Nombre = txt_Nombre.Text.Trim();
+            entity.Activa = chk_Activo.Checked;
+            entity.EsDistribuidor = chk_EsDistribuidor.Checked;
         }
         private int NuevoId<T>() where T : class
         {

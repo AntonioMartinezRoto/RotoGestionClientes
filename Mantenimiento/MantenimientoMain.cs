@@ -55,12 +55,10 @@ namespace RotoGestionClientes
         {
             LoadMaestro(MaestroTipo.MaquinaTipo);
         }
-
         private void btn_TipoSeguridad_Click(object sender, EventArgs e)
         {
             LoadMaestro(MaestroTipo.SeguridadVentana);
         }
-
         private void btn_Pasivas_Click(object sender, EventArgs e)
         {
             LoadMaestro(MaestroTipo.CremonaPasivaVentana);
@@ -77,6 +75,10 @@ namespace RotoGestionClientes
         private void btn_Cerraduras_Click(object sender, EventArgs e)
         {
             LoadMaestro(MaestroTipo.CerraduraPuerta);
+        }
+        private void btn_Usuarios_Click(object sender, EventArgs e)
+        {
+            LoadMaestro(MaestroTipo.Usuario);
         }
         private void btn_Add_Click(object sender, EventArgs e)
         {
@@ -172,6 +174,18 @@ namespace RotoGestionClientes
                     HeaderText = "Tipo",
                     DataPropertyName = "Tipo",
                     Width = 200
+                });
+            }
+            
+            if (_tablaActual == MaestroTipo.Usuario)
+            {
+                dgvMaestros.Columns.Add(new DataGridViewCheckBoxColumn
+                {
+                    Name = "EsDistribuidor",
+                    HeaderText = "Es Distribuidor",
+                    DataPropertyName = "EsDistribuidor",
+                    Width = 120,
+                    ReadOnly = true
                 });
             }
 
@@ -326,6 +340,7 @@ namespace RotoGestionClientes
                         })
                         .ToList();
                     break;
+
                 case MaestroTipo.MaquinaMarcas:
                     dgvMaestros.DataSource = _context.MaquinasMarcas
                         .OrderBy(x => x.Nombre)
@@ -337,6 +352,7 @@ namespace RotoGestionClientes
                         })
                         .ToList();
                     break;
+
                 case MaestroTipo.MaquinaTipo:
                     dgvMaestros.DataSource = _context.MaquinasTipos
                         .OrderBy(x => x.Descripcion)
@@ -344,6 +360,19 @@ namespace RotoGestionClientes
                         {
                             Id = x.Id,
                             Nombre = x.Descripcion,
+                            Activa = x.Activa
+                        })
+                        .ToList();
+                    break;
+
+                case MaestroTipo.Usuario:
+                    dgvMaestros.DataSource = _context.Usuarios
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new MaestroGridItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre,
+                            EsDistribuidor = x.EsDistribuidor,
                             Activa = x.Activa
                         })
                         .ToList();

@@ -33,6 +33,7 @@
             label1 = new Label();
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
+            btn_Usuarios = new Button();
             btn_Perfiles = new Button();
             btn_TipoSeguridad = new Button();
             btn_Pasivas = new Button();
@@ -43,9 +44,9 @@
             btn_MaquinaTipo = new Button();
             btn_MaquinaMarcas = new Button();
             btn_MaquinaMantenimiento = new Button();
+            btn_Volver = new Button();
             dgvMaestros = new DataGridView();
             btn_Add = new Button();
-            btn_Volver = new Button();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -83,12 +84,13 @@
             panel_Sidebar.Margin = new Padding(3, 4, 3, 4);
             panel_Sidebar.Name = "panel_Sidebar";
             panel_Sidebar.Padding = new Padding(11, 13, 11, 13);
-            panel_Sidebar.Size = new Size(286, 952);
+            panel_Sidebar.Size = new Size(286, 1049);
             panel_Sidebar.TabIndex = 34;
             // 
             // flowLayoutPanel_Sidebar
             // 
             flowLayoutPanel_Sidebar.AutoScroll = true;
+            flowLayoutPanel_Sidebar.Controls.Add(btn_Usuarios);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Perfiles);
             flowLayoutPanel_Sidebar.Controls.Add(btn_TipoSeguridad);
             flowLayoutPanel_Sidebar.Controls.Add(btn_Pasivas);
@@ -105,16 +107,32 @@
             flowLayoutPanel_Sidebar.Location = new Point(11, 13);
             flowLayoutPanel_Sidebar.Margin = new Padding(3, 4, 3, 4);
             flowLayoutPanel_Sidebar.Name = "flowLayoutPanel_Sidebar";
-            flowLayoutPanel_Sidebar.Size = new Size(264, 926);
+            flowLayoutPanel_Sidebar.Size = new Size(264, 1023);
             flowLayoutPanel_Sidebar.TabIndex = 0;
             flowLayoutPanel_Sidebar.WrapContents = false;
+            // 
+            // btn_Usuarios
+            // 
+            btn_Usuarios.Font = new Font("Calibri", 9F);
+            btn_Usuarios.Image = (Image)resources.GetObject("btn_Usuarios.Image");
+            btn_Usuarios.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Usuarios.Location = new Point(3, 4);
+            btn_Usuarios.Margin = new Padding(3, 4, 3, 4);
+            btn_Usuarios.Name = "btn_Usuarios";
+            btn_Usuarios.Padding = new Padding(11, 0, 90, 0);
+            btn_Usuarios.Size = new Size(256, 75);
+            btn_Usuarios.TabIndex = 43;
+            btn_Usuarios.Text = "Usuarios";
+            btn_Usuarios.TextAlign = ContentAlignment.MiddleRight;
+            btn_Usuarios.UseVisualStyleBackColor = true;
+            btn_Usuarios.Click += btn_Usuarios_Click;
             // 
             // btn_Perfiles
             // 
             btn_Perfiles.Font = new Font("Calibri", 9F);
             btn_Perfiles.Image = (Image)resources.GetObject("btn_Perfiles.Image");
             btn_Perfiles.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Perfiles.Location = new Point(3, 4);
+            btn_Perfiles.Location = new Point(3, 87);
             btn_Perfiles.Margin = new Padding(3, 4, 3, 4);
             btn_Perfiles.Name = "btn_Perfiles";
             btn_Perfiles.Padding = new Padding(11, 0, 0, 0);
@@ -129,7 +147,7 @@
             btn_TipoSeguridad.Font = new Font("Calibri", 9F);
             btn_TipoSeguridad.Image = (Image)resources.GetObject("btn_TipoSeguridad.Image");
             btn_TipoSeguridad.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_TipoSeguridad.Location = new Point(3, 87);
+            btn_TipoSeguridad.Location = new Point(3, 170);
             btn_TipoSeguridad.Margin = new Padding(3, 4, 3, 4);
             btn_TipoSeguridad.Name = "btn_TipoSeguridad";
             btn_TipoSeguridad.Padding = new Padding(11, 0, 0, 0);
@@ -144,7 +162,7 @@
             btn_Pasivas.Font = new Font("Calibri", 9F);
             btn_Pasivas.Image = (Image)resources.GetObject("btn_Pasivas.Image");
             btn_Pasivas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Pasivas.Location = new Point(3, 170);
+            btn_Pasivas.Location = new Point(3, 253);
             btn_Pasivas.Margin = new Padding(3, 4, 3, 4);
             btn_Pasivas.Name = "btn_Pasivas";
             btn_Pasivas.Padding = new Padding(11, 0, 0, 0);
@@ -159,7 +177,7 @@
             btn_Manillas.Font = new Font("Calibri", 9F);
             btn_Manillas.Image = (Image)resources.GetObject("btn_Manillas.Image");
             btn_Manillas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Manillas.Location = new Point(3, 253);
+            btn_Manillas.Location = new Point(3, 336);
             btn_Manillas.Margin = new Padding(3, 4, 3, 4);
             btn_Manillas.Name = "btn_Manillas";
             btn_Manillas.Padding = new Padding(11, 0, 0, 0);
@@ -174,7 +192,7 @@
             btn_Bisagras.Font = new Font("Calibri", 9F);
             btn_Bisagras.Image = (Image)resources.GetObject("btn_Bisagras.Image");
             btn_Bisagras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Bisagras.Location = new Point(3, 336);
+            btn_Bisagras.Location = new Point(3, 419);
             btn_Bisagras.Margin = new Padding(3, 4, 3, 4);
             btn_Bisagras.Name = "btn_Bisagras";
             btn_Bisagras.Padding = new Padding(11, 0, 0, 0);
@@ -189,7 +207,7 @@
             btn_Cerraduras.Font = new Font("Calibri", 9F);
             btn_Cerraduras.Image = (Image)resources.GetObject("btn_Cerraduras.Image");
             btn_Cerraduras.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Cerraduras.Location = new Point(3, 419);
+            btn_Cerraduras.Location = new Point(3, 502);
             btn_Cerraduras.Margin = new Padding(3, 4, 3, 4);
             btn_Cerraduras.Name = "btn_Cerraduras";
             btn_Cerraduras.Padding = new Padding(11, 0, 0, 0);
@@ -204,7 +222,7 @@
             btn_Software.Font = new Font("Calibri", 9F);
             btn_Software.Image = (Image)resources.GetObject("btn_Software.Image");
             btn_Software.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Software.Location = new Point(3, 502);
+            btn_Software.Location = new Point(3, 585);
             btn_Software.Margin = new Padding(3, 4, 3, 4);
             btn_Software.Name = "btn_Software";
             btn_Software.Padding = new Padding(11, 0, 0, 0);
@@ -219,7 +237,7 @@
             btn_MaquinaTipo.Font = new Font("Calibri", 9F);
             btn_MaquinaTipo.Image = (Image)resources.GetObject("btn_MaquinaTipo.Image");
             btn_MaquinaTipo.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaTipo.Location = new Point(3, 585);
+            btn_MaquinaTipo.Location = new Point(3, 668);
             btn_MaquinaTipo.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaTipo.Name = "btn_MaquinaTipo";
             btn_MaquinaTipo.Padding = new Padding(11, 0, 45, 0);
@@ -235,7 +253,7 @@
             btn_MaquinaMarcas.Font = new Font("Calibri", 9F);
             btn_MaquinaMarcas.Image = (Image)resources.GetObject("btn_MaquinaMarcas.Image");
             btn_MaquinaMarcas.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaMarcas.Location = new Point(3, 668);
+            btn_MaquinaMarcas.Location = new Point(3, 751);
             btn_MaquinaMarcas.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMarcas.Name = "btn_MaquinaMarcas";
             btn_MaquinaMarcas.Padding = new Padding(11, 0, 40, 0);
@@ -251,7 +269,7 @@
             btn_MaquinaMantenimiento.Font = new Font("Calibri", 9F);
             btn_MaquinaMantenimiento.Image = (Image)resources.GetObject("btn_MaquinaMantenimiento.Image");
             btn_MaquinaMantenimiento.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_MaquinaMantenimiento.Location = new Point(3, 751);
+            btn_MaquinaMantenimiento.Location = new Point(3, 834);
             btn_MaquinaMantenimiento.Margin = new Padding(3, 4, 3, 4);
             btn_MaquinaMantenimiento.Name = "btn_MaquinaMantenimiento";
             btn_MaquinaMantenimiento.Padding = new Padding(11, 0, 15, 0);
@@ -261,6 +279,22 @@
             btn_MaquinaMantenimiento.TextAlign = ContentAlignment.MiddleRight;
             btn_MaquinaMantenimiento.UseVisualStyleBackColor = true;
             btn_MaquinaMantenimiento.Click += btn_MaquinaMantenimiento_Click;
+            // 
+            // btn_Volver
+            // 
+            btn_Volver.Font = new Font("Calibri", 9F);
+            btn_Volver.Image = (Image)resources.GetObject("btn_Volver.Image");
+            btn_Volver.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Volver.Location = new Point(3, 917);
+            btn_Volver.Margin = new Padding(3, 4, 3, 4);
+            btn_Volver.Name = "btn_Volver";
+            btn_Volver.Padding = new Padding(11, 0, 20, 0);
+            btn_Volver.Size = new Size(256, 75);
+            btn_Volver.TabIndex = 42;
+            btn_Volver.Text = "Volver a menú principal";
+            btn_Volver.TextAlign = ContentAlignment.MiddleRight;
+            btn_Volver.UseVisualStyleBackColor = true;
+            btn_Volver.Click += btn_Volver_Click;
             // 
             // dgvMaestros
             // 
@@ -277,7 +311,7 @@
             dgvMaestros.ReadOnly = true;
             dgvMaestros.RowHeadersVisible = false;
             dgvMaestros.RowHeadersWidth = 51;
-            dgvMaestros.Size = new Size(1011, 845);
+            dgvMaestros.Size = new Size(1011, 942);
             dgvMaestros.TabIndex = 35;
             dgvMaestros.CellClick += dgvMaestros_CellClick;
             // 
@@ -292,34 +326,19 @@
             btn_Add.UseVisualStyleBackColor = true;
             btn_Add.Click += btn_Add_Click;
             // 
-            // btn_Volver
-            // 
-            btn_Volver.Font = new Font("Calibri", 9F);
-            btn_Volver.Image = (Image)resources.GetObject("btn_Volver.Image");
-            btn_Volver.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Volver.Location = new Point(3, 834);
-            btn_Volver.Margin = new Padding(3, 4, 3, 4);
-            btn_Volver.Name = "btn_Volver";
-            btn_Volver.Padding = new Padding(11, 0, 20, 0);
-            btn_Volver.Size = new Size(256, 75);
-            btn_Volver.TabIndex = 42;
-            btn_Volver.Text = "Volver a menú principal";
-            btn_Volver.TextAlign = ContentAlignment.MiddleRight;
-            btn_Volver.UseVisualStyleBackColor = true;
-            btn_Volver.Click += btn_Volver_Click;
-            // 
             // MantenimientoMain
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1424, 1032);
+            ClientSize = new Size(1424, 1129);
             Controls.Add(btn_Add);
             Controls.Add(dgvMaestros);
             Controls.Add(panel_Sidebar);
             Controls.Add(panel_Header);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1442, 1176);
             Name = "MantenimientoMain";
             StartPosition = FormStartPosition.CenterScreen;
             WindowState = FormWindowState.Maximized;
@@ -350,5 +369,6 @@
         private Button btn_Bisagras;
         private Button btn_Cerraduras;
         private Button btn_Volver;
+        private Button btn_Usuarios;
     }
 }

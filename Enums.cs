@@ -40,7 +40,8 @@ namespace RotoGestionClientes
             MaquinaMantenimiento,
             MaquinaMarcas,
             MaquinaTipo,
-            CerraduraPuerta
+            CerraduraPuerta,
+            Usuario
         }
         public enum InformeFiltroTipo
         {

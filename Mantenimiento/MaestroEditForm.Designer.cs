@@ -36,6 +36,7 @@
             chk_Activo = new CheckBox();
             cmb_PerfilTipo = new ComboBox();
             lbl_PerfilTipo = new Label();
+            chk_EsDistribuidor = new CheckBox();
             SuspendLayout();
             // 
             // lbl_Nombre
@@ -116,12 +117,23 @@
             lbl_PerfilTipo.Text = "Tipo";
             lbl_PerfilTipo.Visible = false;
             // 
+            // chk_EsDistribuidor
+            // 
+            chk_EsDistribuidor.AutoSize = true;
+            chk_EsDistribuidor.Location = new Point(200, 120);
+            chk_EsDistribuidor.Name = "chk_EsDistribuidor";
+            chk_EsDistribuidor.Size = new Size(128, 24);
+            chk_EsDistribuidor.TabIndex = 25;
+            chk_EsDistribuidor.Text = "Es Distribuidor";
+            chk_EsDistribuidor.UseVisualStyleBackColor = true;
+            // 
             // MaestroEditForm
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
             ClientSize = new Size(524, 325);
+            Controls.Add(chk_EsDistribuidor);
             Controls.Add(lbl_PerfilTipo);
             Controls.Add(cmb_PerfilTipo);
             Controls.Add(chk_Activo);
@@ -148,5 +160,6 @@
         private CheckBox chk_Activo;
         private ComboBox cmb_PerfilTipo;
         private Label lbl_PerfilTipo;
+        private CheckBox chk_EsDistribuidor;
     }
 }

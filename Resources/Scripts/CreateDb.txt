@@ -1107,7 +1107,7 @@ CREATE TABLE dbo.ClienteConfiguracionMaquinas
 );
 GO
 
-CREATE TABLE dbo.Usuarios
+CREATE TABLE dbo.Usuario
 (
     Id INT NOT NULL PRIMARY KEY,
     Nombre NVARCHAR(50) NOT NULL,
@@ -1116,7 +1116,7 @@ CREATE TABLE dbo.Usuarios
 	
 );
 
-INSERT INTO dbo.Usuarios (Id, Nombre, EsDistribuidor, Activa)
+INSERT INTO dbo.Usuario (Id, Nombre, EsDistribuidor, Activa)
 VALUES 
 (1, 'Sergio González', 0, 1),
 (2, 'Agustín Canepa', 0, 1),
