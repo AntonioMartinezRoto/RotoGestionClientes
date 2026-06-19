@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -20,6 +21,7 @@ namespace RotoGestionClientes
         private BindingSource _bindingSourceManillas = new BindingSource();
         private BindingSource _bindingSourceSoporteCompas = new BindingSource();
         private BindingSource _bindingSourcePerfil = new BindingSource();
+        private readonly ApplicationInfo _applicationInfo;
 
         #endregion
 
@@ -29,6 +31,7 @@ namespace RotoGestionClientes
             InitializeComponent();
             _model = model;
             _context = context;
+            _applicationInfo = Program.AppServices.GetRequiredService<ApplicationInfo>();
         }
 
         #endregion
@@ -63,6 +66,7 @@ namespace RotoGestionClientes
             CargarSoporteComprasFiltrado();
             CargarPerfilesFiltrados();
             InitializeData();
+            SetVisibilidadModoAplicacion();
         }
         private void dgvPerfilTipo_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
@@ -170,7 +174,24 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
-
+        private void SetVisibilidadModoAplicacion()
+        {
+            if (_applicationInfo.IsDistributor)
+            {
+                lbl_Responsable.Visible = false;
+                cmb_Responsable.Visible = false;
+            }
+            else if (_applicationInfo.IsInternal)
+            {
+                lbl_Responsable.Visible = true;
+                cmb_Responsable.Visible = true;
+            }
+            else if (_applicationInfo.IsDebug)
+            {
+                lbl_Responsable.Visible = true; 
+                cmb_Responsable.Visible = true;
+            }
+        }
         private void CrearGridPerfilTipo()
         {
             dgvPerfilTipo.AutoGenerateColumns = false;
@@ -419,7 +440,12 @@ namespace RotoGestionClientes
             txt_Comentarios.Text = _model.Comentarios;
             cmb_Software.SelectedValue = _model.SoftwareList.FirstOrDefault();
 
-            if (_model.ResponsableId != 0)
+            if (_applicationInfo.IsDistributor)
+            {
+                _model.ResponsableId = _applicationInfo.ResponsableId;
+            }
+
+            if (_model.ResponsableId != null && _model.ResponsableId != 0)
             {
                 cmb_Responsable.SelectedValue = _model.ResponsableId;
             }

@@ -12,13 +12,23 @@ namespace RotoGestionClientes
         static void Main()
         {
             ApplicationConfiguration.Initialize();
-            
-            var configuration = new ConfigurationBuilder()
+
+            IConfiguration configuration = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
                 .AddJsonFile("appsettings.json", optional: false)
                 .Build();
 
             var services = new ServiceCollection();
+
+            // Leer configuración
+            var applicationSettings = configuration
+                .GetSection("Application")
+                .Get<ApplicationSettings>()!;
+
+            services.AddSingleton(applicationSettings);
+
+            // Registrar ApplicationInfo
+            services.AddSingleton<ApplicationInfo>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(

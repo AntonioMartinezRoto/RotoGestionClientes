@@ -55,6 +55,7 @@ namespace RotoGestionClientes.Services
                     Comentarios = data.Comentarios,
                     SapId = data.SapId,
                     Alias = data.Alias,
+                    ResponsableId = data.ResponsableId,
 
                     ObservacionesVentanas =
                         data.ObservacionesVentanas,

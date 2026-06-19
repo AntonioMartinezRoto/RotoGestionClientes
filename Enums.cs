@@ -49,9 +49,16 @@ namespace RotoGestionClientes
             Manilla,
             Bisagra,
             Perfil,
-            //PerfilTipo,
+            Responsable,
             Maquina,
             Cerradura
         }
+        public enum ApplicationEdition
+        {
+            Internal,
+            Distributor,
+            Debug
+        }
     }
+
 }

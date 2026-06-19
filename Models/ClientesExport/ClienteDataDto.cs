@@ -13,6 +13,7 @@ namespace RotoGestionClientes
         public string? SapId { get; set; }
 
         public string? Alias { get; set; }
+        public int? ResponsableId { get; set; }
 
         public string? ObservacionesVentanas { get; set; }
 

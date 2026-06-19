@@ -38,6 +38,7 @@
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_ExportExcel = new Button();
+            btn_Volver = new Button();
             panel1 = new Panel();
             btn_Perfiles = new Button();
             btn_Cerraduras = new Button();
@@ -48,7 +49,7 @@
             btn_Manillas = new Button();
             btn_Software = new Button();
             label2 = new Label();
-            btn_Volver = new Button();
+            btn_Responsables = new Button();
             ((System.ComponentModel.ISupportInitialize)dgvResultados).BeginInit();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
@@ -168,9 +169,26 @@
             btn_ExportExcel.UseVisualStyleBackColor = true;
             btn_ExportExcel.Click += btn_ExportExcel_Click;
             // 
+            // btn_Volver
+            // 
+            btn_Volver.Font = new Font("Calibri", 9F);
+            btn_Volver.Image = (Image)resources.GetObject("btn_Volver.Image");
+            btn_Volver.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Volver.Location = new Point(3, 87);
+            btn_Volver.Margin = new Padding(3, 4, 3, 4);
+            btn_Volver.Name = "btn_Volver";
+            btn_Volver.Padding = new Padding(11, 0, 20, 0);
+            btn_Volver.Size = new Size(256, 75);
+            btn_Volver.TabIndex = 33;
+            btn_Volver.Text = "Volver a menú principal";
+            btn_Volver.TextAlign = ContentAlignment.MiddleRight;
+            btn_Volver.UseVisualStyleBackColor = true;
+            btn_Volver.Click += btn_Volver_Click;
+            // 
             // panel1
             // 
             panel1.BackColor = Color.White;
+            panel1.Controls.Add(btn_Responsables);
             panel1.Controls.Add(btn_Perfiles);
             panel1.Controls.Add(btn_Cerraduras);
             panel1.Controls.Add(btn_MaquinasTipo);
@@ -332,21 +350,22 @@
             label2.TabIndex = 0;
             label2.Text = "Filtros";
             // 
-            // btn_Volver
+            // btn_Responsables
             // 
-            btn_Volver.Font = new Font("Calibri", 9F);
-            btn_Volver.Image = (Image)resources.GetObject("btn_Volver.Image");
-            btn_Volver.ImageAlign = ContentAlignment.MiddleLeft;
-            btn_Volver.Location = new Point(3, 87);
-            btn_Volver.Margin = new Padding(3, 4, 3, 4);
-            btn_Volver.Name = "btn_Volver";
-            btn_Volver.Padding = new Padding(11, 0, 20, 0);
-            btn_Volver.Size = new Size(256, 75);
-            btn_Volver.TabIndex = 33;
-            btn_Volver.Text = "Volver a menú principal";
-            btn_Volver.TextAlign = ContentAlignment.MiddleRight;
-            btn_Volver.UseVisualStyleBackColor = true;
-            btn_Volver.Click += btn_Volver_Click;
+            btn_Responsables.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btn_Responsables.FlatStyle = FlatStyle.Flat;
+            btn_Responsables.Image = (Image)resources.GetObject("btn_Responsables.Image");
+            btn_Responsables.ImageAlign = ContentAlignment.MiddleLeft;
+            btn_Responsables.Location = new Point(326, 77);
+            btn_Responsables.Margin = new Padding(3, 4, 3, 4);
+            btn_Responsables.Name = "btn_Responsables";
+            btn_Responsables.Padding = new Padding(11, 0, 0, 0);
+            btn_Responsables.Size = new Size(161, 53);
+            btn_Responsables.TabIndex = 19;
+            btn_Responsables.Text = "Responsables";
+            btn_Responsables.TextAlign = ContentAlignment.MiddleRight;
+            btn_Responsables.UseVisualStyleBackColor = true;
+            btn_Responsables.Click += btn_Responsables_Click;
             // 
             // InformesMain
             // 
@@ -402,5 +421,6 @@
         private Button btn_Cerraduras;
         private Button btn_Perfiles;
         private Button btn_Volver;
+        private Button btn_Responsables;
     }
 }

@@ -97,6 +97,10 @@ namespace RotoGestionClientes
         {
             AbrirFiltro(InformeFiltroTipo.Perfil);
         }
+        private void btn_Responsables_Click(object sender, EventArgs e)
+        {
+            AbrirFiltro(InformeFiltroTipo.Responsable);
+        }
         private void btn_Buscar_Click(object sender, EventArgs e)
         {
             CargarResultados();
@@ -202,6 +206,16 @@ namespace RotoGestionClientes
                             Nombre = x.Nombre
                         })
                         .ToList();
+                case InformeFiltroTipo.Responsable:
+                    return _context.Usuarios
+                        //.Where(x => x.Activa)
+                        .OrderBy(x => x.Nombre)
+                        .Select(x => new FiltroItem
+                        {
+                            Id = x.Id,
+                            Nombre = x.Nombre
+                        })
+                        .ToList();
             }
 
             return new List<FiltroItem>();
@@ -232,6 +246,7 @@ namespace RotoGestionClientes
                 InformeFiltroTipo.Maquina => btn_MaquinasTipo,
                 InformeFiltroTipo.Cerradura => btn_Cerraduras,
                 InformeFiltroTipo.Perfil => btn_Perfiles,
+                InformeFiltroTipo.Responsable => btn_Responsables,
                 _ => throw new NotImplementedException()
             };
         }
@@ -297,6 +312,13 @@ namespace RotoGestionClientes
                 query = query.Where(c =>
                     c.ClientePerfiles.Any(cp =>
                         perfiles.Contains(cp.PerfilId)));
+            }
+            if (_filtrosSeleccionados.TryGetValue(
+                InformeFiltroTipo.Responsable,
+                out var responsables)
+                && responsables.Any())
+            {
+                query = query.Where(c => responsables.Contains(c.ResponsableId.Value));
             }
 
             _resultadoActual = query
@@ -581,6 +603,5 @@ namespace RotoGestionClientes
         }
 
         #endregion
-
     }
 }

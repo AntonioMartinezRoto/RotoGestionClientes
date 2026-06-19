@@ -46,6 +46,7 @@ namespace RotoGestionClientes
                         Comentarios = cliente.Comentarios,
                         SapId = cliente.SapId,
                         Alias = cliente.Alias,
+                        ResponsableId = cliente.ResponsableId,
 
                         ObservacionesVentanas =
                             cliente.ObservacionesVentanas,
@@ -455,7 +456,8 @@ namespace RotoGestionClientes
                         Comentarios = cliente.Comentarios,
                         SapId = cliente.SapId,
                         Alias = cliente.Alias,
-
+                        ResponsableId = cliente.ResponsableId,
+                        
                         ObservacionesVentanas =
                             cliente.ObservacionesVentanas,
 
