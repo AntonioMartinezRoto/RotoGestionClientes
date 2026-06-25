@@ -320,6 +320,7 @@
             Controls.Add(lbl_NombreCliente);
             Controls.Add(txt_NombreCliente);
             Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1081, 805);
             Name = "PasoDatosGenerales";
             Size = new Size(1081, 805);
             Load += PasoDatosGenerales_Load;

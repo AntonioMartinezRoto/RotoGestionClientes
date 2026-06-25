@@ -274,6 +274,7 @@
             Controls.Add(groupBox1);
             Controls.Add(group_Comentarios);
             Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1081, 805);
             Name = "PasoMaquinas";
             Size = new Size(1081, 805);
             Load += PasoMaquinas_Load;

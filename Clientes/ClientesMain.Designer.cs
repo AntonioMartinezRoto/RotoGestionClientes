@@ -223,6 +223,7 @@
             Controls.Add(dgvClientes);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1442, 1079);
             Name = "ClientesMain";
             StartPosition = FormStartPosition.CenterScreen;
             WindowState = FormWindowState.Maximized;

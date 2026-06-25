@@ -879,7 +879,7 @@
             Controls.Add(tlpRoot);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(1200, 700);
+            MinimumSize = new Size(1605, 1123);
             Name = "ClienteResumen";
             StartPosition = FormStartPosition.CenterScreen;
             WindowState = FormWindowState.Maximized;
