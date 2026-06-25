@@ -85,6 +85,7 @@ namespace RotoGestionClientes
                 {
                     _model.PerfilTipoList.Remove(item.Id);
                     DesmarcarPerfilesDeTipo(item.Id);
+                    DesmarcarSoporteCompasTipo(item.Id);
                 }
 
                 CargarPerfilesFiltrados();
@@ -353,6 +354,17 @@ namespace RotoGestionClientes
 
             // Eliminar del modelo
             _model.PerfilesList.RemoveAll(id => perfilesDelTipo.Contains(id));
+        }
+        private void DesmarcarSoporteCompasTipo(int perfilTipoId)
+        {
+            // Obtener IDs de soporte compas que pertenecen a ese tipo
+            var soporteCompasDelTipo = _context.SoporteCompases
+                .Where(p => p.PerfilTipoId == perfilTipoId)
+                .Select(p => p.Id)
+                .ToList();
+
+            // Eliminar del modelo
+            _model.SoporteCompasList.RemoveAll(id => soporteCompasDelTipo.Contains(id));
         }
         private void RellenarGridManillas()
         {
