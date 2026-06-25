@@ -25,12 +25,14 @@ namespace RotoGestionClientes
         private readonly Dictionary<InformeFiltroTipo, List<int>> _filtrosSeleccionados = new();
         private List<ClienteInformeItem> _resultadoActual = new();
         private readonly BindingSource _bindingResultados = new();
+        private readonly ApplicationInfo _applicationInfo;
         #endregion
 
         #region Constructors
         public InformesMain(ApplicationDbContext context)
         {
             InitializeComponent();
+            _applicationInfo = Program.AppServices.GetRequiredService<ApplicationInfo>();
             _context = context;
         }
 
@@ -41,7 +43,7 @@ namespace RotoGestionClientes
         {
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
             CrearGrid();
-
+            SetVisibilidadModoAplicacion();
             //CargarResultados();
         }
         private void txt_Filtro_TextChanged(object sender, EventArgs e)
@@ -600,6 +602,17 @@ namespace RotoGestionClientes
                 "Exportación",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
+        }
+        private void SetVisibilidadModoAplicacion()
+        {
+            if (_applicationInfo.IsDistributor)
+            {
+                btn_Responsables.Visible = false;
+            }
+            else if (_applicationInfo.IsInternal || _applicationInfo.IsDebug)
+            {
+                btn_Responsables.Visible = true;
+            }
         }
 
         #endregion
