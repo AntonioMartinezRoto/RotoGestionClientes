@@ -201,12 +201,12 @@
             // 
             // picture_Main
             // 
-            picture_Main.Anchor = AnchorStyles.None;
+            picture_Main.Dock = DockStyle.Fill;
             picture_Main.Image = (Image)resources.GetObject("picture_Main.Image");
-            picture_Main.Location = new Point(6, -16);
+            picture_Main.Location = new Point(80, 80);
             picture_Main.Name = "picture_Main";
             picture_Main.Padding = new Padding(80);
-            picture_Main.Size = new Size(1120, 749);
+            picture_Main.Size = new Size(978, 573);
             picture_Main.SizeMode = PictureBoxSizeMode.Zoom;
             picture_Main.TabIndex = 36;
             picture_Main.TabStop = false;
