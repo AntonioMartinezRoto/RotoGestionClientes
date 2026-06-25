@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
 {
@@ -271,7 +272,7 @@ namespace RotoGestionClientes
                         AgujaBalconeraTipo =
                             cliente.ClienteAgujases != null
                                 ? cliente.ClienteAgujases.AgujaBalconeraTipoId
-                                : 1,
+                                : (int)AgujaMode.Todos,
 
                         AgujaBalconera =
                             cliente.ClienteAgujases != null
@@ -281,7 +282,7 @@ namespace RotoGestionClientes
                         AgujaPuertaSecTipo =
                             cliente.ClienteAgujases != null
                                 ? cliente.ClienteAgujases.AgujaPuertaSecTipoId
-                                : 1,
+                                : (int)AgujaMode.Todos,
 
                         AgujaPuertaSec =
                             cliente.ClienteAgujases != null
@@ -291,7 +292,7 @@ namespace RotoGestionClientes
                         AgujaPuertaTipo =
                             cliente.ClienteAgujases != null
                                 ? cliente.ClienteAgujases.AgujaPuertaTipoId
-                                : 1,
+                                : (int)AgujaMode.Todos,
 
                         AgujaPuerta =
                             cliente.ClienteAgujases != null

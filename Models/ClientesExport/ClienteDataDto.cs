@@ -69,13 +69,19 @@ namespace RotoGestionClientes
 
         public int? AgujaBalconera { get; set; }
 
+        public string? AgujaBalconeraNombre { get; set; }
+
         public int AgujaPuertaSecTipo { get; set; }
 
         public int? AgujaPuertaSec { get; set; }
 
+        public string? AgujaPuertaSecNombre { get; set; }
+
         public int AgujaPuertaTipo { get; set; }
 
         public int? AgujaPuerta { get; set; }
+
+        public string? AgujaPuertaNombre { get; set; }
 
         public bool PorteroElectrico { get; set; }
 

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 using System.Xml.Linq;
+using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
 {
@@ -88,7 +89,8 @@ namespace RotoGestionClientes
                                 .Select(x => new MaestroRefDto
                                 {
                                     Id = x.Perfil.Id,
-                                    Nombre = x.Perfil.Nombre
+                                    Nombre = x.Perfil.Nombre,
+                                    Tipo = x.Perfil.PerfilTipo.Nombre
                                 })
                                 .ToList(),
 
@@ -216,7 +218,7 @@ namespace RotoGestionClientes
                         AgujaBalconeraTipo =
                             cliente.ClienteAgujases != null
                                 ? cliente.ClienteAgujases.AgujaBalconeraTipoId
-                                : 1,
+                                : (int)AgujaMode.Todos,
 
                         AgujaBalconera =
                             cliente.ClienteAgujases != null
@@ -226,7 +228,7 @@ namespace RotoGestionClientes
                         AgujaPuertaSecTipo =
                             cliente.ClienteAgujases != null
                                 ? cliente.ClienteAgujases.AgujaPuertaSecTipoId
-                                : 1,
+                                : (int)AgujaMode.Todos,
 
                         AgujaPuertaSec =
                             cliente.ClienteAgujases != null
@@ -236,7 +238,7 @@ namespace RotoGestionClientes
                         AgujaPuertaTipo =
                             cliente.ClienteAgujases != null
                                 ? cliente.ClienteAgujases.AgujaPuertaTipoId
-                                : 1,
+                                : (int)AgujaMode.Todos,
 
                         AgujaPuerta =
                             cliente.ClienteAgujases != null
@@ -254,6 +256,34 @@ namespace RotoGestionClientes
                         MessageBoxIcon.Warning);
 
                     return;
+                }
+
+                // =========================================================
+                // AGUJAS NOMBRE
+                // =========================================================
+
+                if (cliente.AgujaBalconeraTipo == (int)AgujaMode.Todos && cliente.AgujaBalconera != null)
+                {
+                    cliente.AgujaBalconeraNombre = _context.Agujas
+                        .Where(x => x.Id == cliente.AgujaBalconera)
+                        .Select(x => x.Nombre)
+                        .FirstOrDefault();
+                }
+
+                if (cliente.AgujaPuertaSecTipo == (int)AgujaMode.Todos && cliente.AgujaPuertaSec != null)
+                {
+                    cliente.AgujaPuertaSecNombre = _context.Agujas
+                        .Where(x => x.Id == cliente.AgujaPuertaSec)
+                        .Select(x => x.Nombre)
+                        .FirstOrDefault();
+                }
+
+                if (cliente.AgujaPuertaTipo == (int)AgujaMode.Todos && cliente.AgujaPuerta != null)
+                {
+                    cliente.AgujaPuertaNombre = _context.Agujas
+                        .Where(x => x.Id == cliente.AgujaPuerta)
+                        .Select(x => x.Nombre)
+                        .FirstOrDefault();
                 }
 
                 // =========================================================
@@ -302,7 +332,7 @@ namespace RotoGestionClientes
                     new XAttribute("Nombre", cliente.Nombre),
                     new XAttribute("ElevableEstandar", _clienteDataConfig.Elevable_Estandar),
                     new XAttribute("ElevableDLO", _clienteDataConfig.Elevable_Dlo),
-                    CrearSeccion("Perfiles", "Perfil", _clienteDataConfig.Perfiles),
+                    CrearSeccionPerfiles("Perfiles", "Perfil", _clienteDataConfig.Perfiles),
                     CrearSeccion("TiposPerfil", "TipoPerfil", _clienteDataConfig.PerfilTipos),
                     CrearSeccion("SoporteCompas", "Soporte", _clienteDataConfig.SoporteCompas),
                     CrearSeccion("SeguridadVentana", "Seguridad", _clienteDataConfig.SeguridadVentanas),
@@ -313,14 +343,30 @@ namespace RotoGestionClientes
                     CrearSeccion("Manillas", "Manilla", _clienteDataConfig.Manillas),
                     CrearSeccion("BisagrasPuerta", "Bisagra", _clienteDataConfig.BisagrasPuerta),
                     CrearSeccion("BisagrasPuertaSec", "Bisagra", _clienteDataConfig.BisagrasPuertaSec),
-                    CrearSeccion("CerradurasPuerta", "Cerradura", _clienteDataConfig.BisagrasPuertaSec),
-                    CrearSeccion("CerradurasPuerta", "Cerradura", _clienteDataConfig.CerradurasPuertaSec),
-                    CrearSeccion("AgujasCorredera", "Aguja", _clienteDataConfig.AgujasCorredera)
+                    CrearSeccion("CerradurasPuerta", "Cerradura", _clienteDataConfig.CerradurasPuerta),
+                    CrearSeccion("CerradurasPuertaSec", "Cerradura", _clienteDataConfig.CerradurasPuertaSec),
+                    CrearSeccion("AgujasCorredera", "Aguja", _clienteDataConfig.AgujasCorredera),
+                    CrearSeccionAgujaBalconera("AgujaBalconera", "Aguja"),
+                    CrearSeccionAgujaPuertaSec("AgujaPuertaSec", "Aguja"),
+                    CrearSeccionAgujaPuerta("AgujaPuerta", "Aguja"),
+                    CrearSeccionAgujasModeloPerfil("AgujasModeloPerfil","Aguja", _clienteDataConfig.AgujasModeloPerfil)
                     )
                 )
             );
 
             return xml;
+        }
+
+        private object CrearSeccionAgujasModeloPerfil(string nombreNodo, string nombreElemento, List<AgujaModeloPerfilExportDto> agujasModeloPerfil)
+        {
+            return new XElement(nombreNodo,
+                agujasModeloPerfil
+                    .OrderBy(x => x.ModeloName)
+                    .Select(x =>
+                        new XElement(nombreElemento,
+                            new XAttribute("TipoModelo", x.ModeloName),
+                            new XAttribute("Perfil", x.PerfilNombre),
+                            new XAttribute("Nombre", x.AgujaNombre))));
         }
         private XElement CrearSeccion(string nombreNodo, string nombreElemento, List<MaestroRefDto> datos)
         {
@@ -332,6 +378,35 @@ namespace RotoGestionClientes
                             new XAttribute("Id", x.Id),
                             new XAttribute("Nombre", x.Nombre))));
         }
+        private XElement CrearSeccionPerfiles(string nombreNodo, string nombreElemento, List<MaestroRefDto> datos)
+        {
+            return new XElement(nombreNodo,
+                datos
+                    .OrderBy(x => x.Nombre)
+                    .Select(x =>
+                        new XElement(nombreElemento,
+                            new XAttribute("Id", x.Id),
+                            new XAttribute("Nombre", x.Nombre),
+                            new XAttribute("Tipo", x.Tipo))));
+        }
+        private XElement CrearSeccionAgujaBalconera(string nombreNodo, string nombreElemento)
+        {
+            return new XElement(nombreNodo,
+                new XElement(nombreElemento,
+                    new XAttribute("Nombre", _clienteDataConfig.AgujaBalconeraNombre != null ? _clienteDataConfig.AgujaBalconeraNombre : "")));
+        }
+        private XElement CrearSeccionAgujaPuerta(string nombreNodo, string nombreElemento)
+        {
+            return new XElement(nombreNodo,
+                new XElement(nombreElemento,
+                    new XAttribute("Nombre", _clienteDataConfig.AgujaPuertaNombre != null ? _clienteDataConfig.AgujaPuertaNombre : "")));
+        }
+        private XElement CrearSeccionAgujaPuertaSec(string nombreNodo, string nombreElemento)
+        {
+            return new XElement(nombreNodo,
+                new XElement(nombreElemento,
+                    new XAttribute("Nombre", _clienteDataConfig.AgujaPuertaSecNombre != null ? _clienteDataConfig.AgujaPuertaSecNombre : "")));
+        }
         #endregion
 
         #region Public methods
@@ -342,7 +417,7 @@ namespace RotoGestionClientes
 
             using var sfd = new SaveFileDialog();
 
-            sfd.Filter = "Roto Config (*.rotoconfig)|*.rotoconfig";
+            sfd.Filter = "Rotoconfig (*.rotoconfig)|*.rotoconfig";
 
             string? nombreCliente = _context.Clientes.Where(c => c.Id == _cliente.Id).Select(c => c.Nombre.Trim()).FirstOrDefault();
             sfd.FileName = $"{nombreCliente}.rotoconfig";
