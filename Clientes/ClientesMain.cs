@@ -89,6 +89,10 @@ namespace RotoGestionClientes
             {
                 ExportarCliente(cliente.Id);
             }
+            else if (dgvClientes.Columns[e.ColumnIndex].Name == "Config")
+            {
+                GenerateConfig(cliente.Id);
+            }
         }
         private void dgvClientes_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
@@ -204,6 +208,14 @@ namespace RotoGestionClientes
             });
             dgvClientes.Columns.Add(new DataGridViewImageColumn
             {
+                Name = "Config",
+                HeaderText = "",
+                Image = Properties.Resources.options,
+                Width = 25,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None
+            });
+            dgvClientes.Columns.Add(new DataGridViewImageColumn
+            {
                 Name = "Delete",
                 HeaderText = "",
                 Image = Properties.Resources.delete,
@@ -270,6 +282,11 @@ namespace RotoGestionClientes
         {
             var importService = new ClienteImportService(_context);
             importService.ImportarCliente();
+        }
+        private void GenerateConfig(int clienteId)
+        {
+            var exportConfig = new ClienteConfigService(_context, clienteId);
+            exportConfig.GenerarFicheroConfiguracion();
         }
         #endregion
     }
