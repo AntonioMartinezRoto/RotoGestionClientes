@@ -10,5 +10,6 @@ namespace RotoGestionClientes
         public string? Comentarios { get; set; }
         public string? ObservacionesVentanas{ get; set; }
         public string? ObservacionesBalconeras { get; set; }
+        public string? Responsable { get; set; }
     }
 }

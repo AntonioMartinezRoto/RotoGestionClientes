@@ -104,6 +104,7 @@ namespace RotoGestionClientes
                     Nombre = f.Nombre,
                     SapId = f.SapId,
                     Alias = f.Alias,
+                    Responsable = f.Responsable != null ? f.Responsable.Nombre : String.Empty,
                     Comentarios = f.Comentarios,
                     ObservacionesVentanas = f.ObservacionesVentanas,
                     ObservacionesBalconeras = f.ObservacionesBalconeras

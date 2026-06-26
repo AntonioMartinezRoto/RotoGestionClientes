@@ -203,9 +203,9 @@ namespace RotoGestionClientes
             });
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "Alias",
-                HeaderText = "Alias",
-                DataPropertyName = "Alias",
+                Name = "Responsable",
+                HeaderText = "Responsable",
+                DataPropertyName = "Responsable",
                 Width = 300,
             });
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
@@ -265,6 +265,7 @@ namespace RotoGestionClientes
                     Nombre = f.Nombre,
                     SapId = f.SapId,
                     Alias = f.Alias,
+                    Responsable = f.Responsable != null ? f.Responsable.Nombre : String.Empty,
                     Comentarios = f.Comentarios,
                     ObservacionesVentanas = f.ObservacionesVentanas,
                     ObservacionesBalconeras = f.ObservacionesBalconeras
