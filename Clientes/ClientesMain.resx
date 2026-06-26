@@ -121,7 +121,7 @@
   <data name="btn_AddCliente.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        5QAAAOUBj+WbPAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHYSURBVFhH7ZY7
+        4wAAAOMBD+bfpwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHYSURBVFhH7ZY7
         L0RBGIZXaBQIErUSnfgBKhEVifAj6N0ShU4tGuIS90RL4Tfo0KipUBAikbg+72a/ZDOZ2Z2zOyci8SZP
         smf2m/PNN/OemSn8VfXBPGyX0O9eyF1tcAhf8O2gtgNohVyk5FfgJna5hFwGocotyQ2MQ0uJMbgG+38P
         kkprbtOu5B3gqh30n2IUm9QTC2DVqfKQJsDi5tSQSltgL9aUh6S1t7hNNaRS7ABk1FwGUL4EMlxIk2Bx
@@ -150,7 +150,7 @@
   <data name="btn_ExporClientes.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        5wAAAOcB8BtYtQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHUSURBVFhH7dc/
+        5QAAAOUBj+WbPAAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAHUSURBVFhH7dc/
         SxxBHIfxE4mCoKVRCzGQwgimCvEl6AtQIWgMhhTJW0gaFeI7CLHRwsLGJiGFWmpAbNROiwQETZFgITbm
         n6jPs3ELj72du8scFvqFDziz48yuO/vbtXCbKtKHOezhF75jBc9Qj5rlDt7jDOclbOMeoqcOC3CRE7xF
         NxrRDq/+Czx+cNkXNU/h5Md4ZEdGmrEKx320I2Z24cRjSat0WuFJOvahHTFyH074A+Vssndw/OukFSED
@@ -164,7 +164,7 @@
   <data name="btn_Volver.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAA
-        6QAAAOkBVJIUSwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFHSURBVFhH7dYt
+        5wAAAOcB8BtYtQAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAFHSURBVFhH7dYt
         SwRRFMbxQfCliKbVDyAKIphN1sUgGEyC2A1iF4vBoMFiMVgEFywqBoOfwSiITQTRYlAWLb78H/DAMtzZ
         GbwzpzgP/Mph95wzOzt3N6lTJyd9aKGNBRU8o+Hn+P51CLekhz9iDC7R8DPY8CdMwiX/e3jnPf/EBhYj
         zGEKPcjNFmx42Z6xhxFkpsoFzCsyz5IqbsEKdnEP6/uFZQSTXkLP/gRio76b0EWp7wemEUxVSyirsL5X

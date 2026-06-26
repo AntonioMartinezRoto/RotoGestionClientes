@@ -66,6 +66,7 @@
             dgvClientes.TabIndex = 1;
             dgvClientes.CellClick += dgvClientes_CellClick;
             dgvClientes.CellDoubleClick += dgvClientes_CellDoubleClick;
+            dgvClientes.CellToolTipTextNeeded += dgvClientes_CellToolTipTextNeeded;
             // 
             // lbl_Filtro
             // 

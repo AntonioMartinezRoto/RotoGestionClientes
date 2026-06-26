@@ -135,6 +135,39 @@ namespace RotoGestionClientes
         {
             Close();
         }
+        private void dgvClientes_CellToolTipTextNeeded(object sender, DataGridViewCellToolTipTextNeededEventArgs e)
+        {
+            // Validar que no sea el encabezado de la fila o columna (-1)
+            if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
+            {
+                // Obtener el nombre de la columna actual
+                string columnName = dgvClientes.Columns[e.ColumnIndex].Name;
+
+                // Asignar el texto según la columna de tipo imagen
+                switch (columnName)
+                {
+                    case "View":
+                        e.ToolTipText = "Ver resumen";
+                        break;
+                    case "Edit":
+                        e.ToolTipText = "Editar información";
+                        break;
+                    case "Export":
+                        e.ToolTipText = "Exportar";
+                        break;
+                    case "Config":
+                        e.ToolTipText = "Crear fichero configurador";
+                        break;
+                    case "Delete":
+                        e.ToolTipText = "Eliminar";
+                        break;
+                    default:
+                        // resto de las celdas de texto muestren su propio contenido como tooltip
+                        e.ToolTipText = dgvClientes.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString();
+                        break;
+                }
+            }
+        }
         #endregion
 
         #region Private methods
@@ -289,5 +322,7 @@ namespace RotoGestionClientes
             exportConfig.GenerarFicheroConfiguracion();
         }
         #endregion
+
+
     }
 }
