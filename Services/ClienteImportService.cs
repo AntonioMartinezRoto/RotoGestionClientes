@@ -30,8 +30,8 @@ namespace RotoGestionClientes.Services
             if (dto?.Cliente == null)
             {
                 MessageBox.Show(
-                    "El fichero no es válido.",
-                    "Importar cliente",
+                    Lang.ArchivoNoValido,
+                    Lang.ImportarCliente,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
 
@@ -495,8 +495,8 @@ namespace RotoGestionClientes.Services
                 Cursor.Current = Cursors.Default;
 
                 MessageBox.Show(
-                    "Cliente importado correctamente.",
-                    "Importar cliente",
+                    Lang.ClienteImportado,
+                    Lang.ImportarCliente,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
@@ -506,8 +506,8 @@ namespace RotoGestionClientes.Services
                 transaction.Rollback();
 
                 MessageBox.Show(
-                    $"Error al importar cliente:\n\n{ex.Message}",
-                    "Importar cliente",
+                    $"{Lang.ErrorAlImportar}\n\n{ex.Message}",
+                    Lang.ImportarCliente,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -562,8 +562,8 @@ namespace RotoGestionClientes.Services
             if (contador > 0)
             {
                 MessageBox.Show(
-                    $"Ya existe un cliente con ese nombre o variantes. Se importará como:\n\n\"{nombreFinal}\"",
-                    "Validación de Nombre",
+                    $"{Lang.ClienteExistente}\n\n\"{nombreFinal}\"",
+                    Lang.ImportarCliente,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
             }

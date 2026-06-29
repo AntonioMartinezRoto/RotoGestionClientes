@@ -95,7 +95,7 @@
             lbl_Filtro.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbl_Filtro.AutoSize = true;
             lbl_Filtro.BackColor = Color.Transparent;
-            lbl_Filtro.Location = new Point(473, 54);
+            lbl_Filtro.Location = new Point(456, 54);
             lbl_Filtro.Name = "lbl_Filtro";
             lbl_Filtro.Size = new Size(52, 20);
             lbl_Filtro.TabIndex = 31;
@@ -125,11 +125,11 @@
             // lblSeleccionados
             // 
             lblSeleccionados.AutoSize = true;
-            lblSeleccionados.Location = new Point(217, 50);
+            lblSeleccionados.Location = new Point(217, 51);
             lblSeleccionados.Name = "lblSeleccionados";
-            lblSeleccionados.Size = new Size(125, 20);
+            lblSeleccionados.Size = new Size(119, 20);
             lblSeleccionados.TabIndex = 33;
-            lblSeleccionados.Text = "Sseleccionados: 0";
+            lblSeleccionados.Text = "Seleccionados: 0";
             // 
             // ClienteExportacion
             // 

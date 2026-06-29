@@ -73,7 +73,7 @@
             lbl_Filtro.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lbl_Filtro.AutoSize = true;
             lbl_Filtro.BackColor = Color.Transparent;
-            lbl_Filtro.Location = new Point(1121, 115);
+            lbl_Filtro.Location = new Point(1095, 115);
             lbl_Filtro.Name = "lbl_Filtro";
             lbl_Filtro.Size = new Size(52, 20);
             lbl_Filtro.TabIndex = 29;

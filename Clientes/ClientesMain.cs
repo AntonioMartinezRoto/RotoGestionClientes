@@ -1,13 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using RotoGestionClientes.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using RotoGestionClientes.Services;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
@@ -43,6 +35,7 @@ namespace RotoGestionClientes
         private void ClientesMain_Load(object sender, EventArgs e)
         {
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
+            CargarTextos();
             ApplyFilter();
         }
         private void txt_Filtro_TextChanged(object sender, EventArgs e)
@@ -147,19 +140,19 @@ namespace RotoGestionClientes
                 switch (columnName)
                 {
                     case "View":
-                        e.ToolTipText = "Ver resumen";
+                        e.ToolTipText = Lang.VerResumen;
                         break;
                     case "Edit":
-                        e.ToolTipText = "Editar información";
+                        e.ToolTipText = Lang.Editar;
                         break;
                     case "Export":
-                        e.ToolTipText = "Exportar";
+                        e.ToolTipText = Lang.Exportar;
                         break;
                     case "Config":
-                        e.ToolTipText = "Crear fichero configurador";
+                        e.ToolTipText = Lang.CrearConfigurador;
                         break;
                     case "Delete":
-                        e.ToolTipText = "Eliminar";
+                        e.ToolTipText = Lang.Eliminar;
                         break;
                     default:
                         // resto de las celdas de texto muestren su propio contenido como tooltip
@@ -171,6 +164,15 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            btn_AddCliente.Text = Lang.NuevoCliente;
+            btn_ImportCliente.Text = Lang.ImportarCliente;
+            btn_ExporClientes.Text = Lang.ExportarClientes;
+            btn_Volver.Text = Lang.VolverMenu;
+            lbl_Filtro.Text = Lang.Buscar;
+            lbl_Total.Text = Lang.Total;
+        }
         private bool ColumnaResponsableVisible()
         {
             var config = _context.ConfiguracionAplicacion.FirstOrDefault();
@@ -206,21 +208,21 @@ namespace RotoGestionClientes
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "SapId",
-                HeaderText = "SAP Id",
+                HeaderText = Lang.SapId,
                 DataPropertyName = "SapId",
                 Width = 100
             });
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Nombre",
-                HeaderText = "Nombre",
+                HeaderText = Lang.Nombre,
                 DataPropertyName = "Nombre",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Responsable",
-                HeaderText = "Responsable",
+                HeaderText = Lang.Responsable,
                 DataPropertyName = "Responsable",
                 Width = 300,
                 Visible = ColumnaResponsableVisible()
@@ -228,7 +230,7 @@ namespace RotoGestionClientes
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Comentarios",
-                HeaderText = "Comentarios",
+                HeaderText = Lang.Comentarios,
                 DataPropertyName = "Comentarios",
                 Width = 300,
             });
@@ -298,7 +300,7 @@ namespace RotoGestionClientes
 
             if (string.IsNullOrWhiteSpace(filter))
             {
-                lbl_Total.Text = "Total: " + _allClientes.Count().ToString();
+                lbl_Total.Text = Lang.Total + " " + _allClientes.Count().ToString();
                 dgvClientes.DataSource = _allClientes;
                 return;
             }
@@ -310,12 +312,12 @@ namespace RotoGestionClientes
                 )
                 .ToList();
 
-            lbl_Total.Text = "Total: " + filtered.Count().ToString();
+            lbl_Total.Text = Lang.Total + " " + filtered.Count().ToString();
             dgvClientes.DataSource = filtered;
         }
         private void DeleteCliente(ClienteGridItem cliente)
         {
-            if (MessageBox.Show("Se eliminará al cliente y todos los datos relacionado con él." + Environment.NewLine + "¿Está seguro que desea eliminar el cliente " + cliente.Nombre + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show(Lang.EliminarCliente + Environment.NewLine + Lang.ConfirmarEliminar + cliente.Nombre + "?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 Cliente clienteBD = _context.Clientes
                       .First(c => c.Id == cliente.Id);

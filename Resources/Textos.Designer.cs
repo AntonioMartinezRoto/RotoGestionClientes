@@ -70,11 +70,92 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a El fichero no es válido..
+        /// </summary>
+        internal static string ArchivoNoValido {
+            get {
+                return ResourceManager.GetString("ArchivoNoValido", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Buscar.
+        /// </summary>
+        internal static string Buscar {
+            get {
+                return ResourceManager.GetString("Buscar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ya existe un cliente con ese nombre o variantes. Se importará como: .
+        /// </summary>
+        internal static string ClienteExistente {
+            get {
+                return ResourceManager.GetString("ClienteExistente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cliente exportado correctamente..
+        /// </summary>
+        internal static string ClienteExportado {
+            get {
+                return ResourceManager.GetString("ClienteExportado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cliente importado correctamente..
+        /// </summary>
+        internal static string ClienteImportado {
+            get {
+                return ResourceManager.GetString("ClienteImportado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a No se ha encontrado el cliente..
+        /// </summary>
+        internal static string ClienteNoEncontrado {
+            get {
+                return ResourceManager.GetString("ClienteNoEncontrado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Clientes.
         /// </summary>
         internal static string Clientes {
             get {
                 return ResourceManager.GetString("Clientes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a clientes.
+        /// </summary>
+        internal static string ClientesMinuscula {
+            get {
+                return ResourceManager.GetString("ClientesMinuscula", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Comentarios.
+        /// </summary>
+        internal static string Comentarios {
+            get {
+                return ResourceManager.GetString("Comentarios", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a ¿Está seguro que desea eliminar el cliente .
+        /// </summary>
+        internal static string ConfirmarEliminarCliente {
+            get {
+                return ResourceManager.GetString("ConfirmarEliminarCliente", resourceCulture);
             }
         }
         
@@ -88,11 +169,92 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Crear fichero configurador.
+        /// </summary>
+        internal static string CrearConfig {
+            get {
+                return ResourceManager.GetString("CrearConfig", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Editar.
+        /// </summary>
+        internal static string Editar {
+            get {
+                return ResourceManager.GetString("Editar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Eliminar.
+        /// </summary>
+        internal static string Eliminar {
+            get {
+                return ResourceManager.GetString("Eliminar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se eliminará al cliente y todos los datos relacionado con él..
+        /// </summary>
+        internal static string EliminarCliente {
+            get {
+                return ResourceManager.GetString("EliminarCliente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Error al exportar.
+        /// </summary>
+        internal static string ErrorAlExportar {
+            get {
+                return ResourceManager.GetString("ErrorAlExportar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Error al importar cliente:.
+        /// </summary>
+        internal static string ErrorAlImportar {
+            get {
+                return ResourceManager.GetString("ErrorAlImportar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Exportar.
+        /// </summary>
+        internal static string Exportar {
+            get {
+                return ResourceManager.GetString("Exportar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Exportar clientes.
+        /// </summary>
+        internal static string ExportarClientes {
+            get {
+                return ResourceManager.GetString("ExportarClientes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Guardar.
         /// </summary>
         internal static string Guardar {
             get {
                 return ResourceManager.GetString("Guardar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Importar cliente.
+        /// </summary>
+        internal static string ImportarCliente {
+            get {
+                return ResourceManager.GetString("ImportarCliente", resourceCulture);
             }
         }
         
@@ -124,6 +286,33 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Nombre.
+        /// </summary>
+        internal static string Nombre {
+            get {
+                return ResourceManager.GetString("Nombre", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Nuevo cliente.
+        /// </summary>
+        internal static string NuevoCliente {
+            get {
+                return ResourceManager.GetString("NuevoCliente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Responsable.
+        /// </summary>
+        internal static string Responsable {
+            get {
+                return ResourceManager.GetString("Responsable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Salir.
         /// </summary>
         internal static string Salir {
@@ -133,11 +322,92 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a SapId.
+        /// </summary>
+        internal static string SapId {
+            get {
+                return ResourceManager.GetString("SapId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Se han exportado .
+        /// </summary>
+        internal static string SeHanExportado {
+            get {
+                return ResourceManager.GetString("SeHanExportado", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccionados.
+        /// </summary>
+        internal static string Seleccionados {
+            get {
+                return ResourceManager.GetString("Seleccionados", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccionar clientes para exportar.
+        /// </summary>
+        internal static string SeleccionarClientes {
+            get {
+                return ResourceManager.GetString("SeleccionarClientes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccionar todos.
+        /// </summary>
+        internal static string SeleccionarTodos {
+            get {
+                return ResourceManager.GetString("SeleccionarTodos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccione al menos un cliente..
+        /// </summary>
+        internal static string SeleccioneUnCliente {
+            get {
+                return ResourceManager.GetString("SeleccioneUnCliente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Total: .
+        /// </summary>
+        internal static string Total {
+            get {
+                return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ver resumen.
+        /// </summary>
+        internal static string VerResumen {
+            get {
+                return ResourceManager.GetString("VerResumen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Versión de los datos:.
         /// </summary>
         internal static string Version_datos {
             get {
                 return ResourceManager.GetString("Version_datos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Volver al menú principal.
+        /// </summary>
+        internal static string VolverMenu {
+            get {
+                return ResourceManager.GetString("VolverMenu", resourceCulture);
             }
         }
     }

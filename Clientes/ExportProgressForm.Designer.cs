@@ -41,9 +41,9 @@
             lblTitulo.AutoSize = true;
             lblTitulo.Location = new Point(50, 56);
             lblTitulo.Name = "lblTitulo";
-            lblTitulo.Size = new Size(102, 20);
+            lblTitulo.Size = new Size(58, 20);
             lblTitulo.TabIndex = 0;
-            lblTitulo.Text = "Cliente actual:";
+            lblTitulo.Text = "Cliente:";
             // 
             // lblCliente
             // 

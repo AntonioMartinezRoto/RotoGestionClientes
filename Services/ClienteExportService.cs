@@ -304,8 +304,8 @@ namespace RotoGestionClientes
                 if (cliente == null)
                 {
                     MessageBox.Show(
-                        "No se ha encontrado el cliente.",
-                        "Exportar cliente",
+                        Lang.ClienteNoEncontrado,
+                        Lang.Exportar,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
 
@@ -413,16 +413,16 @@ namespace RotoGestionClientes
                     json);
 
                 MessageBox.Show(
-                    "Cliente exportado correctamente.",
-                    "Exportar cliente",
+                    Lang.ClienteExportado,
+                    Lang.Exportar,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Error al exportar:\n\n{ex.Message}",
-                    "Exportar cliente",
+                    $"{Lang.ErrorAlExportar}:\n\n{ex.Message}",
+                    Lang.Exportar,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
@@ -714,8 +714,8 @@ namespace RotoGestionClientes
                 if (cliente == null)
                 {
                     MessageBox.Show(
-                        "No se ha encontrado el cliente.",
-                        "Exportar cliente",
+                        Lang.ClienteNoEncontrado,
+                        Lang.Exportar,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
 
@@ -825,8 +825,8 @@ namespace RotoGestionClientes
             catch (Exception ex)
             {
                 MessageBox.Show(
-                    $"Error al exportar:\n\n{ex.Message}",
-                    "Exportar cliente",
+                    $"{Lang.ErrorAlExportar}:\n\n{ex.Message}",
+                    Lang.Exportar,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }

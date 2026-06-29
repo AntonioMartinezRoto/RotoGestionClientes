@@ -1,12 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 
 namespace RotoGestionClientes
 {
@@ -39,6 +32,7 @@ namespace RotoGestionClientes
         {
             CrearGrid();
             LoadClientes();
+            CargarTextos();
         }
         private async void btn_Aceptar_Click(object sender, EventArgs e)
         {
@@ -52,14 +46,12 @@ namespace RotoGestionClientes
             if (!seleccionados.Any())
             {
                 MessageBox.Show(
-                    "Seleccione al menos un cliente.");
+                    Lang.SeleccioneUnCliente);
 
                 return;
             }
 
             using var folderDialog = new FolderBrowserDialog();
-
-            folderDialog.Description = "Seleccione carpeta destino";
 
             if (folderDialog.ShowDialog() != DialogResult.OK)
                 return;
@@ -88,8 +80,8 @@ namespace RotoGestionClientes
                 progressForm.Close();
 
                 MessageBox.Show(
-                    $"Se han exportado {seleccionados.Count} clientes.",
-                    "Exportación",
+                    $"{Lang.SeHanExportado} {seleccionados.Count} {Lang.ClientesMinuscula}",
+                    Lang.Exportar,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
             }
@@ -157,6 +149,14 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            chkSeleccionarTodos.Text = Lang.SeleccionarTodos;
+            lblSeleccionados.Text = $"{Lang.Seleccionados}: 0";
+            lbl_Filtro.Text = Lang.Buscar;
+            group_Clientes.Text = Lang.SeleccionarClientes;
+            btn_Aceptar.Text = Lang.Exportar;
+        }
         private void CrearGrid()
         {
             dgvClientes.AutoGenerateColumns = false;
@@ -219,7 +219,7 @@ namespace RotoGestionClientes
         {
             int seleccionados = _clientes.Count(x => x.Seleccionado);
 
-            lblSeleccionados.Text = $"Seleccionados: {seleccionados}";
+            lblSeleccionados.Text = $"{Lang.Seleccionados}: {seleccionados}";
         }
         private void ActualizarCheckSeleccionarTodos()
         {
