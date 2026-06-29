@@ -32,7 +32,7 @@
             btn_Clientes = new Button();
             btn_Mantenimiento = new Button();
             panel_Header = new Panel();
-            label1 = new Label();
+            lbl_MenuPrincipal = new Label();
             panel_Sidebar = new Panel();
             flowLayoutPanel_Sidebar = new FlowLayoutPanel();
             btn_Informes = new Button();
@@ -43,8 +43,9 @@
             pictureBox1 = new PictureBox();
             panel_Inferior = new Panel();
             statusStrip1 = new StatusStrip();
-            toolStripStatusLabel_dataVersion = new ToolStripStatusLabel();
+            toolStripStatusLabel_label = new ToolStripStatusLabel();
             panel_Central = new Panel();
+            toolStripStatusLabel_Version = new ToolStripStatusLabel();
             panel_Header.SuspendLayout();
             panel_Sidebar.SuspendLayout();
             flowLayoutPanel_Sidebar.SuspendLayout();
@@ -88,7 +89,7 @@
             // panel_Header
             // 
             panel_Header.BackColor = Color.White;
-            panel_Header.Controls.Add(label1);
+            panel_Header.Controls.Add(lbl_MenuPrincipal);
             panel_Header.Dock = DockStyle.Top;
             panel_Header.Location = new Point(0, 0);
             panel_Header.Margin = new Padding(3, 4, 3, 4);
@@ -96,15 +97,15 @@
             panel_Header.Size = new Size(1424, 80);
             panel_Header.TabIndex = 34;
             // 
-            // label1
+            // lbl_MenuPrincipal
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label1.Location = new Point(29, 25);
-            label1.Name = "label1";
-            label1.Size = new Size(188, 32);
-            label1.TabIndex = 0;
-            label1.Text = "Menú principal";
+            lbl_MenuPrincipal.AutoSize = true;
+            lbl_MenuPrincipal.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lbl_MenuPrincipal.Location = new Point(29, 25);
+            lbl_MenuPrincipal.Name = "lbl_MenuPrincipal";
+            lbl_MenuPrincipal.Size = new Size(188, 32);
+            lbl_MenuPrincipal.TabIndex = 0;
+            lbl_MenuPrincipal.Text = "Menú principal";
             // 
             // panel_Sidebar
             // 
@@ -236,7 +237,7 @@
             // 
             statusStrip1.BackColor = Color.Transparent;
             statusStrip1.ImageScalingSize = new Size(20, 20);
-            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel_dataVersion });
+            statusStrip1.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel_label, toolStripStatusLabel_Version });
             statusStrip1.Location = new Point(0, 193);
             statusStrip1.Name = "statusStrip1";
             statusStrip1.Size = new Size(1138, 26);
@@ -244,11 +245,11 @@
             statusStrip1.TabIndex = 38;
             statusStrip1.Text = "statusStrip1";
             // 
-            // toolStripStatusLabel_dataVersion
+            // toolStripStatusLabel_label
             // 
-            toolStripStatusLabel_dataVersion.Name = "toolStripStatusLabel_dataVersion";
-            toolStripStatusLabel_dataVersion.Size = new Size(151, 20);
-            toolStripStatusLabel_dataVersion.Text = "toolStripStatusLabel1";
+            toolStripStatusLabel_label.Name = "toolStripStatusLabel_label";
+            toolStripStatusLabel_label.Size = new Size(151, 20);
+            toolStripStatusLabel_label.Text = "toolStripStatusLabel1";
             // 
             // panel_Central
             // 
@@ -259,6 +260,12 @@
             panel_Central.Padding = new Padding(80);
             panel_Central.Size = new Size(1138, 733);
             panel_Central.TabIndex = 39;
+            // 
+            // toolStripStatusLabel_Version
+            // 
+            toolStripStatusLabel_Version.Name = "toolStripStatusLabel_Version";
+            toolStripStatusLabel_Version.Size = new Size(151, 20);
+            toolStripStatusLabel_Version.Text = "toolStripStatusLabel1";
             // 
             // Main
             // 
@@ -300,7 +307,7 @@
         private Button btn_Clientes;
         private Button btn_Mantenimiento;
         private Panel panel_Header;
-        private Label label1;
+        private Label lbl_MenuPrincipal;
         private Panel panel_Sidebar;
         private FlowLayoutPanel flowLayoutPanel_Sidebar;
         private Button btn_Informes;
@@ -311,7 +318,8 @@
         private Button btn_Salir;
         private Button btn_UpdateRotoData;
         private StatusStrip statusStrip1;
-        private ToolStripStatusLabel toolStripStatusLabel_dataVersion;
+        private ToolStripStatusLabel toolStripStatusLabel_label;
         private Button btn_GenerarActualizacion;
+        private ToolStripStatusLabel toolStripStatusLabel_Version;
     }
 }

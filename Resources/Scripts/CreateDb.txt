@@ -19,7 +19,7 @@ VALUES
 (8, 'Ignacio', 1, 1),
 (9, 'AluYPvc', 1, 1),
 (10, 'Comalfer', 1, 1),
-(11, 'Sumpay', 1, 1),
+(11, 'Sumpai', 1, 1),
 (12, 'Fernasol', 1, 1),
 (13, 'Mapeal', 1, 1),
 (14, 'Centro del Accesorio', 1, 1);
@@ -1146,10 +1146,10 @@ CREATE TABLE dbo.ConfiguracionAplicacion
     VersionMaestros NVARCHAR(10) NOT NULL,
 	AppEdition NVARCHAR(50) NOT NULL,
 	DistribuidorId INT NULL,
-	
+	Idioma NVARCHAR(10) NOT NULL
 );
 
 INSERT INTO dbo.ConfiguracionAplicacion
-VALUES (1, '1.0', 'Internal', NULL);
+VALUES (1, '1.0', 'Internal', NULL, 'ES');
 
 

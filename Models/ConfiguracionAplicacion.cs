@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace RotoGestionClientes
 {
@@ -20,5 +17,8 @@ namespace RotoGestionClientes
         public string AppEdition { get; set; } = "Internal";
 
         public int? DistribuidorId { get; set; }
+
+        [Required]
+        public string Idioma { get; set; } = "ES";
     }
 }

@@ -814,9 +814,14 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.VersionMaestros)
                     .IsRequired();
+
                 entity.Property(e => e.AppEdition)
                     .IsRequired();
+
                 entity.Property(e => e.DistribuidorId);
+
+                entity.Property(e => e.Idioma)
+                    .IsRequired();
             });
             modelBuilder.Entity<Usuario>(entity =>
             {

@@ -33,7 +33,9 @@ namespace RotoGestionClientes
             SetVisibilidadModoAplicacion();
             SetVersionDatosInfo();
             LoadClientesFromDB();
+            CargarTextos();
         }
+
         private void btn_Clientes_Click(object sender, EventArgs e)
         {
             ClientesMain clientesMainForm = new(_allClientes, _context);
@@ -67,10 +69,22 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+
+        private void CargarTextos()
+        {
+            btn_Clientes.Text = Lang.Clientes;
+            btn_Mantenimiento.Text = Lang.Mantenimiento;
+            btn_Informes.Text = Lang.Informes;
+            btn_GenerarActualizacion.Text = Lang.CrearActualizacion;
+            btn_UpdateRotoData.Text = Lang.ActualizarDatos;
+            toolStripStatusLabel_label.Text = Lang.VersionDatos;
+            btn_Salir.Text = Lang.Salir;
+            lbl_MenuPrincipal.Text = Lang.MenuPrincipal;
+        }
         private void SetVersionDatosInfo()
         {
             var versionLocal = _context.ConfiguracionAplicacion.First().VersionMaestros;
-            toolStripStatusLabel_dataVersion.Text = $"Versión de los datos: {versionLocal}";
+            toolStripStatusLabel_Version.Text = versionLocal;
         }
         private void SetVisibilidadModoAplicacion()
         {

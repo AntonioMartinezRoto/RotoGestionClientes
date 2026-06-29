@@ -26,6 +26,19 @@ namespace RotoGestionClientes
 
             AppServices = services.BuildServiceProvider();
 
+            using var scope = AppServices.CreateScope();
+
+            var context =
+                scope.ServiceProvider
+                     .GetRequiredService<ApplicationDbContext>();
+
+            var idioma = context.ConfiguracionAplicacion
+                                .AsNoTracking()
+                                .Select(x => x.Idioma)
+                                .FirstOrDefault() ?? "ES";
+
+            LanguageService.SetLanguage(idioma);
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
