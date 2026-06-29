@@ -1,19 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using NPOI.OpenXmlFormats.Spreadsheet;
 using NPOI.SS;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
 using NPOI.XSSF.UserModel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using static RotoGestionClientes.Enums;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace RotoGestionClientes
 {
@@ -25,14 +17,12 @@ namespace RotoGestionClientes
         private readonly Dictionary<InformeFiltroTipo, List<int>> _filtrosSeleccionados = new();
         private List<ClienteInformeItem> _resultadoActual = new();
         private readonly BindingSource _bindingResultados = new();
-        private readonly ApplicationInfo _applicationInfo;
         #endregion
 
         #region Constructors
         public InformesMain(ApplicationDbContext context)
         {
             InitializeComponent();
-            _applicationInfo = Program.AppServices.GetRequiredService<ApplicationInfo>();
             _context = context;
         }
 
@@ -605,13 +595,29 @@ namespace RotoGestionClientes
         }
         private void SetVisibilidadModoAplicacion()
         {
-            if (_applicationInfo.IsDistributor)
+            var config = _context.ConfiguracionAplicacion.FirstOrDefault();
+
+            // Si no hay configuración se dejarán por defecto
+            if (config == null) return;
+
+            // Intentamos parsear el string de la BBDD al Enum para trabajar de forma segura
+            if (Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
             {
-                btn_Responsables.Visible = false;
-            }
-            else if (_applicationInfo.IsInternal || _applicationInfo.IsDebug)
-            {
-                btn_Responsables.Visible = true;
+                switch (edition)
+                {
+                    case ApplicationEdition.Distributor:
+                        btn_Responsables.Visible = false;
+                        break;
+                    case ApplicationEdition.Internal:
+                        btn_Responsables.Visible = true;
+                        break;
+                    case ApplicationEdition.Debug:
+                        btn_Responsables.Visible = true;
+                        break;
+                    default:
+                        btn_Responsables.Visible = true;
+                        break;
+                }
             }
         }
 

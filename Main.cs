@@ -2,13 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using System.Text.Json;
+using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
 {
     public partial class Main : Form
     {
         #region Private properties
-        private readonly ApplicationInfo _applicationInfo;
         private readonly ApplicationDbContext _context;
         private List<ClienteGridItem> _allClientes = new();
         #endregion
@@ -19,7 +19,6 @@ namespace RotoGestionClientes
         {
             InitializeComponent();
             _context = Program.AppServices.GetRequiredService<ApplicationDbContext>();
-            _applicationInfo = Program.AppServices.GetRequiredService<ApplicationInfo>();
         }
 
         #endregion
@@ -28,35 +27,13 @@ namespace RotoGestionClientes
 
         private void Main_Load(object sender, EventArgs e)
         {
-            this.Text = $"v{_applicationInfo.Version}";
+            var version = Assembly.GetExecutingAssembly().GetName().Version;
+            this.Text = $"v{version?.Major}.{version?.Minor}.{version?.Build}";
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
             SetVisibilidadModoAplicacion();
             SetVersionDatosInfo();
             LoadClientesFromDB();
         }
-
-        private void SetVisibilidadModoAplicacion()
-        {
-            if (_applicationInfo.IsDistributor)
-            {
-                btn_Mantenimiento.Visible = false;
-                btn_GenerarActualizacion.Visible = false;
-            }
-            else if (_applicationInfo.IsInternal)
-            {
-                btn_Mantenimiento.Visible = true;
-                btn_GenerarActualizacion.Visible = true;
-
-                btn_UpdateRotoData.Visible = false;
-            }
-            else if (_applicationInfo.IsDebug)
-            {
-                btn_Mantenimiento.Visible = true;
-                btn_GenerarActualizacion.Visible = true;
-                btn_UpdateRotoData.Visible = true;
-            }
-        }
-
         private void btn_Clientes_Click(object sender, EventArgs e)
         {
             ClientesMain clientesMainForm = new(_allClientes, _context);
@@ -94,6 +71,41 @@ namespace RotoGestionClientes
         {
             var versionLocal = _context.ConfiguracionAplicacion.First().VersionMaestros;
             toolStripStatusLabel_dataVersion.Text = $"Versión de los datos: {versionLocal}";
+        }
+        private void SetVisibilidadModoAplicacion()
+        {
+            var config = _context.ConfiguracionAplicacion.FirstOrDefault();
+
+            // Si no hay configuración se dejarán por defecto
+            if (config == null) return;
+
+            // Intentamos parsear el string de la BBDD al Enum para trabajar de forma segura
+            if (Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+            {
+                switch (edition)
+                {
+                    case ApplicationEdition.Distributor:
+                        btn_Mantenimiento.Visible = false;
+                        btn_GenerarActualizacion.Visible = false;
+                        btn_UpdateRotoData.Visible = true;
+                        break;
+                    case ApplicationEdition.Internal:
+                        btn_Mantenimiento.Visible = true;
+                        btn_GenerarActualizacion.Visible = true;
+                        btn_UpdateRotoData.Visible = false;
+                        break;
+                    case ApplicationEdition.Debug:
+                        btn_Mantenimiento.Visible = true;
+                        btn_GenerarActualizacion.Visible = true;
+                        btn_UpdateRotoData.Visible = true;
+                        break;
+                    default:
+                        btn_Mantenimiento.Visible = true;
+                        btn_GenerarActualizacion.Visible = true;
+                        btn_UpdateRotoData.Visible = true;
+                        break;
+                }                
+            }
         }
         private void LoadClientesFromDB()
         {

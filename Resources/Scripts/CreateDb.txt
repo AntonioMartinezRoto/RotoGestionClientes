@@ -1144,10 +1144,12 @@ CREATE TABLE dbo.ConfiguracionAplicacion
 (
     Id INT NOT NULL PRIMARY KEY,
     VersionMaestros NVARCHAR(10) NOT NULL,
+	AppEdition NVARCHAR(50) NOT NULL,
+	DistribuidorId INT NULL,
 	
 );
 
 INSERT INTO dbo.ConfiguracionAplicacion
-VALUES (1,'1.0');
+VALUES (1, '1.0', 'Internal', NULL);
 
 

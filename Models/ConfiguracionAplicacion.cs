@@ -15,5 +15,10 @@ namespace RotoGestionClientes
 
         [Required]
         public string VersionMaestros { get; set; } = "1.0";
+
+        [Required]
+        public string AppEdition { get; set; } = "Internal";
+
+        public int? DistribuidorId { get; set; }
     }
 }

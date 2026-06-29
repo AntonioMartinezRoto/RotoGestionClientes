@@ -171,8 +171,24 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private bool ColumnaResponsableVisible()
+        {
+            var config = _context.ConfiguracionAplicacion.FirstOrDefault();
+
+            // Si no hay configuración se dejarán por defecto
+            if (config == null) return true;
+
+            // Intentamos parsear el string de la BBDD al Enum para trabajar de forma segura
+            if (Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+            {
+                return edition != ApplicationEdition.Distributor;
+            }
+
+            return true;
+        }
         private void ConfigureGrid()
         {
+
             dgvClientes.AutoGenerateColumns = false;
             dgvClientes.AllowUserToAddRows = false;
             dgvClientes.ReadOnly = true;
@@ -207,6 +223,7 @@ namespace RotoGestionClientes
                 HeaderText = "Responsable",
                 DataPropertyName = "Responsable",
                 Width = 300,
+                Visible = ColumnaResponsableVisible()
             });
             dgvClientes.Columns.Add(new DataGridViewTextBoxColumn
             {

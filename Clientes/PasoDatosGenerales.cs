@@ -1,13 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
 {
@@ -19,10 +12,6 @@ namespace RotoGestionClientes
         private ApplicationDbContext _context;
         private BindingSource _bindingSourcePerfilTipo = new BindingSource();
         private BindingSource _bindingSourceManillas = new BindingSource();
-        private BindingSource _bindingSourceSoporteCompas = new BindingSource();
-        private BindingSource _bindingSourcePerfil = new BindingSource();
-        private readonly ApplicationInfo _applicationInfo;
-
         #endregion
 
         #region Constructors
@@ -31,7 +20,6 @@ namespace RotoGestionClientes
             InitializeComponent();
             _model = model;
             _context = context;
-            _applicationInfo = Program.AppServices.GetRequiredService<ApplicationInfo>();
         }
 
         #endregion
@@ -177,20 +165,19 @@ namespace RotoGestionClientes
         #region Private methods
         private void SetVisibilidadModoAplicacion()
         {
-            if (_applicationInfo.IsDistributor)
+            var config = _context.ConfiguracionAplicacion.FirstOrDefault();
+
+            // Si no hay configuración se dejarán por defecto
+            if (config == null) return;
+
+            // Intentamos parsear el string de la BBDD al Enum para trabajar de forma segura
+            if (Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
             {
-                lbl_Responsable.Visible = false;
-                cmb_Responsable.Visible = false;
-            }
-            else if (_applicationInfo.IsInternal)
-            {
-                lbl_Responsable.Visible = true;
-                cmb_Responsable.Visible = true;
-            }
-            else if (_applicationInfo.IsDebug)
-            {
-                lbl_Responsable.Visible = true; 
-                cmb_Responsable.Visible = true;
+                // El bloque es visible SIEMPRE QUE NO SEA Distributor (es decir, Internal o Debug)
+                bool esVisible = edition != ApplicationEdition.Distributor;
+
+                lbl_Responsable.Visible = esVisible;
+                cmb_Responsable.Visible = esVisible;
             }
         }
         private void CrearGridPerfilTipo()
@@ -452,9 +439,18 @@ namespace RotoGestionClientes
             txt_Comentarios.Text = _model.Comentarios;
             cmb_Software.SelectedValue = _model.SoftwareList.FirstOrDefault();
 
-            if (_applicationInfo.IsDistributor)
+            var config = _context.ConfiguracionAplicacion.FirstOrDefault();
+
+            // Si no hay configuración se dejarán por defecto
+            if (config == null) return;
+
+            // Intentamos parsear el string de la BBDD al Enum para trabajar de forma segura
+            if (Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
             {
-                _model.ResponsableId = _applicationInfo.ResponsableId;
+                if (edition == ApplicationEdition.Distributor)
+                {
+                    _model.ResponsableId = config.DistribuidorId;
+                }
             }
 
             if (_model.ResponsableId != null && _model.ResponsableId != 0)

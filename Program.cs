@@ -20,16 +20,6 @@ namespace RotoGestionClientes
 
             var services = new ServiceCollection();
 
-            // Leer configuración
-            var applicationSettings = configuration
-                .GetSection("Application")
-                .Get<ApplicationSettings>()!;
-
-            services.AddSingleton(applicationSettings);
-
-            // Registrar ApplicationInfo
-            services.AddSingleton<ApplicationInfo>();
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     configuration.GetConnectionString("DefaultConnection")));
