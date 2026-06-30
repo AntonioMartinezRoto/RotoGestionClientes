@@ -44,7 +44,7 @@
             dgvSoporteCompas = new DataGridView();
             lbl_SapId = new Label();
             txt_SapId = new TextBox();
-            groupBox1 = new GroupBox();
+            group_Perfil = new GroupBox();
             dgvPerfil = new DataGridView();
             lbl_Responsable = new Label();
             cmb_Responsable = new ComboBox();
@@ -56,7 +56,7 @@
             group_Comentarios.SuspendLayout();
             group_SoporteCompas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSoporteCompas).BeginInit();
-            groupBox1.SuspendLayout();
+            group_Perfil.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPerfil).BeginInit();
             SuspendLayout();
             // 
@@ -251,17 +251,17 @@
             txt_SapId.TabIndex = 12;
             txt_SapId.TextChanged += txt_SapId_TextChanged;
             // 
-            // groupBox1
+            // group_Perfil
             // 
-            groupBox1.Controls.Add(dgvPerfil);
-            groupBox1.Location = new Point(734, 44);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(330, 579);
-            groupBox1.TabIndex = 14;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Perfil";
+            group_Perfil.Controls.Add(dgvPerfil);
+            group_Perfil.Location = new Point(734, 44);
+            group_Perfil.Margin = new Padding(3, 4, 3, 4);
+            group_Perfil.Name = "group_Perfil";
+            group_Perfil.Padding = new Padding(3, 4, 3, 4);
+            group_Perfil.Size = new Size(330, 579);
+            group_Perfil.TabIndex = 14;
+            group_Perfil.TabStop = false;
+            group_Perfil.Text = "Perfil";
             // 
             // dgvPerfil
             // 
@@ -307,7 +307,7 @@
             BackColor = Color.White;
             Controls.Add(cmb_Responsable);
             Controls.Add(lbl_Responsable);
-            Controls.Add(groupBox1);
+            Controls.Add(group_Perfil);
             Controls.Add(group_SoporteCompas);
             Controls.Add(lbl_SapId);
             Controls.Add(txt_SapId);
@@ -333,7 +333,7 @@
             group_Comentarios.PerformLayout();
             group_SoporteCompas.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvSoporteCompas).EndInit();
-            groupBox1.ResumeLayout(false);
+            group_Perfil.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvPerfil).EndInit();
             ResumeLayout(false);
             PerformLayout();
@@ -358,7 +358,7 @@
         private DataGridView dgvSoporteCompas;
         private Label lbl_SapId;
         private TextBox txt_SapId;
-        private GroupBox groupBox1;
+        private GroupBox group_Perfil;
         private DataGridView dgvPerfil;
         private Label lbl_Responsable;
         private ComboBox cmb_Responsable;

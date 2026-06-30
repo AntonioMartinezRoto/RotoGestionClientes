@@ -35,6 +35,7 @@ namespace RotoGestionClientes
 
             CrearGrid();
             CargarDatos();
+            CargarTextos();
         }
         #endregion
 
@@ -93,6 +94,12 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            group_Agujas.Text = Lang.Seguridad;
+            this.Text = Lang.DefinirAgujasPerfil;
+            btn_Aceptar.Text = Lang.Guardar;
+        }
         private void CrearGrid()
         {
             dgvAgujas.AutoGenerateColumns = false;
@@ -102,7 +109,7 @@ namespace RotoGestionClientes
             dgvAgujas.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "PerfilNombre",
-                HeaderText = "Perfil",
+                HeaderText = Lang.Perfil,
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
@@ -110,7 +117,7 @@ namespace RotoGestionClientes
             var combo = new DataGridViewComboBoxColumn
             {
                 DataPropertyName = "AgujaId",
-                HeaderText = "Aguja",
+                HeaderText = Lang.Aguja,
                 DisplayMember = "Nombre",
                 ValueMember = "Id",
                 Name = "Aguja",

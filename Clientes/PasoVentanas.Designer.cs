@@ -38,12 +38,12 @@
             txt_Observaciones = new TextBox();
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
-            groupBox1 = new GroupBox();
+            group_PasivaPracticables = new GroupBox();
             dgvPasivasPract = new DataGridView();
             pictureBox4 = new PictureBox();
-            groupBox2 = new GroupBox();
+            group_Oscilobatientes = new GroupBox();
             pictureBox5 = new PictureBox();
-            groupBox3 = new GroupBox();
+            group_Practicables = new GroupBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Seguridad.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvSeguridad).BeginInit();
@@ -52,12 +52,12 @@
             group_Comentarios.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
-            groupBox1.SuspendLayout();
+            group_PasivaPracticables.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvPasivasPract).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
-            groupBox2.SuspendLayout();
+            group_Oscilobatientes.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
-            groupBox3.SuspendLayout();
+            group_Practicables.SuspendLayout();
             SuspendLayout();
             // 
             // pictureBox1
@@ -178,17 +178,17 @@
             pictureBox3.TabIndex = 15;
             pictureBox3.TabStop = false;
             // 
-            // groupBox1
+            // group_PasivaPracticables
             // 
-            groupBox1.Controls.Add(dgvPasivasPract);
-            groupBox1.Location = new Point(362, 29);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(330, 205);
-            groupBox1.TabIndex = 14;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Hoja Pasiva";
+            group_PasivaPracticables.Controls.Add(dgvPasivasPract);
+            group_PasivaPracticables.Location = new Point(362, 29);
+            group_PasivaPracticables.Margin = new Padding(3, 4, 3, 4);
+            group_PasivaPracticables.Name = "group_PasivaPracticables";
+            group_PasivaPracticables.Padding = new Padding(3, 4, 3, 4);
+            group_PasivaPracticables.Size = new Size(330, 205);
+            group_PasivaPracticables.TabIndex = 14;
+            group_PasivaPracticables.TabStop = false;
+            group_PasivaPracticables.Text = "Hoja Pasiva";
             // 
             // dgvPasivasPract
             // 
@@ -219,21 +219,21 @@
             pictureBox4.TabIndex = 12;
             pictureBox4.TabStop = false;
             // 
-            // groupBox2
+            // group_Oscilobatientes
             // 
-            groupBox2.Controls.Add(pictureBox5);
-            groupBox2.Controls.Add(group_Seguridad);
-            groupBox2.Controls.Add(group_Pasivas);
-            groupBox2.Controls.Add(pictureBox1);
-            groupBox2.Controls.Add(pictureBox2);
-            groupBox2.Location = new Point(14, 20);
-            groupBox2.Margin = new Padding(3, 4, 3, 4);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new Padding(3, 4, 3, 4);
-            groupBox2.Size = new Size(1054, 275);
-            groupBox2.TabIndex = 16;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Oscilobatientes";
+            group_Oscilobatientes.Controls.Add(pictureBox5);
+            group_Oscilobatientes.Controls.Add(group_Seguridad);
+            group_Oscilobatientes.Controls.Add(group_Pasivas);
+            group_Oscilobatientes.Controls.Add(pictureBox1);
+            group_Oscilobatientes.Controls.Add(pictureBox2);
+            group_Oscilobatientes.Location = new Point(14, 20);
+            group_Oscilobatientes.Margin = new Padding(3, 4, 3, 4);
+            group_Oscilobatientes.Name = "group_Oscilobatientes";
+            group_Oscilobatientes.Padding = new Padding(3, 4, 3, 4);
+            group_Oscilobatientes.Size = new Size(1054, 275);
+            group_Oscilobatientes.TabIndex = 16;
+            group_Oscilobatientes.TabStop = false;
+            group_Oscilobatientes.Text = "Oscilobatientes";
             // 
             // pictureBox5
             // 
@@ -247,27 +247,27 @@
             pictureBox5.TabIndex = 12;
             pictureBox5.TabStop = false;
             // 
-            // groupBox3
+            // group_Practicables
             // 
-            groupBox3.Controls.Add(groupBox1);
-            groupBox3.Controls.Add(pictureBox3);
-            groupBox3.Controls.Add(pictureBox4);
-            groupBox3.Location = new Point(14, 313);
-            groupBox3.Margin = new Padding(3, 4, 3, 4);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Padding = new Padding(3, 4, 3, 4);
-            groupBox3.Size = new Size(1054, 275);
-            groupBox3.TabIndex = 17;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Practicables";
+            group_Practicables.Controls.Add(group_PasivaPracticables);
+            group_Practicables.Controls.Add(pictureBox3);
+            group_Practicables.Controls.Add(pictureBox4);
+            group_Practicables.Location = new Point(14, 313);
+            group_Practicables.Margin = new Padding(3, 4, 3, 4);
+            group_Practicables.Name = "group_Practicables";
+            group_Practicables.Padding = new Padding(3, 4, 3, 4);
+            group_Practicables.Size = new Size(1054, 275);
+            group_Practicables.TabIndex = 17;
+            group_Practicables.TabStop = false;
+            group_Practicables.Text = "Practicables";
             // 
             // PasoVentanas
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(groupBox3);
-            Controls.Add(groupBox2);
+            Controls.Add(group_Practicables);
+            Controls.Add(group_Oscilobatientes);
             Controls.Add(group_Comentarios);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(1081, 805);
@@ -283,12 +283,12 @@
             group_Comentarios.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
-            groupBox1.ResumeLayout(false);
+            group_PasivaPracticables.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvPasivasPract).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
-            groupBox2.ResumeLayout(false);
+            group_Oscilobatientes.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
-            groupBox3.ResumeLayout(false);
+            group_Practicables.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -303,11 +303,11 @@
         private TextBox txt_Observaciones;
         private PictureBox pictureBox2;
         private PictureBox pictureBox3;
-        private GroupBox groupBox1;
+        private GroupBox group_PasivaPracticables;
         private DataGridView dgvPasivasPract;
         private PictureBox pictureBox4;
-        private GroupBox groupBox2;
-        private GroupBox groupBox3;
+        private GroupBox group_Oscilobatientes;
+        private GroupBox group_Practicables;
         private PictureBox pictureBox5;
     }
 }

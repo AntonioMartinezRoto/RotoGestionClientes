@@ -70,6 +70,24 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Aguja.
+        /// </summary>
+        internal static string Aguja {
+            get {
+                return ResourceManager.GetString("Aguja", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Alias.
+        /// </summary>
+        internal static string Alias {
+            get {
+                return ResourceManager.GetString("Alias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a El fichero no es válido..
         /// </summary>
         internal static string ArchivoNoValido {
@@ -79,11 +97,56 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Atrás.
+        /// </summary>
+        internal static string Atras {
+            get {
+                return ResourceManager.GetString("Atras", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Balconeras.
+        /// </summary>
+        internal static string Balconeras {
+            get {
+                return ResourceManager.GetString("Balconeras", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Bisagras.
+        /// </summary>
+        internal static string Bisagras {
+            get {
+                return ResourceManager.GetString("Bisagras", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Buscar.
         /// </summary>
         internal static string Buscar {
             get {
                 return ResourceManager.GetString("Buscar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cancelar.
+        /// </summary>
+        internal static string Cancelar {
+            get {
+                return ResourceManager.GetString("Cancelar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Cerraduras.
+        /// </summary>
+        internal static string Cerraduras {
+            get {
+                return ResourceManager.GetString("Cerraduras", resourceCulture);
             }
         }
         
@@ -151,6 +214,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Completa los datos para crear el cliente.
+        /// </summary>
+        internal static string CompletaDatosCliente {
+            get {
+                return ResourceManager.GetString("CompletaDatosCliente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a ¿Está seguro que desea eliminar el cliente .
         /// </summary>
         internal static string ConfirmarEliminarCliente {
@@ -178,11 +250,56 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Datos generales.
+        /// </summary>
+        internal static string DatosGenerales {
+            get {
+                return ResourceManager.GetString("DatosGenerales", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Definir agujas por perfil.
+        /// </summary>
+        internal static string DeinifirAgujasPerfil {
+            get {
+                return ResourceManager.GetString("DeinifirAgujasPerfil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Documentos.
+        /// </summary>
+        internal static string Documentos {
+            get {
+                return ResourceManager.GetString("Documentos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Editando cliente.
+        /// </summary>
+        internal static string EditandoCliente {
+            get {
+                return ResourceManager.GetString("EditandoCliente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Editar.
         /// </summary>
         internal static string Editar {
             get {
                 return ResourceManager.GetString("Editar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Elevables/Plegables.
+        /// </summary>
+        internal static string ElevablesPlegables {
+            get {
+                return ResourceManager.GetString("ElevablesPlegables", resourceCulture);
             }
         }
         
@@ -241,11 +358,29 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Finalizar.
+        /// </summary>
+        internal static string Finalizar {
+            get {
+                return ResourceManager.GetString("Finalizar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Guardar.
         /// </summary>
         internal static string Guardar {
             get {
                 return ResourceManager.GetString("Guardar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Hoja pasiva.
+        /// </summary>
+        internal static string HojaPasiva {
+            get {
+                return ResourceManager.GetString("HojaPasiva", resourceCulture);
             }
         }
         
@@ -268,11 +403,38 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Inline.
+        /// </summary>
+        internal static string Inline {
+            get {
+                return ResourceManager.GetString("Inline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Manillas.
+        /// </summary>
+        internal static string Manillas {
+            get {
+                return ResourceManager.GetString("Manillas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Mantenimiento.
         /// </summary>
         internal static string Mantenimiento {
             get {
                 return ResourceManager.GetString("Mantenimiento", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Máquinas.
+        /// </summary>
+        internal static string Maquinas {
+            get {
+                return ResourceManager.GetString("Maquinas", resourceCulture);
             }
         }
         
@@ -304,6 +466,60 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Oscilobatientes.
+        /// </summary>
+        internal static string Oscilobatientes {
+            get {
+                return ResourceManager.GetString("Oscilobatientes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Perfil.
+        /// </summary>
+        internal static string Perfil {
+            get {
+                return ResourceManager.GetString("Perfil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Por perfil.
+        /// </summary>
+        internal static string PorPerfil {
+            get {
+                return ResourceManager.GetString("PorPerfil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Practicables.
+        /// </summary>
+        internal static string Practicables {
+            get {
+                return ResourceManager.GetString("Practicables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Puertas.
+        /// </summary>
+        internal static string Puertas {
+            get {
+                return ResourceManager.GetString("Puertas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Puerta secundaria.
+        /// </summary>
+        internal static string PuertaSecundaria {
+            get {
+                return ResourceManager.GetString("PuertaSecundaria", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Responsable.
         /// </summary>
         internal static string Responsable {
@@ -327,6 +543,15 @@ namespace RotoGestionClientes.Resources {
         internal static string SapId {
             get {
                 return ResourceManager.GetString("SapId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seguridad.
+        /// </summary>
+        internal static string Seguridad {
+            get {
+                return ResourceManager.GetString("Seguridad", resourceCulture);
             }
         }
         
@@ -376,11 +601,65 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Siguiente.
+        /// </summary>
+        internal static string Siguiente {
+            get {
+                return ResourceManager.GetString("Siguiente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Software.
+        /// </summary>
+        internal static string Software {
+            get {
+                return ResourceManager.GetString("Software", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Soporte compás.
+        /// </summary>
+        internal static string SoporteCompas {
+            get {
+                return ResourceManager.GetString("SoporteCompas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Tipo de perfil.
+        /// </summary>
+        internal static string TipoPerfil {
+            get {
+                return ResourceManager.GetString("TipoPerfil", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Todos.
+        /// </summary>
+        internal static string Todos {
+            get {
+                return ResourceManager.GetString("Todos", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Total: .
         /// </summary>
         internal static string Total {
             get {
                 return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Ventanas.
+        /// </summary>
+        internal static string Ventanas {
+            get {
+                return ResourceManager.GetString("Ventanas", resourceCulture);
             }
         }
         

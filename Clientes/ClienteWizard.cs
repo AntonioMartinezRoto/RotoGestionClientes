@@ -45,10 +45,11 @@ namespace RotoGestionClientes
                 _clienteId = clienteId.Value;
                 btn_Siguiente.Visible = false;
                 btn_Atras.Visible = false;
-                btn_Finalizar.Text = "Guardar";
+                btn_Finalizar.Text = Lang.Guardar;
             }
             else
             {
+                btn_Finalizar.Text = Lang.Finalizar;
                 _model = new ClientWizardModel();
             }
 
@@ -61,6 +62,7 @@ namespace RotoGestionClientes
         #region Events
         private void ClienteWizard_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
         }
         private void btn_Siguiente_Click(object sender, EventArgs e)
@@ -75,14 +77,6 @@ namespace RotoGestionClientes
         }
         private void btn_Finalizar_Click(object sender, EventArgs e)
         {
-            //var pasoActual = _steps[_currentStep];
-
-            //if (!pasoActual.IsValid())
-            //{
-            //    MessageBox.Show("Complete los datos obligatorios");
-            //    return;
-
-            //}
             //Validación de los datos antes de guardar
             if (!IsModelValid())
             {
@@ -99,6 +93,12 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            btn_Atras.Text = Lang.Atras;
+            btn_Cancelar.Text = Lang.Cancelar;
+            btn_Siguiente.Text = Lang.Siguiente;
+        }
         private void InitializeWizard()
         {
             _steps = new List<UserControl>
@@ -125,16 +125,16 @@ namespace RotoGestionClientes
 
             string[] titles =
                             {
-                                "Datos generales",
-                                "Ventanas",
-                                "Balconeras",
-                                "Puertas",
+                                Lang.DatosGenerales,
+                                Lang.Ventanas,
+                                Lang.Balconeras,
+                                Lang.Puertas,
                                 //"Paralelas",
-                                "Inline",
-                                "Elevables/Plegables",
+                                Lang.Inline,
+                                Lang.ElevablesPlegables,
                                 //"Especiales",
-                                "Máquinas",
-                                "Documentos asociados"
+                                Lang.Maquinas,
+                                Lang.Documentos
                             };
 
             for (int i = 0; i < titles.Length; i++)
@@ -470,12 +470,12 @@ namespace RotoGestionClientes
             if (_mode == WizardMode.Edit)
             {
                 lbl_Titulo.Text = _model.Nombre;
-                lbl_Subtitulo.Text = "Editando cliente";
+                lbl_Subtitulo.Text = Lang.EditandoCliente;
             }
             else
             {
-                lbl_Titulo.Text = "Nuevo Cliente";
-                lbl_Subtitulo.Text = "Completa los datos para crear el cliente";
+                lbl_Titulo.Text = Lang.NuevoCliente;
+                lbl_Subtitulo.Text = Lang.CompletarDatosCliente;
             }
 
         }

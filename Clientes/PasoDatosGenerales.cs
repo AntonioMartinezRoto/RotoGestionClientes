@@ -43,6 +43,7 @@ namespace RotoGestionClientes
         }
         private void PasoDatosGenerales_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             CrearGridPerfilTipo();
             CrearGridManillas();
             CrearGridSoporteCompas();
@@ -56,6 +57,7 @@ namespace RotoGestionClientes
             InitializeData();
             SetVisibilidadModoAplicacion();
         }
+
         private void dgvPerfilTipo_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.ColumnIndex < 0) return;
@@ -163,6 +165,21 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+
+        private void CargarTextos()
+        {
+            lbl_NombreCliente.Text = Lang.Nombre;
+            lbl_Alias.Text = Lang.Alias;
+            lbl_SapId.Text = Lang.SapId;
+            lbl_Responsable.Text = Lang.Responsable;
+            group_Software.Text = Lang.Software;
+            group_SoporteCompas.Text = Lang.SoporteCompas;
+            group_Manillas.Text = Lang.Manillas;
+            group_PerfilTipo.Text = Lang.TipoPerfil;
+            group_Perfil.Text = Lang.Perfil;
+            group_Comentarios.Text = Lang.Comentarios;
+        }
+
         private void SetVisibilidadModoAplicacion()
         {
             var config = _context.ConfiguracionAplicacion.FirstOrDefault();

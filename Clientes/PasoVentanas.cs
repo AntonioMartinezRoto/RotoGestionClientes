@@ -39,6 +39,7 @@ namespace RotoGestionClientes
         #region Events
         private void PasoVentanas_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             txt_Observaciones.Text = _model.ObservacionesVentanas;
 
             CrearGridSeguridadVentana();
@@ -48,7 +49,6 @@ namespace RotoGestionClientes
             RellenarGridCremonaPasivas();
             RellenarGridCremonaPasivasPract();
         }
-
         private void dgvSeguridad_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.ColumnIndex < 0) return;
@@ -113,7 +113,14 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
-
+        private void CargarTextos()
+        {
+            group_Oscilobatientes.Text = Lang.Oscilobatientes;
+            group_Seguridad.Text = Lang.Seguridad;
+            group_Pasivas.Text = Lang.HojaPasiva;
+            group_Comentarios.Text = Lang.Comentarios;
+            group_PasivaPracticables.Text = Lang.HojaPasiva;
+        }
         private void CrearGridSeguridadVentana()
         {
             dgvSeguridad.AutoGenerateColumns = false;

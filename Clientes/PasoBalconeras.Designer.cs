@@ -43,8 +43,8 @@
             cmb_AgujaBalconeras = new ComboBox();
             rb_AgujaBalcPerfil = new RadioButton();
             rb_AgujaBalcGenerica = new RadioButton();
-            groupBox1 = new GroupBox();
-            groupBox2 = new GroupBox();
+            group_PuertaSec = new GroupBox();
+            group_AgujaPuertaSec = new GroupBox();
             cmb_AgujaPuertaSec = new ComboBox();
             btn_DefinirAgujaPuertaSecPerfil = new Button();
             rb_AgujaPuertaSecGenerica = new RadioButton();
@@ -63,8 +63,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             group_Balconeras.SuspendLayout();
             group_Aguja.SuspendLayout();
-            groupBox1.SuspendLayout();
-            groupBox2.SuspendLayout();
+            group_PuertaSec.SuspendLayout();
+            group_AgujaPuertaSec.SuspendLayout();
             group_Cerraduras.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvCerraduras).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
@@ -256,35 +256,35 @@
             rb_AgujaBalcGenerica.UseVisualStyleBackColor = true;
             rb_AgujaBalcGenerica.CheckedChanged += rb_AgujaBalcGenerica_CheckedChanged;
             // 
-            // groupBox1
+            // group_PuertaSec
             // 
-            groupBox1.Controls.Add(groupBox2);
-            groupBox1.Controls.Add(group_Cerraduras);
-            groupBox1.Controls.Add(pictureBox4);
-            groupBox1.Controls.Add(group_Bisagras);
-            groupBox1.Location = new Point(23, 336);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(1010, 321);
-            groupBox1.TabIndex = 14;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Puerta Secundaria";
+            group_PuertaSec.Controls.Add(group_AgujaPuertaSec);
+            group_PuertaSec.Controls.Add(group_Cerraduras);
+            group_PuertaSec.Controls.Add(pictureBox4);
+            group_PuertaSec.Controls.Add(group_Bisagras);
+            group_PuertaSec.Location = new Point(23, 336);
+            group_PuertaSec.Margin = new Padding(3, 4, 3, 4);
+            group_PuertaSec.Name = "group_PuertaSec";
+            group_PuertaSec.Padding = new Padding(3, 4, 3, 4);
+            group_PuertaSec.Size = new Size(1010, 321);
+            group_PuertaSec.TabIndex = 14;
+            group_PuertaSec.TabStop = false;
+            group_PuertaSec.Text = "Puerta Secundaria";
             // 
-            // groupBox2
+            // group_AgujaPuertaSec
             // 
-            groupBox2.Controls.Add(cmb_AgujaPuertaSec);
-            groupBox2.Controls.Add(btn_DefinirAgujaPuertaSecPerfil);
-            groupBox2.Controls.Add(rb_AgujaPuertaSecGenerica);
-            groupBox2.Controls.Add(rb_AgujaPuertaSecPerfil);
-            groupBox2.Location = new Point(325, 23);
-            groupBox2.Margin = new Padding(3, 4, 3, 4);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new Padding(3, 4, 3, 4);
-            groupBox2.Size = new Size(667, 79);
-            groupBox2.TabIndex = 14;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Aguja";
+            group_AgujaPuertaSec.Controls.Add(cmb_AgujaPuertaSec);
+            group_AgujaPuertaSec.Controls.Add(btn_DefinirAgujaPuertaSecPerfil);
+            group_AgujaPuertaSec.Controls.Add(rb_AgujaPuertaSecGenerica);
+            group_AgujaPuertaSec.Controls.Add(rb_AgujaPuertaSecPerfil);
+            group_AgujaPuertaSec.Location = new Point(325, 23);
+            group_AgujaPuertaSec.Margin = new Padding(3, 4, 3, 4);
+            group_AgujaPuertaSec.Name = "group_AgujaPuertaSec";
+            group_AgujaPuertaSec.Padding = new Padding(3, 4, 3, 4);
+            group_AgujaPuertaSec.Size = new Size(667, 79);
+            group_AgujaPuertaSec.TabIndex = 14;
+            group_AgujaPuertaSec.TabStop = false;
+            group_AgujaPuertaSec.Text = "Aguja";
             // 
             // cmb_AgujaPuertaSec
             // 
@@ -409,7 +409,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(groupBox1);
+            Controls.Add(group_PuertaSec);
             Controls.Add(group_Balconeras);
             Controls.Add(group_Comentarios);
             Margin = new Padding(3, 4, 3, 4);
@@ -428,9 +428,9 @@
             group_Balconeras.ResumeLayout(false);
             group_Aguja.ResumeLayout(false);
             group_Aguja.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            group_PuertaSec.ResumeLayout(false);
+            group_AgujaPuertaSec.ResumeLayout(false);
+            group_AgujaPuertaSec.PerformLayout();
             group_Cerraduras.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvCerraduras).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
@@ -452,8 +452,8 @@
         private GroupBox group_Balconeras;
         private GroupBox group_Aguja;
         private ComboBox cmb_AgujaBalconeras;
-        private GroupBox groupBox1;
-        private GroupBox groupBox2;
+        private GroupBox group_PuertaSec;
+        private GroupBox group_AgujaPuertaSec;
         private ComboBox cmb_AgujaPuertaSec;
         private GroupBox group_Cerraduras;
         private DataGridView dgvCerraduras;

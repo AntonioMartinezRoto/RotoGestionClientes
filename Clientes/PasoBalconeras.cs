@@ -39,6 +39,7 @@ namespace RotoGestionClientes
         #region Events
         private void PasoBalconeras_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             txt_ObservacionesBalconeras.Text = _model.ObservacionesBalconeras;
 
             #region Balconeras
@@ -231,6 +232,25 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+
+        private void CargarTextos()
+        {
+            group_Balconeras.Text = Lang.Balconeras;
+            group_PuertaSec.Text = Lang.PuertaSecundaria;
+            group_Aguja.Text = Lang.Aguja;
+            rb_AgujaBalcGenerica.Text = Lang.Todos;
+            rb_AgujaBalcPerfil.Text = Lang.PorPerfil;
+            group_Seguridad.Text = Lang.Seguridad;
+            group_Pasivas.Text = Lang.HojaPasiva;
+            group_PuertaSec.Text = Lang.PuertaSecundaria;
+            group_AgujaPuertaSec.Text = Lang.Aguja;
+            rb_AgujaPuertaSecGenerica.Text = Lang.Todos;
+            rb_AgujaPuertaSecPerfil.Text = Lang.PorPerfil;
+            group_Bisagras.Text = Lang.Bisagras;
+            group_Cerraduras.Text = Lang.Cerraduras;
+            group_Comentarios.Text = Lang.Comentarios;
+        }
+
         private void RellenarAgujasBalconeras()
         {
             cmb_AgujaBalconeras.SelectedValueChanged -= cmb_AgujaBalconeras_SelectedValueChanged;

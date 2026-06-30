@@ -116,8 +116,10 @@ namespace RotoGestionClientes
         }
         private void btn_ImportCliente_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             ImportarCliente();
             LoadClientesFromDB();
+            Cursor.Current = Cursors.Default;
         }
         private void btn_ExporClientes_Click(object sender, EventArgs e)
         {

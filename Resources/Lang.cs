@@ -53,4 +53,54 @@ public static class Lang
     public static string ClienteImportado => Textos.ClienteImportado;
     public static string ErrorAlImportar => Textos.ErrorAlImportar;
     #endregion
+
+    #region ClienteWizard
+
+    public static string CompletarDatosCliente => Textos.CompletaDatosCliente;
+    public static string EditandoCliente => Textos.EditandoCliente;
+    public static string DatosGenerales => Textos.DatosGenerales;
+    public static string Ventanas => Textos.Ventanas;
+    public static string Puertas => Textos.Puertas;
+    public static string Inline => Textos.Inline;
+    public static string ElevablesPlegables => Textos.ElevablesPlegables;
+    public static string Maquinas => Textos.Maquinas;
+    public static string Documentos => Textos.Documentos;
+    public static string Cancelar => Textos.Cancelar;
+    public static string Atras => Textos.Atras;
+    public static string Finalizar => Textos.Finalizar;
+    public static string Siguiente => Textos.Siguiente;
+    #endregion
+
+    #region PasoDatosGenerales
+
+    public static string Alias => Textos.Alias;
+    public static string Software => Textos.Software;
+    public static string TipoPerfil => Textos.TipoPerfil;
+    public static string SoporteCompas => Textos.SoporteCompas;
+    public static string Manillas => Textos.Manillas;
+    public static string Perfil => Textos.Perfil;
+
+    #endregion
+
+    #region PasoVentanas
+
+    public static string Oscilobatientes => Textos.Oscilobatientes;
+    public static string HojaPasiva => Textos.HojaPasiva;
+    public static string Seguridad => Textos.Seguridad;
+    public static string Practicables => Textos.Practicables;
+
+    #endregion
+
+    #region PasoBalconeras
+
+    public static string Balconeras => Textos.Balconeras;
+    public static string Aguja => Textos.Aguja;
+    public static string Todos => Textos.Todos;
+    public static string PorPerfil => Textos.PorPerfil;
+    public static string PuertaSecundaria => Textos.PuertaSecundaria;
+    public static string Bisagras => Textos.Bisagras;
+    public static string Cerraduras => Textos.Cerraduras;
+    public static string DefinirAgujasPerfil => Textos.DeinifirAgujasPerfil;
+
+    #endregion
 }
