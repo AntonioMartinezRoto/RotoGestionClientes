@@ -36,6 +36,7 @@ namespace RotoGestionClientes
         #region Events
         private void PasoCorrederas_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             txt_ObservacionesCorrederas.Text = _model.ObservacionesCorrederas;
 
             //Vigilar id = 2. Si se añade otro tipo de aguja que también active el bombillo, habrá que cambiar esta lógica.
@@ -89,7 +90,17 @@ namespace RotoGestionClientes
 
         #endregion
         #region Private methods
+        private void CargarTextos()
+        {
+            group_Correderas.Text = Lang.Correderas;
+            group_Agujas.Text = Lang.Aguja;
+            group_Comentarios.Text = Lang.Comentarios;
+            groupBombillo.Text = Lang.Bombillo;
+            rb_BombilloNo.Text = Lang.No;
+            rb_BombilloSi.Text = Lang.Si;
+        }
 
+        
         private void CrearGridAgujasCorredera()
         {
             dgvAgujas.AutoGenerateColumns = false;

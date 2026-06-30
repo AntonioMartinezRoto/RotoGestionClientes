@@ -32,7 +32,7 @@
             pictureBox1 = new PictureBox();
             group_Comentarios = new GroupBox();
             txt_ObservacionesMaquinas = new TextBox();
-            groupBox1 = new GroupBox();
+            group_Maquinas = new GroupBox();
             groupSoporteMarco = new GroupBox();
             rb_SoporteBanco = new RadioButton();
             rb_SoporteCentro = new RadioButton();
@@ -47,7 +47,7 @@
             dgvMaquinas = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Comentarios.SuspendLayout();
-            groupBox1.SuspendLayout();
+            group_Maquinas.SuspendLayout();
             groupSoporteMarco.SuspendLayout();
             groupCentroTripleTaladro.SuspendLayout();
             groupSoldadoraBisagras.SuspendLayout();
@@ -89,22 +89,22 @@
             txt_ObservacionesMaquinas.TabIndex = 8;
             txt_ObservacionesMaquinas.TextChanged += txt_ObservacionesMaquinas_TextChanged;
             // 
-            // groupBox1
+            // group_Maquinas
             // 
-            groupBox1.Controls.Add(groupSoporteMarco);
-            groupBox1.Controls.Add(groupCentroTripleTaladro);
-            groupBox1.Controls.Add(groupSoldadoraBisagras);
-            groupBox1.Controls.Add(btn_AddMaquina);
-            groupBox1.Controls.Add(dgvMaquinas);
-            groupBox1.Controls.Add(pictureBox1);
-            groupBox1.Location = new Point(29, 4);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(1010, 632);
-            groupBox1.TabIndex = 17;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Máquinas";
+            group_Maquinas.Controls.Add(groupSoporteMarco);
+            group_Maquinas.Controls.Add(groupCentroTripleTaladro);
+            group_Maquinas.Controls.Add(groupSoldadoraBisagras);
+            group_Maquinas.Controls.Add(btn_AddMaquina);
+            group_Maquinas.Controls.Add(dgvMaquinas);
+            group_Maquinas.Controls.Add(pictureBox1);
+            group_Maquinas.Location = new Point(29, 4);
+            group_Maquinas.Margin = new Padding(3, 4, 3, 4);
+            group_Maquinas.Name = "group_Maquinas";
+            group_Maquinas.Padding = new Padding(3, 4, 3, 4);
+            group_Maquinas.Size = new Size(1010, 632);
+            group_Maquinas.TabIndex = 17;
+            group_Maquinas.TabStop = false;
+            group_Maquinas.Text = "Máquinas";
             // 
             // groupSoporteMarco
             // 
@@ -271,7 +271,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(groupBox1);
+            Controls.Add(group_Maquinas);
             Controls.Add(group_Comentarios);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(1081, 805);
@@ -281,7 +281,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             group_Comentarios.ResumeLayout(false);
             group_Comentarios.PerformLayout();
-            groupBox1.ResumeLayout(false);
+            group_Maquinas.ResumeLayout(false);
             groupSoporteMarco.ResumeLayout(false);
             groupSoporteMarco.PerformLayout();
             groupCentroTripleTaladro.ResumeLayout(false);
@@ -297,7 +297,7 @@
         private PictureBox pictureBox1;
         private GroupBox group_Comentarios;
         private TextBox txt_ObservacionesMaquinas;
-        private GroupBox groupBox1;
+        private GroupBox group_Maquinas;
         private DataGridView dgvMaquinas;
         private Button btn_AddMaquina;
         private GroupBox groupCentroTripleTaladro;

@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
@@ -215,8 +209,8 @@ namespace RotoGestionClientes
             if (_model == null)
             {
                 MessageBox.Show(
-                    "Datos corruptos. Cierre y reabra la aplicación",
-                    "Validación",
+                    Lang.DatosCorruptos,
+                    Lang.Validacion,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -242,8 +236,8 @@ namespace RotoGestionClientes
                 if (cliente != null)
                 {
                     MessageBox.Show(
-                        "Ya existe un cliente con ese nombre",
-                        "Validación",
+                        Lang.ClienteExistente,
+                        Lang.Validacion,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
 
@@ -259,8 +253,8 @@ namespace RotoGestionClientes
                 if (cliente == null)
                 {
                     MessageBox.Show(
-                        "Datos corruptos editando el cliente. Cierre y reabra la aplicación",
-                        "Validación",
+                        Lang.DatosCorruptos,
+                        Lang.Validacion,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Warning);
 
@@ -274,8 +268,8 @@ namespace RotoGestionClientes
                     if (clienteNombre != null)
                     {
                         MessageBox.Show(
-                            "Ya existe un cliente con ese nombre",
-                            "Validación",
+                            Lang.ClienteExistente,
+                            Lang.Validacion,
                             MessageBoxButtons.OK,
                             MessageBoxIcon.Warning);
 

@@ -69,6 +69,8 @@ public static class Lang
     public static string Atras => Textos.Atras;
     public static string Finalizar => Textos.Finalizar;
     public static string Siguiente => Textos.Siguiente;
+    public static string DatosCorruptos => Textos.DatosCorruptos;
+    public static string Validacion => Textos.Validación;
     #endregion
 
     #region PasoDatosGenerales
@@ -101,6 +103,57 @@ public static class Lang
     public static string Bisagras => Textos.Bisagras;
     public static string Cerraduras => Textos.Cerraduras;
     public static string DefinirAgujasPerfil => Textos.DeinifirAgujasPerfil;
+
+    #endregion
+
+    #region PasoPuertas
+
+    public static string Si => Textos.Si;
+    public static string Cilindros => Textos.Cilindros;
+    public static string SeleccionarCilindros => Textos.SeleccionarCilindros;
+    public static string Tipo => Textos.Tipo;
+    public static string Interior => Textos.Interior;
+    public static string Exterior => Textos.Exterior;
+    public static string Nomenclatura => Textos.Nomenclatura;
+
+
+    #endregion
+    #region Correderas
+
+    public static string Correderas => Textos.Correderas;
+    public static string Bombillo => Textos.Bombillo;
+    public static string No => Textos.No;
+
+    #endregion
+    #region ElevablesPlegables
+
+    public static string Elevables => Textos.Elevables;
+    public static string Plegables => Textos.Plegables;
+    public static string Estandar => Textos.Estandar;
+    public static string Dlo => Textos.Dlo;
+    public static string Consumen => Textos.Consumen;
+
+    #endregion
+    #region Maquinas
+
+    public static string Marca => Textos.Marca;
+    public static string BisagrasSoldadora => Textos.BisagrasSoldadora;
+    public static string TripleTaladroCentro => Textos.TripleTaladroCentro;
+    public static string SoporteMarco => Textos.SoporteMarco;
+    public static string CentroMecanizado => Textos.CentroMecanizado;
+    public static string Plantilla => Textos.Plantilla;
+    public static string BancoMarcos => Textos.BancoMarcos;
+
+    #endregion
+    #region Documentos
+
+    public static string Documento => Textos.Documento;
+    public static string Fichero => Textos.Fichero;
+    public static string NombreDocumento => Textos.NombreDocumento;
+    public static string SeleccionarDocumento => Textos.SeleccionarDocumento;
+    public static string NingunFichero => Textos.NingunFichero;
+    public static string IndicarNombreDoc => Textos.IndicarNombreDoc;
+    public static string DocumentoObligatorio => Textos.DocumentoObligatorio;
 
     #endregion
 }

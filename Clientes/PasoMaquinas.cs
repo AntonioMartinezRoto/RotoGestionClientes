@@ -34,6 +34,7 @@ namespace RotoGestionClientes
         #region Events
         private void PasoMaquinas_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             CrearGrid();
             CargarMaquinasGrid();
 
@@ -61,6 +62,23 @@ namespace RotoGestionClientes
 
             txt_ObservacionesMaquinas.Text = _model.ObservacionesMaquinas;
         }
+
+        private void CargarTextos()
+        {
+            group_Maquinas.Text = Lang.Maquinas;
+            groupCentroTripleTaladro.Text = Lang.TripleTaladroCentro;
+            groupSoldadoraBisagras.Text = Lang.BisagrasSoldadora;
+            groupSoporteMarco.Text = Lang.SoporteMarco;
+            rb_BisagraSoldadoraNo.Text = Lang.No;
+            rb_BisagraSoldadoraSi.Text = Lang.Si;
+            rb_SoporteBanco.Text = Lang.BancoMarcos;
+            rb_SoporteCentro.Text = Lang.CentroMecanizado;
+            rb_SoportePlantilla.Text = Lang.Plantilla;
+            rb_TripleTaladroCentroNo.Text = Lang.No;
+            rb_TripleTaladroCentroSi.Text = Lang.Si;
+            group_Comentarios.Text = Lang.Comentarios;
+        }
+
         private void txt_ObservacionesMaquinas_TextChanged(object sender, EventArgs e)
         {
             _model.ObservacionesMaquinas = txt_ObservacionesMaquinas.Text;

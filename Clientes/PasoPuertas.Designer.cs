@@ -30,15 +30,15 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PasoPuertas));
             pictureBox1 = new PictureBox();
-            groupBox1 = new GroupBox();
-            groupBox4 = new GroupBox();
+            group_Puertas = new GroupBox();
+            group_Cilindros = new GroupBox();
             btn_Cilindros = new Button();
             rb_CilindrosSi = new RadioButton();
             rb_CilindrosNo = new RadioButton();
-            groupBox3 = new GroupBox();
+            group_Portero = new GroupBox();
             rb_PorteroSi = new RadioButton();
             rb_PorteroNo = new RadioButton();
-            groupBox2 = new GroupBox();
+            group_Aguja = new GroupBox();
             cmb_AgujaPuerta = new ComboBox();
             btn_DefinirAgujaPuertaPerfil = new Button();
             rb_AgujaPuertaGenerica = new RadioButton();
@@ -50,10 +50,10 @@
             group_Comentarios = new GroupBox();
             txt_ObservacionesPuertas = new TextBox();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
-            groupBox1.SuspendLayout();
-            groupBox4.SuspendLayout();
-            groupBox3.SuspendLayout();
-            groupBox2.SuspendLayout();
+            group_Puertas.SuspendLayout();
+            group_Cilindros.SuspendLayout();
+            group_Portero.SuspendLayout();
+            group_Aguja.SuspendLayout();
             group_Cerraduras.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvCerraduras).BeginInit();
             group_Bisagras.SuspendLayout();
@@ -73,36 +73,36 @@
             pictureBox1.TabIndex = 2;
             pictureBox1.TabStop = false;
             // 
-            // groupBox1
+            // group_Puertas
             // 
-            groupBox1.Controls.Add(groupBox4);
-            groupBox1.Controls.Add(groupBox3);
-            groupBox1.Controls.Add(groupBox2);
-            groupBox1.Controls.Add(group_Cerraduras);
-            groupBox1.Controls.Add(pictureBox1);
-            groupBox1.Controls.Add(group_Bisagras);
-            groupBox1.Location = new Point(29, 4);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(1010, 613);
-            groupBox1.TabIndex = 16;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Puertas";
+            group_Puertas.Controls.Add(group_Cilindros);
+            group_Puertas.Controls.Add(group_Portero);
+            group_Puertas.Controls.Add(group_Aguja);
+            group_Puertas.Controls.Add(group_Cerraduras);
+            group_Puertas.Controls.Add(pictureBox1);
+            group_Puertas.Controls.Add(group_Bisagras);
+            group_Puertas.Location = new Point(29, 4);
+            group_Puertas.Margin = new Padding(3, 4, 3, 4);
+            group_Puertas.Name = "group_Puertas";
+            group_Puertas.Padding = new Padding(3, 4, 3, 4);
+            group_Puertas.Size = new Size(1010, 613);
+            group_Puertas.TabIndex = 16;
+            group_Puertas.TabStop = false;
+            group_Puertas.Text = "Puertas";
             // 
-            // groupBox4
+            // group_Cilindros
             // 
-            groupBox4.Controls.Add(btn_Cilindros);
-            groupBox4.Controls.Add(rb_CilindrosSi);
-            groupBox4.Controls.Add(rb_CilindrosNo);
-            groupBox4.Location = new Point(303, 164);
-            groupBox4.Margin = new Padding(3, 4, 3, 4);
-            groupBox4.Name = "groupBox4";
-            groupBox4.Padding = new Padding(3, 4, 3, 4);
-            groupBox4.Size = new Size(667, 79);
-            groupBox4.TabIndex = 16;
-            groupBox4.TabStop = false;
-            groupBox4.Text = "Cilindros";
+            group_Cilindros.Controls.Add(btn_Cilindros);
+            group_Cilindros.Controls.Add(rb_CilindrosSi);
+            group_Cilindros.Controls.Add(rb_CilindrosNo);
+            group_Cilindros.Location = new Point(303, 164);
+            group_Cilindros.Margin = new Padding(3, 4, 3, 4);
+            group_Cilindros.Name = "group_Cilindros";
+            group_Cilindros.Padding = new Padding(3, 4, 3, 4);
+            group_Cilindros.Size = new Size(667, 79);
+            group_Cilindros.TabIndex = 16;
+            group_Cilindros.TabStop = false;
+            group_Cilindros.Text = "Cilindros";
             // 
             // btn_Cilindros
             // 
@@ -141,19 +141,19 @@
             rb_CilindrosNo.UseVisualStyleBackColor = true;
             rb_CilindrosNo.CheckedChanged += rb_CilindrosNo_CheckedChanged;
             // 
-            // groupBox3
+            // group_Portero
             // 
-            groupBox3.Controls.Add(rb_PorteroSi);
-            groupBox3.Controls.Add(rb_PorteroNo);
-            groupBox3.Location = new Point(303, 29);
-            groupBox3.Margin = new Padding(3, 4, 3, 4);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Padding = new Padding(3, 4, 3, 4);
-            groupBox3.Size = new Size(161, 40);
-            groupBox3.TabIndex = 15;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Portero eléctrico";
-            groupBox3.Visible = false;
+            group_Portero.Controls.Add(rb_PorteroSi);
+            group_Portero.Controls.Add(rb_PorteroNo);
+            group_Portero.Location = new Point(303, 29);
+            group_Portero.Margin = new Padding(3, 4, 3, 4);
+            group_Portero.Name = "group_Portero";
+            group_Portero.Padding = new Padding(3, 4, 3, 4);
+            group_Portero.Size = new Size(161, 40);
+            group_Portero.TabIndex = 15;
+            group_Portero.TabStop = false;
+            group_Portero.Text = "Portero eléctrico";
+            group_Portero.Visible = false;
             // 
             // rb_PorteroSi
             // 
@@ -181,20 +181,20 @@
             rb_PorteroNo.UseVisualStyleBackColor = true;
             rb_PorteroNo.CheckedChanged += rb_PorteroNo_CheckedChanged;
             // 
-            // groupBox2
+            // group_Aguja
             // 
-            groupBox2.Controls.Add(cmb_AgujaPuerta);
-            groupBox2.Controls.Add(btn_DefinirAgujaPuertaPerfil);
-            groupBox2.Controls.Add(rb_AgujaPuertaGenerica);
-            groupBox2.Controls.Add(rb_AgujaPuertaPerfil);
-            groupBox2.Location = new Point(303, 77);
-            groupBox2.Margin = new Padding(3, 4, 3, 4);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new Padding(3, 4, 3, 4);
-            groupBox2.Size = new Size(667, 79);
-            groupBox2.TabIndex = 14;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Aguja";
+            group_Aguja.Controls.Add(cmb_AgujaPuerta);
+            group_Aguja.Controls.Add(btn_DefinirAgujaPuertaPerfil);
+            group_Aguja.Controls.Add(rb_AgujaPuertaGenerica);
+            group_Aguja.Controls.Add(rb_AgujaPuertaPerfil);
+            group_Aguja.Location = new Point(303, 77);
+            group_Aguja.Margin = new Padding(3, 4, 3, 4);
+            group_Aguja.Name = "group_Aguja";
+            group_Aguja.Padding = new Padding(3, 4, 3, 4);
+            group_Aguja.Size = new Size(667, 79);
+            group_Aguja.TabIndex = 14;
+            group_Aguja.TabStop = false;
+            group_Aguja.Text = "Aguja";
             // 
             // cmb_AgujaPuerta
             // 
@@ -330,7 +330,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(groupBox1);
+            Controls.Add(group_Puertas);
             Controls.Add(group_Comentarios);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(1081, 805);
@@ -338,13 +338,13 @@
             Size = new Size(1081, 805);
             Load += PasoPuertas_Load;
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
-            groupBox1.ResumeLayout(false);
-            groupBox4.ResumeLayout(false);
-            groupBox4.PerformLayout();
-            groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
+            group_Puertas.ResumeLayout(false);
+            group_Cilindros.ResumeLayout(false);
+            group_Cilindros.PerformLayout();
+            group_Portero.ResumeLayout(false);
+            group_Portero.PerformLayout();
+            group_Aguja.ResumeLayout(false);
+            group_Aguja.PerformLayout();
             group_Cerraduras.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvCerraduras).EndInit();
             group_Bisagras.ResumeLayout(false);
@@ -357,8 +357,8 @@
         #endregion
 
         private PictureBox pictureBox1;
-        private GroupBox groupBox1;
-        private GroupBox groupBox2;
+        private GroupBox group_Puertas;
+        private GroupBox group_Aguja;
         private ComboBox cmb_AgujaPuerta;
         private Button btn_DefinirAgujaPuertaPerfil;
         private RadioButton rb_AgujaPuertaGenerica;
@@ -369,10 +369,10 @@
         private DataGridView dgvBisagras;
         private GroupBox group_Comentarios;
         private TextBox txt_ObservacionesPuertas;
-        private GroupBox groupBox4;
+        private GroupBox group_Cilindros;
         private RadioButton rb_CilindrosSi;
         private RadioButton rb_CilindrosNo;
-        private GroupBox groupBox3;
+        private GroupBox group_Portero;
         private RadioButton rb_PorteroSi;
         private RadioButton rb_PorteroNo;
         private Button btn_Cilindros;

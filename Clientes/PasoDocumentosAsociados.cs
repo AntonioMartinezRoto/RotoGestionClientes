@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
-
-namespace RotoGestionClientes
+﻿namespace RotoGestionClientes
 {
     public partial class PasoDocumentosAsociados : UserControl
     {
@@ -29,6 +20,7 @@ namespace RotoGestionClientes
             InitializeComponent();
             _model = model;
             _context = context;
+            CargarTextos();
             CrearGrid();
             CargarDocumentosAsociados();
             txt_ObservacionesDocumentos.Text = _model.ObservacionesMaquinas;
@@ -103,6 +95,11 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            group_Documentos.Text = Lang.Documentos;
+            group_Comentarios.Text = Lang.Comentarios;
+        }
         private void CrearGrid()
         {
             dgvDocumentos.AutoGenerateColumns = false;
@@ -115,7 +112,7 @@ namespace RotoGestionClientes
             dgvDocumentos.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Nombre",
-                HeaderText = "Documento",
+                HeaderText = Lang.Documento,
                 DataPropertyName = "Nombre",
                 Width = 250,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -124,7 +121,7 @@ namespace RotoGestionClientes
             dgvDocumentos.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "NombreFicheroOriginal",
-                HeaderText = "Fichero",
+                HeaderText = Lang.Fichero,
                 DataPropertyName = "NombreFicheroOriginal",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });

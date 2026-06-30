@@ -28,28 +28,28 @@
         /// </summary>
         private void InitializeComponent()
         {
-            groupBox1 = new GroupBox();
+            group_Documentos = new GroupBox();
             btn_AddDocument = new Button();
             dgvDocumentos = new DataGridView();
             group_Comentarios = new GroupBox();
             txt_ObservacionesDocumentos = new TextBox();
-            groupBox1.SuspendLayout();
+            group_Documentos.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvDocumentos).BeginInit();
             group_Comentarios.SuspendLayout();
             SuspendLayout();
             // 
-            // groupBox1
+            // group_Documentos
             // 
-            groupBox1.Controls.Add(btn_AddDocument);
-            groupBox1.Controls.Add(dgvDocumentos);
-            groupBox1.Location = new Point(33, 4);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(1010, 558);
-            groupBox1.TabIndex = 19;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Documentos";
+            group_Documentos.Controls.Add(btn_AddDocument);
+            group_Documentos.Controls.Add(dgvDocumentos);
+            group_Documentos.Location = new Point(33, 4);
+            group_Documentos.Margin = new Padding(3, 4, 3, 4);
+            group_Documentos.Name = "group_Documentos";
+            group_Documentos.Padding = new Padding(3, 4, 3, 4);
+            group_Documentos.Size = new Size(1010, 558);
+            group_Documentos.TabIndex = 19;
+            group_Documentos.TabStop = false;
+            group_Documentos.Text = "Documentos";
             // 
             // btn_AddDocument
             // 
@@ -108,13 +108,13 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(groupBox1);
+            Controls.Add(group_Documentos);
             Controls.Add(group_Comentarios);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(1081, 805);
             Name = "PasoDocumentosAsociados";
             Size = new Size(1081, 805);
-            groupBox1.ResumeLayout(false);
+            group_Documentos.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvDocumentos).EndInit();
             group_Comentarios.ResumeLayout(false);
             group_Comentarios.PerformLayout();
@@ -123,7 +123,7 @@
 
         #endregion
 
-        private GroupBox groupBox1;
+        private GroupBox group_Documentos;
         private GroupBox groupSoporteMarco;
         private RadioButton radioButton5;
         private RadioButton radioButton3;

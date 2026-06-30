@@ -32,6 +32,7 @@ namespace RotoGestionClientes
             _context = context;
             _model = model;
 
+            CargarTextos();
             CrearGridCilindros();
             CargarCilindros();
         }
@@ -64,6 +65,12 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            this.Text = Lang.SeleccionarCilindros;
+            group_Cilindros.Text = Lang.Cilindros;
+            btn_Aceptar.Text = Lang.Guardar;
+        }
         private void CrearGridCilindros()
         {
             dgvCilindros.AutoGenerateColumns = false;
@@ -80,7 +87,7 @@ namespace RotoGestionClientes
             dgvCilindros.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "CilindroTipoNombre",
-                HeaderText = "Tipo",
+                HeaderText = Lang.Tipo,
                 ReadOnly = true,
                 Width = 90
             });
@@ -88,7 +95,7 @@ namespace RotoGestionClientes
             dgvCilindros.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "MedidaInterior",
-                HeaderText = "Interior",
+                HeaderText = Lang.Interior,
                 ReadOnly = true,
                 Width = 60
             });
@@ -96,7 +103,7 @@ namespace RotoGestionClientes
             dgvCilindros.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "MedidaExterior",
-                HeaderText = "Exterior",
+                HeaderText = Lang.Exterior,
                 ReadOnly = true,
                 Width = 60
             });
@@ -104,7 +111,7 @@ namespace RotoGestionClientes
             dgvCilindros.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Nomenclatura",
-                HeaderText = "Nomenclatura",
+                HeaderText = Lang.Nomenclatura,
                 ReadOnly = true,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });

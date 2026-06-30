@@ -26,6 +26,8 @@ namespace RotoGestionClientes
         #region Events
         private void PasoElevablesPlegables_Load(object sender, EventArgs e)
         {
+            CargarTextos();
+
             txt_ObservacionesPlegables.Text = _model.ObservacionesPlegables;
             txt_ObservacionesElevables.Text = _model.ObservacionesElevables;
 
@@ -74,6 +76,23 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+
+
+        private void CargarTextos()
+        {
+            group_Elevables.Text = Lang.Elevables;
+            group_Estandar.Text = Lang.Estandar;
+            groupDLO.Text = Lang.Dlo;
+            rb_ConsumoNo.Text = Lang.No;
+            rb_ConsumoSi.Text = Lang.Si;
+            rb_DloNo.Text = Lang.No;
+            rb_DloSi.Text = Lang.Si;
+            rb_EstandarNo.Text = Lang.No;
+            rb_EstandarSi.Text = Lang.Si;
+            group_Plegables.Text = Lang.Plegables;
+            group_ObservacionesPlegables.Text = Lang.Comentarios;
+            group_Comentarios.Text = Lang.Comentarios;
+        }
 
         #endregion
 

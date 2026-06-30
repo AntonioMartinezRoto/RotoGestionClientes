@@ -32,7 +32,7 @@
             pictureBox1 = new PictureBox();
             group_Comentarios = new GroupBox();
             txt_ObservacionesCorrederas = new TextBox();
-            groupBox1 = new GroupBox();
+            group_Correderas = new GroupBox();
             groupBombillo = new GroupBox();
             rb_BombilloSi = new RadioButton();
             rb_BombilloNo = new RadioButton();
@@ -40,7 +40,7 @@
             dgvAgujas = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             group_Comentarios.SuspendLayout();
-            groupBox1.SuspendLayout();
+            group_Correderas.SuspendLayout();
             groupBombillo.SuspendLayout();
             group_Agujas.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvAgujas).BeginInit();
@@ -81,19 +81,19 @@
             txt_ObservacionesCorrederas.TabIndex = 8;
             txt_ObservacionesCorrederas.TextChanged += txt_ObservacionesCorrederas_TextChanged;
             // 
-            // groupBox1
+            // group_Correderas
             // 
-            groupBox1.Controls.Add(groupBombillo);
-            groupBox1.Controls.Add(group_Agujas);
-            groupBox1.Controls.Add(pictureBox1);
-            groupBox1.Location = new Point(33, 4);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(1010, 599);
-            groupBox1.TabIndex = 18;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Correderas";
+            group_Correderas.Controls.Add(groupBombillo);
+            group_Correderas.Controls.Add(group_Agujas);
+            group_Correderas.Controls.Add(pictureBox1);
+            group_Correderas.Location = new Point(33, 4);
+            group_Correderas.Margin = new Padding(3, 4, 3, 4);
+            group_Correderas.Name = "group_Correderas";
+            group_Correderas.Padding = new Padding(3, 4, 3, 4);
+            group_Correderas.Size = new Size(1010, 599);
+            group_Correderas.TabIndex = 18;
+            group_Correderas.TabStop = false;
+            group_Correderas.Text = "Correderas";
             // 
             // groupBombillo
             // 
@@ -169,7 +169,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(groupBox1);
+            Controls.Add(group_Correderas);
             Controls.Add(group_Comentarios);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(1081, 805);
@@ -179,7 +179,7 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             group_Comentarios.ResumeLayout(false);
             group_Comentarios.PerformLayout();
-            groupBox1.ResumeLayout(false);
+            group_Correderas.ResumeLayout(false);
             groupBombillo.ResumeLayout(false);
             groupBombillo.PerformLayout();
             group_Agujas.ResumeLayout(false);
@@ -192,7 +192,7 @@
         private PictureBox pictureBox1;
         private GroupBox group_Comentarios;
         private TextBox txt_ObservacionesCorrederas;
-        private GroupBox groupBox1;
+        private GroupBox group_Correderas;
         private GroupBox group_Agujas;
         private DataGridView dgvAgujas;
         private GroupBox groupBombillo;

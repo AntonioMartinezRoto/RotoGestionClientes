@@ -35,10 +35,10 @@
             groupConsumoPlegable = new GroupBox();
             rb_ConsumoSi = new RadioButton();
             rb_ConsumoNo = new RadioButton();
-            groupBox2 = new GroupBox();
+            group_ObservacionesPlegables = new GroupBox();
             txt_ObservacionesPlegables = new TextBox();
-            groupBox1 = new GroupBox();
-            groupBox3 = new GroupBox();
+            group_Elevables = new GroupBox();
+            group_Estandar = new GroupBox();
             rb_EstandarSi = new RadioButton();
             rb_EstandarNo = new RadioButton();
             groupDLO = new GroupBox();
@@ -50,9 +50,9 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             group_Plegables.SuspendLayout();
             groupConsumoPlegable.SuspendLayout();
-            groupBox2.SuspendLayout();
-            groupBox1.SuspendLayout();
-            groupBox3.SuspendLayout();
+            group_ObservacionesPlegables.SuspendLayout();
+            group_Elevables.SuspendLayout();
+            group_Estandar.SuspendLayout();
             groupDLO.SuspendLayout();
             group_Comentarios.SuspendLayout();
             SuspendLayout();
@@ -84,7 +84,7 @@
             // group_Plegables
             // 
             group_Plegables.Controls.Add(groupConsumoPlegable);
-            group_Plegables.Controls.Add(groupBox2);
+            group_Plegables.Controls.Add(group_ObservacionesPlegables);
             group_Plegables.Controls.Add(pictureBox2);
             group_Plegables.Location = new Point(25, 419);
             group_Plegables.Margin = new Padding(3, 4, 3, 4);
@@ -134,17 +134,17 @@
             rb_ConsumoNo.UseVisualStyleBackColor = true;
             rb_ConsumoNo.CheckedChanged += rb_ConsumoNo_CheckedChanged;
             // 
-            // groupBox2
+            // group_ObservacionesPlegables
             // 
-            groupBox2.Controls.Add(txt_ObservacionesPlegables);
-            groupBox2.Location = new Point(453, 196);
-            groupBox2.Margin = new Padding(3, 4, 3, 4);
-            groupBox2.Name = "groupBox2";
-            groupBox2.Padding = new Padding(3, 4, 3, 4);
-            groupBox2.Size = new Size(561, 139);
-            groupBox2.TabIndex = 17;
-            groupBox2.TabStop = false;
-            groupBox2.Text = "Observaciones";
+            group_ObservacionesPlegables.Controls.Add(txt_ObservacionesPlegables);
+            group_ObservacionesPlegables.Location = new Point(453, 196);
+            group_ObservacionesPlegables.Margin = new Padding(3, 4, 3, 4);
+            group_ObservacionesPlegables.Name = "group_ObservacionesPlegables";
+            group_ObservacionesPlegables.Padding = new Padding(3, 4, 3, 4);
+            group_ObservacionesPlegables.Size = new Size(561, 139);
+            group_ObservacionesPlegables.TabIndex = 17;
+            group_ObservacionesPlegables.TabStop = false;
+            group_ObservacionesPlegables.Text = "Observaciones";
             // 
             // txt_ObservacionesPlegables
             // 
@@ -157,33 +157,33 @@
             txt_ObservacionesPlegables.TabIndex = 8;
             txt_ObservacionesPlegables.TextChanged += txt_ObservacionesPlegables_TextChanged;
             // 
-            // groupBox1
+            // group_Elevables
             // 
-            groupBox1.Controls.Add(groupBox3);
-            groupBox1.Controls.Add(groupDLO);
-            groupBox1.Controls.Add(group_Comentarios);
-            groupBox1.Controls.Add(pictureBox1);
-            groupBox1.Location = new Point(25, 25);
-            groupBox1.Margin = new Padding(3, 4, 3, 4);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(3, 4, 3, 4);
-            groupBox1.Size = new Size(1032, 367);
-            groupBox1.TabIndex = 4;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Elevables";
+            group_Elevables.Controls.Add(group_Estandar);
+            group_Elevables.Controls.Add(groupDLO);
+            group_Elevables.Controls.Add(group_Comentarios);
+            group_Elevables.Controls.Add(pictureBox1);
+            group_Elevables.Location = new Point(25, 25);
+            group_Elevables.Margin = new Padding(3, 4, 3, 4);
+            group_Elevables.Name = "group_Elevables";
+            group_Elevables.Padding = new Padding(3, 4, 3, 4);
+            group_Elevables.Size = new Size(1032, 367);
+            group_Elevables.TabIndex = 4;
+            group_Elevables.TabStop = false;
+            group_Elevables.Text = "Elevables";
             // 
-            // groupBox3
+            // group_Estandar
             // 
-            groupBox3.Controls.Add(rb_EstandarSi);
-            groupBox3.Controls.Add(rb_EstandarNo);
-            groupBox3.Location = new Point(453, 45);
-            groupBox3.Margin = new Padding(3, 4, 3, 4);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Padding = new Padding(3, 4, 3, 4);
-            groupBox3.Size = new Size(138, 148);
-            groupBox3.TabIndex = 18;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Estándar";
+            group_Estandar.Controls.Add(rb_EstandarSi);
+            group_Estandar.Controls.Add(rb_EstandarNo);
+            group_Estandar.Location = new Point(453, 45);
+            group_Estandar.Margin = new Padding(3, 4, 3, 4);
+            group_Estandar.Name = "group_Estandar";
+            group_Estandar.Padding = new Padding(3, 4, 3, 4);
+            group_Estandar.Size = new Size(138, 148);
+            group_Estandar.TabIndex = 18;
+            group_Estandar.TabStop = false;
+            group_Estandar.Text = "Estándar";
             // 
             // rb_EstandarSi
             // 
@@ -278,7 +278,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            Controls.Add(groupBox1);
+            Controls.Add(group_Elevables);
             Controls.Add(group_Plegables);
             Margin = new Padding(3, 4, 3, 4);
             MinimumSize = new Size(1081, 805);
@@ -290,11 +290,11 @@
             group_Plegables.ResumeLayout(false);
             groupConsumoPlegable.ResumeLayout(false);
             groupConsumoPlegable.PerformLayout();
-            groupBox2.ResumeLayout(false);
-            groupBox2.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
+            group_ObservacionesPlegables.ResumeLayout(false);
+            group_ObservacionesPlegables.PerformLayout();
+            group_Elevables.ResumeLayout(false);
+            group_Estandar.ResumeLayout(false);
+            group_Estandar.PerformLayout();
             groupDLO.ResumeLayout(false);
             groupDLO.PerformLayout();
             group_Comentarios.ResumeLayout(false);
@@ -307,10 +307,10 @@
         private PictureBox pictureBox1;
         private PictureBox pictureBox2;
         private GroupBox group_Plegables;
-        private GroupBox groupBox1;
+        private GroupBox group_Elevables;
         private GroupBox group_Comentarios;
         private TextBox txt_ObservacionesElevables;
-        private GroupBox groupBox2;
+        private GroupBox group_ObservacionesPlegables;
         private TextBox txt_ObservacionesPlegables;
         private GroupBox groupDLO;
         private RadioButton rb_DloSi;
@@ -318,7 +318,7 @@
         private GroupBox groupConsumoPlegable;
         private RadioButton rb_ConsumoSi;
         private RadioButton rb_ConsumoNo;
-        private GroupBox groupBox3;
+        private GroupBox group_Estandar;
         private RadioButton rb_EstandarSi;
         private RadioButton rb_EstandarNo;
     }

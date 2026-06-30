@@ -40,6 +40,8 @@ namespace RotoGestionClientes
         #region Events
         private void DefinicionMaquinas_Load(object sender, EventArgs e)
         {
+            CargarTextos();
+
             cmb_TipoMaquina.DataSource = _context.MaquinasTipos
                                         .Where(x => x.Activa)
                                         .OrderBy(x => x.Descripcion)
@@ -135,6 +137,17 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+
+
+        private void CargarTextos()
+        {
+            group_Comentarios.Text = Lang.Comentarios;
+            group_TipoMaquina.Text = Lang.Tipo;
+            group_MarcaMaquina.Text = Lang.Marca;
+            group_EmpresaMaquina.Text = Lang.Mantenimiento;
+            btn_Aceptar.Text = Lang.Guardar;
+        }
+
 
         #endregion
 

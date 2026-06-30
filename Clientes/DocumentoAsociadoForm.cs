@@ -29,12 +29,21 @@ namespace RotoGestionClientes
         #region Events
         private void DocumentoAsociadoForm_Load(object sender, EventArgs e)
         {
-            lblFichero.Text = "Ningún fichero seleccionado";
+            CargarTextos();
+            lblFichero.Text = Lang.NingunFichero;
         }
         #endregion
 
         #region Private methods
 
+
+        private void CargarTextos()
+        {
+            lbl_NombreDoc.Text = Lang.NombreDocumento;
+            btn_Aceptar.Text = Lang.Guardar;
+            btn_Cancelar.Text = Lang.Cancelar;
+            btn_Seleccionar.Text = Lang.SeleccionarDocumento;
+        }
         #endregion
 
 
@@ -43,7 +52,6 @@ namespace RotoGestionClientes
         {
             using (var ofd = new OpenFileDialog())
             {
-                ofd.Title = "Seleccionar documento";
                 ofd.Filter = "Documentos|*.pdf;*.doc;*.docx;*.xls;*.xlsx;*.txt|Todos los archivos|*.*";
 
                 if (ofd.ShowDialog() == DialogResult.OK)
@@ -58,14 +66,14 @@ namespace RotoGestionClientes
         {
             if (string.IsNullOrWhiteSpace(FilePath) || !File.Exists(FilePath))
             {
-                MessageBox.Show("Debes seleccionar un documento.", "Validación",
+                MessageBox.Show(Lang.DocumentoObligatorio, Lang.Validacion,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(txt_Nombre.Text))
             {
-                MessageBox.Show("Debes indicar un nombre para el documento.", "Validación",
+                MessageBox.Show(Lang.IndicarNombreDoc, Lang.Validacion,
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }

@@ -1,11 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Data;
 using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
@@ -38,6 +31,7 @@ namespace RotoGestionClientes
         #region Events
         private void PasoPuertas_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             txt_ObservacionesPuertas.Text = _model.ObservacionesPuertas;
             CrearGridBisagras();
             RellenarGridBisagras();
@@ -77,6 +71,7 @@ namespace RotoGestionClientes
                 rb_CilindrosNo.Checked = true;
             }
         }
+
         private void dgvBisagras_CellMouseUp(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.ColumnIndex < 0) return;
@@ -180,6 +175,21 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+
+        private void CargarTextos()
+        {
+            group_Puertas.Text = Lang.Puertas;
+            group_Aguja.Text = Lang.Aguja;
+            rb_AgujaPuertaGenerica.Text = Lang.Todos;
+            rb_AgujaPuertaPerfil.Text = Lang.PorPerfil;
+            group_Bisagras.Text = Lang.Bisagras;
+            group_Cerraduras.Text = Lang.Cerraduras;
+            group_Comentarios.Text = Lang.Comentarios;
+            group_Cilindros.Text = Lang.Cilindros;
+            rb_CilindrosNo.Text = Lang.No;
+            rb_CilindrosSi.Text = Lang.Si;
+        }
+
         private void RellenarAgujasPuerta()
         {
             List<Aguja> agujaList = new List<Aguja>();
