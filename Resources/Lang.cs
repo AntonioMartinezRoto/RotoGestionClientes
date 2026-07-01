@@ -175,4 +175,14 @@ public static class Lang
     public static string ConsumenPlegables => Textos.ConsumenPlegables;
     public static string Desconocido => Textos.Desconocido;
     #endregion
+    #region Mantenimiento
+
+    public static string Usuarios => Textos.Usuarios;
+    public static string Pasivas => Textos.Pasivas;
+    public static string TipoMaquinas => Textos.TipoMaquinas;
+    public static string MarcasMaquinas => Textos.MarcasMaquinas;
+    public static string MantenimientoMaquinas => Textos.MantenimientoMaquina;
+    public static string Activo => Textos.Activo;
+    public static string EsDistribuidor => Textos.EsDistribuidor;
+    #endregion
 }

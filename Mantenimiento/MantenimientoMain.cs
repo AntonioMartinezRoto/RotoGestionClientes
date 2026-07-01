@@ -17,7 +17,7 @@ namespace RotoGestionClientes
         #region Private properties
 
         private readonly ApplicationDbContext _context;
-        private MaestroTipo _tablaActual;
+        private MaestroTipo? _tablaActual = null;
         #endregion
 
         #region Constructors
@@ -33,6 +33,7 @@ namespace RotoGestionClientes
         private void MantenimientoMain_Load(object sender, EventArgs e)
         {
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
+            CargarTextos();
             CrearGrid();
         }
         private void btn_Perfiles_Click(object sender, EventArgs e)
@@ -82,7 +83,10 @@ namespace RotoGestionClientes
         }
         private void btn_Add_Click(object sender, EventArgs e)
         {
-            using var form = new MaestroEditForm(_context, _tablaActual);
+            if (!_tablaActual.HasValue)
+                return;
+
+            using var form = new MaestroEditForm(_context, _tablaActual.Value);
 
             if (form.ShowDialog() != DialogResult.OK)
                 return;
@@ -95,17 +99,24 @@ namespace RotoGestionClientes
         }
         private void dgvMaestros_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+
             if (e.RowIndex < 0)
                 return;
 
             if (dgvMaestros.Columns[e.ColumnIndex].Name != "Edit")
                 return;
 
+            if (!_tablaActual.HasValue)
+                return;
+
             var item = (MaestroGridItem)dgvMaestros.Rows[e.RowIndex].DataBoundItem;
+
+            if(item == null)
+                return;
 
             using var form = new MaestroEditForm(
                 _context,
-                _tablaActual,
+                _tablaActual.Value,
                 item.Id);
 
             if (form.ShowDialog() != DialogResult.OK)
@@ -116,6 +127,21 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            btn_Usuarios.Text = Lang.Usuarios;
+            btn_Perfiles.Text = Lang.Perfiles;
+            btn_Software.Text = Lang.Software;
+            btn_MaquinaMarcas.Text = Lang.MarcasMaquinas;
+            btn_MaquinaMantenimiento.Text = Lang.MantenimientoMaquinas;
+            btn_MaquinaTipo.Text = Lang.TipoMaquinas;
+            btn_TipoSeguridad.Text = Lang.SeguridadVentana;
+            btn_Pasivas.Text = Lang.Pasivas;
+            btn_Manillas.Text = Lang.Manillas;
+            btn_Bisagras.Text = Lang.Bisagras;
+            btn_Cerraduras.Text = Lang.Cerraduras;
+            btn_Volver.Text = Lang.VolverMenu;
+        }
         private void CrearGrid()
         {
             dgvMaestros.AutoGenerateColumns = false;
@@ -127,7 +153,7 @@ namespace RotoGestionClientes
             dgvMaestros.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Nombre",
-                HeaderText = "Nombre",
+                HeaderText = Lang.Nombre,
                 DataPropertyName = "Nombre",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
@@ -135,7 +161,7 @@ namespace RotoGestionClientes
             dgvMaestros.Columns.Add(new DataGridViewCheckBoxColumn
             {
                 Name = "Activa",
-                HeaderText = "Activo",
+                HeaderText = Lang.Activo,
                 DataPropertyName = "Activa",
                 Width = 80
             });
@@ -161,7 +187,7 @@ namespace RotoGestionClientes
             dgvMaestros.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Nombre",
-                HeaderText = "Nombre",
+                HeaderText = Lang.Nombre,
                 DataPropertyName = "Nombre",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
@@ -171,7 +197,7 @@ namespace RotoGestionClientes
                 dgvMaestros.Columns.Add(new DataGridViewTextBoxColumn
                 {
                     Name = "Tipo",
-                    HeaderText = "Tipo",
+                    HeaderText = Lang.Tipo,
                     DataPropertyName = "Tipo",
                     Width = 200
                 });
@@ -182,7 +208,7 @@ namespace RotoGestionClientes
                 dgvMaestros.Columns.Add(new DataGridViewCheckBoxColumn
                 {
                     Name = "EsDistribuidor",
-                    HeaderText = "Es Distribuidor",
+                    HeaderText = Lang.EsDistribuidor,
                     DataPropertyName = "EsDistribuidor",
                     Width = 120,
                     ReadOnly = true
@@ -192,7 +218,7 @@ namespace RotoGestionClientes
             dgvMaestros.Columns.Add(new DataGridViewCheckBoxColumn
             {
                 Name = "Activa",
-                HeaderText = "Activa",
+                HeaderText = Lang.Activo,
                 DataPropertyName = "Activa",
                 Width = 80,
                 ReadOnly = true

@@ -1,11 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
 using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
@@ -28,7 +22,17 @@ namespace RotoGestionClientes
         }
         private void MaestroEditForm_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             CargarDatos();
+        }
+        private void CargarTextos()
+        {
+            btn_Aceptar.Text = Lang.Guardar;
+            btn_Cancelar.Text = Lang.Cancelar;
+            lbl_Nombre.Text = Lang.Nombre;
+            lbl_PerfilTipo.Text = Lang.Tipo;
+            chk_Activo.Text = Lang.Activo;
+            chk_EsDistribuidor.Text = Lang.EsDistribuidor;
         }
         private void CargarDatos()
         {

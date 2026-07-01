@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Activo" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
   <data name="Actualizar_datos_Roto" xml:space="preserve">
     <value>Atualizar dados do Roto</value>
   </data>
@@ -261,6 +264,9 @@
   <data name="ErrorAlImportar" xml:space="preserve">
     <value>Erro ao importar cliente:</value>
   </data>
+  <data name="EsDistribuidor" xml:space="preserve">
+    <value>É distribuidor</value>
+  </data>
   <data name="Estandar" xml:space="preserve">
     <value>Padrão</value>
   </data>
@@ -309,11 +315,17 @@
   <data name="Mantenimiento" xml:space="preserve">
     <value>Manutenção</value>
   </data>
+  <data name="MantenimientoMaquina" xml:space="preserve">
+    <value>Manutenção de máquinas</value>
+  </data>
   <data name="Maquinas" xml:space="preserve">
     <value>Máquinas</value>
   </data>
   <data name="Marca" xml:space="preserve">
     <value>Marca</value>
+  </data>
+  <data name="MarcasMaquinas" xml:space="preserve">
+    <value>Marcas de máquinas</value>
   </data>
   <data name="Menu_principal" xml:space="preserve">
     <value>Menu principal</value>
@@ -356,6 +368,9 @@
   </data>
   <data name="PasivaPracticables" xml:space="preserve">
     <value>Passiva (Practicables)</value>
+  </data>
+  <data name="Pasivas" xml:space="preserve">
+    <value>Passivas</value>
   </data>
   <data name="Perfil" xml:space="preserve">
     <value>Perfil</value>
@@ -438,6 +453,9 @@
   <data name="Tipo" xml:space="preserve">
     <value>Tipo</value>
   </data>
+  <data name="TipoMaquinas" xml:space="preserve">
+    <value>Tipo de máquinas</value>
+  </data>
   <data name="TipoPerfil" xml:space="preserve">
     <value>Tipo de perfil</value>
   </data>
@@ -452,6 +470,9 @@
   </data>
   <data name="UsaElevablesDlo" xml:space="preserve">
     <value>Utiliza elevadores DLO</value>
+  </data>
+  <data name="Usuarios" xml:space="preserve">
+    <value>Utilizadores</value>
   </data>
   <data name="Validación" xml:space="preserve">
     <value>Validação</value>

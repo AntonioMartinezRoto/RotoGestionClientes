@@ -61,6 +61,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Activo.
+        /// </summary>
+        internal static string Activo {
+            get {
+                return ResourceManager.GetString("Activo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Actualizar datos Roto.
         /// </summary>
         internal static string Actualizar_datos_Roto {
@@ -493,6 +502,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Es distribuidor.
+        /// </summary>
+        internal static string EsDistribuidor {
+            get {
+                return ResourceManager.GetString("EsDistribuidor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Estándar.
         /// </summary>
         internal static string Estandar {
@@ -637,6 +655,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Mantenimiento máquinas.
+        /// </summary>
+        internal static string MantenimientoMaquina {
+            get {
+                return ResourceManager.GetString("MantenimientoMaquina", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Máquinas.
         /// </summary>
         internal static string Maquinas {
@@ -651,6 +678,15 @@ namespace RotoGestionClientes.Resources {
         internal static string Marca {
             get {
                 return ResourceManager.GetString("Marca", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Marcas de máquinas.
+        /// </summary>
+        internal static string MarcasMaquinas {
+            get {
+                return ResourceManager.GetString("MarcasMaquinas", resourceCulture);
             }
         }
         
@@ -777,6 +813,15 @@ namespace RotoGestionClientes.Resources {
         internal static string PasivaPracticables {
             get {
                 return ResourceManager.GetString("PasivaPracticables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Pasivas.
+        /// </summary>
+        internal static string Pasivas {
+            get {
+                return ResourceManager.GetString("Pasivas", resourceCulture);
             }
         }
         
@@ -1024,6 +1069,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Tipo de máquinas.
+        /// </summary>
+        internal static string TipoMaquinas {
+            get {
+                return ResourceManager.GetString("TipoMaquinas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Tipo de perfil.
         /// </summary>
         internal static string TipoPerfil {
@@ -1065,6 +1119,15 @@ namespace RotoGestionClientes.Resources {
         internal static string UsaElevablesDlo {
             get {
                 return ResourceManager.GetString("UsaElevablesDlo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Usuarios.
+        /// </summary>
+        internal static string Usuarios {
+            get {
+                return ResourceManager.GetString("Usuarios", resourceCulture);
             }
         }
         
