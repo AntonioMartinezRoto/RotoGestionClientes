@@ -33,14 +33,14 @@
             tlpHeader = new TableLayoutPanel();
             pictureBox1 = new PictureBox();
             tlpInfoHeader = new TableLayoutPanel();
+            lbl_ObservacionesDato = new Label();
             lbl_Observaciones = new Label();
-            label4 = new Label();
-            lbl_Alias = new Label();
-            lbl_SapId = new Label();
+            lbl_ResponsableDato = new Label();
+            lbl_SapIdDato = new Label();
+            lbl_NombreDato = new Label();
             lbl_Nombre = new Label();
-            label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
+            lbl_SapId = new Label();
+            lbl_Responsable = new Label();
             tlpBody = new TableLayoutPanel();
             tlpLeft = new TableLayoutPanel();
             groupBox_Documentos = new GroupBox();
@@ -173,14 +173,14 @@
             tlpInfoHeader.ColumnCount = 2;
             tlpInfoHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F));
             tlpInfoHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tlpInfoHeader.Controls.Add(lbl_Observaciones, 1, 3);
-            tlpInfoHeader.Controls.Add(label4, 0, 3);
-            tlpInfoHeader.Controls.Add(lbl_Alias, 1, 2);
-            tlpInfoHeader.Controls.Add(lbl_SapId, 1, 1);
-            tlpInfoHeader.Controls.Add(lbl_Nombre, 1, 0);
-            tlpInfoHeader.Controls.Add(label1, 0, 0);
-            tlpInfoHeader.Controls.Add(label2, 0, 1);
-            tlpInfoHeader.Controls.Add(label3, 0, 2);
+            tlpInfoHeader.Controls.Add(lbl_ObservacionesDato, 1, 3);
+            tlpInfoHeader.Controls.Add(lbl_Observaciones, 0, 3);
+            tlpInfoHeader.Controls.Add(lbl_ResponsableDato, 1, 2);
+            tlpInfoHeader.Controls.Add(lbl_SapIdDato, 1, 1);
+            tlpInfoHeader.Controls.Add(lbl_NombreDato, 1, 0);
+            tlpInfoHeader.Controls.Add(lbl_Nombre, 0, 0);
+            tlpInfoHeader.Controls.Add(lbl_SapId, 0, 1);
+            tlpInfoHeader.Controls.Add(lbl_Responsable, 0, 2);
             tlpInfoHeader.Dock = DockStyle.Fill;
             tlpInfoHeader.Location = new Point(253, 3);
             tlpInfoHeader.Name = "tlpInfoHeader";
@@ -192,81 +192,81 @@
             tlpInfoHeader.Size = new Size(1295, 108);
             tlpInfoHeader.TabIndex = 2;
             // 
+            // lbl_ObservacionesDato
+            // 
+            lbl_ObservacionesDato.AutoSize = true;
+            lbl_ObservacionesDato.Location = new Point(153, 78);
+            lbl_ObservacionesDato.Name = "lbl_ObservacionesDato";
+            lbl_ObservacionesDato.Size = new Size(113, 20);
+            lbl_ObservacionesDato.TabIndex = 7;
+            lbl_ObservacionesDato.Text = "COMENTARIOS:";
+            // 
             // lbl_Observaciones
             // 
             lbl_Observaciones.AutoSize = true;
-            lbl_Observaciones.Location = new Point(153, 78);
+            lbl_Observaciones.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbl_Observaciones.Location = new Point(3, 78);
             lbl_Observaciones.Name = "lbl_Observaciones";
-            lbl_Observaciones.Size = new Size(113, 20);
-            lbl_Observaciones.TabIndex = 7;
-            lbl_Observaciones.Text = "COMENTARIOS:";
+            lbl_Observaciones.Size = new Size(102, 20);
+            lbl_Observaciones.TabIndex = 6;
+            lbl_Observaciones.Text = "Comentarios:";
             // 
-            // label4
+            // lbl_ResponsableDato
             // 
-            label4.AutoSize = true;
-            label4.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label4.Location = new Point(3, 78);
-            label4.Name = "label4";
-            label4.Size = new Size(102, 20);
-            label4.TabIndex = 6;
-            label4.Text = "Comentarios:";
+            lbl_ResponsableDato.AutoSize = true;
+            lbl_ResponsableDato.Location = new Point(153, 48);
+            lbl_ResponsableDato.Name = "lbl_ResponsableDato";
+            lbl_ResponsableDato.Size = new Size(106, 20);
+            lbl_ResponsableDato.TabIndex = 5;
+            lbl_ResponsableDato.Text = "RESPONSABLE";
             // 
-            // lbl_Alias
+            // lbl_SapIdDato
             // 
-            lbl_Alias.AutoSize = true;
-            lbl_Alias.Location = new Point(153, 48);
-            lbl_Alias.Name = "lbl_Alias";
-            lbl_Alias.Size = new Size(48, 20);
-            lbl_Alias.TabIndex = 5;
-            lbl_Alias.Text = "ALIAS";
+            lbl_SapIdDato.AutoSize = true;
+            lbl_SapIdDato.Location = new Point(153, 24);
+            lbl_SapIdDato.Name = "lbl_SapIdDato";
+            lbl_SapIdDato.Size = new Size(54, 20);
+            lbl_SapIdDato.TabIndex = 4;
+            lbl_SapIdDato.Text = "SAP ID";
             // 
-            // lbl_SapId
+            // lbl_NombreDato
             // 
-            lbl_SapId.AutoSize = true;
-            lbl_SapId.Location = new Point(153, 24);
-            lbl_SapId.Name = "lbl_SapId";
-            lbl_SapId.Size = new Size(54, 20);
-            lbl_SapId.TabIndex = 4;
-            lbl_SapId.Text = "SAP ID";
+            lbl_NombreDato.AutoSize = true;
+            lbl_NombreDato.Location = new Point(153, 0);
+            lbl_NombreDato.Name = "lbl_NombreDato";
+            lbl_NombreDato.Size = new Size(70, 20);
+            lbl_NombreDato.TabIndex = 3;
+            lbl_NombreDato.Text = "NOMBRE";
             // 
             // lbl_Nombre
             // 
             lbl_Nombre.AutoSize = true;
-            lbl_Nombre.Location = new Point(153, 0);
+            lbl_Nombre.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbl_Nombre.Location = new Point(3, 0);
             lbl_Nombre.Name = "lbl_Nombre";
-            lbl_Nombre.Size = new Size(70, 20);
-            lbl_Nombre.TabIndex = 3;
-            lbl_Nombre.Text = "NOMBRE";
+            lbl_Nombre.Size = new Size(61, 20);
+            lbl_Nombre.TabIndex = 0;
+            lbl_Nombre.Text = "Cliente:";
             // 
-            // label1
+            // lbl_SapId
             // 
-            label1.AutoSize = true;
-            label1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label1.Location = new Point(3, 0);
-            label1.Name = "label1";
-            label1.Size = new Size(61, 20);
-            label1.TabIndex = 0;
-            label1.Text = "Cliente:";
+            lbl_SapId.AutoSize = true;
+            lbl_SapId.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbl_SapId.Location = new Point(3, 24);
+            lbl_SapId.Name = "lbl_SapId";
+            lbl_SapId.Size = new Size(59, 20);
+            lbl_SapId.TabIndex = 1;
+            lbl_SapId.Text = "SAP Id:";
             // 
-            // label2
+            // lbl_Responsable
             // 
-            label2.AutoSize = true;
-            label2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label2.Location = new Point(3, 24);
-            label2.Name = "label2";
-            label2.Size = new Size(59, 20);
-            label2.TabIndex = 1;
-            label2.Text = "SAP Id:";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            label3.Location = new Point(3, 48);
-            label3.Name = "label3";
-            label3.Size = new Size(47, 20);
-            label3.TabIndex = 2;
-            label3.Text = "Alias:";
+            lbl_Responsable.AutoSize = true;
+            lbl_Responsable.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            lbl_Responsable.Location = new Point(3, 48);
+            lbl_Responsable.Name = "lbl_Responsable";
+            lbl_Responsable.Size = new Size(101, 20);
+            lbl_Responsable.TabIndex = 2;
+            lbl_Responsable.Text = "Responsable:";
             // 
             // tlpBody
             // 
@@ -940,14 +940,14 @@
         private TableLayoutPanel tlpHeader;
         private PictureBox pictureBox1;
         private TableLayoutPanel tlpInfoHeader;
-        private Label label1;
-        private Label lbl_SapId;
-        private Label lbl_Alias;
         private Label lbl_Nombre;
-        private Label label2;
-        private Label label3;
+        private Label lbl_SapIdDato;
+        private Label lbl_ResponsableDato;
+        private Label lbl_NombreDato;
+        private Label lbl_SapId;
+        private Label lbl_Responsable;
+        private Label lbl_ObservacionesDato;
         private Label lbl_Observaciones;
-        private Label label4;
         private TableLayoutPanel tlpBody;
         private TableLayoutPanel tlpLeft;
         private GroupBox groupBox_Software;

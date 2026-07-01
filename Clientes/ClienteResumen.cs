@@ -1,12 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RotoGestionClientes.Models;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Text;
-using System.Windows.Forms;
+using static RotoGestionClientes.Enums;
 
 namespace RotoGestionClientes
 {
@@ -57,7 +52,7 @@ namespace RotoGestionClientes
         {
             btn_Cerrar.Text = Lang.Cancelar;
             //btn_ExportarPdf.Text = Lang.ExportarPdf;
-            lbl_Alias.Text = Lang.Alias;
+            lbl_Responsable.Text = Lang.Alias;
             lbl_Nombre.Text = Lang.Nombre;
             lbl_SapId.Text = Lang.SapId;
             lbl_Observaciones.Text = Lang.Comentarios;
@@ -141,6 +136,7 @@ namespace RotoGestionClientes
                                     c.SapId,
                                     c.Alias,
                                     c.Comentarios,
+                                    c.ResponsableId,
 
                                     Softwares = c.ClienteSoftwares
                                         .Select(x => x.Software.Nombre)
@@ -220,10 +216,11 @@ namespace RotoGestionClientes
 
             #region Carga textboxes
 
-            lbl_Nombre.Text = cliente.Nombre.Trim();
-            lbl_SapId.Text = cliente.SapId;
-            lbl_Alias.Text = cliente.Alias;
-            lbl_Observaciones.Text = cliente.Comentarios;
+            lbl_NombreDato.Text = cliente.Nombre.Trim();
+            lbl_SapIdDato.Text = cliente.SapId;
+            lbl_ObservacionesDato.Text = cliente.Comentarios;
+
+            SetResponsableAliasInfo(cliente.ResponsableId, cliente.Alias);
 
             if (cliente.ClienteConfiguracionElevablePlegable != null)
             {
@@ -341,6 +338,37 @@ namespace RotoGestionClientes
 
             #endregion
         }
+
+        private void SetResponsableAliasInfo(int? responsableId, string? alias)
+        {
+
+            var config = _context.ConfiguracionAplicacion.FirstOrDefault();
+
+            // Si no hay configuración se dejarán por defecto
+            if (config == null) return;
+
+            // Intentamos parsear el string de la BBDD al Enum para trabajar de forma segura
+            if (Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+            {
+                if (edition == ApplicationEdition.Internal || edition == ApplicationEdition.Debug)
+                {
+                    lbl_Responsable.Text = Lang.Responsable;
+                    lbl_ResponsableDato.Text = responsableId != null && responsableId != 0
+                                                ? _context.Usuarios
+                                                    .AsNoTracking()
+                                                    .Where(x => x.Id == responsableId)
+                                                    .Select(x => x.Nombre)
+                                                    .FirstOrDefault()
+                                                : string.Empty;
+                }
+                else if (edition == ApplicationEdition.Distributor)
+                {
+                    lbl_Responsable.Text = Lang.Alias;
+                    lbl_ResponsableDato.Text = alias;
+                }
+            }
+        }
+
         private string FormatearAgujasBalconera(ClienteAgujas? clienteAgujas, List<ClienteAgujasModeloPerfil>? relacionesPerfil,
                                                 Dictionary<int, string>? perfiles, Dictionary<int, string>? agujas)
         {
