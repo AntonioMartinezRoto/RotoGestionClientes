@@ -520,6 +520,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Archivo Excel creado correctamente.
+        /// </summary>
+        internal static string ExcelExportadoCorrectamente {
+            get {
+                return ResourceManager.GetString("ExcelExportadoCorrectamente", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Exportar.
         /// </summary>
         internal static string Exportar {
@@ -538,6 +547,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Exportar a Excel.
+        /// </summary>
+        internal static string ExportarExcel {
+            get {
+                return ResourceManager.GetString("ExportarExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Exterior.
         /// </summary>
         internal static string Exterior {
@@ -552,6 +570,15 @@ namespace RotoGestionClientes.Resources {
         internal static string Fichero {
             get {
                 return ResourceManager.GetString("Fichero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Filtros.
+        /// </summary>
+        internal static string Filtros {
+            get {
+                return ResourceManager.GetString("Filtros", resourceCulture);
             }
         }
         
@@ -633,6 +660,15 @@ namespace RotoGestionClientes.Resources {
         internal static string Interior {
             get {
                 return ResourceManager.GetString("Interior", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Limpiar filtros.
+        /// </summary>
+        internal static string LimpiarFiltros {
+            get {
+                return ResourceManager.GetString("LimpiarFiltros", resourceCulture);
             }
         }
         
@@ -723,6 +759,15 @@ namespace RotoGestionClientes.Resources {
         internal static string NoConsumenPlegables {
             get {
                 return ResourceManager.GetString("NoConsumenPlegables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a No hay datos para exportar..
+        /// </summary>
+        internal static string NoDatosExportar {
+            get {
+                return ResourceManager.GetString("NoDatosExportar", resourceCulture);
             }
         }
         
@@ -907,6 +952,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Responsables.
+        /// </summary>
+        internal static string Responsables {
+            get {
+                return ResourceManager.GetString("Responsables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Salir.
         /// </summary>
         internal static string Salir {
@@ -966,6 +1020,15 @@ namespace RotoGestionClientes.Resources {
         internal static string Seleccionados {
             get {
                 return ResourceManager.GetString("Seleccionados", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Seleccionar.
+        /// </summary>
+        internal static string Seleccionar {
+            get {
+                return ResourceManager.GetString("Seleccionar", resourceCulture);
             }
         }
         
@@ -1042,6 +1105,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Softwares.
+        /// </summary>
+        internal static string Softwares {
+            get {
+                return ResourceManager.GetString("Softwares", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Soporte compás.
         /// </summary>
         internal static string SoporteCompas {
@@ -1101,6 +1173,15 @@ namespace RotoGestionClientes.Resources {
         internal static string Total {
             get {
                 return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Total registros: .
+        /// </summary>
+        internal static string TotalRegistros {
+            get {
+                return ResourceManager.GetString("TotalRegistros", resourceCulture);
             }
         }
         

@@ -185,4 +185,16 @@ public static class Lang
     public static string Activo => Textos.Activo;
     public static string EsDistribuidor => Textos.EsDistribuidor;
     #endregion
+    #region Informes
+
+    public static string ExportarExcel => Textos.ExportarExcel;
+    public static string LimpiarFiltros => Textos.LimpiarFiltros;
+    public static string Filtros => Textos.Filtros;
+    public static string Responsables => Textos.Responsables;
+    public static string Softwares => Textos.Softwares;
+    public static string TotalRegistros => Textos.TotalRegistros;
+    public static string Seleccionar => Textos.Seleccionar;
+    public static string NoDatosExportar => Textos.NoDatosExportar;
+    public static string ExcelExportadoCorrectamente => Textos.ExcelExportadoCorrectamente;
+    #endregion
 }

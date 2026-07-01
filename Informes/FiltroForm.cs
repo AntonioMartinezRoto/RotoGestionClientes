@@ -34,11 +34,12 @@ namespace RotoGestionClientes
             InitializeComponent();
 
             _items = new BindingList<FiltroItem>(items);
-
+            CargarTextos();
             CrearGrid();
 
             dgvItems.DataSource = _items;
         }
+
         #endregion
 
         #region Events
@@ -50,6 +51,11 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            btn_Aceptar.Text = Lang.Guardar;
+            group_Filtro.Text = Lang.Seleccionar;
+        }
         private void CrearGrid()
         {
             dgvItems.AutoGenerateColumns = false;
@@ -65,7 +71,7 @@ namespace RotoGestionClientes
             dgvItems.Columns.Add(new DataGridViewTextBoxColumn
             {
                 DataPropertyName = "Nombre",
-                HeaderText = "Nombre",
+                HeaderText = Lang.Nombre,
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
         }

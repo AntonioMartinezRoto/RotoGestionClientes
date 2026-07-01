@@ -270,17 +270,26 @@
   <data name="Estandar" xml:space="preserve">
     <value>Padrão</value>
   </data>
+  <data name="ExcelExportadoCorrectamente" xml:space="preserve">
+    <value>Ficheiro Excel criado com sucesso</value>
+  </data>
   <data name="Exportar" xml:space="preserve">
     <value>Exportar</value>
   </data>
   <data name="ExportarClientes" xml:space="preserve">
     <value>Clientes de exportação</value>
   </data>
+  <data name="ExportarExcel" xml:space="preserve">
+    <value>Exportar para o Excel</value>
+  </data>
   <data name="Exterior" xml:space="preserve">
     <value>Exterior</value>
   </data>
   <data name="Fichero" xml:space="preserve">
     <value>Ficheiro</value>
+  </data>
+  <data name="Filtros" xml:space="preserve">
+    <value>Filtros</value>
   </data>
   <data name="Finalizar" xml:space="preserve">
     <value>Terminar</value>
@@ -308,6 +317,9 @@
   </data>
   <data name="Interior" xml:space="preserve">
     <value>Interior</value>
+  </data>
+  <data name="LimpiarFiltros" xml:space="preserve">
+    <value>Limpiar filtros</value>
   </data>
   <data name="Manillas" xml:space="preserve">
     <value>Alças</value>
@@ -338,6 +350,9 @@
   </data>
   <data name="NoConsumenPlegables" xml:space="preserve">
     <value>Não consomem dobráveis</value>
+  </data>
+  <data name="NoDatosExportar" xml:space="preserve">
+    <value>Não há dados para exportar.</value>
   </data>
   <data name="Nombre" xml:space="preserve">
     <value>Nome</value>
@@ -399,6 +414,9 @@
   <data name="Responsable" xml:space="preserve">
     <value>Responsável</value>
   </data>
+  <data name="Responsables" xml:space="preserve">
+    <value>Responsáveis</value>
+  </data>
   <data name="Salir" xml:space="preserve">
     <value>Sair</value>
   </data>
@@ -419,6 +437,9 @@
   </data>
   <data name="Seleccionados" xml:space="preserve">
     <value>Selecionado</value>
+  </data>
+  <data name="Seleccionar" xml:space="preserve">
+    <value>Selecionar</value>
   </data>
   <data name="SeleccionarCilindros" xml:space="preserve">
     <value>Selecionar cilindros</value>
@@ -444,6 +465,9 @@
   <data name="Software" xml:space="preserve">
     <value>Software</value>
   </data>
+  <data name="Softwares" xml:space="preserve">
+    <value>Softwares</value>
+  </data>
   <data name="SoporteCompas" xml:space="preserve">
     <value>Suporte de fixação</value>
   </data>
@@ -464,6 +488,9 @@
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total: </value>
+  </data>
+  <data name="TotalRegistros" xml:space="preserve">
+    <value>Total de registos: </value>
   </data>
   <data name="TripleTaladroCentro" xml:space="preserve">
     <value>Broca tripla num centro de maquinagem</value>

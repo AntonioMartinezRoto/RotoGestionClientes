@@ -30,9 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FiltroForm));
             btn_Aceptar = new Button();
-            group_Agujas = new GroupBox();
+            group_Filtro = new GroupBox();
             dgvItems = new DataGridView();
-            group_Agujas.SuspendLayout();
+            group_Filtro.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvItems).BeginInit();
             SuspendLayout();
             // 
@@ -52,17 +52,17 @@
             btn_Aceptar.UseVisualStyleBackColor = true;
             btn_Aceptar.Click += btn_Aceptar_Click;
             // 
-            // group_Agujas
+            // group_Filtro
             // 
-            group_Agujas.Controls.Add(dgvItems);
-            group_Agujas.Location = new Point(47, 48);
-            group_Agujas.Margin = new Padding(3, 4, 3, 4);
-            group_Agujas.Name = "group_Agujas";
-            group_Agujas.Padding = new Padding(3, 4, 3, 4);
-            group_Agujas.Size = new Size(441, 361);
-            group_Agujas.TabIndex = 9;
-            group_Agujas.TabStop = false;
-            group_Agujas.Text = "Seleccionar";
+            group_Filtro.Controls.Add(dgvItems);
+            group_Filtro.Location = new Point(47, 48);
+            group_Filtro.Margin = new Padding(3, 4, 3, 4);
+            group_Filtro.Name = "group_Filtro";
+            group_Filtro.Padding = new Padding(3, 4, 3, 4);
+            group_Filtro.Size = new Size(441, 361);
+            group_Filtro.TabIndex = 9;
+            group_Filtro.TabStop = false;
+            group_Filtro.Text = "Seleccionar";
             // 
             // dgvItems
             // 
@@ -88,13 +88,13 @@
             BackColor = Color.White;
             ClientSize = new Size(556, 516);
             Controls.Add(btn_Aceptar);
-            Controls.Add(group_Agujas);
+            Controls.Add(group_Filtro);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             Name = "FiltroForm";
             StartPosition = FormStartPosition.CenterScreen;
-            group_Agujas.ResumeLayout(false);
+            group_Filtro.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)dgvItems).EndInit();
             ResumeLayout(false);
         }
@@ -102,7 +102,7 @@
         #endregion
 
         private Button btn_Aceptar;
-        private GroupBox group_Agujas;
+        private GroupBox group_Filtro;
         private DataGridView dgvItems;
     }
 }

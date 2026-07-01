@@ -32,6 +32,7 @@ namespace RotoGestionClientes
         private void InformesMain_Load(object sender, EventArgs e)
         {
             panel_Sidebar.BackColor = Color.FromArgb(245, 247, 250);
+            CargarTextos();
             CrearGrid();
             SetVisibilidadModoAplicacion();
             //CargarResultados();
@@ -54,12 +55,13 @@ namespace RotoGestionClientes
             _bindingResultados.DataSource = resultado;
             dgvResultados.DataSource = _bindingResultados;
 
-            lbl_Total.Text = $"Total registros: {resultado.Count}";
+            lbl_Total.Text = $"{Lang.TotalRegistros} {resultado.Count}";
         }
-
         private void btn_ExportExcel_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             ExportarExcel();
+            Cursor.Current = Cursors.Default;
         }
         private void btn_Volver_Click(object sender, EventArgs e)
         {
@@ -105,11 +107,29 @@ namespace RotoGestionClientes
 
             dgvResultados.DataSource = null;
 
-            lbl_Total.Text = "Total registros: 0";
+            lbl_Total.Text = $"{Lang.TotalRegistros} 0";
         }
         #endregion
 
         #region Private methods
+
+        private void CargarTextos()
+        {
+            btn_ExportExcel.Text = Lang.ExportarExcel;
+            btn_Volver.Text = Lang.VolverMenu;
+            btn_LimpiarFiltros.Text = Lang.LimpiarFiltros;
+            btn_Buscar.Text = Lang.Buscar;
+            btn_Responsables.Text = Lang.Responsables;
+            btn_Manillas.Text = Lang.Manillas;
+            btn_Bisagras.Text = Lang.Bisagras;
+            btn_Cerraduras.Text = Lang.Cerraduras;
+            btn_Software.Text = Lang.Softwares;
+            btn_Perfiles.Text = Lang.Perfiles;
+            btn_MaquinasTipo.Text = Lang.Maquinas;
+            lbl_Filtro.Text = Lang.Buscar;
+            lbl_Total.Text = Lang.TotalRegistros + " 0";
+        }
+
         private void AbrirFiltro(InformeFiltroTipo tipo)
         {
             var items = ObtenerItemsFiltro(tipo);
@@ -353,7 +373,7 @@ namespace RotoGestionClientes
             _bindingResultados.DataSource = _resultadoActual;
             dgvResultados.DataSource = _bindingResultados;
 
-            lbl_Total.Text = $"Total registros: {_resultadoActual.Count}";
+            lbl_Total.Text = $"{Lang.TotalRegistros} {_resultadoActual.Count}";
         }
         private void ActualizarTodosBotones()
         {
@@ -392,7 +412,7 @@ namespace RotoGestionClientes
             dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Nombre",
-                HeaderText = "Cliente",
+                HeaderText = Lang.Nombre,
                 DataPropertyName = "Nombre",
                 Width = 250
             });
@@ -400,7 +420,7 @@ namespace RotoGestionClientes
             dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Software",
-                HeaderText = "Software",
+                HeaderText = Lang.Software,
                 DataPropertyName = "Software",
                 Width = 180
             });
@@ -408,7 +428,7 @@ namespace RotoGestionClientes
             dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Perfiles",
-                HeaderText = "Perfiles",
+                HeaderText = Lang.Perfiles,
                 DataPropertyName = "Perfiles",
 
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
@@ -417,7 +437,7 @@ namespace RotoGestionClientes
             dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Cerraduras",
-                HeaderText = "Cerraduras",
+                HeaderText = Lang.Cerraduras,
                 DataPropertyName = "Cerraduras",
                 Width = 250
             });
@@ -426,7 +446,7 @@ namespace RotoGestionClientes
             dgvResultados.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Bisagras",
-                HeaderText = "Bisagras",
+                HeaderText = Lang.Bisagras,
                 DataPropertyName = "Bisagras",
                 Width = 250
             });
@@ -438,8 +458,8 @@ namespace RotoGestionClientes
             if (data == null || data.Count == 0)
             {
                 MessageBox.Show(
-                    "No hay datos para exportar.",
-                    "Información",
+                    Lang.NoDatosExportar,
+                    "",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
 
@@ -449,7 +469,7 @@ namespace RotoGestionClientes
             using SaveFileDialog sfd = new SaveFileDialog
             {
                 Filter = "Excel (*.xlsx)|*.xlsx",
-                FileName = $"Clientes_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+                FileName = $"{Lang.Clientes}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
             };
 
             if (sfd.ShowDialog() != DialogResult.OK)
@@ -457,7 +477,7 @@ namespace RotoGestionClientes
 
             IWorkbook workbook = new XSSFWorkbook();
 
-            ISheet sheet = workbook.CreateSheet("Clientes");
+            ISheet sheet = workbook.CreateSheet(Lang.Clientes);
 
             // =========================
             // CABECERA
@@ -467,17 +487,18 @@ namespace RotoGestionClientes
 
             var headerFont = workbook.CreateFont();
             headerFont.IsBold = true;
+            headerFont.Color = IndexedColors.White.Index;
 
             headerStyle.SetFont(headerFont);
             headerStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
 
             IRow header = sheet.CreateRow(0);
 
-            header.CreateCell(0).SetCellValue("Nombre");
-            header.CreateCell(1).SetCellValue("Software");
-            header.CreateCell(2).SetCellValue("Perfiles");
-            header.CreateCell(3).SetCellValue("Cerraduras");
-            header.CreateCell(4).SetCellValue("Bisagras");
+            header.CreateCell(0).SetCellValue(Lang.Nombre);
+            header.CreateCell(1).SetCellValue(Lang.Software);
+            header.CreateCell(2).SetCellValue(Lang.Perfiles);
+            header.CreateCell(3).SetCellValue(Lang.Cerraduras);
+            header.CreateCell(4).SetCellValue(Lang.Bisagras);
 
             for (int i = 0; i < 5; i++)
             {
@@ -531,11 +552,11 @@ namespace RotoGestionClientes
 
             string[] columnas =
             {
-                "Nombre",
-                "Software",
-                "Perfiles",
-                "Cerraduras",
-                "Bisagras"
+                Lang.Nombre,
+                Lang.Software,
+                Lang.Perfiles,
+                Lang.Cerraduras,
+                Lang.Bisagras
             };
 
             for (int i = 0; i < columnas.Length; i++)
@@ -572,9 +593,9 @@ namespace RotoGestionClientes
 
             sheet.SetColumnWidth(0, 9000);
             sheet.SetColumnWidth(1, 12000);
-            sheet.SetColumnWidth(2, 25000);
-            sheet.SetColumnWidth(3, 25000);
-            sheet.SetColumnWidth(4, 25000);
+            sheet.SetColumnWidth(2, 20000);
+            sheet.SetColumnWidth(3, 20000);
+            sheet.SetColumnWidth(4, 20000);
 
             // =========================
             // GUARDAR
@@ -588,8 +609,8 @@ namespace RotoGestionClientes
             workbook.Write(fs);
 
             MessageBox.Show(
-                "Excel exportado correctamente.",
-                "Exportación",
+                Lang.ExcelExportadoCorrectamente,
+                "",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
         }
@@ -603,22 +624,15 @@ namespace RotoGestionClientes
             // Intentamos parsear el string de la BBDD al Enum para trabajar de forma segura
             if (Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
             {
-                switch (edition)
+                if (edition == ApplicationEdition.Distributor)
                 {
-                    case ApplicationEdition.Distributor:
-                        btn_Responsables.Visible = false;
-                        break;
-                    case ApplicationEdition.Internal:
-                        btn_Responsables.Visible = true;
-                        break;
-                    case ApplicationEdition.Debug:
-                        btn_Responsables.Visible = true;
-                        break;
-                    default:
-                        btn_Responsables.Visible = true;
-                        break;
+                    btn_Responsables.Visible = false;
                 }
-            }
+                else
+                {
+                    btn_Responsables.Visible = true;
+                }
+            }            
         }
 
         #endregion
