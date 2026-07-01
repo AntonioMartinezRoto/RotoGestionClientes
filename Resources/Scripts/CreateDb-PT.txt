@@ -1,0 +1,1132 @@
+CREATE TABLE dbo.Usuario
+(
+    Id INT NOT NULL PRIMARY KEY,
+    Nombre NVARCHAR(50) NOT NULL,
+	EsDistribuidor BIT NOT NULL DEFAULT (0),
+	Activa BIT NOT NULL DEFAULT (1),
+	
+);
+
+
+CREATE TABLE dbo.Cliente
+(
+    Id INT IDENTITY(1,1) NOT NULL,    
+    Nombre NVARCHAR(50) NOT NULL,
+	SapId NVARCHAR(50) NULL,
+	Alias NVARCHAR(50) NULL,
+	ResponsableId INT NULL,
+	Comentarios NVARCHAR(1000) NULL,
+	ObservacionesVentanas NVARCHAR(1000) NULL,
+	ObservacionesBalconeras NVARCHAR(1000) NULL,
+	ObservacionesPuertas NVARCHAR(1000) NULL,
+	ObservacionesParalelas NVARCHAR(1000) NULL,
+	ObservacionesCorrederas NVARCHAR(1000) NULL,
+	ObservacionesElevables NVARCHAR(1000) NULL,
+	ObservacionesPlegables NVARCHAR(1000) NULL,
+	ObservacionesMaquinas NVARCHAR(1000) NULL,
+	ObservacionesDocumentos NVARCHAR(1000) NULL,
+
+    CONSTRAINT PK_Cliente
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_Cliente_Nombre 
+        UNIQUE (Nombre),
+		
+	CONSTRAINT FK_Cliente_Usuario
+	FOREIGN KEY (ResponsableId)
+	REFERENCES dbo.Usuario(Id),
+);
+GO
+
+CREATE TABLE dbo.PerfilTipo
+(
+    Id INT NOT NULL,    
+    Nombre NVARCHAR(25) NOT NULL,    
+    NombreAbreviado NVARCHAR(5) NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_PerfilTipo 
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_PerfilTipo_Nombre 
+        UNIQUE (Nombre),
+);
+GO
+
+CREATE TABLE dbo.ClientePerfilTipo
+(
+    ClienteId INT NOT NULL,
+    PerfilTipoId INT NOT NULL,
+
+    CONSTRAINT PK_ClientePerfilTipo 
+        PRIMARY KEY CLUSTERED (ClienteId, PerfilTipoId),
+
+    CONSTRAINT FK_ClientePerfilTipo_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClientePerfilTipo_PerfilTipo
+        FOREIGN KEY (PerfilTipoId)
+        REFERENCES dbo.PerfilTipo(Id)
+);
+GO
+
+
+CREATE TABLE dbo.Perfil
+(
+    Id INT NOT NULL,    
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+	PerfilTipoId INT NOT NULL,
+
+    CONSTRAINT PK_Perfil
+        PRIMARY KEY CLUSTERED (Id),
+		
+	CONSTRAINT FK_Perfil_PerfilTipo
+	FOREIGN KEY (PerfilTipoId)
+	REFERENCES dbo.PerfilTipo(Id)
+);
+GO
+
+
+CREATE TABLE dbo.ClientePerfil
+(
+    ClienteId INT NOT NULL,
+    PerfilId INT NOT NULL,
+
+    CONSTRAINT PK_ClientePerfil
+        PRIMARY KEY CLUSTERED (ClienteId, PerfilId),
+
+    CONSTRAINT FK_ClientePerfil_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClientePerfil_Perfil
+        FOREIGN KEY (PerfilId)
+        REFERENCES dbo.Perfil(Id)
+);
+GO
+
+
+ CREATE TABLE dbo.Software
+(
+    Id INT NOT NULL,    
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_Software
+        PRIMARY KEY CLUSTERED (Id),
+
+);
+GO
+
+CREATE TABLE dbo.ClienteSoftware
+(
+    ClienteId INT NOT NULL,
+    SoftwareId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteSoftware 
+        PRIMARY KEY CLUSTERED (ClienteId, SoftwareId),
+
+    CONSTRAINT FK_ClienteSoftware_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteSoftware_Software
+        FOREIGN KEY (SoftwareId)
+        REFERENCES dbo.Software(Id)
+);
+GO
+ 
+ CREATE TABLE dbo.SoporteCompas
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+	PerfilTipoId INT NOT NULL,
+
+    CONSTRAINT PK_SoporteCompas
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_SoporteCompas
+        UNIQUE (Nombre),
+		
+	CONSTRAINT FK_SoporteCompas_PerfilTipo
+	FOREIGN KEY (PerfilTipoId)
+	REFERENCES dbo.PerfilTipo(Id)
+);
+GO
+
+
+CREATE TABLE dbo.ClienteSoporteCompas
+(
+    ClienteId INT NOT NULL,
+    SoporteCompasId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteSoporteCompas
+        PRIMARY KEY CLUSTERED (ClienteId, SoporteCompasId),
+
+    CONSTRAINT FK_ClienteSoporteCompas_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteSoporteCompas_SoporteCompas
+        FOREIGN KEY (SoporteCompasId)
+        REFERENCES dbo.SoporteCompas(Id)
+);
+GO
+
+CREATE TABLE dbo.MaquinaTipos
+(
+    Id INT NOT NULL,    
+    Descripcion NVARCHAR(50) NOT NULL,    
+    Mecaniza SMALLINT NOT NULL,
+    Automatica SMALLINT NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_MaquinaTipo
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_MaquinaTipo_Descripcion
+        UNIQUE (Descripcion),
+);
+GO
+
+
+CREATE TABLE dbo.MaquinaMarcas
+(
+    Id INT NOT NULL,    
+    Nombre NVARCHAR(50) NOT NULL,    
+    Modelo NVARCHAR(50) NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_MaquinaMarcas
+        PRIMARY KEY CLUSTERED (Id)
+);
+GO
+
+
+
+CREATE TABLE dbo.MaquinaMantenimiento
+(
+    Id INT NOT NULL,    
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_MaquinaMantenimiento
+        PRIMARY KEY CLUSTERED (Id)
+);
+GO
+
+CREATE TABLE dbo.ClienteMaquina
+(
+	Id INT IDENTITY(1,1) NOT NULL, 
+    ClienteId INT NOT NULL,
+	MaquinaTipoId INT NOT NULL,
+    MaquinaMarcaId INT NULL,
+	MaquinaMantenimientoId INT NOT NULL,
+    Observaciones VARCHAR(100) NULL,
+
+    CONSTRAINT PK_ClienteMaquina
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_ClienteMaquina_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+	CONSTRAINT FK_ClienteMaquina_MaquinaTipos
+		FOREIGN KEY (MaquinaTipoId)
+		REFERENCES dbo.MaquinaTipos(Id),
+
+    CONSTRAINT FK_ClienteMaquina_MaquinaMarcas
+        FOREIGN KEY (MaquinaMarcaId)
+        REFERENCES dbo.MaquinaMarcas(Id),
+		
+	CONSTRAINT FK_ClienteAgujas_MaquinaMantenimiento
+		FOREIGN KEY (MaquinaMantenimientoId)
+		REFERENCES dbo.MaquinaMantenimiento(Id)
+);
+GO
+ 
+CREATE TABLE dbo.Aperturas
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+
+    CONSTRAINT PK_Aperturas
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_Aperturas
+        UNIQUE (Nombre),);
+GO
+ 
+ CREATE TABLE dbo.ModeloTipo
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+
+    CONSTRAINT PK_ModeloTipo
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_ModeloTipo
+        UNIQUE (Nombre),);
+GO 
+ 
+CREATE TABLE dbo.SeguridadVentana
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_SeguridadVentana
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_SeguridadVentana
+        UNIQUE (Nombre),);
+GO
+
+ 
+CREATE TABLE dbo.CremonaPasivaVentanaTipos
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_CremonaPasivaVentanaTipos
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_CremonaPasivaVentanaTipos
+        UNIQUE (Nombre),);
+GO
+
+ CREATE TABLE dbo.ClienteCremonaPasivaVentana
+(
+    ClienteId INT NOT NULL,
+    CremonaPasivaVentanaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteCremonaPasivaVentana
+        PRIMARY KEY CLUSTERED (ClienteId, CremonaPasivaVentanaId),
+
+    CONSTRAINT FK_ClienteCremonaPasivaVentana_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteCremonaPasivaVentana_CremonaPasivaVentana
+        FOREIGN KEY (CremonaPasivaVentanaId)
+        REFERENCES dbo.CremonaPasivaVentanaTipos(Id)
+);
+GO
+
+
+ CREATE TABLE dbo.ClienteCremonaPasivaVentanaPract
+(
+    ClienteId INT NOT NULL,
+    CremonaPasivaVentanaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteCremonaPasivaVentanaPract
+        PRIMARY KEY CLUSTERED (ClienteId, CremonaPasivaVentanaId),
+
+    CONSTRAINT FK_ClienteCremonaPasivaVentanaPract_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteCremonaPasivaVentanaPract_CremonaPasivaVentana
+        FOREIGN KEY (CremonaPasivaVentanaId)
+        REFERENCES dbo.CremonaPasivaVentanaTipos(Id)
+);
+GO
+
+ CREATE TABLE dbo.ClienteCremonaPasivaBalconera
+(
+    ClienteId INT NOT NULL,
+    CremonaPasivaBalconeraId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteCremonaPasivaBalconera
+        PRIMARY KEY CLUSTERED (ClienteId, CremonaPasivaBalconeraId),
+
+    CONSTRAINT FK_ClienteCremonaPasivaBalconera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteCremonaPasivaBalconera_CremonaPasivaVentana
+        FOREIGN KEY (CremonaPasivaBalconeraId)
+        REFERENCES dbo.CremonaPasivaVentanaTipos(Id)
+);
+GO
+
+
+ CREATE TABLE dbo.ClienteSeguridadVentana
+(
+    ClienteId INT NOT NULL,
+    SeguridadVentanaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteSeguridadVentana
+        PRIMARY KEY CLUSTERED (ClienteId, SeguridadVentanaId),
+
+    CONSTRAINT FK_ClienteSeguridadVentana_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteSeguridadVentana_SeguridadVentana
+        FOREIGN KEY (SeguridadVentanaId)
+        REFERENCES dbo.SeguridadVentana(Id)
+);
+GO
+
+ CREATE TABLE dbo.ClienteSeguridadBalconera
+(
+    ClienteId INT NOT NULL,
+    SeguridadBalconeraId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteSeguridadBalconera
+        PRIMARY KEY CLUSTERED (ClienteId, SeguridadBalconeraId),
+
+    CONSTRAINT FK_ClienteSeguridadBalconera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteSeguridadBalconera_SeguridadVentana
+        FOREIGN KEY (SeguridadBalconeraId)
+        REFERENCES dbo.SeguridadVentana(Id)
+);
+GO
+
+CREATE TABLE dbo.Manilla
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_Manillas
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_Manillas
+        UNIQUE (Nombre),);
+GO
+
+CREATE TABLE dbo.ClienteManilla
+(
+    ClienteId INT NOT NULL,
+    ManillaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteManilla
+        PRIMARY KEY CLUSTERED (ClienteId, ManillaId),
+
+    CONSTRAINT FK_ClienteManilla_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteManilla_Manilla
+        FOREIGN KEY (ManillaId)
+        REFERENCES dbo.Manilla(Id)
+);
+GO
+
+CREATE TABLE dbo.Agujas
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_Agujas
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_Agujas
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.AgujasCorredera
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_AgujasCorredera
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_AgujasCorredera
+        UNIQUE (Nombre),);
+GO
+
+CREATE TABLE dbo.ClienteAgujasCorredera
+(
+    ClienteId INT NOT NULL,
+    AgujaCorrederaId INT NOT NULL,
+	
+    CONSTRAINT PK_ClienteAgujasCorredera
+        PRIMARY KEY CLUSTERED (ClienteId, AgujaCorrederaId),
+
+    CONSTRAINT FK_ClienteAgujasCorredera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteAgujasCorredera_Aguja
+        FOREIGN KEY (AgujaCorrederaId)
+        REFERENCES dbo.AgujasCorredera(Id)
+);
+GO
+
+CREATE TABLE dbo.AgujasDefinicion
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+
+    CONSTRAINT PK_AgujasDefinicion
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_AgujasDefinicion
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.AgujasModelo
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+
+    CONSTRAINT PK_AgujasModelo
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_AgujasModelo
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.ClienteAgujas
+(
+    ClienteId INT NOT NULL,
+	AgujaBalconeraTipoId INT NOT NULL,
+    AgujaBalconeraId INT NULL,
+	AgujaPuertaSecTipoId INT NOT NULL,
+    AgujaPuertaSecId INT NULL,
+	AgujaPuertaTipoId INT NOT NULL,
+    AgujaPuertaId INT NULL,
+
+    CONSTRAINT PK_ClienteAgujas
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteAgujas_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+	CONSTRAINT FK_ClienteAgujas_AgujasDefinicionBalc
+		FOREIGN KEY (AgujaBalconeraTipoId)
+		REFERENCES dbo.AgujasDefinicion(Id),
+
+    CONSTRAINT FK_ClienteAgujas_AgujaBalconera
+        FOREIGN KEY (AgujaBalconeraId)
+        REFERENCES dbo.Agujas(Id),
+		
+	CONSTRAINT FK_ClienteAgujas_AgujasDefinicionPuertaSec
+		FOREIGN KEY (AgujaPuertaSecTipoId)
+		REFERENCES dbo.AgujasDefinicion(Id),
+
+    CONSTRAINT FK_ClienteAgujas_AgujaPuertaSec
+        FOREIGN KEY (AgujaPuertaSecId)
+        REFERENCES dbo.Agujas(Id),
+
+	CONSTRAINT FK_ClienteAgujas_AgujasDefinicionPuerta
+		FOREIGN KEY (AgujaPuertaTipoId)
+		REFERENCES dbo.AgujasDefinicion(Id),
+	
+    CONSTRAINT FK_ClienteAgujas_AgujaPuerta
+        FOREIGN KEY (AgujaPuertaId)
+        REFERENCES dbo.Agujas(Id)
+);
+GO
+
+CREATE TABLE dbo.ClienteAgujasModeloPerfil
+(
+    ClienteId INT NOT NULL,
+	AgujaModeloTipoId INT NOT NULL,
+    PerfilId INT NOT NULL,
+	AgujaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteAgujasModeloPerfil
+        PRIMARY KEY CLUSTERED (ClienteId, AgujaModeloTipoId, PerfilId),
+
+    CONSTRAINT FK_ClienteAgujasModeloPerfil_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+	CONSTRAINT FK_ClienteAgujasModeloPerfil_AgujasModelo
+		FOREIGN KEY (AgujaModeloTipoId)
+		REFERENCES dbo.AgujasModelo(Id),
+
+    CONSTRAINT FK_ClienteAgujasModeloPerfil_Agujas
+        FOREIGN KEY (AgujaId)
+        REFERENCES dbo.Agujas(Id),
+
+    CONSTRAINT FK_ClienteAgujasModeloPerfil_Perfil
+        FOREIGN KEY (PerfilId)
+        REFERENCES dbo.Perfil(Id),
+);
+GO
+
+CREATE TABLE dbo.BisagraPuerta
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_BisagraPuerta
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_BisagraPuerta
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.ClienteBisagraPuerta
+(
+    ClienteId INT NOT NULL,
+    BisagraPuertaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteBisagraPuerta
+        PRIMARY KEY CLUSTERED (ClienteId, BisagraPuertaId),
+
+    CONSTRAINT FK_ClienteBisagraPuerta_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteBisagraPuerta_BisagraPuerta
+        FOREIGN KEY (BisagraPuertaId)
+        REFERENCES dbo.BisagraPuerta(Id)
+);
+GO
+
+CREATE TABLE dbo.ClienteBisagraPuertaSec
+(
+    ClienteId INT NOT NULL,
+    BisagraPuertaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteBisagraPuertaSec
+        PRIMARY KEY CLUSTERED (ClienteId, BisagraPuertaId),
+
+    CONSTRAINT FK_ClienteBisagraPuertaSec_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteBisagraPuertaSec_BisagraPuerta
+        FOREIGN KEY (BisagraPuertaId)
+        REFERENCES dbo.BisagraPuerta(Id)
+);
+GO
+
+CREATE TABLE dbo.CerraduraPuertaSec
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_CerraduraPuertaSec
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_CerraduraPuertaSec
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.ClienteCerraduraPuertaSec
+(
+    ClienteId INT NOT NULL,
+    CerraduraPuertaSecId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteCerraduraPuertaSec
+        PRIMARY KEY CLUSTERED (ClienteId, CerraduraPuertaSecId),
+
+    CONSTRAINT FK_ClienteCerraduraPuertaSec_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteCerraduraPuertaSec_CerraduraPuertaSec
+        FOREIGN KEY (CerraduraPuertaSecId)
+        REFERENCES dbo.CerraduraPuertaSec(Id)
+);
+GO
+
+CREATE TABLE dbo.CerraduraPuerta
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_CerraduraPuerta
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_CerraduraPuerta
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.ClienteCerraduraPuerta
+(
+    ClienteId INT NOT NULL,
+    CerraduraPuertaId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteCerraduraPuerta
+        PRIMARY KEY CLUSTERED (ClienteId, CerraduraPuertaId),
+
+    CONSTRAINT FK_ClienteCerraduraPuerta_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteCerraduraPuerta_CerraduraPuerta
+        FOREIGN KEY (CerraduraPuertaId)
+        REFERENCES dbo.CerraduraPuerta(Id)
+);
+GO
+
+CREATE TABLE dbo.ClienteConfiguracionPuerta
+(
+    ClienteId INT NOT NULL,
+	PorteroElectrico BIT NOT NULL,
+    Cilindro BIT NOT NULL,
+
+    CONSTRAINT PK_ClienteConfiguracionPuerta
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteConfiguracionPuerta_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+);
+GO
+
+CREATE TABLE dbo.CilindroTipo
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_CilindroTipo
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_CilindroTipo
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.Cilindro
+(
+    Id INT NOT NULL,
+    CilindroTipoId INT NOT NULL,
+	MedidaInterior INT NOT NULL,
+	MedidaExterior INT NOT NULL,
+	Nomenclatura NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_Cilindro
+        PRIMARY KEY CLUSTERED (Id),
+		
+	CONSTRAINT FK_Cilindro_CilindroTipo
+		FOREIGN KEY (CilindroTipoId)
+		REFERENCES dbo.CilindroTipo(Id)
+);
+GO
+
+
+CREATE TABLE dbo.ClienteCilindro
+(
+    ClienteId INT NOT NULL,
+    CilindroId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteCilindro
+        PRIMARY KEY CLUSTERED (ClienteId, CilindroId),
+
+    CONSTRAINT FK_ClienteCilindro_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteCilindro_Cilindro
+        FOREIGN KEY (CilindroId)
+        REFERENCES dbo.Cilindro(Id)
+);
+GO
+
+CREATE TABLE dbo.ClienteCilindroCorredera
+(
+    ClienteId INT NOT NULL,
+    Cilindro BIT NOT NULL,
+
+    CONSTRAINT PK_ClienteCilindroCorredera
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteCilindroCorredera_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+);
+GO
+
+
+CREATE TABLE dbo.ClienteConfiguracionElevablePlegable
+(
+    ClienteId INT NOT NULL,
+	Elevable_Estandar BIT NOT NULL,
+    Elevable_Dlo BIT NOT NULL,
+	Plegable_Consumen BIT NOT NULL,
+
+    CONSTRAINT PK_ClienteConfiguracionElevablePlegable
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteConfiguracionElevablePlegable_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+);
+GO
+
+CREATE TABLE dbo.ClienteDocumento
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    ClienteId INT NOT NULL,
+
+    Nombre NVARCHAR(255) NOT NULL,
+
+    NombreFicheroOriginal NVARCHAR(255) NOT NULL,
+    Extension NVARCHAR(10) NOT NULL,
+
+    Contenido VARBINARY(MAX) NOT NULL,
+    TamañoBytes BIGINT NOT NULL,
+
+    FechaAlta DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
+
+    CONSTRAINT PK_ClienteDocumento
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_ClienteDocumento_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE
+);
+
+CREATE INDEX IX_ClienteDocumento_ClienteId
+ON dbo.ClienteDocumento(ClienteId);
+
+
+CREATE TABLE dbo.SoporteMarcoConfig
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+	Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_SoporteMarcoConfig
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_SoporteMarcoConfig
+        UNIQUE (Nombre),);
+GO
+
+
+CREATE TABLE dbo.ClienteConfiguracionMaquinas
+(
+    ClienteId INT NOT NULL,
+	BisagrasSoldadora BIT NOT NULL,
+    TripleTaladroCentro BIT NOT NULL,
+	SoporteMarcoId INT NOT NULL,
+
+    CONSTRAINT PK_ClienteConfiguracionMaquinas
+        PRIMARY KEY CLUSTERED (ClienteId),
+
+    CONSTRAINT FK_ClienteConfiguracionMaquinas_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+	
+	CONSTRAINT FK_ClienteConfiguracionMaquinas_SoporteMarco
+        FOREIGN KEY (SoporteMarcoId)
+        REFERENCES dbo.SoporteMarcoConfig(Id)
+);
+GO
+
+CREATE TABLE dbo.ConfiguracionAplicacion
+(
+    Id INT NOT NULL PRIMARY KEY,
+    VersionMaestros NVARCHAR(10) NOT NULL,
+	AppEdition NVARCHAR(50) NOT NULL,
+	DistribuidorId INT NULL,
+	Idioma NVARCHAR(10) NOT NULL
+);
+
+INSERT INTO dbo.Usuario (Id, Nombre, EsDistribuidor, Activa)
+VALUES 
+(1, 'Sergio González', 0, 1),
+(2, 'Agustín Canepa', 0, 1),
+(3, 'Albert Blas', 0, 1),
+(4, 'Antonio Barba', 0, 1),
+(5, 'Miguel Pereira', 0, 1),
+(6, 'Rotofer', 1, 1),
+(7, 'Alcantarilla', 1, 1),
+(8, 'Ignacio', 1, 1),
+(9, 'AluYPvc', 1, 1),
+(10, 'Comalfer', 1, 1),
+(11, 'Sumpai', 1, 1),
+(12, 'Fernasol', 1, 1),
+(13, 'Mapeal', 1, 1),
+(14, 'Centro del Accesorio', 1, 1);
+
+INSERT INTO dbo.PerfilTipo (Id, Nombre, NombreAbreviado, Activa)
+VALUES 
+(1, 'Alumínio', 'ALU', 1),
+(2, 'PVC', 'PVC', 1),
+(3, 'Madeira', 'MAD', 1),
+(4, 'Alumínio-PVC', 'PAX', 1);
+
+
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(1, 'Aluplast', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(2, 'Cortizo', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(3, 'Deceuninck', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(4, 'Dimex', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(5, 'Gealan', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(6, 'Kommerling', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(7, 'Kbe', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(8, 'Profilplast', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(9, 'Refine', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(10, 'Rehau', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(11, 'Schuco', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(12, 'Salamander', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(13, 'Veka', 2, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(14, 'Indalsu', 1, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(15, 'Itesal', 1, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(16, 'Centroalum', 1, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(17, 'Strugal', 1, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(18, 'Cortizo', 1, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(19, 'Aluvision', 1, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(20, 'Alas Ibérica', 1, 1);
+INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(21, 'Alueuropa', 1, 1);
+
+
+INSERT INTO dbo.[Software] (Id, Nombre, Activa)
+VALUES 
+(1, 'PrefSuite', 1),
+(2, 'Hetmo', 1),
+(3, 'Gesfacil', 1),
+(4, 'WinPerfil', 1),
+(5, 'Sicar', 1),
+(6, 'EmmegiSoft', 1),
+(7, 'Orgadata', 1),
+(8, 'Opera', 1);
+
+INSERT INTO dbo.SoporteCompas (Id, Nombre, Activa, PerfilTipoId)
+VALUES 
+(1, '6/130', 1, 2),
+(2, '6/150', 1, 2),
+(3, '3/130', 1, 1);
+
+INSERT INTO dbo.MaquinaTipos (Id, Descripcion, Mecaniza, Automatica, Activa)
+VALUES 
+(1, 'Serra de corte', 0, 0, 1),
+(2, 'Centro de maquinagem (Macros)', 1, 0, 1),
+(3, 'Centro de maquinagem (3D)', 1, 0, 1),
+(4, 'Mesa de ferragens', 0, 0, 1),
+(5, 'Mesa de ferragens (Autómatica)', 0, 1, 1),
+(6, 'Máquina de soldar', 0, 0, 1),
+(7, 'Robôs para fechaduras', 0, 0, 1);
+
+INSERT INTO dbo.MaquinaMarcas (Id, Nombre, Modelo, Activa)
+VALUES 
+(1, 'Schirmer', NULL, 1),
+(2, 'Urban', NULL, 1),
+(3, 'Yilmaz', NULL, 1),
+(4, 'Kaban', NULL, 1),
+(5, 'Thorwersten', NULL, 1),
+(6, 'Graf', NULL, 1),
+(7, 'Mecal', NULL, 1),
+(8, 'Pertici', NULL, 1),
+(9, 'Fom', NULL, 1),
+(10, 'Rotox', NULL, 1),
+(11, 'Murat', NULL, 1),
+(12, 'Inter MH', NULL, 1);
+
+
+INSERT INTO dbo.MaquinaMantenimiento (Id, Nombre, Activa)
+VALUES 
+(1, 'Disomac', 1),
+(2, 'Mecal', 1),
+(3, 'Vema', 1),
+(4, 'Vraia', 1),
+(5, 'Maquintec', 1),
+(6, 'Daser', 1),
+(7, 'Haffner', 1);
+
+INSERT INTO dbo.Aperturas (Nombre)
+VALUES 
+('Practicable'),
+('Oscilobatente'),
+('Corrediças'),
+('Osciloparalela'),
+('Elevável'),
+('Dobrável');
+
+
+INSERT INTO dbo.ModeloTipo (Nombre)
+VALUES 
+('Janela'),
+('Varanda'),
+('Porta')
+
+INSERT INTO dbo.SeguridadVentana (Id, Nombre, Activa)
+VALUES 
+(1, 'Básica', 1),
+(2, 'RC1', 0),
+(3, 'RC2', 1)
+
+
+INSERT INTO dbo.CremonaPasivaVentanaTipos (Id, Nombre, Activa)
+VALUES 
+(1, 'Cremona', 1),
+(2, 'Perimetral', 1),
+(3, 'Click y pasador', 1),
+(4, 'Falso compás', 1)
+
+INSERT INTO dbo.Manilla (Id, Nombre, Activa)
+VALUES 
+(1, 'Rotoline', 1),
+(2, 'Rotoswing', 1),
+(3, 'Rotosamba', 1),
+(4, 'Rotoline Secustik', 1),
+(5, 'Rotoswing Secustik', 1),
+(6, 'Rotosamba Secustik', 1);
+
+
+INSERT INTO dbo.Agujas (Id, Nombre, Activa)
+VALUES 
+(1, '8', 1),
+(2, '15', 1),
+(3, '25', 1),
+(4, '30', 1),
+(5, '35', 1),
+(6, '40', 1),
+(7, '45', 1),
+(8, '50', 1),
+(9, '55', 1);
+
+
+INSERT INTO dbo.AgujasCorredera (Id, Nombre, Activa)
+VALUES 
+(1, '7', 1),
+(2, '17', 1);
+
+INSERT INTO dbo.AgujasDefinicion (Id, Nombre)
+VALUES 
+(1, 'Todos'),
+(2, 'Por perfil');
+
+
+INSERT INTO dbo.AgujasModelo (Id, Nombre)
+VALUES 
+(1, 'Varanda'),
+(2, 'Porta lateral'),
+(3, 'Porta'),
+(4, 'Janela');
+
+
+INSERT INTO dbo.BisagraPuerta (Id, Nombre, Activa)
+VALUES 
+(1, 'SOLID B', 1),
+(2, 'PS27', 1),
+(3, 'PS23', 1),
+(4, 'PB10', 1),
+(5, '150P', 0),
+(6, 'SCR', 1),
+(7, 'SIN BISAGRAS', 1);
+
+
+INSERT INTO dbo.CerraduraPuertaSec (Id, Nombre, Activa)
+VALUES 
+(1, 'Acc. Manilla', 1),
+(2, 'Acc. Lâmpada', 1);
+
+
+INSERT INTO dbo.CerraduraPuerta (Id, Nombre, Activa)
+VALUES 
+(1, '1 punto', 1),
+(2, 'Bulones', 1),
+(3, 'Pestillos', 1),
+(4, 'Tandeo', 1),
+(5, 'A700', 1),
+(6, 'Combinada', 1),
+(7, 'Eneo A', 1),
+(8, 'E700', 1),
+(9, 'Eneo CC', 1),
+(10, 'Combinada 5P', 1);
+
+ 
+INSERT INTO dbo.CilindroTipo (Id, Nombre, Activa)
+VALUES 
+(1, 'Segurança', 1),
+(2, 'Serreta', 1);
+
+
+INSERT INTO dbo.Cilindro (Id, CilindroTipoId, MedidaInterior, MedidaExterior, Nomenclatura, Activa)
+VALUES 
+(1,1,35,65,'35-65',1),
+(2,1,35,75,'35-75',1),
+(3,1,40,40,'40-40',1),
+(4,1,40,45,'40-45',1),
+(5,1,40,50,'40-50',1),
+(6,1,40,60,'40-60',1),
+(7,1,45,45,'45-45',1),
+(8,1,45,50,'45-50',1),
+(9,1,45,55,'45-55',1),
+(10,1,55,60,'55-60',1),
+(11,2,31,31,'31-31',1),
+(12,2,31,35,'31-35',1),
+(13,2,31,40,'31-40',1),
+(14,2,31,45,'31-45',1),
+(15,2,31,50,'31-50',1),
+(16,2,31,55,'31-55',1),
+(17,2,31,60,'31-60',1),
+(18,2,31,70,'31-70',1),
+(19,2,35,35,'35-35',1),
+(20,2,35,40,'35-40',1),
+(21,2,35,45,'35-45',1),
+(22,2,35,50,'35-50',1),
+(23,2,35,55,'35-55',1),
+(24,2,40,40,'40-40',1),
+(25,2,40,45,'40-45',1),
+(26,2,40,50,'40-50',1),
+(27,2,40,55,'40-55',1),
+(28,2,40,60,'40-60',1),
+(29,2,40,70,'40-70',1),
+(30,2,45,45,'45-45',1),
+(31,2,45,50,'45-50',1),
+(32,2,45,60,'45-60',1),
+(33,2,45,55,'45-55',1),
+(34,2,50,50,'50-50',1),
+(35,2,50,60,'50-60',1),
+(36,2,50,70,'50-70',1);
+
+
+INSERT INTO dbo.SoporteMarcoConfig (Id, Nombre, Activa)
+VALUES 
+(1, 'Centro de maquinagem', 1),
+(2, 'Modelo', 1),
+(3, 'Banco de marcos', 1);
+
+INSERT INTO dbo.ConfiguracionAplicacion
+VALUES (1, '1.0', 'Distributor', NULL, 'PT');
+
+
+
