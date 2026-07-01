@@ -700,6 +700,15 @@ namespace RotoGestionClientes.Resources {
         }
         
         /// <summary>
+        ///   Busca una cadena traducida similar a Debe seleccionar una empresa de mantenimiento..
+        /// </summary>
+        internal static string MantenimientoObligatorio {
+            get {
+                return ResourceManager.GetString("MantenimientoObligatorio", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Busca una cadena traducida similar a Máquinas.
         /// </summary>
         internal static string Maquinas {
@@ -1137,6 +1146,15 @@ namespace RotoGestionClientes.Resources {
         internal static string Tipo {
             get {
                 return ResourceManager.GetString("Tipo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Busca una cadena traducida similar a Debe seleccionar un tipo de máquina..
+        /// </summary>
+        internal static string TipoMaquinaObligatorio {
+            get {
+                return ResourceManager.GetString("TipoMaquinaObligatorio", resourceCulture);
             }
         }
         

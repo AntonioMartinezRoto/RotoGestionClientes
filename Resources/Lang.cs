@@ -34,6 +34,8 @@ public static class Lang
     public static string Eliminar => Textos.Eliminar;
     public static string EliminarCliente => Textos.EliminarCliente;
     public static string ConfirmarEliminar => Textos.ConfirmarEliminarCliente;
+    public static string MantenimientoObligatorio => Textos.MantenimientoObligatorio;
+    public static string TipoMaquinaObligatorio => Textos.TipoMaquinaObligatorio;
 
     #endregion
 

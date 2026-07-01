@@ -93,8 +93,8 @@ namespace RotoGestionClientes
             if (tipo == null)
             {
                 MessageBox.Show(
-                    "Debe seleccionar un tipo de máquina.",
-                    "Validación",
+                    Lang.TipoMaquinaObligatorio,
+                    Lang.Validacion,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 
@@ -104,8 +104,8 @@ namespace RotoGestionClientes
             if (mantenimiento == null)
             {
                 MessageBox.Show(
-                    "Debe seleccionar un mantenimiento.",
-                    "Validación",
+                    Lang.MantenimientoObligatorio,
+                    Lang.Validacion,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
 

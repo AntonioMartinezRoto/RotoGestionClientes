@@ -330,6 +330,9 @@
   <data name="MantenimientoMaquina" xml:space="preserve">
     <value>Mantenimiento máquinas</value>
   </data>
+  <data name="MantenimientoObligatorio" xml:space="preserve">
+    <value>Debe seleccionar una empresa de mantenimiento.</value>
+  </data>
   <data name="Maquinas" xml:space="preserve">
     <value>Máquinas</value>
   </data>
@@ -476,6 +479,9 @@
   </data>
   <data name="Tipo" xml:space="preserve">
     <value>Tipo</value>
+  </data>
+  <data name="TipoMaquinaObligatorio" xml:space="preserve">
+    <value>Debe seleccionar un tipo de máquina.</value>
   </data>
   <data name="TipoMaquinas" xml:space="preserve">
     <value>Tipo de máquinas</value>
