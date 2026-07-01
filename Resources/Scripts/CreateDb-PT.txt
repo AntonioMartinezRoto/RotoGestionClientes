@@ -1126,7 +1126,7 @@ VALUES
 (3, 'Banco de marcos', 1);
 
 INSERT INTO dbo.ConfiguracionAplicacion
-VALUES (1, '1.0', 'Distributor', NULL, 'PT');
+VALUES (1, '1.0', 'Distributor', 6, 'PT');
 
 
 
