@@ -156,4 +156,23 @@ public static class Lang
     public static string DocumentoObligatorio => Textos.DocumentoObligatorio;
 
     #endregion
+    #region Resumen
+
+    public static string General => Textos.General;
+    public static string Perfiles => Textos.Perfiles;
+    public static string SeguridadVentana => Textos.SeguridadVentana;
+    public static string PasivaOscilo => Textos.PasivaOscilo;
+    public static string PasivaPracticables => Textos.PasivaPracticables;
+    public static string AgujaBalconera => Textos.AgujaBalconera;
+    public static string SeguridadBalconera => Textos.SeguridadBalconera;
+    public static string PasivaBalconera => Textos.PasivaBalconera;
+    public static string AgujaPuerta => Textos.AgujaPuerta;
+    public static string ElevablesEstandar => Textos.ElevablesEstandar;
+    public static string NoUsaElevablesEstandar => Textos.NoUsaElevablesEstandar;
+    public static string UsaElevablesDlo => Textos.UsaElevablesDlo;
+    public static string NoUsaElevablesDlo => Textos.NoUsaElevablesDlo;
+    public static string NoConsumenPlegables => Textos.NoConsumenPlegables;
+    public static string ConsumenPlegables => Textos.ConsumenPlegables;
+    public static string Desconocido => Textos.Desconocido;
+    #endregion
 }

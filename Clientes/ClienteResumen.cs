@@ -33,6 +33,7 @@ namespace RotoGestionClientes
         #region Events
         private void ClienteResumen_Load(object sender, EventArgs e)
         {
+            CargarTextos();
             ConfigurarFormulario();
             CargarDatos();
             pictureBox1.Focus();
@@ -52,6 +53,30 @@ namespace RotoGestionClientes
         #endregion
 
         #region Private methods
+        private void CargarTextos()
+        {
+            btn_Cerrar.Text = Lang.Cancelar;
+            //btn_ExportarPdf.Text = Lang.ExportarPdf;
+            lbl_Alias.Text = Lang.Alias;
+            lbl_Nombre.Text = Lang.Nombre;
+            lbl_SapId.Text = Lang.SapId;
+            lbl_Observaciones.Text = Lang.Comentarios;
+            lbl_Software.Text = Lang.Software;
+            groupBox_Documentos.Text = Lang.Documentos;
+            groupBox_General.Text = Lang.General;
+            groupBox_Manillas.Text = Lang.Manillas;
+            groupBox_Perfiles.Text = Lang.Perfiles;
+            groupBox_SeguridadVent.Text = Lang.SeguridadVentana;
+            groupBox_PasivaOsc.Text = Lang.PasivaOscilo;
+            groupBox_PasivaPrac.Text = Lang.PasivaPracticables;
+            groupBox_AgujasBalc.Text = Lang.AgujaBalconera;
+            groupBox_SeguridadBalc.Text = Lang.SeguridadBalconera;
+            groupBox_PasivaBalc.Text = Lang.PasivaBalconera;
+            groupbox_AgujasPuerta.Text = Lang.AgujaPuerta;
+            groupbox_Bisagras.Text = Lang.Bisagras;
+            groupBox_Cerraduras.Text = Lang.Cerraduras;
+            groupMaquinas.Text = Lang.Maquinas;
+        }
         private void ConfigurarFormulario()
         {
             StartPosition = FormStartPosition.CenterParent;
@@ -71,7 +96,7 @@ namespace RotoGestionClientes
             dgvMaquinas.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Tipo",
-                HeaderText = "Tipo",
+                HeaderText = Lang.Tipo,
                 DataPropertyName = "Tipo",
                 AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill
             });
@@ -79,7 +104,7 @@ namespace RotoGestionClientes
             dgvMaquinas.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Marca",
-                HeaderText = "Marca",
+                HeaderText = Lang.Marca,
                 DataPropertyName = "Marca",
                 Width = 200
             });
@@ -87,7 +112,7 @@ namespace RotoGestionClientes
             dgvMaquinas.Columns.Add(new DataGridViewTextBoxColumn
             {
                 Name = "Mantenimiento",
-                HeaderText = "Mantenimiento",
+                HeaderText = Lang.Mantenimiento,
                 DataPropertyName = "Mantenimiento",
                 Width = 200
             });
@@ -202,9 +227,9 @@ namespace RotoGestionClientes
 
             if (cliente.ClienteConfiguracionElevablePlegable != null)
             {
-                lbl_ElevableEstandar.Text = cliente.ClienteConfiguracionElevablePlegable.Elevable_Estandar ? "Elevables estándar" : "No usa elevables estándar";
-                lbl_UsaDlo.Text = cliente.ClienteConfiguracionElevablePlegable.Elevable_Dlo ? "Usa elevables DLO" : "No usa elevables DLO";
-                lbl_ConsumenPlegables.Text = cliente.ClienteConfiguracionElevablePlegable.Plegable_Consumen ? "Consumen plegables" : "No consumen plegables";
+                lbl_ElevableEstandar.Text = cliente.ClienteConfiguracionElevablePlegable.Elevable_Estandar ? Lang.ElevablesEstandar : Lang.NoUsaElevablesEstandar;
+                lbl_UsaDlo.Text = cliente.ClienteConfiguracionElevablePlegable.Elevable_Dlo ? Lang.UsaElevablesDlo : Lang.NoUsaElevablesDlo;
+                lbl_ConsumenPlegables.Text = cliente.ClienteConfiguracionElevablePlegable.Plegable_Consumen ? Lang.ConsumenPlegables : Lang.NoConsumenPlegables;
             }
             else
             {
@@ -338,11 +363,11 @@ namespace RotoGestionClientes
                 {
                     var nombrePerfil = perfiles.ContainsKey(x.PerfilId)
                         ? perfiles[x.PerfilId]
-                        : "Desconocido";
+                        : Lang.Desconocido;
 
                     var nombreAguja = agujas.ContainsKey(x.AgujaId)
                         ? agujas[x.AgujaId]
-                        : "Desconocido";
+                        : Lang.Desconocido;
 
                     return $"• {nombrePerfil}: {nombreAguja}";
                 })
@@ -372,11 +397,11 @@ namespace RotoGestionClientes
                 {
                     var nombrePerfil = perfiles.ContainsKey(x.PerfilId)
                         ? perfiles[x.PerfilId]
-                        : "Desconocido";
+                        : Lang.Desconocido;
 
                     var nombreAguja = agujas.ContainsKey(x.AgujaId)
                         ? agujas[x.AgujaId]
-                        : "Desconocido";
+                        : Lang.Desconocido;
 
                     return $"• {nombrePerfil}: {nombreAguja}";
                 })

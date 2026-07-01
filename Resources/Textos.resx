@@ -123,6 +123,12 @@
   <data name="Aguja" xml:space="preserve">
     <value>Aguja</value>
   </data>
+  <data name="AgujaBalconera" xml:space="preserve">
+    <value>Aguja balconera</value>
+  </data>
+  <data name="AgujaPuerta" xml:space="preserve">
+    <value>Aguja puerta</value>
+  </data>
   <data name="Alias" xml:space="preserve">
     <value>Alias</value>
   </data>
@@ -192,6 +198,9 @@
   <data name="Consumen" xml:space="preserve">
     <value>Consumen</value>
   </data>
+  <data name="ConsumenPlegables" xml:space="preserve">
+    <value>Consumen plegables</value>
+  </data>
   <data name="Correderas" xml:space="preserve">
     <value>Correderas</value>
   </data>
@@ -209,6 +218,9 @@
   </data>
   <data name="DeinifirAgujasPerfil" xml:space="preserve">
     <value>Definir agujas por perfil</value>
+  </data>
+  <data name="Desconocido" xml:space="preserve">
+    <value>Desconocido</value>
   </data>
   <data name="Dlo" xml:space="preserve">
     <value>DLO</value>
@@ -230,6 +242,9 @@
   </data>
   <data name="Elevables" xml:space="preserve">
     <value>Elevables</value>
+  </data>
+  <data name="ElevablesEstandar" xml:space="preserve">
+    <value>Elevables estándar</value>
   </data>
   <data name="ElevablesPlegables" xml:space="preserve">
     <value>Elevables/Plegables</value>
@@ -263,6 +278,9 @@
   </data>
   <data name="Finalizar" xml:space="preserve">
     <value>Finalizar</value>
+  </data>
+  <data name="General" xml:space="preserve">
+    <value>General</value>
   </data>
   <data name="Guardar" xml:space="preserve">
     <value>Guardar</value>
@@ -306,6 +324,9 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="NoConsumenPlegables" xml:space="preserve">
+    <value>No consumen plegables</value>
+  </data>
   <data name="Nombre" xml:space="preserve">
     <value>Nombre</value>
   </data>
@@ -315,14 +336,32 @@
   <data name="Nomenclatura" xml:space="preserve">
     <value>Nomenclatura</value>
   </data>
+  <data name="NoUsaElevablesDlo" xml:space="preserve">
+    <value>No usa elevables DLO</value>
+  </data>
+  <data name="NoUsaElevablesEstandar" xml:space="preserve">
+    <value>No usa elevables estándar</value>
+  </data>
   <data name="NuevoCliente" xml:space="preserve">
     <value>Nuevo cliente</value>
   </data>
   <data name="Oscilobatientes" xml:space="preserve">
     <value>Oscilobatientes</value>
   </data>
+  <data name="PasivaBalconera" xml:space="preserve">
+    <value>Pasiva (Balconera)</value>
+  </data>
+  <data name="PasivaOscilo" xml:space="preserve">
+    <value>Pasiva (Oscilo)</value>
+  </data>
+  <data name="PasivaPracticables" xml:space="preserve">
+    <value>Pasiva (Practicables)</value>
+  </data>
   <data name="Perfil" xml:space="preserve">
     <value>Perfil</value>
+  </data>
+  <data name="Perfiles" xml:space="preserve">
+    <value>Perfiles</value>
   </data>
   <data name="Plantilla" xml:space="preserve">
     <value>Plantilla</value>
@@ -353,6 +392,12 @@
   </data>
   <data name="Seguridad" xml:space="preserve">
     <value>Seguridad</value>
+  </data>
+  <data name="SeguridadBalconera" xml:space="preserve">
+    <value>Seguridad balconera</value>
+  </data>
+  <data name="SeguridadVentana" xml:space="preserve">
+    <value>Seguridad ventana</value>
   </data>
   <data name="SeHanExportado" xml:space="preserve">
     <value>Se han exportado </value>
@@ -404,6 +449,9 @@
   </data>
   <data name="TripleTaladroCentro" xml:space="preserve">
     <value>Triple taladro en centro de mecanizado</value>
+  </data>
+  <data name="UsaElevablesDlo" xml:space="preserve">
+    <value>Usa elevables DLO</value>
   </data>
   <data name="Validación" xml:space="preserve">
     <value>Validación</value>
