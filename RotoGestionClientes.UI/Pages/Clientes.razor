@@ -8,6 +8,7 @@
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
+@inject ClientesListState ListState
 @using Microsoft.EntityFrameworkCore
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
@@ -104,6 +105,10 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Recuperamos el filtro guardado en el estado compartido (sobrevive a
+        // la navegación, p.ej. al volver de editar un cliente).
+        _filtro = ListState.Filtro;
+
         await using var db = await DbFactory.CreateDbContextAsync();
 
         var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
@@ -146,6 +151,7 @@
     private void OnFiltroChanged(string value)
     {
         _filtro = value;
+        ListState.Filtro = value;
         AplicarFiltro();
     }
 

@@ -113,6 +113,10 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string SinResultados => ResourceManager.GetString("SinResultados", resourceCulture)!;
 
+        public static string SinMaquinas => ResourceManager.GetString("SinMaquinas", resourceCulture)!;
+
+        public static string SinDocumentos => ResourceManager.GetString("SinDocumentos", resourceCulture)!;
+
         public static string Cancelar => ResourceManager.GetString("Cancelar", resourceCulture)!;
 
         public static string Atras => ResourceManager.GetString("Atras", resourceCulture)!;

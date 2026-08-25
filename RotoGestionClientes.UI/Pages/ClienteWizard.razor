@@ -422,6 +422,14 @@
         return modelo;
     }
 
+    // El combo Responsable de PasoDatosGeneralesStep usa 0 como valor
+    // centinela de "sin responsable" (los Id de Usuario son IDENTITY, nunca
+    // 0). Normalizamos aquí, justo antes de guardar, para que un 0 nunca
+    // llegue a la BBDD como ResponsableId: violaría FK_Cliente_Usuario
+    // porque no existe ningún Usuario con Id 0.
+    private static int? NormalizarResponsableId(int? responsableId) =>
+        responsableId.HasValue && responsableId.Value > 0 ? responsableId : null;
+
     private async Task CrearClienteAsync()
     {
         await using var db = await DbFactory.CreateDbContextAsync();
@@ -432,7 +440,7 @@
             SapId = _model.SapId,
             Alias = _model.Alias,
             Comentarios = _model.Comentarios,
-            ResponsableId = _model.ResponsableId,
+            ResponsableId = NormalizarResponsableId(_model.ResponsableId),
             ObservacionesVentanas = _model.ObservacionesVentanas,
             ObservacionesBalconeras = _model.ObservacionesBalconeras,
             ObservacionesPuertas = _model.ObservacionesPuertas,
@@ -614,14 +622,13 @@
             .Include(c => c.ClienteCilindros)
             .Include(c => c.ClienteAgujasCorredera)
             .Include(c => c.ClienteMaquinas)
-            .Include(c => c.ClienteDocumentos)
             .FirstAsync(c => c.Id == _model.Id);
 
         cliente.Nombre = _model.Nombre;
         cliente.SapId = _model.SapId;
         cliente.Alias = _model.Alias;
         cliente.Comentarios = _model.Comentarios;
-        cliente.ResponsableId = _model.ResponsableId;
+        cliente.ResponsableId = NormalizarResponsableId(_model.ResponsableId);
         cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
         cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
         cliente.ObservacionesPuertas = _model.ObservacionesPuertas;
@@ -774,27 +781,45 @@
         clienteConfiguracionMaquinas.SoporteMarcoId = _model.SoporteMarcoConfigId;
 
         // Documentos: igual que Máquinas, el diff se hace por Id (null =
-        // fichero nuevo, todavía no guardado). Los documentos ya existentes
-        // en BBDD solo actualizan su Nombre — el Contenido/Extension/
-        // TamañoBytes de esas filas NO viajan de vuelta desde el modelo
-        // (CargarModeloAsync no los carga, por peso), así que sobrescribirlos
-        // aquí borraría el fichero guardado; exactamente igual que
-        // UpdateClienteDocumentos() en la app legacy.
+        // fichero nuevo, todavía no guardado). A propósito NO usamos
+        // .Include(c => c.ClienteDocumentos) arriba: eso cargaría en memoria
+        // el Contenido (byte[]) de cada documento —hasta 20 MB por fichero—
+        // solo para hacer un diff por Id, que era justo lo que dejaba la app
+        // "sin responder" al eliminar un documento y guardar. En su lugar
+        // consultamos solo {Id, Nombre} sin tracking, y usamos entidades
+        // "stub" (con solo el Id relleno) para borrar/actualizar sin tocar
+        // el contenido binario ni cargarlo nunca en memoria. Los documentos
+        // ya existentes en BBDD solo actualizan su Nombre — el Contenido/
+        // Extension/TamañoBytes de esas filas NO viajan de vuelta desde el
+        // modelo (CargarModeloAsync no los carga, por peso), así que
+        // sobrescribirlos aquí borraría el fichero guardado; exactamente
+        // igual que UpdateClienteDocumentos() en la app legacy.
+        var documentosBd = await db.ClienteDocumentos.AsNoTracking()
+            .Where(x => x.ClienteId == cliente.Id)
+            .Select(x => new { x.Id, x.Nombre })
+            .ToListAsync();
+
         var idsDocumentosModelo = _model.DocumentosList.Where(d => d.Id.HasValue).Select(d => d.Id!.Value).ToHashSet();
-        foreach (var eliminar in cliente.ClienteDocumentos.Where(x => !idsDocumentosModelo.Contains(x.Id)).ToList())
-            db.Remove(eliminar);
+
+        foreach (var eliminar in documentosBd.Where(x => !idsDocumentosModelo.Contains(x.Id)))
+            db.Remove(new ClienteDocumento { Id = eliminar.Id });
 
         foreach (var documento in _model.DocumentosList)
         {
             if (documento.Id.HasValue)
             {
-                var existente = cliente.ClienteDocumentos.FirstOrDefault(x => x.Id == documento.Id.Value);
-                if (existente is not null)
-                    existente.Nombre = documento.Nombre;
+                var existente = documentosBd.FirstOrDefault(x => x.Id == documento.Id.Value);
+                if (existente is not null && existente.Nombre != documento.Nombre)
+                {
+                    var stub = new ClienteDocumento { Id = documento.Id.Value };
+                    db.Attach(stub);
+                    stub.Nombre = documento.Nombre;
+                    db.Entry(stub).Property(x => x.Nombre).IsModified = true;
+                }
             }
             else
             {
-                cliente.ClienteDocumentos.Add(new ClienteDocumento
+                db.ClienteDocumentos.Add(new ClienteDocumento
                 {
                     ClienteId = cliente.Id,
                     Nombre = documento.Nombre,

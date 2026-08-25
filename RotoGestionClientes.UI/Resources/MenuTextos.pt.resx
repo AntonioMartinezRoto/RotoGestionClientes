@@ -151,6 +151,12 @@
   <data name="SinResultados" xml:space="preserve">
     <value>Não foram encontrados clientes.</value>
   </data>
+  <data name="SinMaquinas" xml:space="preserve">
+    <value>Não há máquinas registadas.</value>
+  </data>
+  <data name="SinDocumentos" xml:space="preserve">
+    <value>Não há documentos.</value>
+  </data>
   <data name="Cancelar" xml:space="preserve">
     <value>Cancelar</value>
   </data>

@@ -43,6 +43,7 @@ internal static class Program
             options.UseSqlServer(connectionString));
 
         services.AddSingleton<IAppHost, DesktopAppHost>();
+        services.AddSingleton<ClientesListState>();
 
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);

@@ -27,11 +27,12 @@ else
         @if (_mostrarResponsable)
         {
             <MudItem xs="12" md="6">
-                <MudSelect T="int?" Value="Model.ResponsableId" ValueChanged="@(v => Model.ResponsableId = v)"
-                           Label="@MenuTextos.Responsable" Variant="Variant.Outlined" Clearable="true" Class="mb-4">
+                <MudSelect T="int" Value="_responsableId" ValueChanged="OnResponsableChanged"
+                           Label="@MenuTextos.Responsable" Variant="Variant.Outlined" Class="mb-4">
+                    <MudSelectItem T="int" Value="0">—</MudSelectItem>
                     @foreach (var usuario in _responsables)
                     {
-                        <MudSelectItem T="int?" Value="@((int?)usuario.Id)">@usuario.Nombre</MudSelectItem>
+                        <MudSelectItem T="int" Value="@usuario.Id">@usuario.Nombre</MudSelectItem>
                     }
                 </MudSelect>
             </MudItem>
@@ -78,6 +79,14 @@ else
     private bool _mostrarResponsable = true;
     private int? _softwareId;
 
+    // Combo Responsable: usamos "int" (no "int?") con 0 como valor centinela
+    // de "sin responsable". Los Id de Usuario son IDENTITY de SQL Server
+    // (arrancan en 1), así que 0 nunca choca con uno real. Evitamos así un
+    // problema de MudSelect<int?> que mostraba "0" en vez de vacío al no
+    // haber ningún responsable seleccionado.
+    private const int SinResponsable = 0;
+    private int _responsableId = SinResponsable;
+
     private List<Usuario> _responsables = new();
     private List<Software> _softwareOptions = new();
     private List<SeleccionableItem> _tiposPerfil = new();
@@ -102,6 +111,8 @@ else
 
         _softwareOptions = await db.Softwares.Where(s => s.Activa).OrderBy(s => s.Id).AsNoTracking().ToListAsync();
         _softwareId = Model.SoftwareList.Count > 0 ? Model.SoftwareList[0] : null;
+
+        _responsableId = Model.ResponsableId ?? SinResponsable;
 
         if (_mostrarResponsable)
             _responsables = await db.Usuarios.Where(u => u.Activa).OrderBy(u => u.Nombre).AsNoTracking().ToListAsync();
@@ -246,5 +257,11 @@ else
         Model.SoftwareList.Clear();
         if (value.HasValue)
             Model.SoftwareList.Add(value.Value);
+    }
+
+    private void OnResponsableChanged(int value)
+    {
+        _responsableId = value;
+        Model.ResponsableId = value == SinResponsable ? null : value;
     }
 }
