@@ -320,5 +320,23 @@ namespace RotoGestionClientes.UI.Resources
         public static string Responsables => ResourceManager.GetString("Responsables", resourceCulture)!;
 
         public static string Softwares => ResourceManager.GetString("Softwares", resourceCulture)!;
+
+        public static string CrearActualizacionDescripcion => ResourceManager.GetString("CrearActualizacionDescripcion", resourceCulture)!;
+
+        public static string ActualizarDatosDescripcion => ResourceManager.GetString("ActualizarDatosDescripcion", resourceCulture)!;
+
+        public static string SeleccionarArchivoActualizacion => ResourceManager.GetString("SeleccionarArchivoActualizacion", resourceCulture)!;
+
+        public static string AplicarActualizacion => ResourceManager.GetString("AplicarActualizacion", resourceCulture)!;
+
+        public static string ArchivoActualizacionObligatorio => ResourceManager.GetString("ArchivoActualizacionObligatorio", resourceCulture)!;
+
+        public static string DatosExportadosCorrectamente => ResourceManager.GetString("DatosExportadosCorrectamente", resourceCulture)!;
+
+        public static string ErrorExportarDatos => ResourceManager.GetString("ErrorExportarDatos", resourceCulture)!;
+
+        public static string ErrorImportarDatos => ResourceManager.GetString("ErrorImportarDatos", resourceCulture)!;
+
+        public static string DatosActualizadosVersion => ResourceManager.GetString("DatosActualizadosVersion", resourceCulture)!;
     }
 }

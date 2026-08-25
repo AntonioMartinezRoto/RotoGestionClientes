@@ -463,4 +463,31 @@
   <data name="Softwares" xml:space="preserve">
     <value>Softwares</value>
   </data>
+  <data name="CrearActualizacionDescripcion" xml:space="preserve">
+    <value>Gera um ficheiro com os dados mestres atuais para o distribuir aos distribuidores.</value>
+  </data>
+  <data name="ActualizarDatosDescripcion" xml:space="preserve">
+    <value>Selecione o ficheiro de atualização de dados mestres enviado pela sede para o aplicar.</value>
+  </data>
+  <data name="SeleccionarArchivoActualizacion" xml:space="preserve">
+    <value>Selecionar ficheiro de atualização</value>
+  </data>
+  <data name="AplicarActualizacion" xml:space="preserve">
+    <value>Aplicar atualização</value>
+  </data>
+  <data name="ArchivoActualizacionObligatorio" xml:space="preserve">
+    <value>Selecione um ficheiro de atualização antes de continuar.</value>
+  </data>
+  <data name="DatosExportadosCorrectamente" xml:space="preserve">
+    <value>Dados exportados corretamente.</value>
+  </data>
+  <data name="ErrorExportarDatos" xml:space="preserve">
+    <value>Erro ao exportar os dados mestres.</value>
+  </data>
+  <data name="ErrorImportarDatos" xml:space="preserve">
+    <value>Erro ao importar os dados mestres. Verifique se o ficheiro selecionado é válido.</value>
+  </data>
+  <data name="DatosActualizadosVersion" xml:space="preserve">
+    <value>Dados mestres atualizados para a versão {0}.</value>
+  </data>
 </root>
