@@ -304,5 +304,21 @@ namespace RotoGestionClientes.UI.Resources
         public static string TipoPerfilObligatorio => ResourceManager.GetString("TipoPerfilObligatorio", resourceCulture)!;
 
         public static string SeleccionaCategoria => ResourceManager.GetString("SeleccionaCategoria", resourceCulture)!;
+
+        public static string TotalRegistros => ResourceManager.GetString("TotalRegistros", resourceCulture)!;
+
+        public static string LimpiarFiltros => ResourceManager.GetString("LimpiarFiltros", resourceCulture)!;
+
+        public static string ExportarExcel => ResourceManager.GetString("ExportarExcel", resourceCulture)!;
+
+        public static string NoDatosExportar => ResourceManager.GetString("NoDatosExportar", resourceCulture)!;
+
+        public static string ExcelExportadoCorrectamente => ResourceManager.GetString("ExcelExportadoCorrectamente", resourceCulture)!;
+
+        public static string Seleccionar => ResourceManager.GetString("Seleccionar", resourceCulture)!;
+
+        public static string Responsables => ResourceManager.GetString("Responsables", resourceCulture)!;
+
+        public static string Softwares => ResourceManager.GetString("Softwares", resourceCulture)!;
     }
 }

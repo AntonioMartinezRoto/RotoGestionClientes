@@ -439,4 +439,28 @@
   <data name="SeleccionaCategoria" xml:space="preserve">
     <value>Selecciona una categoría a la izquierda para ver y editar sus datos.</value>
   </data>
+  <data name="TotalRegistros" xml:space="preserve">
+    <value>Total registros: </value>
+  </data>
+  <data name="LimpiarFiltros" xml:space="preserve">
+    <value>Limpiar filtros</value>
+  </data>
+  <data name="ExportarExcel" xml:space="preserve">
+    <value>Exportar a Excel</value>
+  </data>
+  <data name="NoDatosExportar" xml:space="preserve">
+    <value>No hay datos para exportar.</value>
+  </data>
+  <data name="ExcelExportadoCorrectamente" xml:space="preserve">
+    <value>Archivo Excel creado correctamente.</value>
+  </data>
+  <data name="Seleccionar" xml:space="preserve">
+    <value>Seleccionar</value>
+  </data>
+  <data name="Responsables" xml:space="preserve">
+    <value>Responsables</value>
+  </data>
+  <data name="Softwares" xml:space="preserve">
+    <value>Softwares</value>
+  </data>
 </root>

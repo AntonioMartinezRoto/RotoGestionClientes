@@ -17,6 +17,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.11" />
     <PackageReference Include="MudBlazor" Version="9.8.0" />
+    <!-- Misma versión que usa RotoGestionClientes.csproj (legacy) para
+         generar el Excel del módulo de Informes. -->
+    <PackageReference Include="NPOI" Version="2.8.0" />
   </ItemGroup>
 
   <ItemGroup>

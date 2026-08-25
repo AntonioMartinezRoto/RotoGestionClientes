@@ -223,3 +223,10 @@ html, body {
         white-space: nowrap;
     }
 }
+
+/* Botones de categoría de filtro del módulo de Informes (sidebar izquierda):
+   texto alineado a la izquierda en vez de centrado, para que se lean como
+   una lista de opciones en vez de como botones de acción sueltos. */
+.rgc-informes-filtro-btn {
+    justify-content: flex-start;
+}

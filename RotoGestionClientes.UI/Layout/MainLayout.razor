@@ -93,7 +93,7 @@
         [
             new MenuItem(MenuTextos.Clientes, Icons.Material.Filled.People, true, () => NavigationManager.NavigateTo("/clientes")),
             new MenuItem(MenuTextos.Mantenimiento, Icons.Material.Filled.Build, mostrarMantenimiento, () => NavigationManager.NavigateTo("/mantenimiento")),
-            new MenuItem(MenuTextos.Informes, Icons.Material.Filled.Assessment, true, ShowComingSoon),
+            new MenuItem(MenuTextos.Informes, Icons.Material.Filled.Assessment, true, () => NavigationManager.NavigateTo("/informes")),
             new MenuItem(MenuTextos.CrearActualizacion, Icons.Material.Filled.CloudUpload, mostrarCrearActualizacion, ShowComingSoon),
             new MenuItem(MenuTextos.ActualizarDatos, Icons.Material.Filled.CloudDownload, mostrarActualizarDatos, ShowComingSoon),
             new MenuItem(MenuTextos.Salir, Icons.Material.Filled.ExitToApp, true, AppHost.Exit),
