@@ -32,3 +32,12 @@ html, body {
         padding: 1rem;
     }
 }
+
+.rgc-search {
+    min-width: 260px;
+    max-width: 420px;
+}
+
+.rgc-clientes-table {
+    overflow-x: auto;
+}

@@ -74,5 +74,45 @@ namespace RotoGestionClientes.UI.Resources
         public static string Bienvenida => ResourceManager.GetString("Bienvenida", resourceCulture)!;
 
         public static string BienvenidaTexto => ResourceManager.GetString("BienvenidaTexto", resourceCulture)!;
+
+        public static string NuevoCliente => ResourceManager.GetString("NuevoCliente", resourceCulture)!;
+
+        public static string ImportarCliente => ResourceManager.GetString("ImportarCliente", resourceCulture)!;
+
+        public static string ExportarClientes => ResourceManager.GetString("ExportarClientes", resourceCulture)!;
+
+        public static string VolverMenu => ResourceManager.GetString("VolverMenu", resourceCulture)!;
+
+        public static string Total => ResourceManager.GetString("Total", resourceCulture)!;
+
+        public static string Buscar => ResourceManager.GetString("Buscar", resourceCulture)!;
+
+        public static string SapId => ResourceManager.GetString("SapId", resourceCulture)!;
+
+        public static string Nombre => ResourceManager.GetString("Nombre", resourceCulture)!;
+
+        public static string Responsable => ResourceManager.GetString("Responsable", resourceCulture)!;
+
+        public static string Comentarios => ResourceManager.GetString("Comentarios", resourceCulture)!;
+
+        public static string Acciones => ResourceManager.GetString("Acciones", resourceCulture)!;
+
+        public static string VerResumen => ResourceManager.GetString("VerResumen", resourceCulture)!;
+
+        public static string Editar => ResourceManager.GetString("Editar", resourceCulture)!;
+
+        public static string Exportar => ResourceManager.GetString("Exportar", resourceCulture)!;
+
+        public static string CrearConfigurador => ResourceManager.GetString("CrearConfigurador", resourceCulture)!;
+
+        public static string Eliminar => ResourceManager.GetString("Eliminar", resourceCulture)!;
+
+        public static string EliminarClienteTitulo => ResourceManager.GetString("EliminarClienteTitulo", resourceCulture)!;
+
+        public static string ConfirmarEliminarCliente => ResourceManager.GetString("ConfirmarEliminarCliente", resourceCulture)!;
+
+        public static string SinResultados => ResourceManager.GetString("SinResultados", resourceCulture)!;
+
+        public static string Cancelar => ResourceManager.GetString("Cancelar", resourceCulture)!;
     }
 }

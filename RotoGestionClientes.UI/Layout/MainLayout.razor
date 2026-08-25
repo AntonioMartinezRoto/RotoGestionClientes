@@ -2,6 +2,7 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IAppHost AppHost
 @inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
 
 <MudThemeProvider Theme="RgcTheme.Theme" />
@@ -83,7 +84,7 @@
 
         _menuItems =
         [
-            new MenuItem(MenuTextos.Clientes, Icons.Material.Filled.People, true, ShowComingSoon),
+            new MenuItem(MenuTextos.Clientes, Icons.Material.Filled.People, true, () => NavigationManager.NavigateTo("/clientes")),
             new MenuItem(MenuTextos.Mantenimiento, Icons.Material.Filled.Build, mostrarMantenimiento, ShowComingSoon),
             new MenuItem(MenuTextos.Informes, Icons.Material.Filled.Assessment, true, ShowComingSoon),
             new MenuItem(MenuTextos.CrearActualizacion, Icons.Material.Filled.CloudUpload, mostrarCrearActualizacion, ShowComingSoon),

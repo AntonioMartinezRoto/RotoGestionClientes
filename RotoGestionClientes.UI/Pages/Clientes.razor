@@ -1,0 +1,201 @@
+@* Réplica moderna de Clientes/ClientesMain.cs (WinForms).
+   Listado + búsqueda + eliminación reales; el resto de acciones (ver
+   resumen, editar, exportar, generar configurador, nuevo, importar,
+   exportar múltiples) están cableadas pero muestran "Próximamente" hasta
+   que se migren en fases siguientes (el wizard de alta/edición). *@
+@page "/clientes"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4" Wrap="Wrap.Wrap" Spacing="4">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+            <MudTooltip Text="@MenuTextos.VolverMenu">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+            </MudTooltip>
+            <MudText Typo="Typo.h5">@MenuTextos.Clientes</MudText>
+        </MudStack>
+
+        <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="2">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="ShowComingSoon">
+                @MenuTextos.NuevoCliente
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileUpload" OnClick="ShowComingSoon">
+                @MenuTextos.ImportarCliente
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="ShowComingSoon">
+                @MenuTextos.ExportarClientes
+            </MudButton>
+        </MudStack>
+    </MudStack>
+
+    <MudPaper Class="pa-4" Elevation="1">
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-3" Wrap="Wrap.Wrap" Spacing="3">
+            <MudTextField T="string" Value="_filtro" ValueChanged="OnFiltroChanged" Immediate="true"
+                          Label="@MenuTextos.Buscar" Variant="Variant.Outlined" Margin="Margin.Dense"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                          Class="rgc-search" />
+            <MudText Typo="Typo.subtitle2" Class="mud-text-secondary">
+                @MenuTextos.Total: @_clientesFiltrados.Count
+            </MudText>
+        </MudStack>
+
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else
+        {
+            <MudTable Items="_clientesFiltrados" Hover="true" Dense="true" Bordered="false" Striped="true"
+                      Class="rgc-clientes-table">
+                <HeaderContent>
+                    <MudTh>@MenuTextos.SapId</MudTh>
+                    <MudTh>@MenuTextos.Nombre</MudTh>
+                    @if (_mostrarResponsable)
+                    {
+                        <MudTh>@MenuTextos.Responsable</MudTh>
+                    }
+                    <MudTh>@MenuTextos.Comentarios</MudTh>
+                    <MudTh Style="text-align:right">@MenuTextos.Acciones</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="@MenuTextos.SapId">@context.SapId</MudTd>
+                    <MudTd DataLabel="@MenuTextos.Nombre">@context.Nombre</MudTd>
+                    @if (_mostrarResponsable)
+                    {
+                        <MudTd DataLabel="@MenuTextos.Responsable">@context.Responsable</MudTd>
+                    }
+                    <MudTd DataLabel="@MenuTextos.Comentarios">@context.Comentarios</MudTd>
+                    <MudTd DataLabel="@MenuTextos.Acciones" Style="text-align:right; white-space:nowrap">
+                        <MudTooltip Text="@MenuTextos.VerResumen">
+                            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" OnClick="ShowComingSoon" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.Editar">
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="ShowComingSoon" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.Exportar">
+                            <MudIconButton Icon="@Icons.Material.Filled.Share" Size="Size.Small" OnClick="ShowComingSoon" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.CrearConfigurador">
+                            <MudIconButton Icon="@Icons.Material.Filled.Settings" Size="Size.Small" OnClick="ShowComingSoon" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.Eliminar">
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(() => EliminarCliente(context))" />
+                        </MudTooltip>
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText Class="pa-4 mud-text-secondary">@MenuTextos.SinResultados</MudText>
+                </NoRecordsContent>
+            </MudTable>
+        }
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private List<ClienteGridItem> _allClientes = new();
+    private List<ClienteGridItem> _clientesFiltrados = new();
+    private string _filtro = string.Empty;
+    private bool _mostrarResponsable = true;
+    private bool _cargando = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        if (config is not null && Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+        {
+            // Misma regla que ColumnaResponsableVisible() en la app WinForms actual.
+            _mostrarResponsable = edition != ApplicationEdition.Distributor;
+        }
+
+        await CargarClientesAsync();
+    }
+
+    private async Task CargarClientesAsync()
+    {
+        _cargando = true;
+        StateHasChanged();
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        _allClientes = await db.Clientes
+            .AsNoTracking()
+            .Select(f => new ClienteGridItem
+            {
+                Id = f.Id,
+                Nombre = f.Nombre,
+                SapId = f.SapId,
+                Alias = f.Alias,
+                Responsable = f.Responsable != null ? f.Responsable.Nombre : string.Empty,
+                Comentarios = f.Comentarios,
+                ObservacionesVentanas = f.ObservacionesVentanas,
+                ObservacionesBalconeras = f.ObservacionesBalconeras
+            })
+            .OrderBy(f => f.Nombre)
+            .ToListAsync();
+
+        _cargando = false;
+        AplicarFiltro();
+    }
+
+    private void OnFiltroChanged(string value)
+    {
+        _filtro = value;
+        AplicarFiltro();
+    }
+
+    private void AplicarFiltro()
+    {
+        var filtro = _filtro.Trim();
+
+        _clientesFiltrados = string.IsNullOrWhiteSpace(filtro)
+            ? _allClientes
+            : _allClientes
+                .Where(f => !string.IsNullOrEmpty(f.Nombre) && f.Nombre.Contains(filtro, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+    }
+
+    private async Task EliminarCliente(ClienteGridItem cliente)
+    {
+        bool? confirmado = await DialogService.ShowMessageBoxAsync(
+            MenuTextos.EliminarClienteTitulo,
+            $"{MenuTextos.ConfirmarEliminarCliente} \"{cliente.Nombre}\"?",
+            yesText: MenuTextos.Eliminar,
+            cancelText: MenuTextos.Cancelar);
+
+        if (confirmado != true)
+            return;
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var clienteBd = await db.Clientes.FirstOrDefaultAsync(c => c.Id == cliente.Id);
+        if (clienteBd is null)
+        {
+            Snackbar.Add(MenuTextos.SinResultados, Severity.Warning);
+            await CargarClientesAsync();
+            return;
+        }
+
+        db.Clientes.Remove(clienteBd);
+        await db.SaveChangesAsync();
+
+        Snackbar.Add($"{MenuTextos.Eliminar}: {cliente.Nombre}", Severity.Success, config => { config.SnackbarVariant = Variant.Filled; });
+
+        await CargarClientesAsync();
+    }
+
+    private void VolverMenu()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+
+    private void ShowComingSoon()
+    {
+        Snackbar.Add(MenuTextos.ProximamenteTexto, Severity.Info, config => { config.SnackbarVariant = Variant.Filled; });
+    }
+}
