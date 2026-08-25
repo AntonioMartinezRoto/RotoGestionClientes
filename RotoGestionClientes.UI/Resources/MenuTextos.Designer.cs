@@ -176,5 +176,21 @@ namespace RotoGestionClientes.UI.Resources
         public static string HojaPasiva => ResourceManager.GetString("HojaPasiva", resourceCulture)!;
 
         public static string Practicables => ResourceManager.GetString("Practicables", resourceCulture)!;
+
+        public static string PuertaSecundaria => ResourceManager.GetString("PuertaSecundaria", resourceCulture)!;
+
+        public static string Aguja => ResourceManager.GetString("Aguja", resourceCulture)!;
+
+        public static string Todos => ResourceManager.GetString("Todos", resourceCulture)!;
+
+        public static string PorPerfil => ResourceManager.GetString("PorPerfil", resourceCulture)!;
+
+        public static string Bisagras => ResourceManager.GetString("Bisagras", resourceCulture)!;
+
+        public static string Cerraduras => ResourceManager.GetString("Cerraduras", resourceCulture)!;
+
+        public static string DefinirAgujaPerfil => ResourceManager.GetString("DefinirAgujaPerfil", resourceCulture)!;
+
+        public static string ConfigurarPorPerfil => ResourceManager.GetString("ConfigurarPorPerfil", resourceCulture)!;
     }
 }

@@ -1,9 +1,9 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
-   (WinForms). Fase actual: los pasos "Datos generales" y "Ventanas" están
-   totalmente funcionales contra BBDD; el resto de pasos técnicos (Balconeras,
-   Puertas, Correderas, Elevables/Plegables, Máquinas, Documentos) se migran
-   uno a uno en fases siguientes y por ahora se muestran como "Próximamente"
-   en la navegación, sin tocar sus datos en BBDD. *@
+   (WinForms). Fase actual: los pasos "Datos generales", "Ventanas" y
+   "Balconeras" están totalmente funcionales contra BBDD; el resto de pasos
+   técnicos (Puertas, Correderas, Elevables/Plegables, Máquinas, Documentos)
+   se migran uno a uno en fases siguientes y por ahora se muestran como
+   "Próximamente" en la navegación, sin tocar sus datos en BBDD. *@
 @page "/clientes/nuevo"
 @page "/clientes/editar/{ClienteId:int}"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
@@ -54,6 +54,10 @@
                 else if (_currentStep == 1)
                 {
                     <PasoVentanasStep Model="_model" />
+                }
+                else if (_currentStep == 2)
+                {
+                    <PasoBalconerasStep Model="_model" />
                 }
                 else
                 {
@@ -156,11 +160,11 @@
     }
 
     // Imágenes representativas por paso (las mismas que la app WinForms
-    // legacy usa como apoyo visual en cada pantalla del wizard). El paso 0
-    // (Datos generales) no lleva imagen a propósito.
+    // legacy usa como apoyo visual en cada pantalla del wizard), para los
+    // pasos que todavía no están migrados y solo muestran un placeholder.
+    // El paso 0 (Datos generales) no lleva imagen a propósito.
     private static readonly Dictionary<int, string[]> ImagenesPorPaso = new()
     {
-        [2] = ["_content/RotoGestionClientes.UI/images/wizard/balconera.png"],
         [3] = ["_content/RotoGestionClientes.UI/images/wizard/puerta.png"],
         [4] = ["_content/RotoGestionClientes.UI/images/wizard/corredera.png"],
         [5] = ["_content/RotoGestionClientes.UI/images/wizard/elevable.png", "_content/RotoGestionClientes.UI/images/wizard/plegable.png"],
@@ -276,13 +280,23 @@
     // IMPORTANTE (alcance de esta fase): solo se leen/escriben los campos de
     // los pasos ya migrados: "Datos generales" (Nombre, SapId, Alias,
     // Comentarios, Responsable, Software, tipos de perfil, perfiles,
-    // manillas, soporte compás) y "Ventanas" (seguridad, hoja pasiva de
-    // oscilobatientes y de practicables, observaciones). El resto de
-    // categorías del cliente (Balconeras, Puertas, Correderas,
-    // Elevables/Plegables, Máquinas, Documentos, agujas, bisagras,
-    // cerraduras, cilindros, cremonas de balconera...) NO se tocan aquí
-    // todavía: si un cliente ya tiene esos datos cargados desde la app
+    // manillas, soporte compás), "Ventanas" (seguridad, hoja pasiva de
+    // oscilobatientes y de practicables, observaciones) y "Balconeras"
+    // (seguridad, hoja pasiva, bisagras y cerraduras de puerta secundaria,
+    // aguja de montaje y observaciones). El resto de categorías del cliente
+    // (Puertas, Correderas, Elevables/Plegables, Máquinas, Documentos,
+    // cilindros, bisagras/cerraduras de puerta principal...) NO se tocan
+    // aquí todavía: si un cliente ya tiene esos datos cargados desde la app
     // legacy, se quedan intactos en BBDD hasta que migremos cada paso.
+    //
+    // Caso especial — "aguja de montaje" (tabla ClienteAgujas): es una única
+    // fila por cliente con columnas para Balconera, Puerta secundaria Y
+    // Puerta (esta última todavía sin migrar), y la tabla de detalle
+    // ClienteAgujasModeloPerfil mezcla filas de los tres tipos. Por eso se
+    // cargan y se vuelven a guardar TODAS las columnas/filas (incluidas las
+    // de "Puerta", todavía no editables desde esta UI) para no perder esos
+    // datos al guardar: como el paso "Puertas" no tiene todavía controles
+    // que las modifiquen, viajan sin cambios entre la carga y el guardado.
 
     private async Task<ClientWizardModel?> CargarModeloAsync(int clienteId)
     {
@@ -292,7 +306,7 @@
         if (cliente is null)
             return null;
 
-        return new ClientWizardModel
+        var modelo = new ClientWizardModel
         {
             Id = cliente.Id,
             Nombre = cliente.Nombre,
@@ -301,6 +315,7 @@
             Comentarios = cliente.Comentarios,
             ResponsableId = cliente.ResponsableId,
             ObservacionesVentanas = cliente.ObservacionesVentanas,
+            ObservacionesBalconeras = cliente.ObservacionesBalconeras,
             SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
             PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
             PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
@@ -309,7 +324,24 @@
             SeguridadVentanaList = await db.ClienteSeguridadVentanas.Where(x => x.ClienteId == clienteId).Select(x => x.SeguridadVentanaId).ToListAsync(),
             CremonaPasivaVentanaList = await db.ClienteCremonaPasivaVentanas.Where(x => x.ClienteId == clienteId).Select(x => x.CremonaPasivaVentanaId).ToListAsync(),
             CremonaPasivaVentanaPractList = await db.ClienteCremonaPasivaVentanasPract.Where(x => x.ClienteId == clienteId).Select(x => x.CremonaPasivaVentanaId).ToListAsync(),
+            SeguridadBalconeraList = await db.ClienteSeguridadBalconeras.Where(x => x.ClienteId == clienteId).Select(x => x.SeguridadBalconeraId).ToListAsync(),
+            CremonaPasivaBalconeraList = await db.ClienteCremonaPasivaBalconeras.Where(x => x.ClienteId == clienteId).Select(x => x.CremonaPasivaBalconeraId).ToListAsync(),
+            BisagrasPuertaSecList = await db.ClienteBisagraPuertasSec.Where(x => x.ClienteId == clienteId).Select(x => x.BisagraPuertaId).ToListAsync(),
+            CerradurasPuertaSecList = await db.ClienteCerradurasPuertaSec.Where(x => x.ClienteId == clienteId).Select(x => x.CerraduraPuertaSecId).ToListAsync(),
+            AgujasModeloPerfilList = await db.ClienteAgujasModeloPerfil.Where(x => x.ClienteId == clienteId)
+                .Select(x => new AgujaModeloPerfilItem { AgujaModeloTipoId = x.AgujaModeloTipoId, AgujaId = x.AgujaId, PerfilId = x.PerfilId })
+                .ToListAsync(),
         };
+
+        var clienteAgujas = await db.ClienteAgujases.AsNoTracking().FirstOrDefaultAsync(x => x.ClienteId == clienteId);
+        modelo.AgujaBalconeraTipo = clienteAgujas?.AgujaBalconeraTipoId ?? (int)AgujaMode.Todos;
+        modelo.AgujaBalconera = clienteAgujas?.AgujaBalconeraId;
+        modelo.AgujaPuertaSecTipo = clienteAgujas?.AgujaPuertaSecTipoId ?? (int)AgujaMode.Todos;
+        modelo.AgujaPuertaSec = clienteAgujas?.AgujaPuertaSecId;
+        modelo.AgujaPuertaTipo = clienteAgujas?.AgujaPuertaTipoId ?? (int)AgujaMode.Todos;
+        modelo.AgujaPuerta = clienteAgujas?.AgujaPuertaId;
+
+        return modelo;
     }
 
     private async Task CrearClienteAsync()
@@ -323,7 +355,8 @@
             Alias = _model.Alias,
             Comentarios = _model.Comentarios,
             ResponsableId = _model.ResponsableId,
-            ObservacionesVentanas = _model.ObservacionesVentanas
+            ObservacionesVentanas = _model.ObservacionesVentanas,
+            ObservacionesBalconeras = _model.ObservacionesBalconeras
         };
 
         db.Clientes.Add(cliente);
@@ -353,7 +386,59 @@
         foreach (var cremonaId in _model.CremonaPasivaVentanaPractList)
             db.ClienteCremonaPasivaVentanasPract.Add(new ClienteCremonaPasivaVentanaPract { ClienteId = cliente.Id, CremonaPasivaVentanaId = cremonaId });
 
+        foreach (var seguridadBalconeraId in _model.SeguridadBalconeraList)
+            db.ClienteSeguridadBalconeras.Add(new ClienteSeguridadBalconera { ClienteId = cliente.Id, SeguridadBalconeraId = seguridadBalconeraId });
+
+        foreach (var cremonaId in _model.CremonaPasivaBalconeraList)
+            db.ClienteCremonaPasivaBalconeras.Add(new ClienteCremonaPasivaBalconera { ClienteId = cliente.Id, CremonaPasivaBalconeraId = cremonaId });
+
+        foreach (var bisagraId in _model.BisagrasPuertaSecList)
+            db.ClienteBisagraPuertasSec.Add(new ClienteBisagraPuertaSec { ClienteId = cliente.Id, BisagraPuertaId = bisagraId });
+
+        foreach (var cerraduraId in _model.CerradurasPuertaSecList)
+            db.ClienteCerradurasPuertaSec.Add(new ClienteCerraduraPuertaSec { ClienteId = cliente.Id, CerraduraPuertaSecId = cerraduraId });
+
+        // Aguja de montaje: fila única (Balconera + Puerta secundaria +
+        // Puerta) — ver nota de "Caso especial" más arriba.
+        db.ClienteAgujases.Add(new ClienteAgujas
+        {
+            ClienteId = cliente.Id,
+            AgujaBalconeraTipoId = _model.AgujaBalconeraTipo,
+            AgujaBalconeraId = _model.AgujaBalconera,
+            AgujaPuertaSecTipoId = _model.AgujaPuertaSecTipo,
+            AgujaPuertaSecId = _model.AgujaPuertaSec,
+            AgujaPuertaTipoId = _model.AgujaPuertaTipo,
+            AgujaPuertaId = _model.AgujaPuerta
+        });
+
+        if (_model.AgujasModeloPerfilList.Count > 0)
+        {
+            if (_model.AgujaBalconeraTipo == (int)AgujaMode.PorPerfil)
+                AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.Balconera);
+
+            if (_model.AgujaPuertaSecTipo == (int)AgujaMode.PorPerfil)
+                AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.PuertaSecundaria);
+
+            if (_model.AgujaPuertaTipo == (int)AgujaMode.PorPerfil)
+                AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.Puerta);
+        }
+
         await db.SaveChangesAsync();
+    }
+
+    private void AgregarAgujasModeloPerfil(ApplicationDbContext db, int clienteId, int agujaModeloTipoId)
+    {
+        var nuevos = _model.AgujasModeloPerfilList
+            .Where(x => x.AgujaModeloTipoId == agujaModeloTipoId)
+            .Select(x => new ClienteAgujasModeloPerfil
+            {
+                ClienteId = clienteId,
+                AgujaModeloTipoId = x.AgujaModeloTipoId,
+                AgujaId = x.AgujaId,
+                PerfilId = x.PerfilId
+            });
+
+        db.ClienteAgujasModeloPerfil.AddRange(nuevos);
     }
 
     private async Task ActualizarClienteAsync()
@@ -369,6 +454,10 @@
             .Include(c => c.ClienteSeguridadVentanas)
             .Include(c => c.ClienteCremonaPasivaVentanas)
             .Include(c => c.ClienteCremonaPasivaVentanasPract)
+            .Include(c => c.ClienteSeguridadBalconeras)
+            .Include(c => c.ClienteCremonaPasivaBalconeras)
+            .Include(c => c.ClienteBisagraPuertasSec)
+            .Include(c => c.ClienteCerradurasPuertaSec)
             .FirstAsync(c => c.Id == _model.Id);
 
         cliente.Nombre = _model.Nombre;
@@ -377,6 +466,7 @@
         cliente.Comentarios = _model.Comentarios;
         cliente.ResponsableId = _model.ResponsableId;
         cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
+        cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
 
         // Tipos de perfil
         foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
@@ -425,6 +515,61 @@
             db.Remove(eliminar);
         foreach (var id in _model.CremonaPasivaVentanaPractList.Where(id => !cliente.ClienteCremonaPasivaVentanasPract.Any(x => x.CremonaPasivaVentanaId == id)))
             cliente.ClienteCremonaPasivaVentanasPract.Add(new ClienteCremonaPasivaVentanaPract { ClienteId = cliente.Id, CremonaPasivaVentanaId = id });
+
+        // Seguridad balconera
+        foreach (var eliminar in cliente.ClienteSeguridadBalconeras.Where(x => !_model.SeguridadBalconeraList.Contains(x.SeguridadBalconeraId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.SeguridadBalconeraList.Where(id => !cliente.ClienteSeguridadBalconeras.Any(x => x.SeguridadBalconeraId == id)))
+            cliente.ClienteSeguridadBalconeras.Add(new ClienteSeguridadBalconera { ClienteId = cliente.Id, SeguridadBalconeraId = id });
+
+        // Cremona pasiva (balconeras)
+        foreach (var eliminar in cliente.ClienteCremonaPasivaBalconeras.Where(x => !_model.CremonaPasivaBalconeraList.Contains(x.CremonaPasivaBalconeraId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.CremonaPasivaBalconeraList.Where(id => !cliente.ClienteCremonaPasivaBalconeras.Any(x => x.CremonaPasivaBalconeraId == id)))
+            cliente.ClienteCremonaPasivaBalconeras.Add(new ClienteCremonaPasivaBalconera { ClienteId = cliente.Id, CremonaPasivaBalconeraId = id });
+
+        // Bisagras puerta secundaria
+        foreach (var eliminar in cliente.ClienteBisagraPuertasSec.Where(x => !_model.BisagrasPuertaSecList.Contains(x.BisagraPuertaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.BisagrasPuertaSecList.Where(id => !cliente.ClienteBisagraPuertasSec.Any(x => x.BisagraPuertaId == id)))
+            cliente.ClienteBisagraPuertasSec.Add(new ClienteBisagraPuertaSec { ClienteId = cliente.Id, BisagraPuertaId = id });
+
+        // Cerraduras puerta secundaria
+        foreach (var eliminar in cliente.ClienteCerradurasPuertaSec.Where(x => !_model.CerradurasPuertaSecList.Contains(x.CerraduraPuertaSecId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.CerradurasPuertaSecList.Where(id => !cliente.ClienteCerradurasPuertaSec.Any(x => x.CerraduraPuertaSecId == id)))
+            cliente.ClienteCerradurasPuertaSec.Add(new ClienteCerraduraPuertaSec { ClienteId = cliente.Id, CerraduraPuertaSecId = id });
+
+        // Aguja de montaje: fila única (Balconera + Puerta secundaria +
+        // Puerta) — ver nota de "Caso especial" más arriba.
+        var clienteAgujas = await db.ClienteAgujases.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);
+        if (clienteAgujas is null)
+        {
+            clienteAgujas = new ClienteAgujas { ClienteId = cliente.Id };
+            db.ClienteAgujases.Add(clienteAgujas);
+        }
+
+        clienteAgujas.AgujaBalconeraTipoId = _model.AgujaBalconeraTipo;
+        clienteAgujas.AgujaBalconeraId = _model.AgujaBalconera;
+        clienteAgujas.AgujaPuertaSecTipoId = _model.AgujaPuertaSecTipo;
+        clienteAgujas.AgujaPuertaSecId = _model.AgujaPuertaSec;
+        clienteAgujas.AgujaPuertaTipoId = _model.AgujaPuertaTipo;
+        clienteAgujas.AgujaPuertaId = _model.AgujaPuerta;
+
+        var existentesAgujaPerfil = await db.ClienteAgujasModeloPerfil.Where(x => x.ClienteId == cliente.Id).ToListAsync();
+        db.ClienteAgujasModeloPerfil.RemoveRange(existentesAgujaPerfil);
+
+        if (_model.AgujasModeloPerfilList.Count > 0)
+        {
+            if (_model.AgujaBalconeraTipo == (int)AgujaMode.PorPerfil)
+                AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.Balconera);
+
+            if (_model.AgujaPuertaSecTipo == (int)AgujaMode.PorPerfil)
+                AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.PuertaSecundaria);
+
+            if (_model.AgujaPuertaTipo == (int)AgujaMode.PorPerfil)
+                AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.Puerta);
+        }
 
         await db.SaveChangesAsync();
     }

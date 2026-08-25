@@ -247,4 +247,28 @@
   <data name="Practicables" xml:space="preserve">
     <value>Praticáveis</value>
   </data>
+  <data name="PuertaSecundaria" xml:space="preserve">
+    <value>Porta secundária</value>
+  </data>
+  <data name="Aguja" xml:space="preserve">
+    <value>Agulha</value>
+  </data>
+  <data name="Todos" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="PorPerfil" xml:space="preserve">
+    <value>Por perfil</value>
+  </data>
+  <data name="Bisagras" xml:space="preserve">
+    <value>Dobradiças</value>
+  </data>
+  <data name="Cerraduras" xml:space="preserve">
+    <value>Fechaduras</value>
+  </data>
+  <data name="DefinirAgujaPerfil" xml:space="preserve">
+    <value>Definir agulha por perfil</value>
+  </data>
+  <data name="ConfigurarPorPerfil" xml:space="preserve">
+    <value>Configurar por perfil</value>
+  </data>
 </root>

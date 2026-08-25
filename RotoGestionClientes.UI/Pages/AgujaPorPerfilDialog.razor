@@ -1,0 +1,121 @@
+@* Diálogo "Aguja por perfil": para cada perfil ya seleccionado en el paso
+   Datos generales, permite elegir qué aguja de montaje le corresponde.
+   Réplica moderna de Clientes/AgujasModeloPerfil.cs (WinForms), reutilizable
+   para Balconera / Puerta secundaria / Puerta (AgujasTipoModelo). *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Titulo</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else if (_filas.Count == 0)
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SeleccionaTipoPerfil</MudText>
+        }
+        else
+        {
+            <MudSimpleTable Dense="true" Style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>@MenuTextos.Perfil</th>
+                        <th>@MenuTextos.Aguja</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fila in _filas)
+                    {
+                        <tr>
+                            <td>@fila.PerfilNombre</td>
+                            <td>
+                                <MudSelect T="int?" Value="fila.AgujaId" ValueChanged="@(v => fila.AgujaId = v)"
+                                           Dense="true" Margin="Margin.Dense">
+                                    <MudSelectItem T="int?" Value="@((int?)null)">—</MudSelectItem>
+                                    @foreach (var aguja in _agujas)
+                                    {
+                                        <MudSelectItem T="int?" Value="@((int?)aguja.Id)">@aguja.Nombre</MudSelectItem>
+                                    }
+                                </MudSelect>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancelar">@MenuTextos.Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Aceptar">@MenuTextos.Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+    [Parameter, EditorRequired] public int AgujaModeloTipoId { get; set; }
+    [Parameter, EditorRequired] public string Titulo { get; set; } = string.Empty;
+
+    private bool _cargando = true;
+    private List<Aguja> _agujas = new();
+    private List<FilaPerfil> _filas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        _agujas = await db.Agujas.Where(a => a.Activa).OrderBy(a => a.Id).AsNoTracking().ToListAsync();
+
+        var perfiles = await db.Perfiles
+            .Include(p => p.PerfilTipo)
+            .Where(p => Model.PerfilesList.Contains(p.Id))
+            .AsNoTracking()
+            .OrderBy(p => p.Id)
+            .ToListAsync();
+
+        _filas = perfiles
+            .Select(p => new FilaPerfil
+            {
+                PerfilId = p.Id,
+                PerfilNombre = $"{p.Nombre} ({p.PerfilTipo.NombreAbreviado})",
+                AgujaId = Model.AgujasModeloPerfilList
+                    .Where(a => a.AgujaModeloTipoId == AgujaModeloTipoId && a.PerfilId == p.Id)
+                    .Select(a => (int?)a.AgujaId)
+                    .FirstOrDefault()
+            })
+            .ToList();
+
+        _cargando = false;
+    }
+
+    private void Aceptar()
+    {
+        Model.AgujasModeloPerfilList.RemoveAll(a => a.AgujaModeloTipoId == AgujaModeloTipoId);
+
+        foreach (var fila in _filas.Where(f => f.AgujaId.HasValue))
+        {
+            Model.AgujasModeloPerfilList.Add(new AgujaModeloPerfilItem
+            {
+                AgujaModeloTipoId = AgujaModeloTipoId,
+                PerfilId = fila.PerfilId,
+                AgujaId = fila.AgujaId!.Value
+            });
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancelar() => MudDialog.Cancel();
+
+    private class FilaPerfil
+    {
+        public int PerfilId { get; set; }
+        public string PerfilNombre { get; set; } = string.Empty;
+        public int? AgujaId { get; set; }
+    }
+}
