@@ -301,6 +301,45 @@
   <data name="Tipo" xml:space="preserve">
     <value>Tipo</value>
   </data>
+  <data name="Marca" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="BisagrasSoldadora" xml:space="preserve">
+    <value>Dobradiças na máquina de soldar</value>
+  </data>
+  <data name="TripleTaladroCentro" xml:space="preserve">
+    <value>Broca tripla num centro de maquinagem</value>
+  </data>
+  <data name="SoporteMarco" xml:space="preserve">
+    <value>Suporte de moldura</value>
+  </data>
+  <data name="CentroMecanizado" xml:space="preserve">
+    <value>Centro de maquinagem</value>
+  </data>
+  <data name="Plantilla" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="BancoMarcos" xml:space="preserve">
+    <value>Banco de marcos</value>
+  </data>
+  <data name="TipoMaquinaObligatorio" xml:space="preserve">
+    <value>Deve selecionar um tipo de máquina.</value>
+  </data>
+  <data name="MantenimientoObligatorio" xml:space="preserve">
+    <value>Deve selecionar uma empresa de manutenção.</value>
+  </data>
+  <data name="AnadirMaquina" xml:space="preserve">
+    <value>Adicionar máquina</value>
+  </data>
+  <data name="EditarMaquina" xml:space="preserve">
+    <value>Editar máquina</value>
+  </data>
+  <data name="EliminarMaquinaTitulo" xml:space="preserve">
+    <value>Eliminar máquina</value>
+  </data>
+  <data name="ConfirmarEliminarMaquina" xml:space="preserve">
+    <value>Tem a certeza que pretende eliminar esta máquina?</value>
+  </data>
   <data name="Interior" xml:space="preserve">
     <value>Interior</value>
   </data>

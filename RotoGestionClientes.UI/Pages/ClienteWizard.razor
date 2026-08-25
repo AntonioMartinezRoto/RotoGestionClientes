@@ -1,16 +1,16 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
    (WinForms). Fase actual: los pasos "Datos generales", "Ventanas",
-   "Balconeras", "Puertas", "Correderas" y "Elevables/Plegables" están
-   totalmente funcionales contra BBDD; el resto de pasos técnicos (Máquinas,
-   Documentos) se migran uno a uno en fases siguientes y por ahora se
-   muestran como "Próximamente" en la navegación, sin tocar sus datos en
-   BBDD. *@
+   "Balconeras", "Puertas", "Correderas", "Elevables/Plegables" y "Máquinas"
+   están totalmente funcionales contra BBDD; el paso "Documentos" se migra
+   en una fase siguiente y por ahora se muestra como "Próximamente" en la
+   navegación, sin tocar sus datos en BBDD. *@
 @page "/clientes/nuevo"
 @page "/clientes/editar/{ClienteId:int}"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 @using Microsoft.EntityFrameworkCore
+@using System.ComponentModel
 
 <div class="rgc-wizard">
     <div class="rgc-wizard-header">
@@ -71,6 +71,10 @@
                 else if (_currentStep == 5)
                 {
                     <PasoElevablesPlegablesStep Model="_model" />
+                }
+                else if (_currentStep == 6)
+                {
+                    <PasoMaquinasStep Model="_model" />
                 }
                 else
                 {
@@ -176,10 +180,7 @@
     // legacy usa como apoyo visual en cada pantalla del wizard), para los
     // pasos que todavía no están migrados y solo muestran un placeholder.
     // El paso 0 (Datos generales) no lleva imagen a propósito.
-    private static readonly Dictionary<int, string[]> ImagenesPorPaso = new()
-    {
-        [6] = ["_content/RotoGestionClientes.UI/images/wizard/maquina.png"],
-    };
+    private static readonly Dictionary<int, string[]> ImagenesPorPaso = new();
 
     private static IReadOnlyList<string> ImagenesPaso(int index) =>
         ImagenesPorPaso.TryGetValue(index, out var imagenes) ? imagenes : Array.Empty<string>();
@@ -295,11 +296,13 @@
     // (seguridad, hoja pasiva, bisagras y cerraduras de puerta secundaria,
     // aguja de montaje y observaciones), "Puertas" (bisagras, cerraduras,
     // cilindros, aguja de montaje y observaciones), "Correderas" (agujas de
-    // corredera, bombillo y observaciones) y "Elevables/Plegables" (Estándar,
-    // DLO, Consumen y observaciones de ambos bloques). El resto de
-    // categorías del cliente (Máquinas, Documentos...) NO se tocan aquí
-    // todavía: si un cliente ya tiene esos datos cargados desde la app
-    // legacy, se quedan intactos en BBDD hasta que migremos cada paso.
+    // corredera, bombillo y observaciones), "Elevables/Plegables" (Estándar,
+    // DLO, Consumen y observaciones de ambos bloques) y "Máquinas" (lista de
+    // máquinas del cliente, bisagras en soldadora, triple taladro en centro
+    // de mecanizado, soporte de marco y observaciones). El resto de
+    // categorías del cliente (Documentos...) NO se tocan aquí todavía: si un
+    // cliente ya tiene esos datos cargados desde la app legacy, se quedan
+    // intactos en BBDD hasta que migremos cada paso.
     //
     // Caso especial — "aguja de montaje" (tabla ClienteAgujas): es una única
     // fila por cliente con columnas para Balconera, Puerta secundaria y
@@ -338,6 +341,7 @@
             ObservacionesCorrederas = cliente.ObservacionesCorrederas,
             ObservacionesElevables = cliente.ObservacionesElevables,
             ObservacionesPlegables = cliente.ObservacionesPlegables,
+            ObservacionesMaquinas = cliente.ObservacionesMaquinas,
             SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
             PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
             PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
@@ -357,6 +361,20 @@
             AgujasModeloPerfilList = await db.ClienteAgujasModeloPerfil.Where(x => x.ClienteId == clienteId)
                 .Select(x => new AgujaModeloPerfilItem { AgujaModeloTipoId = x.AgujaModeloTipoId, AgujaId = x.AgujaId, PerfilId = x.PerfilId })
                 .ToListAsync(),
+            MaquinasList = new BindingList<ClienteMaquinaItem>(await db.ClienteMaquinas.Where(x => x.ClienteId == clienteId)
+                .OrderBy(x => x.Id)
+                .Select(x => new ClienteMaquinaItem
+                {
+                    Id = x.Id,
+                    MaquinaTipoId = x.MaquinaTipoId,
+                    Descripcion = x.MaquinaTipo.Descripcion,
+                    MaquinaMarcaId = x.MaquinaMarcaId,
+                    MarcaNombre = x.MaquinaMarca != null ? x.MaquinaMarca.Nombre : null,
+                    MaquinaMantenimientoId = x.MaquinaMantenimientoId,
+                    MantenimientoNombre = x.MaquinaMantenimiento.Nombre,
+                    Observaciones = x.Observaciones
+                })
+                .ToListAsync()),
         };
 
         var clienteAgujas = await db.ClienteAgujases.AsNoTracking().FirstOrDefaultAsync(x => x.ClienteId == clienteId);
@@ -379,6 +397,11 @@
         modelo.Elevable_Dlo = clienteElevablePlegable?.Elevable_Dlo ?? false;
         modelo.Plegable_Consumen = clienteElevablePlegable?.Plegable_Consumen ?? false;
 
+        var clienteConfiguracionMaquinas = await db.ClienteConfiguracionMaquinas.AsNoTracking().FirstOrDefaultAsync(x => x.ClienteId == clienteId);
+        modelo.BisagraEnSoldadora = clienteConfiguracionMaquinas?.BisagrasSoldadora ?? false;
+        modelo.TripleTaladroCentro = clienteConfiguracionMaquinas?.TripleTaladroCentro ?? false;
+        modelo.SoporteMarcoConfigId = clienteConfiguracionMaquinas?.SoporteMarcoId ?? (int)Enums.SoporteMarcoConfig.CentroMecanizado;
+
         return modelo;
     }
 
@@ -398,7 +421,8 @@
             ObservacionesPuertas = _model.ObservacionesPuertas,
             ObservacionesCorrederas = _model.ObservacionesCorrederas,
             ObservacionesElevables = _model.ObservacionesElevables,
-            ObservacionesPlegables = _model.ObservacionesPlegables
+            ObservacionesPlegables = _model.ObservacionesPlegables,
+            ObservacionesMaquinas = _model.ObservacionesMaquinas
         };
 
         db.Clientes.Add(cliente);
@@ -473,6 +497,26 @@
             Plegable_Consumen = _model.Plegable_Consumen
         });
 
+        foreach (var maquina in _model.MaquinasList)
+        {
+            db.ClienteMaquinas.Add(new ClienteMaquina
+            {
+                ClienteId = cliente.Id,
+                MaquinaTipoId = maquina.MaquinaTipoId,
+                MaquinaMarcaId = maquina.MaquinaMarcaId,
+                MaquinaMantenimientoId = maquina.MaquinaMantenimientoId,
+                Observaciones = maquina.Observaciones
+            });
+        }
+
+        db.ClienteConfiguracionMaquinas.Add(new ClienteConfiguracionMaquinas
+        {
+            ClienteId = cliente.Id,
+            BisagrasSoldadora = _model.BisagraEnSoldadora,
+            TripleTaladroCentro = _model.TripleTaladroCentro,
+            SoporteMarcoId = _model.SoporteMarcoConfigId
+        });
+
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
         // Puerta) — ver nota de "Caso especial" más arriba.
         db.ClienteAgujases.Add(new ClienteAgujas
@@ -537,6 +581,7 @@
             .Include(c => c.ClienteCerradurasPuerta)
             .Include(c => c.ClienteCilindros)
             .Include(c => c.ClienteAgujasCorredera)
+            .Include(c => c.ClienteMaquinas)
             .FirstAsync(c => c.Id == _model.Id);
 
         cliente.Nombre = _model.Nombre;
@@ -550,6 +595,7 @@
         cliente.ObservacionesCorrederas = _model.ObservacionesCorrederas;
         cliente.ObservacionesElevables = _model.ObservacionesElevables;
         cliente.ObservacionesPlegables = _model.ObservacionesPlegables;
+        cliente.ObservacionesMaquinas = _model.ObservacionesMaquinas;
 
         // Tipos de perfil
         foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
@@ -646,6 +692,52 @@
             db.Remove(eliminar);
         foreach (var id in _model.AgujasCorrederaList.Where(id => !cliente.ClienteAgujasCorredera.Any(x => x.AgujaCorrederaId == id)))
             cliente.ClienteAgujasCorredera.Add(new ClienteAgujasCorredera { ClienteId = cliente.Id, AgujaCorrederaId = id });
+
+        // Máquinas: a diferencia de las listas de ids simples, cada fila
+        // tiene varios campos propios (tipo, marca, mantenimiento,
+        // observaciones), así que el diff se hace por Id en vez de por
+        // pertenencia a la lista. Id null = fila nueva (todavía no guardada).
+        var idsMaquinasModelo = _model.MaquinasList.Where(m => m.Id.HasValue).Select(m => m.Id!.Value).ToHashSet();
+        foreach (var eliminar in cliente.ClienteMaquinas.Where(x => !idsMaquinasModelo.Contains(x.Id)).ToList())
+            db.Remove(eliminar);
+
+        foreach (var maquina in _model.MaquinasList)
+        {
+            if (maquina.Id.HasValue)
+            {
+                var existente = cliente.ClienteMaquinas.FirstOrDefault(x => x.Id == maquina.Id.Value);
+                if (existente is not null)
+                {
+                    existente.MaquinaTipoId = maquina.MaquinaTipoId;
+                    existente.MaquinaMarcaId = maquina.MaquinaMarcaId;
+                    existente.MaquinaMantenimientoId = maquina.MaquinaMantenimientoId;
+                    existente.Observaciones = maquina.Observaciones;
+                }
+            }
+            else
+            {
+                cliente.ClienteMaquinas.Add(new ClienteMaquina
+                {
+                    ClienteId = cliente.Id,
+                    MaquinaTipoId = maquina.MaquinaTipoId,
+                    MaquinaMarcaId = maquina.MaquinaMarcaId,
+                    MaquinaMantenimientoId = maquina.MaquinaMantenimientoId,
+                    Observaciones = maquina.Observaciones
+                });
+            }
+        }
+
+        // Configuración de máquinas (bisagras en soldadora, triple taladro, soporte de marco)
+        var clienteConfiguracionMaquinas = await db.ClienteConfiguracionMaquinas.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);
+        if (clienteConfiguracionMaquinas is null)
+        {
+            clienteConfiguracionMaquinas = new ClienteConfiguracionMaquinas { ClienteId = cliente.Id };
+            db.ClienteConfiguracionMaquinas.Add(clienteConfiguracionMaquinas);
+        }
+
+        clienteConfiguracionMaquinas.BisagrasSoldadora = _model.BisagraEnSoldadora;
+        clienteConfiguracionMaquinas.TripleTaladroCentro = _model.TripleTaladroCentro;
+        clienteConfiguracionMaquinas.SoporteMarcoId = _model.SoporteMarcoConfigId;
 
         // Configuración de puerta (Cilindro sí/no + Portero eléctrico oculto)
         var clienteConfiguracionPuerta = await db.ClienteConfiguracionPuerta.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);

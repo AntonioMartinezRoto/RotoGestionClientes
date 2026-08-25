@@ -213,6 +213,32 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string Tipo => ResourceManager.GetString("Tipo", resourceCulture)!;
 
+        public static string Marca => ResourceManager.GetString("Marca", resourceCulture)!;
+
+        public static string BisagrasSoldadora => ResourceManager.GetString("BisagrasSoldadora", resourceCulture)!;
+
+        public static string TripleTaladroCentro => ResourceManager.GetString("TripleTaladroCentro", resourceCulture)!;
+
+        public static string SoporteMarco => ResourceManager.GetString("SoporteMarco", resourceCulture)!;
+
+        public static string CentroMecanizado => ResourceManager.GetString("CentroMecanizado", resourceCulture)!;
+
+        public static string Plantilla => ResourceManager.GetString("Plantilla", resourceCulture)!;
+
+        public static string BancoMarcos => ResourceManager.GetString("BancoMarcos", resourceCulture)!;
+
+        public static string TipoMaquinaObligatorio => ResourceManager.GetString("TipoMaquinaObligatorio", resourceCulture)!;
+
+        public static string MantenimientoObligatorio => ResourceManager.GetString("MantenimientoObligatorio", resourceCulture)!;
+
+        public static string AnadirMaquina => ResourceManager.GetString("AnadirMaquina", resourceCulture)!;
+
+        public static string EditarMaquina => ResourceManager.GetString("EditarMaquina", resourceCulture)!;
+
+        public static string EliminarMaquinaTitulo => ResourceManager.GetString("EliminarMaquinaTitulo", resourceCulture)!;
+
+        public static string ConfirmarEliminarMaquina => ResourceManager.GetString("ConfirmarEliminarMaquina", resourceCulture)!;
+
         public static string Interior => ResourceManager.GetString("Interior", resourceCulture)!;
 
         public static string Exterior => ResourceManager.GetString("Exterior", resourceCulture)!;

@@ -128,6 +128,12 @@ else
     {
         var parametros = new DialogParameters { ["Model"] = Model };
         var opciones = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseOnEscapeKey = true };
-        await DialogService.ShowAsync<CilindrosDialog>(MenuTextos.SeleccionarCilindros, parametros, opciones);
+
+        // ShowAsync solo espera a que el diálogo se abra, no a que se
+        // cierre; esperamos también el Result para que, al volver aquí,
+        // esta pantalla se vuelva a renderizar con los cilindros que el
+        // diálogo acaba de guardar en Model.
+        var dialogo = await DialogService.ShowAsync<CilindrosDialog>(MenuTextos.SeleccionarCilindros, parametros, opciones);
+        await dialogo.Result;
     }
 }

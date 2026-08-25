@@ -1,0 +1,126 @@
+@* Paso "Máquinas" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoMaquinas.cs (WinForms): lista de máquinas del cliente
+   (añadir/editar vía diálogo, eliminar con confirmación), más tres
+   interruptores independientes (bisagras en soldadora, triple taladro en
+   centro de mecanizado, soporte de marco) y observaciones. *@
+@inject IDialogService DialogService
+
+<MudStack Spacing="4">
+    <MudPaper Outlined="true" Class="pa-4">
+        <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Maquinas</MudText>
+        <div class="rgc-step-images">
+            <img src="_content/RotoGestionClientes.UI/images/wizard/maquina.png" alt="@MenuTextos.Maquinas" />
+        </div>
+
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+            <MudText Typo="Typo.subtitle2">@MenuTextos.Maquinas</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled"
+                           Size="Size.Small" OnClick="AbrirAnadirMaquinaAsync" />
+        </MudStack>
+
+        @if (Model.MaquinasList.Count == 0)
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary mb-4">@MenuTextos.SinResultados</MudText>
+        }
+        else
+        {
+            <MudSimpleTable Dense="true" Style="width: 100%;" Class="mb-4">
+                <thead>
+                    <tr>
+                        <th>@MenuTextos.Tipo</th>
+                        <th>@MenuTextos.Marca</th>
+                        <th>@MenuTextos.Mantenimiento</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var maquina in Model.MaquinasList)
+                    {
+                        <tr>
+                            <td>@maquina.Descripcion</td>
+                            <td>@maquina.MarcaNombre</td>
+                            <td>@maquina.MantenimientoNombre</td>
+                            <td>
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                                               OnClick="@(() => EditarMaquinaAsync(maquina))" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small"
+                                               OnClick="@(() => EliminarMaquinaAsync(maquina))" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
+
+        <MudGrid>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@MenuTextos.BisagrasSoldadora</MudText>
+                <MudRadioGroup T="bool" Value="Model.BisagraEnSoldadora" ValueChanged="OnBisagraSoldadoraChanged">
+                    <MudRadio T="bool" Value="true" Color="Color.Primary">@MenuTextos.Si</MudRadio>
+                    <MudRadio T="bool" Value="false" Color="Color.Primary">@MenuTextos.No</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@MenuTextos.TripleTaladroCentro</MudText>
+                <MudRadioGroup T="bool" Value="Model.TripleTaladroCentro" ValueChanged="OnTripleTaladroChanged">
+                    <MudRadio T="bool" Value="true" Color="Color.Primary">@MenuTextos.Si</MudRadio>
+                    <MudRadio T="bool" Value="false" Color="Color.Primary">@MenuTextos.No</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+            <MudItem xs="12" md="4">
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@MenuTextos.SoporteMarco</MudText>
+                <MudRadioGroup T="int" Value="Model.SoporteMarcoConfigId" ValueChanged="OnSoporteMarcoChanged">
+                    <MudRadio T="int" Value="@((int)Enums.SoporteMarcoConfig.CentroMecanizado)" Color="Color.Primary">@MenuTextos.CentroMecanizado</MudRadio>
+                    <MudRadio T="int" Value="@((int)Enums.SoporteMarcoConfig.Plantilla)" Color="Color.Primary">@MenuTextos.Plantilla</MudRadio>
+                    <MudRadio T="int" Value="@((int)Enums.SoporteMarcoConfig.BancoMarcos)" Color="Color.Primary">@MenuTextos.BancoMarcos</MudRadio>
+                </MudRadioGroup>
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+    <MudTextField T="string" @bind-Value="Model.ObservacionesMaquinas" Label="@MenuTextos.Comentarios"
+                  Variant="Variant.Outlined" Lines="3" />
+</MudStack>
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private void OnBisagraSoldadoraChanged(bool valor) => Model.BisagraEnSoldadora = valor;
+    private void OnTripleTaladroChanged(bool valor) => Model.TripleTaladroCentro = valor;
+    private void OnSoporteMarcoChanged(int valor) => Model.SoporteMarcoConfigId = valor;
+
+    private async Task AbrirAnadirMaquinaAsync()
+    {
+        var parametros = new DialogParameters { ["Model"] = Model, ["Titulo"] = MenuTextos.AnadirMaquina };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+        var dialogo = await DialogService.ShowAsync<MaquinaDialog>(MenuTextos.AnadirMaquina, parametros, opciones);
+
+        // Esperamos a que el diálogo se cierre de verdad (ShowAsync solo
+        // espera a que se abra) para que, al volver aquí, Blazor vuelva a
+        // renderizar esta tabla con la máquina recién añadida/editada —
+        // MaquinaDialog muta Model.MaquinasList directamente.
+        await dialogo.Result;
+    }
+
+    private async Task EditarMaquinaAsync(ClienteMaquinaItem maquina)
+    {
+        var parametros = new DialogParameters { ["Model"] = Model, ["Titulo"] = MenuTextos.EditarMaquina, ["Item"] = maquina };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+        var dialogo = await DialogService.ShowAsync<MaquinaDialog>(MenuTextos.EditarMaquina, parametros, opciones);
+        await dialogo.Result;
+    }
+
+    private async Task EliminarMaquinaAsync(ClienteMaquinaItem maquina)
+    {
+        bool? confirmado = await DialogService.ShowMessageBoxAsync(
+            MenuTextos.EliminarMaquinaTitulo,
+            MenuTextos.ConfirmarEliminarMaquina,
+            yesText: MenuTextos.Eliminar,
+            cancelText: MenuTextos.Cancelar);
+
+        if (confirmado != true)
+            return;
+
+        Model.MaquinasList.Remove(maquina);
+    }
+}

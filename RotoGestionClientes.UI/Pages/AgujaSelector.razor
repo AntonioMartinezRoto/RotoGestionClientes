@@ -53,6 +53,11 @@
 
         var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
 
-        await DialogService.ShowAsync<AgujaPorPerfilDialog>(DialogTitulo, parametros, opciones);
+        // ShowAsync solo espera a que el diálogo se abra, no a que se
+        // cierre; esperamos también el Result para que, al volver aquí,
+        // cualquier estado que dependa de los datos que el diálogo acaba de
+        // guardar en Model se vuelva a renderizar correctamente.
+        var dialogo = await DialogService.ShowAsync<AgujaPorPerfilDialog>(DialogTitulo, parametros, opciones);
+        await dialogo.Result;
     }
 }
