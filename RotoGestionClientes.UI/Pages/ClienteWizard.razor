@@ -1,6 +1,6 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
-   (WinForms). Fase actual: el paso "Datos generales" está totalmente
-   funcional contra BBDD; el resto de pasos técnicos (Ventanas, Balconeras,
+   (WinForms). Fase actual: los pasos "Datos generales" y "Ventanas" están
+   totalmente funcionales contra BBDD; el resto de pasos técnicos (Balconeras,
    Puertas, Correderas, Elevables/Plegables, Máquinas, Documentos) se migran
    uno a uno en fases siguientes y por ahora se muestran como "Próximamente"
    en la navegación, sin tocar sus datos en BBDD. *@
@@ -51,11 +51,28 @@
                 {
                     <PasoDatosGeneralesStep Model="_model" />
                 }
+                else if (_currentStep == 1)
+                {
+                    <PasoVentanasStep Model="_model" />
+                }
                 else
                 {
                     <MudPaper Outlined="true" Class="pa-8 rgc-wizard-placeholder">
-                        <MudIcon Icon="@Icons.Material.Filled.Construction" Size="Size.Large" Class="mb-4 mud-text-secondary" />
-                        <MudText Typo="Typo.h6" Class="mb-2">@_pasos[_currentStep]</MudText>
+                        @{ var imagenes = ImagenesPaso(_currentStep); }
+                        @if (imagenes.Count > 0)
+                        {
+                            <div class="rgc-step-images rgc-step-images-placeholder">
+                                @foreach (var src in imagenes)
+                                {
+                                    <img src="@src" alt="@_pasos[_currentStep]" />
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Description" Size="Size.Large" Class="mb-4 mud-text-secondary" />
+                        }
+                        <MudText Typo="Typo.h6" Class="mb-2 mt-4">@_pasos[_currentStep]</MudText>
                         <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.PasoProximamenteTexto</MudText>
                     </MudPaper>
                 }
@@ -137,6 +154,21 @@
 
         _cargandoInicial = false;
     }
+
+    // Imágenes representativas por paso (las mismas que la app WinForms
+    // legacy usa como apoyo visual en cada pantalla del wizard). El paso 0
+    // (Datos generales) no lleva imagen a propósito.
+    private static readonly Dictionary<int, string[]> ImagenesPorPaso = new()
+    {
+        [2] = ["_content/RotoGestionClientes.UI/images/wizard/balconera.png"],
+        [3] = ["_content/RotoGestionClientes.UI/images/wizard/puerta.png"],
+        [4] = ["_content/RotoGestionClientes.UI/images/wizard/corredera.png"],
+        [5] = ["_content/RotoGestionClientes.UI/images/wizard/elevable.png", "_content/RotoGestionClientes.UI/images/wizard/plegable.png"],
+        [6] = ["_content/RotoGestionClientes.UI/images/wizard/maquina.png"],
+    };
+
+    private static IReadOnlyList<string> ImagenesPaso(int index) =>
+        ImagenesPorPaso.TryGetValue(index, out var imagenes) ? imagenes : Array.Empty<string>();
 
     private string EstadoPaso(int index)
     {
@@ -241,13 +273,15 @@
 
     // --- Carga y guardado -------------------------------------------------
     //
-    // IMPORTANTE (alcance de esta fase): solo se leen/escriben los campos del
-    // paso "Datos generales" (Nombre, SapId, Alias, Comentarios, Responsable,
-    // Software, tipos de perfil, perfiles, manillas, soporte compás). El
-    // resto de categorías del cliente (Ventanas, Balconeras, Puertas,
-    // Correderas, Elevables/Plegables, Máquinas, Documentos, agujas,
-    // bisagras, cerraduras, cilindros, cremonas, seguridad...) NO se tocan
-    // aquí todavía: si un cliente ya tiene esos datos cargados desde la app
+    // IMPORTANTE (alcance de esta fase): solo se leen/escriben los campos de
+    // los pasos ya migrados: "Datos generales" (Nombre, SapId, Alias,
+    // Comentarios, Responsable, Software, tipos de perfil, perfiles,
+    // manillas, soporte compás) y "Ventanas" (seguridad, hoja pasiva de
+    // oscilobatientes y de practicables, observaciones). El resto de
+    // categorías del cliente (Balconeras, Puertas, Correderas,
+    // Elevables/Plegables, Máquinas, Documentos, agujas, bisagras,
+    // cerraduras, cilindros, cremonas de balconera...) NO se tocan aquí
+    // todavía: si un cliente ya tiene esos datos cargados desde la app
     // legacy, se quedan intactos en BBDD hasta que migremos cada paso.
 
     private async Task<ClientWizardModel?> CargarModeloAsync(int clienteId)
@@ -266,11 +300,15 @@
             Alias = cliente.Alias,
             Comentarios = cliente.Comentarios,
             ResponsableId = cliente.ResponsableId,
+            ObservacionesVentanas = cliente.ObservacionesVentanas,
             SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
             PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
             PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
             ManillasList = await db.ClienteManillas.Where(x => x.ClienteId == clienteId).Select(x => x.ManillaId).ToListAsync(),
             SoporteCompasList = await db.ClienteSoporteCompases.Where(x => x.ClienteId == clienteId).Select(x => x.SoporteCompasId).ToListAsync(),
+            SeguridadVentanaList = await db.ClienteSeguridadVentanas.Where(x => x.ClienteId == clienteId).Select(x => x.SeguridadVentanaId).ToListAsync(),
+            CremonaPasivaVentanaList = await db.ClienteCremonaPasivaVentanas.Where(x => x.ClienteId == clienteId).Select(x => x.CremonaPasivaVentanaId).ToListAsync(),
+            CremonaPasivaVentanaPractList = await db.ClienteCremonaPasivaVentanasPract.Where(x => x.ClienteId == clienteId).Select(x => x.CremonaPasivaVentanaId).ToListAsync(),
         };
     }
 
@@ -284,7 +322,8 @@
             SapId = _model.SapId,
             Alias = _model.Alias,
             Comentarios = _model.Comentarios,
-            ResponsableId = _model.ResponsableId
+            ResponsableId = _model.ResponsableId,
+            ObservacionesVentanas = _model.ObservacionesVentanas
         };
 
         db.Clientes.Add(cliente);
@@ -305,6 +344,15 @@
         if (_model.SoftwareList.Count > 0)
             db.ClienteSoftwares.Add(new ClienteSoftware { ClienteId = cliente.Id, SoftwareId = _model.SoftwareList[0] });
 
+        foreach (var seguridadVentanaId in _model.SeguridadVentanaList)
+            db.ClienteSeguridadVentanas.Add(new ClienteSeguridadVentana { ClienteId = cliente.Id, SeguridadVentanaId = seguridadVentanaId });
+
+        foreach (var cremonaId in _model.CremonaPasivaVentanaList)
+            db.ClienteCremonaPasivaVentanas.Add(new ClienteCremonaPasivaVentana { ClienteId = cliente.Id, CremonaPasivaVentanaId = cremonaId });
+
+        foreach (var cremonaId in _model.CremonaPasivaVentanaPractList)
+            db.ClienteCremonaPasivaVentanasPract.Add(new ClienteCremonaPasivaVentanaPract { ClienteId = cliente.Id, CremonaPasivaVentanaId = cremonaId });
+
         await db.SaveChangesAsync();
     }
 
@@ -318,6 +366,9 @@
             .Include(c => c.ClienteManillas)
             .Include(c => c.ClienteSoporteCompases)
             .Include(c => c.ClienteSoftwares)
+            .Include(c => c.ClienteSeguridadVentanas)
+            .Include(c => c.ClienteCremonaPasivaVentanas)
+            .Include(c => c.ClienteCremonaPasivaVentanasPract)
             .FirstAsync(c => c.Id == _model.Id);
 
         cliente.Nombre = _model.Nombre;
@@ -325,6 +376,7 @@
         cliente.Alias = _model.Alias;
         cliente.Comentarios = _model.Comentarios;
         cliente.ResponsableId = _model.ResponsableId;
+        cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
 
         // Tipos de perfil
         foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
@@ -355,6 +407,24 @@
             db.Remove(eliminar);
         foreach (var id in _model.SoftwareList.Where(id => !cliente.ClienteSoftwares.Any(x => x.SoftwareId == id)))
             cliente.ClienteSoftwares.Add(new ClienteSoftware { ClienteId = cliente.Id, SoftwareId = id });
+
+        // Seguridad ventana
+        foreach (var eliminar in cliente.ClienteSeguridadVentanas.Where(x => !_model.SeguridadVentanaList.Contains(x.SeguridadVentanaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.SeguridadVentanaList.Where(id => !cliente.ClienteSeguridadVentanas.Any(x => x.SeguridadVentanaId == id)))
+            cliente.ClienteSeguridadVentanas.Add(new ClienteSeguridadVentana { ClienteId = cliente.Id, SeguridadVentanaId = id });
+
+        // Cremona pasiva (oscilobatientes)
+        foreach (var eliminar in cliente.ClienteCremonaPasivaVentanas.Where(x => !_model.CremonaPasivaVentanaList.Contains(x.CremonaPasivaVentanaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.CremonaPasivaVentanaList.Where(id => !cliente.ClienteCremonaPasivaVentanas.Any(x => x.CremonaPasivaVentanaId == id)))
+            cliente.ClienteCremonaPasivaVentanas.Add(new ClienteCremonaPasivaVentana { ClienteId = cliente.Id, CremonaPasivaVentanaId = id });
+
+        // Cremona pasiva (practicables)
+        foreach (var eliminar in cliente.ClienteCremonaPasivaVentanasPract.Where(x => !_model.CremonaPasivaVentanaPractList.Contains(x.CremonaPasivaVentanaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.CremonaPasivaVentanaPractList.Where(id => !cliente.ClienteCremonaPasivaVentanasPract.Any(x => x.CremonaPasivaVentanaId == id)))
+            cliente.ClienteCremonaPasivaVentanasPract.Add(new ClienteCremonaPasivaVentanaPract { ClienteId = cliente.Id, CremonaPasivaVentanaId = id });
 
         await db.SaveChangesAsync();
     }

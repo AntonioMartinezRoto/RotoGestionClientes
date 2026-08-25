@@ -1,0 +1,121 @@
+@* Paso "Ventanas" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoVentanas.cs (WinForms): seguridad y hoja pasiva para
+   oscilobatientes, hoja pasiva para practicables (excluye los tipos de
+   cremona "Perimetral", igual que la app legacy) y observaciones. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+
+@if (_cargando)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+}
+else
+{
+    <MudStack Spacing="4">
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Oscilobatientes</MudText>
+            <div class="rgc-step-images">
+                <img src="_content/RotoGestionClientes.UI/images/wizard/ventana-oscilobatiente-1h.png" alt="@MenuTextos.Oscilobatientes" />
+                <img src="_content/RotoGestionClientes.UI/images/wizard/ventana-oscilobatiente-2h.png" alt="@MenuTextos.Oscilobatientes" />
+            </div>
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.Seguridad" Items="_seguridad" OnToggle="OnSeguridadToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.HojaPasiva" Items="_cremonaPasiva" OnToggle="OnCremonaPasivaToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Practicables</MudText>
+            <div class="rgc-step-images">
+                <img src="_content/RotoGestionClientes.UI/images/wizard/ventana-practicable-1h.png" alt="@MenuTextos.Practicables" />
+                <img src="_content/RotoGestionClientes.UI/images/wizard/ventana-practicable-2h.png" alt="@MenuTextos.Practicables" />
+            </div>
+            <SeleccionableGrid Title="@MenuTextos.HojaPasiva" Items="_cremonaPasivaPract" OnToggle="OnCremonaPasivaPractToggle"
+                                EmptyText="@MenuTextos.SinResultados" />
+        </MudPaper>
+
+        <MudTextField T="string" @bind-Value="Model.ObservacionesVentanas" Label="@MenuTextos.Comentarios"
+                      Variant="Variant.Outlined" Lines="3" />
+    </MudStack>
+}
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private bool _cargando = true;
+    private List<SeleccionableItem> _seguridad = new();
+    private List<SeleccionableItem> _cremonaPasiva = new();
+    private List<SeleccionableItem> _cremonaPasivaPract = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var seguridad = await db.SeguridadVentanas.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _seguridad = seguridad
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.SeguridadVentanaList.Contains(f.Id) })
+            .ToList();
+
+        var cremonas = await db.CremonaPasivaVentanaTipos.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _cremonaPasiva = cremonas
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.CremonaPasivaVentanaList.Contains(f.Id) })
+            .ToList();
+
+        // Los tipos "Perimetral" no aplican a hojas practicables (misma
+        // exclusión que RellenarGridCremonaPasivasPract() en la app legacy).
+        _cremonaPasivaPract = cremonas
+            .Where(f => !f.Nombre.Contains("Perimetral"))
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.CremonaPasivaVentanaPractList.Contains(f.Id) })
+            .ToList();
+
+        _cargando = false;
+    }
+
+    private void OnSeguridadToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.SeguridadVentanaList.Contains(e.Item.Id))
+                Model.SeguridadVentanaList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.SeguridadVentanaList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnCremonaPasivaToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.CremonaPasivaVentanaList.Contains(e.Item.Id))
+                Model.CremonaPasivaVentanaList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.CremonaPasivaVentanaList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnCremonaPasivaPractToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.CremonaPasivaVentanaPractList.Contains(e.Item.Id))
+                Model.CremonaPasivaVentanaPractList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.CremonaPasivaVentanaPractList.Remove(e.Item.Id);
+        }
+    }
+}

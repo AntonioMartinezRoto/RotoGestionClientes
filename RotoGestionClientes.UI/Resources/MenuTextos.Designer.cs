@@ -168,5 +168,13 @@ namespace RotoGestionClientes.UI.Resources
         public static string SeleccionaTipoPerfil => ResourceManager.GetString("SeleccionaTipoPerfil", resourceCulture)!;
 
         public static string PasoProximamenteTexto => ResourceManager.GetString("PasoProximamenteTexto", resourceCulture)!;
+
+        public static string Oscilobatientes => ResourceManager.GetString("Oscilobatientes", resourceCulture)!;
+
+        public static string Seguridad => ResourceManager.GetString("Seguridad", resourceCulture)!;
+
+        public static string HojaPasiva => ResourceManager.GetString("HojaPasiva", resourceCulture)!;
+
+        public static string Practicables => ResourceManager.GetString("Practicables", resourceCulture)!;
     }
 }

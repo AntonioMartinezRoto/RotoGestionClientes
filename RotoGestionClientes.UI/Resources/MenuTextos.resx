@@ -235,4 +235,16 @@
   <data name="PasoProximamenteTexto" xml:space="preserve">
     <value>Este paso todavía no está disponible en la nueva versión. Puedes completarlo desde la aplicación actual (RGC); en cuanto migremos este paso, sus datos aparecerán aquí.</value>
   </data>
+  <data name="Oscilobatientes" xml:space="preserve">
+    <value>Oscilobatientes</value>
+  </data>
+  <data name="Seguridad" xml:space="preserve">
+    <value>Seguridad</value>
+  </data>
+  <data name="HojaPasiva" xml:space="preserve">
+    <value>Hoja pasiva</value>
+  </data>
+  <data name="Practicables" xml:space="preserve">
+    <value>Practicables</value>
+  </data>
 </root>

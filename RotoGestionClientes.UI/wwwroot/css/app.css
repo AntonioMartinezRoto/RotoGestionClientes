@@ -42,15 +42,29 @@ html, body {
     overflow-x: auto;
 }
 
-/* Wizard de Clientes (alta/edición) */
+/* Wizard de Clientes (alta/edición)
+   Se ancla al viewport con position:fixed (en vez de depender de que los
+   contenedores de MudBlazor tengan una altura acotada) para que la barra de
+   navegación inferior (Cancelar/Atrás/Siguiente/Guardar) quede SIEMPRE a la
+   misma altura, sin que el usuario tenga que hacer scroll de página para
+   encontrarla al cambiar de paso. Solo el contenido del paso actual
+   (.rgc-wizard-content) y la barra lateral en móvil hacen scroll interno.
+   Los valores de top/left coinciden con AppbarHeight (64px) y
+   DrawerWidthLeft (290px) definidos en RgcTheme.cs; si el menú lateral se
+   hace colapsable/responsive en el futuro, este left deberá revisarse. */
 
 .rgc-wizard {
+    position: fixed;
+    top: 64px;
+    left: 290px;
+    right: 0;
+    bottom: 0;
     display: flex;
     flex-direction: column;
-    height: 100%;
     padding: 1.5rem 2rem;
     box-sizing: border-box;
     gap: 1rem;
+    overflow: hidden;
 }
 
 .rgc-wizard-header {
@@ -159,19 +173,50 @@ html, body {
     overflow-y: auto;
 }
 
+/* Imágenes representativas de cada paso/área (equivalentes a los PictureBox
+   de la app legacy). Fila horizontal con scroll si no caben, altura acotada
+   para que nunca desplacen a la barra de navegación inferior. */
+.rgc-step-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.rgc-step-images img {
+    height: 120px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 4px;
+    background: var(--mud-palette-background);
+    padding: 0.25rem;
+}
+
+.rgc-step-images-placeholder {
+    justify-content: center;
+}
+
+.rgc-step-images-placeholder img {
+    height: 160px;
+}
+
 /* Responsive: por debajo de 900px la barra lateral del wizard pasa a ir
-   arriba, en horizontal y con scroll, en vez de recortarse. */
+   arriba, en horizontal y con scroll, en vez de recortarse. El resto del
+   wizard mantiene overflow:hidden para que la barra de navegación inferior
+   (position:fixed en .rgc-wizard) siga sin necesitar scroll de página. */
 @media (max-width: 900px) {
     .rgc-wizard-body {
         flex-direction: column;
-        overflow: visible;
+        overflow: hidden;
     }
 
     .rgc-wizard-sidebar {
         flex-direction: row;
         flex: 0 0 auto;
         overflow-x: auto;
-        overflow-y: visible;
+        overflow-y: hidden;
     }
 
     .rgc-wizard-step-label {
