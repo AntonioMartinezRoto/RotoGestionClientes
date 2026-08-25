@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RotoGestionClientes.UI</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    Razor Class Library con la UI moderna (Blazor + MudBlazor) del menú
+    principal. No depende de WinForms: el objetivo es poder reutilizar estos
+    mismos componentes en el futuro desde cualquier host de Blazor Hybrid
+    (WinForms hoy; WPF u otro más adelante si hiciera falta) sin reescribirlos.
+  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.11" />
+    <PackageReference Include="MudBlazor" Version="9.8.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RotoGestionClientes.Core\RotoGestionClientes.Core.csproj" />
+  </ItemGroup>
+
+</Project>

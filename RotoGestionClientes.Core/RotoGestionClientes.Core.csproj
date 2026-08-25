@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RotoGestionClientes</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    Modelos EF Core + DbContext copiados literalmente desde el proyecto WinForms
+    original (RotoGestionClientes) para que la nueva app (RotoGestionClientes.Desktop)
+    no dependa de él. Se mantiene el mismo namespace ("RotoGestionClientes") a
+    propósito para que el copiado sea mecánico y quede claro que ambos modelan
+    exactamente el mismo esquema de base de datos.
+
+    IMPORTANTE: mientras convivan las dos aplicaciones, un cambio de esquema
+    (columna/tabla nueva) debe reflejarse a mano en ambos sitios:
+      - RotoGestionClientes\Models (proyecto legacy)
+      - RotoGestionClientes.Core\Models (este proyecto)
+  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.3" />
+  </ItemGroup>
+
+</Project>

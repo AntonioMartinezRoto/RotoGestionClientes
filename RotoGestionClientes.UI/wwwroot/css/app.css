@@ -1,0 +1,34 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#app {
+    height: 100vh;
+}
+
+.rgc-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding: 2rem;
+}
+
+.rgc-hero img {
+    max-width: min(560px, 80%);
+    width: 100%;
+    height: auto;
+    margin-bottom: 1.5rem;
+}
+
+/* Responsive: en ventanas estrechas la cabecera reduce el título y el
+   contenido central reduce márgenes, en vez de recortarse como en la
+   versión WinForms de tamaño fijo. */
+@media (max-width: 600px) {
+    .rgc-hero {
+        padding: 1rem;
+    }
+}

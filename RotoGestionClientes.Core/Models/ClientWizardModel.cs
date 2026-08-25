@@ -1,0 +1,68 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Text;
+
+namespace RotoGestionClientes
+{
+    public class ClientWizardModel
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string? Comentarios { get; set; }
+        public string? SapId { get; set; }
+        public string? Alias { get; set; }
+        public string? ObservacionesVentanas { get; set; }
+        public string? ObservacionesBalconeras { get; set; }
+        public string? ObservacionesPuertas { get; set; }
+        public string? ObservacionesParalelas { get; set; }
+        public string? ObservacionesCorrederas { get; set; }
+        public string? ObservacionesElevables { get; set; }
+        public string? ObservacionesPlegables { get; set; }
+        public string? ObservacionesMaquinas { get; set; }
+        public string? ObservacionesDocumentos { get; set; }
+        public List<int> PerfilTipoList { get; set; } = new();
+        public List<int> SoftwareList { get; set; } = new();
+        public int? ResponsableId { get; set; } = new();
+        public List<int> ManillasList { get; set; } = new();
+        public List<int> SoporteCompasList { get; set; } = new();
+        public List<int> SeguridadVentanaList { get; set; } = new();
+        public List<int> SeguridadBalconeraList { get; set; } = new();
+        public List<int> CremonaPasivaVentanaList { get; set; } = new();
+        public List<int> CremonaPasivaBalconeraList { get; set; } = new();
+        public List<int> CremonaPasivaVentanaPractList { get; set; } = new();
+        public List<int> PerfilesList { get; set; } = new();
+        public int AgujaBalconeraTipo { get; set; }
+        public int? AgujaBalconera { get; set; }
+        public int AgujaPuertaSecTipo { get; set; }
+        public int? AgujaPuertaSec { get; set; }
+        public int AgujaPuertaTipo { get; set; }
+        public int? AgujaPuerta { get; set; }
+        public List<int> BisagrasPuertaSecList { get; set; } = new();
+        public List<int> BisagrasPuertaList { get; set; } = new();
+        public List<AgujaModeloPerfilItem> AgujasModeloPerfilList { get; set; } = new();
+        public List<int> CerradurasPuertaSecList { get; set; } = new();
+        public List<int> CerradurasPuertaList { get; set; } = new();
+        public bool PorteroElectrico { get; set; } = true;
+        public bool Cilindro { get; set; } = true;
+        public bool CilindroCorredera { get; set; } = false;
+        public List<int> CilindroList { get; set; } = new();
+        public List<int> AgujasCorrederaList { get; set; } = new();
+        public bool Elevable_Estandar { get; set; } = false;
+        public bool Elevable_Dlo { get; set; } = false;
+        public bool Plegable_Consumen { get; set; } = false;
+        public BindingList<ClienteMaquinaItem> MaquinasList { get; set; } = new();
+        public BindingList<ClienteDocumentoItem> DocumentosList { get; set; } = new();
+        public bool BisagraEnSoldadora { get; set; } = false;
+        public bool TripleTaladroCentro { get; set; } = false;
+        public int SoporteMarcoConfigId { get; set; } = 1;
+
+
+    }
+    public class AgujaModeloPerfilItem
+    {
+        public int AgujaModeloTipoId { get; set; }
+        public int AgujaId { get; set; }
+        public int PerfilId { get; set; }
+    }
+}
