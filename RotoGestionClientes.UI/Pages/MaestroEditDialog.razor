@@ -7,6 +7,7 @@
    IncrementarVersionDatos() en la app legacy. *@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
+@inject VersionDatosState VersionDatosState
 @using Microsoft.EntityFrameworkCore
 
 <MudDialog>
@@ -340,8 +341,13 @@
                     break;
             }
 
-            await IncrementarVersionDatosAsync(db);
+            var nuevaVersion = await IncrementarVersionDatosAsync(db);
             await db.SaveChangesAsync();
+
+            // Refleja al instante la nueva versión en la cabecera de la app
+            // (MainLayout), que no se reinstancia al navegar y por tanto no
+            // se enteraría del cambio salvo por este aviso explícito.
+            VersionDatosState.Establecer(nuevaVersion);
 
             MudDialog.Close(DialogResult.Ok(true));
         }
@@ -362,8 +368,10 @@
         return ids.Count > 0 ? ids.Max() + 1 : 1;
     }
 
-    // Igual que IncrementarVersionDatos() en MaestroEditForm.cs.
-    private static async Task IncrementarVersionDatosAsync(ApplicationDbContext db)
+    // Igual que IncrementarVersionDatos() en MaestroEditForm.cs. Devuelve la
+    // nueva versión para poder reflejarla al instante en la cabecera de la
+    // app (VersionDatosState) sin esperar a un SaveChangesAsync posterior.
+    private static async Task<string> IncrementarVersionDatosAsync(ApplicationDbContext db)
     {
         var configuracion = await db.ConfiguracionAplicacion.FirstAsync();
         var partes = configuracion.VersionMaestros.Split('.');
@@ -379,5 +387,6 @@
         }
 
         configuracion.VersionMaestros = $"{mayor}.{menor}";
+        return configuracion.VersionMaestros;
     }
 }

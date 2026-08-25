@@ -44,6 +44,7 @@ internal static class Program
 
         services.AddSingleton<IAppHost, DesktopAppHost>();
         services.AddSingleton<ClientesListState>();
+        services.AddSingleton<VersionDatosState>();
 
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);

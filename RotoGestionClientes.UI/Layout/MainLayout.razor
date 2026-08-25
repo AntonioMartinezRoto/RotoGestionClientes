@@ -1,8 +1,10 @@
 @inherits LayoutComponentBase
+@implements IDisposable
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IAppHost AppHost
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
+@inject VersionDatosState VersionDatosState
 @using Microsoft.EntityFrameworkCore
 
 <MudThemeProvider Theme="RgcTheme.Theme" />
@@ -15,7 +17,7 @@
         <MudImage Src="_content/RotoGestionClientes.UI/images/logo-main.png" Height="34" ObjectFit="ObjectFit.Contain" Class="mr-4" />
         <MudText Typo="Typo.h6">@MenuTextos.MenuPrincipal</MudText>
         <MudSpacer />
-        <MudText Typo="Typo.body2" Class="mr-2">@MenuTextos.VersionDatos: @(_versionDatos ?? "—")</MudText>
+        <MudText Typo="Typo.body2" Class="mr-2">@MenuTextos.VersionDatos: @(VersionDatosState.Version ?? "—")</MudText>
         <MudText Typo="Typo.caption" Class="mud-text-secondary">v@(AppHost.AppVersion)</MudText>
     </MudAppBar>
 
@@ -36,20 +38,25 @@
 </MudLayout>
 
 @code {
-    private string? _versionDatos;
     private List<MenuItem> _menuItems = new();
 
     private sealed record MenuItem(string Label, string Icon, bool Visible, Action OnClick);
 
     protected override async Task OnInitializedAsync()
     {
+        // MainLayout no se reinstancia al navegar entre páginas, así que
+        // escuchamos VersionDatosState.Changed para refrescar la cabecera al
+        // instante cuando se guarda un maestro en Mantenimiento (ver
+        // MaestroEditDialog), sin depender de recargar la página.
+        VersionDatosState.Changed += OnVersionDatosCambiada;
+
         await using var db = await DbFactory.CreateDbContextAsync();
 
         var config = await db.ConfiguracionAplicacion
             .AsNoTracking()
             .FirstOrDefaultAsync();
 
-        _versionDatos = config?.VersionMaestros;
+        VersionDatosState.Establecer(config?.VersionMaestros);
 
         var edition = ApplicationEdition.Internal;
         if (config is not null)
@@ -96,5 +103,12 @@
     private void ShowComingSoon()
     {
         Snackbar.Add(MenuTextos.ProximamenteTexto, Severity.Info, config => { config.SnackbarVariant = Variant.Filled; });
+    }
+
+    private void OnVersionDatosCambiada() => InvokeAsync(StateHasChanged);
+
+    public void Dispose()
+    {
+        VersionDatosState.Changed -= OnVersionDatosCambiada;
     }
 }
