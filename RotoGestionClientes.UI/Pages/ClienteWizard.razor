@@ -1,7 +1,7 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
    (WinForms). Fase actual: los pasos "Datos generales", "Ventanas",
-   "Balconeras" y "Puertas" están totalmente funcionales contra BBDD; el
-   resto de pasos técnicos (Correderas, Elevables/Plegables, Máquinas,
+   "Balconeras", "Puertas" y "Correderas" están totalmente funcionales
+   contra BBDD; el resto de pasos técnicos (Elevables/Plegables, Máquinas,
    Documentos) se migran uno a uno en fases siguientes y por ahora se
    muestran como "Próximamente" en la navegación, sin tocar sus datos en
    BBDD. *@
@@ -63,6 +63,10 @@
                 else if (_currentStep == 3)
                 {
                     <PasoPuertasStep Model="_model" />
+                }
+                else if (_currentStep == 4)
+                {
+                    <PasoCorrederasStep Model="_model" />
                 }
                 else
                 {
@@ -170,7 +174,6 @@
     // El paso 0 (Datos generales) no lleva imagen a propósito.
     private static readonly Dictionary<int, string[]> ImagenesPorPaso = new()
     {
-        [4] = ["_content/RotoGestionClientes.UI/images/wizard/corredera.png"],
         [5] = ["_content/RotoGestionClientes.UI/images/wizard/elevable.png", "_content/RotoGestionClientes.UI/images/wizard/plegable.png"],
         [6] = ["_content/RotoGestionClientes.UI/images/wizard/maquina.png"],
     };
@@ -287,12 +290,12 @@
     // manillas, soporte compás), "Ventanas" (seguridad, hoja pasiva de
     // oscilobatientes y de practicables, observaciones), "Balconeras"
     // (seguridad, hoja pasiva, bisagras y cerraduras de puerta secundaria,
-    // aguja de montaje y observaciones) y "Puertas" (bisagras, cerraduras,
-    // cilindros, aguja de montaje y observaciones). El resto de categorías
-    // del cliente (Correderas, Elevables/Plegables, Máquinas, Documentos...)
-    // NO se tocan aquí todavía: si un cliente ya tiene esos datos cargados
-    // desde la app legacy, se quedan intactos en BBDD hasta que migremos
-    // cada paso.
+    // aguja de montaje y observaciones), "Puertas" (bisagras, cerraduras,
+    // cilindros, aguja de montaje y observaciones) y "Correderas" (agujas de
+    // corredera, bombillo y observaciones). El resto de categorías del
+    // cliente (Elevables/Plegables, Máquinas, Documentos...) NO se tocan
+    // aquí todavía: si un cliente ya tiene esos datos cargados desde la app
+    // legacy, se quedan intactos en BBDD hasta que migremos cada paso.
     //
     // Caso especial — "aguja de montaje" (tabla ClienteAgujas): es una única
     // fila por cliente con columnas para Balconera, Puerta secundaria y
@@ -328,6 +331,7 @@
             ObservacionesVentanas = cliente.ObservacionesVentanas,
             ObservacionesBalconeras = cliente.ObservacionesBalconeras,
             ObservacionesPuertas = cliente.ObservacionesPuertas,
+            ObservacionesCorrederas = cliente.ObservacionesCorrederas,
             SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
             PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
             PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
@@ -343,6 +347,7 @@
             BisagrasPuertaList = await db.ClienteBisagraPuertas.Where(x => x.ClienteId == clienteId).Select(x => x.BisagraPuertaId).ToListAsync(),
             CerradurasPuertaList = await db.ClienteCerradurasPuerta.Where(x => x.ClienteId == clienteId).Select(x => x.CerraduraPuertaId).ToListAsync(),
             CilindroList = await db.ClienteCilindros.Where(x => x.ClienteId == clienteId).Select(x => x.CilindroId).ToListAsync(),
+            AgujasCorrederaList = await db.ClienteAgujasCorrederas.Where(x => x.ClienteId == clienteId).Select(x => x.AgujaCorrederaId).ToListAsync(),
             AgujasModeloPerfilList = await db.ClienteAgujasModeloPerfil.Where(x => x.ClienteId == clienteId)
                 .Select(x => new AgujaModeloPerfilItem { AgujaModeloTipoId = x.AgujaModeloTipoId, AgujaId = x.AgujaId, PerfilId = x.PerfilId })
                 .ToListAsync(),
@@ -360,6 +365,9 @@
         modelo.PorteroElectrico = clienteConfiguracionPuerta?.PorteroElectrico ?? false;
         modelo.Cilindro = clienteConfiguracionPuerta?.Cilindro ?? false;
 
+        var clienteCilindroCorredera = await db.ClienteCilindrosCorredera.AsNoTracking().FirstOrDefaultAsync(x => x.ClienteId == clienteId);
+        modelo.CilindroCorredera = clienteCilindroCorredera?.Cilindro ?? false;
+
         return modelo;
     }
 
@@ -376,7 +384,8 @@
             ResponsableId = _model.ResponsableId,
             ObservacionesVentanas = _model.ObservacionesVentanas,
             ObservacionesBalconeras = _model.ObservacionesBalconeras,
-            ObservacionesPuertas = _model.ObservacionesPuertas
+            ObservacionesPuertas = _model.ObservacionesPuertas,
+            ObservacionesCorrederas = _model.ObservacionesCorrederas
         };
 
         db.Clientes.Add(cliente);
@@ -427,11 +436,20 @@
         foreach (var cilindroId in _model.CilindroList)
             db.ClienteCilindros.Add(new ClienteCilindro { ClienteId = cliente.Id, CilindroId = cilindroId });
 
+        foreach (var agujaCorrederaId in _model.AgujasCorrederaList)
+            db.ClienteAgujasCorrederas.Add(new ClienteAgujasCorredera { ClienteId = cliente.Id, AgujaCorrederaId = agujaCorrederaId });
+
         db.ClienteConfiguracionPuerta.Add(new ClienteConfiguracionPuerta
         {
             ClienteId = cliente.Id,
             PorteroElectrico = _model.PorteroElectrico,
             Cilindro = _model.Cilindro
+        });
+
+        db.ClienteCilindrosCorredera.Add(new ClienteCilindroCorredera
+        {
+            ClienteId = cliente.Id,
+            Cilindro = _model.CilindroCorredera
         });
 
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
@@ -497,6 +515,7 @@
             .Include(c => c.ClienteBisagraPuertas)
             .Include(c => c.ClienteCerradurasPuerta)
             .Include(c => c.ClienteCilindros)
+            .Include(c => c.ClienteAgujasCorredera)
             .FirstAsync(c => c.Id == _model.Id);
 
         cliente.Nombre = _model.Nombre;
@@ -507,6 +526,7 @@
         cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
         cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
         cliente.ObservacionesPuertas = _model.ObservacionesPuertas;
+        cliente.ObservacionesCorrederas = _model.ObservacionesCorrederas;
 
         // Tipos de perfil
         foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
@@ -598,6 +618,12 @@
         foreach (var id in _model.CilindroList.Where(id => !cliente.ClienteCilindros.Any(x => x.CilindroId == id)))
             cliente.ClienteCilindros.Add(new ClienteCilindro { ClienteId = cliente.Id, CilindroId = id });
 
+        // Agujas de corredera
+        foreach (var eliminar in cliente.ClienteAgujasCorredera.Where(x => !_model.AgujasCorrederaList.Contains(x.AgujaCorrederaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.AgujasCorrederaList.Where(id => !cliente.ClienteAgujasCorredera.Any(x => x.AgujaCorrederaId == id)))
+            cliente.ClienteAgujasCorredera.Add(new ClienteAgujasCorredera { ClienteId = cliente.Id, AgujaCorrederaId = id });
+
         // Configuración de puerta (Cilindro sí/no + Portero eléctrico oculto)
         var clienteConfiguracionPuerta = await db.ClienteConfiguracionPuerta.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);
         if (clienteConfiguracionPuerta is null)
@@ -608,6 +634,16 @@
 
         clienteConfiguracionPuerta.PorteroElectrico = _model.PorteroElectrico;
         clienteConfiguracionPuerta.Cilindro = _model.Cilindro;
+
+        // Bombillo de corredera (Cilindro sí/no)
+        var clienteCilindroCorredera = await db.ClienteCilindrosCorredera.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);
+        if (clienteCilindroCorredera is null)
+        {
+            clienteCilindroCorredera = new ClienteCilindroCorredera { ClienteId = cliente.Id };
+            db.ClienteCilindrosCorredera.Add(clienteCilindroCorredera);
+        }
+
+        clienteCilindroCorredera.Cilindro = _model.CilindroCorredera;
 
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
         // Puerta) — ver nota de "Caso especial" más arriba.

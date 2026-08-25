@@ -124,6 +124,9 @@
   <data name="Comentarios" xml:space="preserve">
     <value>Comentarios</value>
   </data>
+  <data name="Bombillo" xml:space="preserve">
+    <value>Bombillo</value>
+  </data>
   <data name="Acciones" xml:space="preserve">
     <value>Acciones</value>
   </data>

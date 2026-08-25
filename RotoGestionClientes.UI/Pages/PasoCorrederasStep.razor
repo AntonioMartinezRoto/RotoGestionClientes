@@ -1,0 +1,88 @@
+@* Paso "Correderas" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoCorrederas.cs (WinForms): un multi-selección de agujas de
+   corredera y, condicionado a la aguja seleccionada (igual que en la app
+   legacy), un interruptor Sí/No de "Bombillo", más un campo de
+   observaciones. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+
+@if (_cargando)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+}
+else
+{
+    <MudStack Spacing="4">
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Correderas</MudText>
+            <div class="rgc-step-images">
+                <img src="_content/RotoGestionClientes.UI/images/wizard/corredera.png" alt="@MenuTextos.Correderas" />
+            </div>
+            <MudGrid Class="mb-4">
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.Aguja" Items="_agujas" OnToggle="OnAgujaToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+                @if (_mostrarBombillo)
+                {
+                    <MudItem xs="12" md="6">
+                        <MudText Typo="Typo.subtitle2" Class="mb-2">@MenuTextos.Bombillo</MudText>
+                        <MudRadioGroup T="bool" Value="Model.CilindroCorredera" ValueChanged="OnCilindroCorrederaChanged">
+                            <MudRadio T="bool" Value="true" Color="Color.Primary">@MenuTextos.Si</MudRadio>
+                            <MudRadio T="bool" Value="false" Color="Color.Primary">@MenuTextos.No</MudRadio>
+                        </MudRadioGroup>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudPaper>
+
+        <MudTextField T="string" @bind-Value="Model.ObservacionesCorrederas" Label="@MenuTextos.Comentarios"
+                      Variant="Variant.Outlined" Lines="3" />
+    </MudStack>
+}
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private bool _cargando = true;
+    private bool _mostrarBombillo;
+    private List<SeleccionableItem> _agujas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var agujas = await db.AgujasCorredera.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _agujas = agujas
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.AgujasCorrederaList.Contains(f.Id) })
+            .ToList();
+
+        // Igual que PasoCorrederas_Load en la app legacy: el grupo "Bombillo"
+        // solo se muestra si el cliente ya tiene seleccionada la aguja cuyo
+        // nombre contiene "17" (id 2 en el momento de escribir esto). Vigilar
+        // esta lógica si se añade otro tipo de aguja que también deba
+        // activar el bombillo.
+        _mostrarBombillo = _agujas.Any(a => a.Selected && a.Nombre.Contains("17", StringComparison.OrdinalIgnoreCase));
+
+        _cargando = false;
+    }
+
+    private void OnAgujaToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.AgujasCorrederaList.Contains(e.Item.Id))
+                Model.AgujasCorrederaList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.AgujasCorrederaList.Remove(e.Item.Id);
+        }
+
+        if (e.Item.Nombre.Contains("17", StringComparison.OrdinalIgnoreCase))
+            _mostrarBombillo = e.Selected;
+    }
+
+    private void OnCilindroCorrederaChanged(bool value) => Model.CilindroCorredera = value;
+}

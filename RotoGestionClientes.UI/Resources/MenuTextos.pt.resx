@@ -187,6 +187,9 @@
   <data name="Correderas" xml:space="preserve">
     <value>Correr</value>
   </data>
+  <data name="Bombillo" xml:space="preserve">
+    <value>Cilindro</value>
+  </data>
   <data name="ElevablesPlegables" xml:space="preserve">
     <value>Elevável / Dobrável</value>
   </data>

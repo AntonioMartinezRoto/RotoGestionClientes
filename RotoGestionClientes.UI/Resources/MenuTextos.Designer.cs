@@ -137,6 +137,8 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string Correderas => ResourceManager.GetString("Correderas", resourceCulture)!;
 
+        public static string Bombillo => ResourceManager.GetString("Bombillo", resourceCulture)!;
+
         public static string ElevablesPlegables => ResourceManager.GetString("ElevablesPlegables", resourceCulture)!;
 
         public static string Maquinas => ResourceManager.GetString("Maquinas", resourceCulture)!;
