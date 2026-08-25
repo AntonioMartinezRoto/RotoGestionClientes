@@ -192,5 +192,23 @@ namespace RotoGestionClientes.UI.Resources
         public static string DefinirAgujaPerfil => ResourceManager.GetString("DefinirAgujaPerfil", resourceCulture)!;
 
         public static string ConfigurarPorPerfil => ResourceManager.GetString("ConfigurarPorPerfil", resourceCulture)!;
+
+        public static string Cilindros => ResourceManager.GetString("Cilindros", resourceCulture)!;
+
+        public static string SeleccionarCilindros => ResourceManager.GetString("SeleccionarCilindros", resourceCulture)!;
+
+        public static string ConfigurarCilindros => ResourceManager.GetString("ConfigurarCilindros", resourceCulture)!;
+
+        public static string Tipo => ResourceManager.GetString("Tipo", resourceCulture)!;
+
+        public static string Interior => ResourceManager.GetString("Interior", resourceCulture)!;
+
+        public static string Exterior => ResourceManager.GetString("Exterior", resourceCulture)!;
+
+        public static string Nomenclatura => ResourceManager.GetString("Nomenclatura", resourceCulture)!;
+
+        public static string Si => ResourceManager.GetString("Si", resourceCulture)!;
+
+        public static string No => ResourceManager.GetString("No", resourceCulture)!;
     }
 }

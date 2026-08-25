@@ -271,4 +271,31 @@
   <data name="ConfigurarPorPerfil" xml:space="preserve">
     <value>Configurar por perfil</value>
   </data>
+  <data name="Cilindros" xml:space="preserve">
+    <value>Cilindros</value>
+  </data>
+  <data name="SeleccionarCilindros" xml:space="preserve">
+    <value>Seleccionar cilindros</value>
+  </data>
+  <data name="ConfigurarCilindros" xml:space="preserve">
+    <value>Configurar cilindros</value>
+  </data>
+  <data name="Tipo" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Interior" xml:space="preserve">
+    <value>Interior</value>
+  </data>
+  <data name="Exterior" xml:space="preserve">
+    <value>Exterior</value>
+  </data>
+  <data name="Nomenclatura" xml:space="preserve">
+    <value>Nomenclatura</value>
+  </data>
+  <data name="Si" xml:space="preserve">
+    <value>Sí</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
 </root>

@@ -1,9 +1,10 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
-   (WinForms). Fase actual: los pasos "Datos generales", "Ventanas" y
-   "Balconeras" están totalmente funcionales contra BBDD; el resto de pasos
-   técnicos (Puertas, Correderas, Elevables/Plegables, Máquinas, Documentos)
-   se migran uno a uno en fases siguientes y por ahora se muestran como
-   "Próximamente" en la navegación, sin tocar sus datos en BBDD. *@
+   (WinForms). Fase actual: los pasos "Datos generales", "Ventanas",
+   "Balconeras" y "Puertas" están totalmente funcionales contra BBDD; el
+   resto de pasos técnicos (Correderas, Elevables/Plegables, Máquinas,
+   Documentos) se migran uno a uno en fases siguientes y por ahora se
+   muestran como "Próximamente" en la navegación, sin tocar sus datos en
+   BBDD. *@
 @page "/clientes/nuevo"
 @page "/clientes/editar/{ClienteId:int}"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
@@ -58,6 +59,10 @@
                 else if (_currentStep == 2)
                 {
                     <PasoBalconerasStep Model="_model" />
+                }
+                else if (_currentStep == 3)
+                {
+                    <PasoPuertasStep Model="_model" />
                 }
                 else
                 {
@@ -165,7 +170,6 @@
     // El paso 0 (Datos generales) no lleva imagen a propósito.
     private static readonly Dictionary<int, string[]> ImagenesPorPaso = new()
     {
-        [3] = ["_content/RotoGestionClientes.UI/images/wizard/puerta.png"],
         [4] = ["_content/RotoGestionClientes.UI/images/wizard/corredera.png"],
         [5] = ["_content/RotoGestionClientes.UI/images/wizard/elevable.png", "_content/RotoGestionClientes.UI/images/wizard/plegable.png"],
         [6] = ["_content/RotoGestionClientes.UI/images/wizard/maquina.png"],
@@ -281,22 +285,29 @@
     // los pasos ya migrados: "Datos generales" (Nombre, SapId, Alias,
     // Comentarios, Responsable, Software, tipos de perfil, perfiles,
     // manillas, soporte compás), "Ventanas" (seguridad, hoja pasiva de
-    // oscilobatientes y de practicables, observaciones) y "Balconeras"
+    // oscilobatientes y de practicables, observaciones), "Balconeras"
     // (seguridad, hoja pasiva, bisagras y cerraduras de puerta secundaria,
-    // aguja de montaje y observaciones). El resto de categorías del cliente
-    // (Puertas, Correderas, Elevables/Plegables, Máquinas, Documentos,
-    // cilindros, bisagras/cerraduras de puerta principal...) NO se tocan
-    // aquí todavía: si un cliente ya tiene esos datos cargados desde la app
-    // legacy, se quedan intactos en BBDD hasta que migremos cada paso.
+    // aguja de montaje y observaciones) y "Puertas" (bisagras, cerraduras,
+    // cilindros, aguja de montaje y observaciones). El resto de categorías
+    // del cliente (Correderas, Elevables/Plegables, Máquinas, Documentos...)
+    // NO se tocan aquí todavía: si un cliente ya tiene esos datos cargados
+    // desde la app legacy, se quedan intactos en BBDD hasta que migremos
+    // cada paso.
     //
     // Caso especial — "aguja de montaje" (tabla ClienteAgujas): es una única
-    // fila por cliente con columnas para Balconera, Puerta secundaria Y
-    // Puerta (esta última todavía sin migrar), y la tabla de detalle
-    // ClienteAgujasModeloPerfil mezcla filas de los tres tipos. Por eso se
-    // cargan y se vuelven a guardar TODAS las columnas/filas (incluidas las
-    // de "Puerta", todavía no editables desde esta UI) para no perder esos
-    // datos al guardar: como el paso "Puertas" no tiene todavía controles
-    // que las modifiquen, viajan sin cambios entre la carga y el guardado.
+    // fila por cliente con columnas para Balconera, Puerta secundaria y
+    // Puerta, y la tabla de detalle ClienteAgujasModeloPerfil mezcla filas
+    // de los tres tipos. Ahora que los tres pasos (Balconeras, Puerta
+    // secundaria dentro de Balconeras, y Puertas) están migrados, las tres
+    // columnas/tipos son editables desde esta UI; se siguen cargando y
+    // guardando siempre juntas porque comparten la misma fila/tabla física.
+    //
+    // Caso especial — "Portero eléctrico" (tabla ClienteConfiguracionPuerta,
+    // columna PorteroElectrico): en la app legacy el control de este campo
+    // está oculto (group_Portero.Visible = false en PasoPuertas.Designer.cs)
+    // y nunca se muestra al usuario, aunque comparte fila con "Cilindro" (que
+    // sí es editable). Por eso aquí también se carga y se vuelve a guardar
+    // sin exponer ningún control, para no perder el valor ya guardado.
 
     private async Task<ClientWizardModel?> CargarModeloAsync(int clienteId)
     {
@@ -316,6 +327,7 @@
             ResponsableId = cliente.ResponsableId,
             ObservacionesVentanas = cliente.ObservacionesVentanas,
             ObservacionesBalconeras = cliente.ObservacionesBalconeras,
+            ObservacionesPuertas = cliente.ObservacionesPuertas,
             SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
             PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
             PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
@@ -328,6 +340,9 @@
             CremonaPasivaBalconeraList = await db.ClienteCremonaPasivaBalconeras.Where(x => x.ClienteId == clienteId).Select(x => x.CremonaPasivaBalconeraId).ToListAsync(),
             BisagrasPuertaSecList = await db.ClienteBisagraPuertasSec.Where(x => x.ClienteId == clienteId).Select(x => x.BisagraPuertaId).ToListAsync(),
             CerradurasPuertaSecList = await db.ClienteCerradurasPuertaSec.Where(x => x.ClienteId == clienteId).Select(x => x.CerraduraPuertaSecId).ToListAsync(),
+            BisagrasPuertaList = await db.ClienteBisagraPuertas.Where(x => x.ClienteId == clienteId).Select(x => x.BisagraPuertaId).ToListAsync(),
+            CerradurasPuertaList = await db.ClienteCerradurasPuerta.Where(x => x.ClienteId == clienteId).Select(x => x.CerraduraPuertaId).ToListAsync(),
+            CilindroList = await db.ClienteCilindros.Where(x => x.ClienteId == clienteId).Select(x => x.CilindroId).ToListAsync(),
             AgujasModeloPerfilList = await db.ClienteAgujasModeloPerfil.Where(x => x.ClienteId == clienteId)
                 .Select(x => new AgujaModeloPerfilItem { AgujaModeloTipoId = x.AgujaModeloTipoId, AgujaId = x.AgujaId, PerfilId = x.PerfilId })
                 .ToListAsync(),
@@ -340,6 +355,10 @@
         modelo.AgujaPuertaSec = clienteAgujas?.AgujaPuertaSecId;
         modelo.AgujaPuertaTipo = clienteAgujas?.AgujaPuertaTipoId ?? (int)AgujaMode.Todos;
         modelo.AgujaPuerta = clienteAgujas?.AgujaPuertaId;
+
+        var clienteConfiguracionPuerta = await db.ClienteConfiguracionPuerta.AsNoTracking().FirstOrDefaultAsync(x => x.ClienteId == clienteId);
+        modelo.PorteroElectrico = clienteConfiguracionPuerta?.PorteroElectrico ?? false;
+        modelo.Cilindro = clienteConfiguracionPuerta?.Cilindro ?? false;
 
         return modelo;
     }
@@ -356,7 +375,8 @@
             Comentarios = _model.Comentarios,
             ResponsableId = _model.ResponsableId,
             ObservacionesVentanas = _model.ObservacionesVentanas,
-            ObservacionesBalconeras = _model.ObservacionesBalconeras
+            ObservacionesBalconeras = _model.ObservacionesBalconeras,
+            ObservacionesPuertas = _model.ObservacionesPuertas
         };
 
         db.Clientes.Add(cliente);
@@ -397,6 +417,22 @@
 
         foreach (var cerraduraId in _model.CerradurasPuertaSecList)
             db.ClienteCerradurasPuertaSec.Add(new ClienteCerraduraPuertaSec { ClienteId = cliente.Id, CerraduraPuertaSecId = cerraduraId });
+
+        foreach (var bisagraId in _model.BisagrasPuertaList)
+            db.ClienteBisagraPuertas.Add(new ClienteBisagraPuerta { ClienteId = cliente.Id, BisagraPuertaId = bisagraId });
+
+        foreach (var cerraduraId in _model.CerradurasPuertaList)
+            db.ClienteCerradurasPuerta.Add(new ClienteCerraduraPuerta { ClienteId = cliente.Id, CerraduraPuertaId = cerraduraId });
+
+        foreach (var cilindroId in _model.CilindroList)
+            db.ClienteCilindros.Add(new ClienteCilindro { ClienteId = cliente.Id, CilindroId = cilindroId });
+
+        db.ClienteConfiguracionPuerta.Add(new ClienteConfiguracionPuerta
+        {
+            ClienteId = cliente.Id,
+            PorteroElectrico = _model.PorteroElectrico,
+            Cilindro = _model.Cilindro
+        });
 
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
         // Puerta) — ver nota de "Caso especial" más arriba.
@@ -458,6 +494,9 @@
             .Include(c => c.ClienteCremonaPasivaBalconeras)
             .Include(c => c.ClienteBisagraPuertasSec)
             .Include(c => c.ClienteCerradurasPuertaSec)
+            .Include(c => c.ClienteBisagraPuertas)
+            .Include(c => c.ClienteCerradurasPuerta)
+            .Include(c => c.ClienteCilindros)
             .FirstAsync(c => c.Id == _model.Id);
 
         cliente.Nombre = _model.Nombre;
@@ -467,6 +506,7 @@
         cliente.ResponsableId = _model.ResponsableId;
         cliente.ObservacionesVentanas = _model.ObservacionesVentanas;
         cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
+        cliente.ObservacionesPuertas = _model.ObservacionesPuertas;
 
         // Tipos de perfil
         foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
@@ -539,6 +579,35 @@
             db.Remove(eliminar);
         foreach (var id in _model.CerradurasPuertaSecList.Where(id => !cliente.ClienteCerradurasPuertaSec.Any(x => x.CerraduraPuertaSecId == id)))
             cliente.ClienteCerradurasPuertaSec.Add(new ClienteCerraduraPuertaSec { ClienteId = cliente.Id, CerraduraPuertaSecId = id });
+
+        // Bisagras puerta principal
+        foreach (var eliminar in cliente.ClienteBisagraPuertas.Where(x => !_model.BisagrasPuertaList.Contains(x.BisagraPuertaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.BisagrasPuertaList.Where(id => !cliente.ClienteBisagraPuertas.Any(x => x.BisagraPuertaId == id)))
+            cliente.ClienteBisagraPuertas.Add(new ClienteBisagraPuerta { ClienteId = cliente.Id, BisagraPuertaId = id });
+
+        // Cerraduras puerta principal
+        foreach (var eliminar in cliente.ClienteCerradurasPuerta.Where(x => !_model.CerradurasPuertaList.Contains(x.CerraduraPuertaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.CerradurasPuertaList.Where(id => !cliente.ClienteCerradurasPuerta.Any(x => x.CerraduraPuertaId == id)))
+            cliente.ClienteCerradurasPuerta.Add(new ClienteCerraduraPuerta { ClienteId = cliente.Id, CerraduraPuertaId = id });
+
+        // Cilindros
+        foreach (var eliminar in cliente.ClienteCilindros.Where(x => !_model.CilindroList.Contains(x.CilindroId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.CilindroList.Where(id => !cliente.ClienteCilindros.Any(x => x.CilindroId == id)))
+            cliente.ClienteCilindros.Add(new ClienteCilindro { ClienteId = cliente.Id, CilindroId = id });
+
+        // Configuración de puerta (Cilindro sí/no + Portero eléctrico oculto)
+        var clienteConfiguracionPuerta = await db.ClienteConfiguracionPuerta.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);
+        if (clienteConfiguracionPuerta is null)
+        {
+            clienteConfiguracionPuerta = new ClienteConfiguracionPuerta { ClienteId = cliente.Id };
+            db.ClienteConfiguracionPuerta.Add(clienteConfiguracionPuerta);
+        }
+
+        clienteConfiguracionPuerta.PorteroElectrico = _model.PorteroElectrico;
+        clienteConfiguracionPuerta.Cilindro = _model.Cilindro;
 
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
         // Puerta) — ver nota de "Caso especial" más arriba.
