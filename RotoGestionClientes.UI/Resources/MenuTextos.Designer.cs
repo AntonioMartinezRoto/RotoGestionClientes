@@ -278,5 +278,31 @@ namespace RotoGestionClientes.UI.Resources
         public static string Si => ResourceManager.GetString("Si", resourceCulture)!;
 
         public static string No => ResourceManager.GetString("No", resourceCulture)!;
+
+        public static string Usuarios => ResourceManager.GetString("Usuarios", resourceCulture)!;
+
+        public static string Perfiles => ResourceManager.GetString("Perfiles", resourceCulture)!;
+
+        public static string MarcasMaquinas => ResourceManager.GetString("MarcasMaquinas", resourceCulture)!;
+
+        public static string MantenimientoMaquina => ResourceManager.GetString("MantenimientoMaquina", resourceCulture)!;
+
+        public static string TipoMaquinas => ResourceManager.GetString("TipoMaquinas", resourceCulture)!;
+
+        public static string SeguridadVentana => ResourceManager.GetString("SeguridadVentana", resourceCulture)!;
+
+        public static string Pasivas => ResourceManager.GetString("Pasivas", resourceCulture)!;
+
+        public static string Activo => ResourceManager.GetString("Activo", resourceCulture)!;
+
+        public static string EsDistribuidor => ResourceManager.GetString("EsDistribuidor", resourceCulture)!;
+
+        public static string NombreObligatorio => ResourceManager.GetString("NombreObligatorio", resourceCulture)!;
+
+        public static string Nuevo => ResourceManager.GetString("Nuevo", resourceCulture)!;
+
+        public static string TipoPerfilObligatorio => ResourceManager.GetString("TipoPerfilObligatorio", resourceCulture)!;
+
+        public static string SeleccionaCategoria => ResourceManager.GetString("SeleccionaCategoria", resourceCulture)!;
     }
 }

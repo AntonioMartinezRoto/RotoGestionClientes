@@ -400,4 +400,43 @@
   <data name="No" xml:space="preserve">
     <value>No</value>
   </data>
+  <data name="Usuarios" xml:space="preserve">
+    <value>Usuarios</value>
+  </data>
+  <data name="Perfiles" xml:space="preserve">
+    <value>Perfiles</value>
+  </data>
+  <data name="MarcasMaquinas" xml:space="preserve">
+    <value>Marcas de máquinas</value>
+  </data>
+  <data name="MantenimientoMaquina" xml:space="preserve">
+    <value>Mantenimiento máquinas</value>
+  </data>
+  <data name="TipoMaquinas" xml:space="preserve">
+    <value>Tipo de máquinas</value>
+  </data>
+  <data name="SeguridadVentana" xml:space="preserve">
+    <value>Seguridad ventana</value>
+  </data>
+  <data name="Pasivas" xml:space="preserve">
+    <value>Pasivas</value>
+  </data>
+  <data name="Activo" xml:space="preserve">
+    <value>Activo</value>
+  </data>
+  <data name="EsDistribuidor" xml:space="preserve">
+    <value>Es distribuidor</value>
+  </data>
+  <data name="NombreObligatorio" xml:space="preserve">
+    <value>El nombre es obligatorio.</value>
+  </data>
+  <data name="Nuevo" xml:space="preserve">
+    <value>Nuevo</value>
+  </data>
+  <data name="TipoPerfilObligatorio" xml:space="preserve">
+    <value>Debe seleccionar un tipo de perfil.</value>
+  </data>
+  <data name="SeleccionaCategoria" xml:space="preserve">
+    <value>Selecciona una categoría a la izquierda para ver y editar sus datos.</value>
+  </data>
 </root>

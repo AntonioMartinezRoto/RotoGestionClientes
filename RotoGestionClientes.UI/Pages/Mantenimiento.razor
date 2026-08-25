@@ -1,0 +1,245 @@
+@* Réplica moderna de Mantenimiento/MantenimientoMain.cs (WinForms): gestión
+   de las tablas "maestro" (de referencia) que alimentan el wizard de
+   Clientes — perfiles, software, marcas y tipos de máquina, empresas de
+   mantenimiento, seguridad de ventana, cremonas pasivas, manillas, bisagras,
+   cerraduras y usuarios. Selector de categoría a la izquierda + listado con
+   alta/edición a la derecha (MaestroEditDialog), igual que en la app legacy. *@
+@page "/mantenimiento"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Class="mb-4">
+        <MudTooltip Text="@MenuTextos.VolverMenu">
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+        </MudTooltip>
+        <MudText Typo="Typo.h5">@MenuTextos.Mantenimiento</MudText>
+    </MudStack>
+
+    <MudGrid>
+        <MudItem xs="12" md="3">
+            <MudPaper Outlined="true" Class="pa-2">
+                <MudList T="MaestroTipo?" SelectedValue="_tablaActual" SelectedValueChanged="OnCategoriaSeleccionadaAsync" Dense="true">
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.Usuario" Icon="@Icons.Material.Filled.People">@MenuTextos.Usuarios</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.Perfil" Icon="@Icons.Material.Filled.Straighten">@MenuTextos.Perfiles</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.Software" Icon="@Icons.Material.Filled.Apps">@MenuTextos.Software</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.MaquinaMarcas" Icon="@Icons.Material.Filled.PrecisionManufacturing">@MenuTextos.MarcasMaquinas</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.MaquinaMantenimiento" Icon="@Icons.Material.Filled.Build">@MenuTextos.MantenimientoMaquina</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.MaquinaTipo" Icon="@Icons.Material.Filled.Category">@MenuTextos.TipoMaquinas</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.SeguridadVentana" Icon="@Icons.Material.Filled.Security">@MenuTextos.SeguridadVentana</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.CremonaPasivaVentana" Icon="@Icons.Material.Filled.Lock">@MenuTextos.Pasivas</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.Manilla" Icon="@Icons.Material.Filled.MeetingRoom">@MenuTextos.Manillas</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.BisagraPuerta" Icon="@Icons.Material.Filled.SettingsInputComponent">@MenuTextos.Bisagras</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.CerraduraPuerta" Icon="@Icons.Material.Filled.VpnKey">@MenuTextos.Cerraduras</MudListItem>
+                </MudList>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="9">
+            <MudPaper Outlined="true" Class="pa-4">
+                @if (_tablaActual is null)
+                {
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SeleccionaCategoria</MudText>
+                }
+                else
+                {
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-3" Wrap="Wrap.Wrap" Spacing="3">
+                        <MudText Typo="Typo.subtitle1">@TituloSeccion(_tablaActual.Value)</MudText>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AbrirNuevoAsync">
+                            @MenuTextos.Nuevo
+                        </MudButton>
+                    </MudStack>
+
+                    @if (_cargando)
+                    {
+                        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+                    }
+                    else if (_items.Count == 0)
+                    {
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinResultados</MudText>
+                    }
+                    else
+                    {
+                        <MudSimpleTable Dense="true" Style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>@MenuTextos.Nombre</th>
+                                    @if (_tablaActual == MaestroTipo.Perfil)
+                                    {
+                                        <th>@MenuTextos.Tipo</th>
+                                    }
+                                    @if (_tablaActual == MaestroTipo.Usuario)
+                                    {
+                                        <th>@MenuTextos.EsDistribuidor</th>
+                                    }
+                                    <th>@MenuTextos.Activo</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in _items)
+                                {
+                                    <tr>
+                                        <td>@item.Nombre</td>
+                                        @if (_tablaActual == MaestroTipo.Perfil)
+                                        {
+                                            <td>@item.Tipo</td>
+                                        }
+                                        @if (_tablaActual == MaestroTipo.Usuario)
+                                        {
+                                            <td>@(item.EsDistribuidor ? MenuTextos.Si : MenuTextos.No)</td>
+                                        }
+                                        <td>@(item.Activa ? MenuTextos.Si : MenuTextos.No)</td>
+                                        <td style="text-align:right">
+                                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => AbrirEditarAsync(item))" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </MudSimpleTable>
+                    }
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private MaestroTipo? _tablaActual;
+    private bool _cargando;
+    private List<MaestroGridItem> _items = new();
+
+    private async Task OnCategoriaSeleccionadaAsync(MaestroTipo? tipo)
+    {
+        _tablaActual = tipo;
+        await CargarItemsAsync();
+    }
+
+    private async Task CargarItemsAsync()
+    {
+        if (_tablaActual is null)
+        {
+            _items = new();
+            return;
+        }
+
+        _cargando = true;
+        StateHasChanged();
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        _items = _tablaActual switch
+        {
+            MaestroTipo.Perfil => await db.Perfiles
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Tipo = x.PerfilTipo.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.Software => await db.Softwares
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.Manilla => await db.Manillas
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.CerraduraPuerta => await db.CerradurasPuerta
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.BisagraPuerta => await db.Bisagras
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.SeguridadVentana => await db.SeguridadVentanas
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.CremonaPasivaVentana => await db.CremonaPasivaVentanaTipos
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.MaquinaMantenimiento => await db.MaquinasMantenimiento
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.MaquinaMarcas => await db.MaquinasMarcas
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.MaquinaTipo => await db.MaquinasTipos
+                .OrderBy(x => x.Descripcion)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Descripcion, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.Usuario => await db.Usuarios
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, EsDistribuidor = x.EsDistribuidor, Activa = x.Activa })
+                .ToListAsync(),
+
+            _ => new List<MaestroGridItem>()
+        };
+
+        _cargando = false;
+    }
+
+    private static string TituloSeccion(MaestroTipo tipo) => tipo switch
+    {
+        MaestroTipo.Perfil => MenuTextos.Perfiles,
+        MaestroTipo.Software => MenuTextos.Software,
+        MaestroTipo.MaquinaMarcas => MenuTextos.MarcasMaquinas,
+        MaestroTipo.MaquinaMantenimiento => MenuTextos.MantenimientoMaquina,
+        MaestroTipo.MaquinaTipo => MenuTextos.TipoMaquinas,
+        MaestroTipo.SeguridadVentana => MenuTextos.SeguridadVentana,
+        MaestroTipo.CremonaPasivaVentana => MenuTextos.Pasivas,
+        MaestroTipo.Manilla => MenuTextos.Manillas,
+        MaestroTipo.BisagraPuerta => MenuTextos.Bisagras,
+        MaestroTipo.CerraduraPuerta => MenuTextos.Cerraduras,
+        MaestroTipo.Usuario => MenuTextos.Usuarios,
+        _ => string.Empty
+    };
+
+    private async Task AbrirNuevoAsync()
+    {
+        if (_tablaActual is null)
+            return;
+
+        var titulo = $"{MenuTextos.Nuevo} — {TituloSeccion(_tablaActual.Value)}";
+        var parametros = new DialogParameters { ["Tipo"] = _tablaActual.Value, ["Titulo"] = titulo };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<MaestroEditDialog>(titulo, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+            await CargarItemsAsync();
+    }
+
+    private async Task AbrirEditarAsync(MaestroGridItem item)
+    {
+        if (_tablaActual is null)
+            return;
+
+        var titulo = $"{MenuTextos.Editar} — {TituloSeccion(_tablaActual.Value)}";
+        var parametros = new DialogParameters { ["Tipo"] = _tablaActual.Value, ["Titulo"] = titulo, ["Id"] = item.Id };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<MaestroEditDialog>(titulo, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+            await CargarItemsAsync();
+    }
+
+    private void VolverMenu() => NavigationManager.NavigateTo("/");
+}
