@@ -97,14 +97,13 @@
                     .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
                     .ToListAsync(),
 
-                // NOTA: igual que en la app legacy, aquí no se incluye Activa
-                // (el DTO original tampoco lo hacía para SoporteCompases), por
-                // lo que todos los registros llegan al distribuidor con
-                // Activa = false. Se replica tal cual para no cambiar el
-                // comportamiento respecto a la app actual; ver aviso al
-                // usuario tras la migración.
+                // Corregido respecto a la app legacy: Main.ExportarDatosMaestros()
+                // no copiaba Activa para SoporteCompases, así que todos los
+                // registros llegaban al distribuidor desactivados. Aquí sí se
+                // incluye (y se ha corregido también en Main.cs para que
+                // ambas apps generen el mismo paquete durante la convivencia).
                 SoporteCompases = await db.SoporteCompases.AsNoTracking()
-                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre })
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
                     .ToListAsync(),
 
                 SeguridadVentanas = await db.SeguridadVentanas.AsNoTracking()
