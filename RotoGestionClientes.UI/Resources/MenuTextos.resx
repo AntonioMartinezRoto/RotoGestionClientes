@@ -214,6 +214,45 @@
   <data name="Documentos" xml:space="preserve">
     <value>Documentos</value>
   </data>
+  <data name="Documento" xml:space="preserve">
+    <value>Documento</value>
+  </data>
+  <data name="DocumentoObligatorio" xml:space="preserve">
+    <value>Debes seleccionar un documento.</value>
+  </data>
+  <data name="Fichero" xml:space="preserve">
+    <value>Fichero</value>
+  </data>
+  <data name="IndicarNombreDoc" xml:space="preserve">
+    <value>Debes indicar un nombre para el documento.</value>
+  </data>
+  <data name="NingunFichero" xml:space="preserve">
+    <value>Ningún fichero seleccionado</value>
+  </data>
+  <data name="NombreDocumento" xml:space="preserve">
+    <value>Nombre documento</value>
+  </data>
+  <data name="SeleccionarDocumento" xml:space="preserve">
+    <value>Seleccionar documento</value>
+  </data>
+  <data name="AnadirDocumento" xml:space="preserve">
+    <value>Añadir documento</value>
+  </data>
+  <data name="EliminarDocumentoTitulo" xml:space="preserve">
+    <value>Eliminar documento</value>
+  </data>
+  <data name="ConfirmarEliminarDocumento" xml:space="preserve">
+    <value>¿Seguro que deseas eliminar este documento?</value>
+  </data>
+  <data name="DebeGuardarClienteDescarga" xml:space="preserve">
+    <value>Debe guardar el cliente antes de descargar el documento.</value>
+  </data>
+  <data name="DocumentoNoEncontrado" xml:space="preserve">
+    <value>No se ha encontrado el documento.</value>
+  </data>
+  <data name="DocumentoDescargado" xml:space="preserve">
+    <value>Documento descargado correctamente.</value>
+  </data>
   <data name="DatosCorruptos" xml:space="preserve">
     <value>Los datos del cliente no son válidos.</value>
   </data>

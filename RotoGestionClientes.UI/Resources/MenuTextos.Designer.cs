@@ -155,6 +155,32 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string Documentos => ResourceManager.GetString("Documentos", resourceCulture)!;
 
+        public static string Documento => ResourceManager.GetString("Documento", resourceCulture)!;
+
+        public static string DocumentoObligatorio => ResourceManager.GetString("DocumentoObligatorio", resourceCulture)!;
+
+        public static string Fichero => ResourceManager.GetString("Fichero", resourceCulture)!;
+
+        public static string IndicarNombreDoc => ResourceManager.GetString("IndicarNombreDoc", resourceCulture)!;
+
+        public static string NingunFichero => ResourceManager.GetString("NingunFichero", resourceCulture)!;
+
+        public static string NombreDocumento => ResourceManager.GetString("NombreDocumento", resourceCulture)!;
+
+        public static string SeleccionarDocumento => ResourceManager.GetString("SeleccionarDocumento", resourceCulture)!;
+
+        public static string AnadirDocumento => ResourceManager.GetString("AnadirDocumento", resourceCulture)!;
+
+        public static string EliminarDocumentoTitulo => ResourceManager.GetString("EliminarDocumentoTitulo", resourceCulture)!;
+
+        public static string ConfirmarEliminarDocumento => ResourceManager.GetString("ConfirmarEliminarDocumento", resourceCulture)!;
+
+        public static string DebeGuardarClienteDescarga => ResourceManager.GetString("DebeGuardarClienteDescarga", resourceCulture)!;
+
+        public static string DocumentoNoEncontrado => ResourceManager.GetString("DocumentoNoEncontrado", resourceCulture)!;
+
+        public static string DocumentoDescargado => ResourceManager.GetString("DocumentoDescargado", resourceCulture)!;
+
         public static string DatosCorruptos => ResourceManager.GetString("DatosCorruptos", resourceCulture)!;
 
         public static string ClienteExistente => ResourceManager.GetString("ClienteExistente", resourceCulture)!;

@@ -1,9 +1,7 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
-   (WinForms). Fase actual: los pasos "Datos generales", "Ventanas",
-   "Balconeras", "Puertas", "Correderas", "Elevables/Plegables" y "Máquinas"
-   están totalmente funcionales contra BBDD; el paso "Documentos" se migra
-   en una fase siguiente y por ahora se muestra como "Próximamente" en la
-   navegación, sin tocar sus datos en BBDD. *@
+   (WinForms). Los 8 pasos ("Datos generales", "Ventanas", "Balconeras",
+   "Puertas", "Correderas", "Elevables/Plegables", "Máquinas" y
+   "Documentos") están totalmente funcionales contra BBDD. *@
 @page "/clientes/nuevo"
 @page "/clientes/editar/{ClienteId:int}"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
@@ -75,6 +73,10 @@
                 else if (_currentStep == 6)
                 {
                     <PasoMaquinasStep Model="_model" />
+                }
+                else if (_currentStep == 7)
+                {
+                    <PasoDocumentosStep Model="_model" />
                 }
                 else
                 {
@@ -297,12 +299,11 @@
     // aguja de montaje y observaciones), "Puertas" (bisagras, cerraduras,
     // cilindros, aguja de montaje y observaciones), "Correderas" (agujas de
     // corredera, bombillo y observaciones), "Elevables/Plegables" (Estándar,
-    // DLO, Consumen y observaciones de ambos bloques) y "Máquinas" (lista de
+    // DLO, Consumen y observaciones de ambos bloques), "Máquinas" (lista de
     // máquinas del cliente, bisagras en soldadora, triple taladro en centro
-    // de mecanizado, soporte de marco y observaciones). El resto de
-    // categorías del cliente (Documentos...) NO se tocan aquí todavía: si un
-    // cliente ya tiene esos datos cargados desde la app legacy, se quedan
-    // intactos en BBDD hasta que migremos cada paso.
+    // de mecanizado, soporte de marco y observaciones) y "Documentos"
+    // (ficheros adjuntos del cliente y observaciones). Con esto quedan
+    // cubiertos los 8 pasos del wizard.
     //
     // Caso especial — "aguja de montaje" (tabla ClienteAgujas): es una única
     // fila por cliente con columnas para Balconera, Puerta secundaria y
@@ -342,6 +343,7 @@
             ObservacionesElevables = cliente.ObservacionesElevables,
             ObservacionesPlegables = cliente.ObservacionesPlegables,
             ObservacionesMaquinas = cliente.ObservacionesMaquinas,
+            ObservacionesDocumentos = cliente.ObservacionesDocumentos,
             SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
             PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
             PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
@@ -373,6 +375,21 @@
                     MaquinaMantenimientoId = x.MaquinaMantenimientoId,
                     MantenimientoNombre = x.MaquinaMantenimiento.Nombre,
                     Observaciones = x.Observaciones
+                })
+                .ToListAsync()),
+            // Solo se cargan los metadatos (no el contenido del fichero, que
+            // pesaría mucho para toda la lista): igual que CargarModeloAsync
+            // en la app legacy, el contenido se lee bajo demanda al
+            // descargar un documento concreto.
+            DocumentosList = new BindingList<ClienteDocumentoItem>(await db.ClienteDocumentos.Where(x => x.ClienteId == clienteId)
+                .OrderBy(x => x.Id)
+                .Select(x => new ClienteDocumentoItem
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                    NombreFicheroOriginal = x.NombreFicheroOriginal,
+                    Extension = x.Extension,
+                    TamañoBytes = x.TamañoBytes
                 })
                 .ToListAsync()),
         };
@@ -422,7 +439,8 @@
             ObservacionesCorrederas = _model.ObservacionesCorrederas,
             ObservacionesElevables = _model.ObservacionesElevables,
             ObservacionesPlegables = _model.ObservacionesPlegables,
-            ObservacionesMaquinas = _model.ObservacionesMaquinas
+            ObservacionesMaquinas = _model.ObservacionesMaquinas,
+            ObservacionesDocumentos = _model.ObservacionesDocumentos
         };
 
         db.Clientes.Add(cliente);
@@ -517,6 +535,20 @@
             SoporteMarcoId = _model.SoporteMarcoConfigId
         });
 
+        foreach (var documento in _model.DocumentosList)
+        {
+            db.ClienteDocumentos.Add(new ClienteDocumento
+            {
+                ClienteId = cliente.Id,
+                Nombre = documento.Nombre,
+                NombreFicheroOriginal = documento.NombreFicheroOriginal,
+                Extension = documento.Extension,
+                Contenido = documento.Contenido,
+                TamañoBytes = documento.TamañoBytes,
+                FechaAlta = DateTime.Now
+            });
+        }
+
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
         // Puerta) — ver nota de "Caso especial" más arriba.
         db.ClienteAgujases.Add(new ClienteAgujas
@@ -582,6 +614,7 @@
             .Include(c => c.ClienteCilindros)
             .Include(c => c.ClienteAgujasCorredera)
             .Include(c => c.ClienteMaquinas)
+            .Include(c => c.ClienteDocumentos)
             .FirstAsync(c => c.Id == _model.Id);
 
         cliente.Nombre = _model.Nombre;
@@ -596,6 +629,7 @@
         cliente.ObservacionesElevables = _model.ObservacionesElevables;
         cliente.ObservacionesPlegables = _model.ObservacionesPlegables;
         cliente.ObservacionesMaquinas = _model.ObservacionesMaquinas;
+        cliente.ObservacionesDocumentos = _model.ObservacionesDocumentos;
 
         // Tipos de perfil
         foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
@@ -738,6 +772,40 @@
         clienteConfiguracionMaquinas.BisagrasSoldadora = _model.BisagraEnSoldadora;
         clienteConfiguracionMaquinas.TripleTaladroCentro = _model.TripleTaladroCentro;
         clienteConfiguracionMaquinas.SoporteMarcoId = _model.SoporteMarcoConfigId;
+
+        // Documentos: igual que Máquinas, el diff se hace por Id (null =
+        // fichero nuevo, todavía no guardado). Los documentos ya existentes
+        // en BBDD solo actualizan su Nombre — el Contenido/Extension/
+        // TamañoBytes de esas filas NO viajan de vuelta desde el modelo
+        // (CargarModeloAsync no los carga, por peso), así que sobrescribirlos
+        // aquí borraría el fichero guardado; exactamente igual que
+        // UpdateClienteDocumentos() en la app legacy.
+        var idsDocumentosModelo = _model.DocumentosList.Where(d => d.Id.HasValue).Select(d => d.Id!.Value).ToHashSet();
+        foreach (var eliminar in cliente.ClienteDocumentos.Where(x => !idsDocumentosModelo.Contains(x.Id)).ToList())
+            db.Remove(eliminar);
+
+        foreach (var documento in _model.DocumentosList)
+        {
+            if (documento.Id.HasValue)
+            {
+                var existente = cliente.ClienteDocumentos.FirstOrDefault(x => x.Id == documento.Id.Value);
+                if (existente is not null)
+                    existente.Nombre = documento.Nombre;
+            }
+            else
+            {
+                cliente.ClienteDocumentos.Add(new ClienteDocumento
+                {
+                    ClienteId = cliente.Id,
+                    Nombre = documento.Nombre,
+                    NombreFicheroOriginal = documento.NombreFicheroOriginal,
+                    Extension = documento.Extension,
+                    Contenido = documento.Contenido,
+                    TamañoBytes = documento.TamañoBytes,
+                    FechaAlta = DateTime.Now
+                });
+            }
+        }
 
         // Configuración de puerta (Cilindro sí/no + Portero eléctrico oculto)
         var clienteConfiguracionPuerta = await db.ClienteConfiguracionPuerta.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);

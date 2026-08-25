@@ -214,6 +214,45 @@
   <data name="Documentos" xml:space="preserve">
     <value>Documentos</value>
   </data>
+  <data name="Documento" xml:space="preserve">
+    <value>Documento</value>
+  </data>
+  <data name="DocumentoObligatorio" xml:space="preserve">
+    <value>Tem de selecionar um documento.</value>
+  </data>
+  <data name="Fichero" xml:space="preserve">
+    <value>Ficheiro</value>
+  </data>
+  <data name="IndicarNombreDoc" xml:space="preserve">
+    <value>Deve indicar um nome para o documento.</value>
+  </data>
+  <data name="NingunFichero" xml:space="preserve">
+    <value>Nenhum ficheiro selecionado</value>
+  </data>
+  <data name="NombreDocumento" xml:space="preserve">
+    <value>Nome do documento</value>
+  </data>
+  <data name="SeleccionarDocumento" xml:space="preserve">
+    <value>Selecionar documento</value>
+  </data>
+  <data name="AnadirDocumento" xml:space="preserve">
+    <value>Adicionar documento</value>
+  </data>
+  <data name="EliminarDocumentoTitulo" xml:space="preserve">
+    <value>Eliminar documento</value>
+  </data>
+  <data name="ConfirmarEliminarDocumento" xml:space="preserve">
+    <value>Tem a certeza que pretende eliminar este documento?</value>
+  </data>
+  <data name="DebeGuardarClienteDescarga" xml:space="preserve">
+    <value>Deve guardar o cliente antes de transferir o documento.</value>
+  </data>
+  <data name="DocumentoNoEncontrado" xml:space="preserve">
+    <value>Não foi possível encontrar o documento.</value>
+  </data>
+  <data name="DocumentoDescargado" xml:space="preserve">
+    <value>Documento transferido com sucesso.</value>
+  </data>
   <data name="DatosCorruptos" xml:space="preserve">
     <value>Os dados do cliente não são válidos.</value>
   </data>
