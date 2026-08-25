@@ -193,6 +193,21 @@
   <data name="ElevablesPlegables" xml:space="preserve">
     <value>Elevável / Dobrável</value>
   </data>
+  <data name="Elevables" xml:space="preserve">
+    <value>Eleváveis</value>
+  </data>
+  <data name="Plegables" xml:space="preserve">
+    <value>Dobráveis</value>
+  </data>
+  <data name="Estandar" xml:space="preserve">
+    <value>Padrão</value>
+  </data>
+  <data name="Dlo" xml:space="preserve">
+    <value>DLO</value>
+  </data>
+  <data name="Consumen" xml:space="preserve">
+    <value>Consumem</value>
+  </data>
   <data name="Maquinas" xml:space="preserve">
     <value>Máquinas</value>
   </data>

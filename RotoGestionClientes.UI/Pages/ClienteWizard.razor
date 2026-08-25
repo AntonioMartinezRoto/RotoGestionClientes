@@ -1,7 +1,7 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
    (WinForms). Fase actual: los pasos "Datos generales", "Ventanas",
-   "Balconeras", "Puertas" y "Correderas" están totalmente funcionales
-   contra BBDD; el resto de pasos técnicos (Elevables/Plegables, Máquinas,
+   "Balconeras", "Puertas", "Correderas" y "Elevables/Plegables" están
+   totalmente funcionales contra BBDD; el resto de pasos técnicos (Máquinas,
    Documentos) se migran uno a uno en fases siguientes y por ahora se
    muestran como "Próximamente" en la navegación, sin tocar sus datos en
    BBDD. *@
@@ -67,6 +67,10 @@
                 else if (_currentStep == 4)
                 {
                     <PasoCorrederasStep Model="_model" />
+                }
+                else if (_currentStep == 5)
+                {
+                    <PasoElevablesPlegablesStep Model="_model" />
                 }
                 else
                 {
@@ -174,7 +178,6 @@
     // El paso 0 (Datos generales) no lleva imagen a propósito.
     private static readonly Dictionary<int, string[]> ImagenesPorPaso = new()
     {
-        [5] = ["_content/RotoGestionClientes.UI/images/wizard/elevable.png", "_content/RotoGestionClientes.UI/images/wizard/plegable.png"],
         [6] = ["_content/RotoGestionClientes.UI/images/wizard/maquina.png"],
     };
 
@@ -291,10 +294,11 @@
     // oscilobatientes y de practicables, observaciones), "Balconeras"
     // (seguridad, hoja pasiva, bisagras y cerraduras de puerta secundaria,
     // aguja de montaje y observaciones), "Puertas" (bisagras, cerraduras,
-    // cilindros, aguja de montaje y observaciones) y "Correderas" (agujas de
-    // corredera, bombillo y observaciones). El resto de categorías del
-    // cliente (Elevables/Plegables, Máquinas, Documentos...) NO se tocan
-    // aquí todavía: si un cliente ya tiene esos datos cargados desde la app
+    // cilindros, aguja de montaje y observaciones), "Correderas" (agujas de
+    // corredera, bombillo y observaciones) y "Elevables/Plegables" (Estándar,
+    // DLO, Consumen y observaciones de ambos bloques). El resto de
+    // categorías del cliente (Máquinas, Documentos...) NO se tocan aquí
+    // todavía: si un cliente ya tiene esos datos cargados desde la app
     // legacy, se quedan intactos en BBDD hasta que migremos cada paso.
     //
     // Caso especial — "aguja de montaje" (tabla ClienteAgujas): es una única
@@ -332,6 +336,8 @@
             ObservacionesBalconeras = cliente.ObservacionesBalconeras,
             ObservacionesPuertas = cliente.ObservacionesPuertas,
             ObservacionesCorrederas = cliente.ObservacionesCorrederas,
+            ObservacionesElevables = cliente.ObservacionesElevables,
+            ObservacionesPlegables = cliente.ObservacionesPlegables,
             SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
             PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
             PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
@@ -368,6 +374,11 @@
         var clienteCilindroCorredera = await db.ClienteCilindrosCorredera.AsNoTracking().FirstOrDefaultAsync(x => x.ClienteId == clienteId);
         modelo.CilindroCorredera = clienteCilindroCorredera?.Cilindro ?? false;
 
+        var clienteElevablePlegable = await db.ClienteConfiguracionElevablePlegables.AsNoTracking().FirstOrDefaultAsync(x => x.ClienteId == clienteId);
+        modelo.Elevable_Estandar = clienteElevablePlegable?.Elevable_Estandar ?? false;
+        modelo.Elevable_Dlo = clienteElevablePlegable?.Elevable_Dlo ?? false;
+        modelo.Plegable_Consumen = clienteElevablePlegable?.Plegable_Consumen ?? false;
+
         return modelo;
     }
 
@@ -385,7 +396,9 @@
             ObservacionesVentanas = _model.ObservacionesVentanas,
             ObservacionesBalconeras = _model.ObservacionesBalconeras,
             ObservacionesPuertas = _model.ObservacionesPuertas,
-            ObservacionesCorrederas = _model.ObservacionesCorrederas
+            ObservacionesCorrederas = _model.ObservacionesCorrederas,
+            ObservacionesElevables = _model.ObservacionesElevables,
+            ObservacionesPlegables = _model.ObservacionesPlegables
         };
 
         db.Clientes.Add(cliente);
@@ -450,6 +463,14 @@
         {
             ClienteId = cliente.Id,
             Cilindro = _model.CilindroCorredera
+        });
+
+        db.ClienteConfiguracionElevablePlegables.Add(new ClienteConfiguracionElevablePlegable
+        {
+            ClienteId = cliente.Id,
+            Elevable_Estandar = _model.Elevable_Estandar,
+            Elevable_Dlo = _model.Elevable_Dlo,
+            Plegable_Consumen = _model.Plegable_Consumen
         });
 
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
@@ -527,6 +548,8 @@
         cliente.ObservacionesBalconeras = _model.ObservacionesBalconeras;
         cliente.ObservacionesPuertas = _model.ObservacionesPuertas;
         cliente.ObservacionesCorrederas = _model.ObservacionesCorrederas;
+        cliente.ObservacionesElevables = _model.ObservacionesElevables;
+        cliente.ObservacionesPlegables = _model.ObservacionesPlegables;
 
         // Tipos de perfil
         foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
@@ -644,6 +667,18 @@
         }
 
         clienteCilindroCorredera.Cilindro = _model.CilindroCorredera;
+
+        // Elevables/Plegables (Estándar, DLO, Consumen)
+        var clienteElevablePlegable = await db.ClienteConfiguracionElevablePlegables.FirstOrDefaultAsync(x => x.ClienteId == cliente.Id);
+        if (clienteElevablePlegable is null)
+        {
+            clienteElevablePlegable = new ClienteConfiguracionElevablePlegable { ClienteId = cliente.Id };
+            db.ClienteConfiguracionElevablePlegables.Add(clienteElevablePlegable);
+        }
+
+        clienteElevablePlegable.Elevable_Estandar = _model.Elevable_Estandar;
+        clienteElevablePlegable.Elevable_Dlo = _model.Elevable_Dlo;
+        clienteElevablePlegable.Plegable_Consumen = _model.Plegable_Consumen;
 
         // Aguja de montaje: fila única (Balconera + Puerta secundaria +
         // Puerta) — ver nota de "Caso especial" más arriba.
