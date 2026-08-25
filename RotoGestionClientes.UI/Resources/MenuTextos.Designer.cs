@@ -114,5 +114,59 @@ namespace RotoGestionClientes.UI.Resources
         public static string SinResultados => ResourceManager.GetString("SinResultados", resourceCulture)!;
 
         public static string Cancelar => ResourceManager.GetString("Cancelar", resourceCulture)!;
+
+        public static string Atras => ResourceManager.GetString("Atras", resourceCulture)!;
+
+        public static string Siguiente => ResourceManager.GetString("Siguiente", resourceCulture)!;
+
+        public static string Finalizar => ResourceManager.GetString("Finalizar", resourceCulture)!;
+
+        public static string Guardar => ResourceManager.GetString("Guardar", resourceCulture)!;
+
+        public static string EditandoCliente => ResourceManager.GetString("EditandoCliente", resourceCulture)!;
+
+        public static string CompletarDatosCliente => ResourceManager.GetString("CompletarDatosCliente", resourceCulture)!;
+
+        public static string DatosGenerales => ResourceManager.GetString("DatosGenerales", resourceCulture)!;
+
+        public static string Ventanas => ResourceManager.GetString("Ventanas", resourceCulture)!;
+
+        public static string Balconeras => ResourceManager.GetString("Balconeras", resourceCulture)!;
+
+        public static string Puertas => ResourceManager.GetString("Puertas", resourceCulture)!;
+
+        public static string Correderas => ResourceManager.GetString("Correderas", resourceCulture)!;
+
+        public static string ElevablesPlegables => ResourceManager.GetString("ElevablesPlegables", resourceCulture)!;
+
+        public static string Maquinas => ResourceManager.GetString("Maquinas", resourceCulture)!;
+
+        public static string Documentos => ResourceManager.GetString("Documentos", resourceCulture)!;
+
+        public static string DatosCorruptos => ResourceManager.GetString("DatosCorruptos", resourceCulture)!;
+
+        public static string ClienteExistente => ResourceManager.GetString("ClienteExistente", resourceCulture)!;
+
+        public static string NombreClienteObligatorio => ResourceManager.GetString("NombreClienteObligatorio", resourceCulture)!;
+
+        public static string ClienteCreado => ResourceManager.GetString("ClienteCreado", resourceCulture)!;
+
+        public static string ClienteActualizado => ResourceManager.GetString("ClienteActualizado", resourceCulture)!;
+
+        public static string Software => ResourceManager.GetString("Software", resourceCulture)!;
+
+        public static string SoporteCompas => ResourceManager.GetString("SoporteCompas", resourceCulture)!;
+
+        public static string TipoPerfil => ResourceManager.GetString("TipoPerfil", resourceCulture)!;
+
+        public static string Perfil => ResourceManager.GetString("Perfil", resourceCulture)!;
+
+        public static string Manillas => ResourceManager.GetString("Manillas", resourceCulture)!;
+
+        public static string Alias => ResourceManager.GetString("Alias", resourceCulture)!;
+
+        public static string SeleccionaTipoPerfil => ResourceManager.GetString("SeleccionaTipoPerfil", resourceCulture)!;
+
+        public static string PasoProximamenteTexto => ResourceManager.GetString("PasoProximamenteTexto", resourceCulture)!;
     }
 }

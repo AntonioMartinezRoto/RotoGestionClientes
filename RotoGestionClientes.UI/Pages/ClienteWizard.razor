@@ -1,0 +1,361 @@
+@* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
+   (WinForms). Fase actual: el paso "Datos generales" está totalmente
+   funcional contra BBDD; el resto de pasos técnicos (Ventanas, Balconeras,
+   Puertas, Correderas, Elevables/Plegables, Máquinas, Documentos) se migran
+   uno a uno en fases siguientes y por ahora se muestran como "Próximamente"
+   en la navegación, sin tocar sus datos en BBDD. *@
+@page "/clientes/nuevo"
+@page "/clientes/editar/{ClienteId:int}"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<div class="rgc-wizard">
+    <div class="rgc-wizard-header">
+        <MudText Typo="Typo.h5">@_titulo</MudText>
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">@_subtitulo</MudText>
+    </div>
+
+    @if (_cargandoInicial)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+    }
+    else
+    {
+        <div class="rgc-wizard-body">
+            <div class="rgc-wizard-sidebar">
+                @for (var i = 0; i < _pasos.Count; i++)
+                {
+                    var index = i;
+                    var estado = EstadoPaso(index);
+                    <div class="rgc-wizard-step rgc-wizard-step-@estado @(_mode == WizardMode.Edit ? "rgc-clickable" : "")"
+                         @onclick="@(() => IrAPaso(index))">
+                        <span class="rgc-wizard-step-badge">
+                            @if (estado == "completado")
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Check" Size="Size.Small" />
+                            }
+                            else
+                            {
+                                @((index + 1).ToString())
+                            }
+                        </span>
+                        <span class="rgc-wizard-step-label">@_pasos[index]</span>
+                    </div>
+                }
+            </div>
+
+            <div class="rgc-wizard-content">
+                @if (_currentStep == 0)
+                {
+                    <PasoDatosGeneralesStep Model="_model" />
+                }
+                else
+                {
+                    <MudPaper Outlined="true" Class="pa-8 rgc-wizard-placeholder">
+                        <MudIcon Icon="@Icons.Material.Filled.Construction" Size="Size.Large" Class="mb-4 mud-text-secondary" />
+                        <MudText Typo="Typo.h6" Class="mb-2">@_pasos[_currentStep]</MudText>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.PasoProximamenteTexto</MudText>
+                    </MudPaper>
+                }
+            </div>
+        </div>
+
+        <div class="rgc-wizard-footer">
+            <MudButton Variant="Variant.Outlined" OnClick="Cancelar" Disabled="_guardando">@MenuTextos.Cancelar</MudButton>
+            <MudSpacer />
+            @if (_mode == WizardMode.Create)
+            {
+                <MudButton Variant="Variant.Outlined" OnClick="Atras" Disabled="@(_currentStep == 0 || _guardando)">@MenuTextos.Atras</MudButton>
+                @if (_currentStep < _pasos.Count - 1)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Siguiente" Disabled="_guardando">@MenuTextos.Siguiente</MudButton>
+                }
+                else
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Guardar" Disabled="_guardando">@MenuTextos.Finalizar</MudButton>
+                }
+            }
+            else
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="Guardar" Disabled="_guardando">@MenuTextos.Guardar</MudButton>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int? ClienteId { get; set; }
+
+    private WizardMode _mode;
+    private ClientWizardModel _model = new();
+    private int _currentStep;
+    private bool _cargandoInicial = true;
+    private bool _guardando;
+    private string _titulo = string.Empty;
+    private string _subtitulo = string.Empty;
+    private List<string> _pasos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _pasos =
+        [
+            MenuTextos.DatosGenerales,
+            MenuTextos.Ventanas,
+            MenuTextos.Balconeras,
+            MenuTextos.Puertas,
+            MenuTextos.Correderas,
+            MenuTextos.ElevablesPlegables,
+            MenuTextos.Maquinas,
+            MenuTextos.Documentos,
+        ];
+
+        if (ClienteId.HasValue)
+        {
+            _mode = WizardMode.Edit;
+
+            var modelo = await CargarModeloAsync(ClienteId.Value);
+            if (modelo is null)
+            {
+                Snackbar.Add(MenuTextos.DatosCorruptos, Severity.Warning);
+                NavigationManager.NavigateTo("/clientes");
+                return;
+            }
+
+            _model = modelo;
+            _titulo = _model.Nombre;
+            _subtitulo = MenuTextos.EditandoCliente;
+        }
+        else
+        {
+            _mode = WizardMode.Create;
+            _model = new ClientWizardModel();
+            _titulo = MenuTextos.NuevoCliente;
+            _subtitulo = MenuTextos.CompletarDatosCliente;
+        }
+
+        _cargandoInicial = false;
+    }
+
+    private string EstadoPaso(int index)
+    {
+        if (_mode == WizardMode.Edit)
+            return index == _currentStep ? "activo" : "pendiente";
+
+        if (index < _currentStep) return "completado";
+        return index == _currentStep ? "activo" : "pendiente";
+    }
+
+    private void IrAPaso(int index)
+    {
+        if (_mode == WizardMode.Edit)
+            _currentStep = index;
+    }
+
+    private void Siguiente()
+    {
+        if (_currentStep < _pasos.Count - 1)
+            _currentStep++;
+    }
+
+    private void Atras()
+    {
+        if (_currentStep > 0)
+            _currentStep--;
+    }
+
+    private void Cancelar()
+    {
+        NavigationManager.NavigateTo("/clientes");
+    }
+
+    private async Task Guardar()
+    {
+        if (!await EsModeloValidoAsync())
+            return;
+
+        _guardando = true;
+        try
+        {
+            if (_mode == WizardMode.Create)
+                await CrearClienteAsync();
+            else
+                await ActualizarClienteAsync();
+
+            Snackbar.Add(
+                _mode == WizardMode.Create ? MenuTextos.ClienteCreado : MenuTextos.ClienteActualizado,
+                Severity.Success,
+                config => { config.SnackbarVariant = Variant.Filled; });
+
+            NavigationManager.NavigateTo("/clientes");
+        }
+        finally
+        {
+            _guardando = false;
+        }
+    }
+
+    private async Task<bool> EsModeloValidoAsync()
+    {
+        if (string.IsNullOrWhiteSpace(_model.Nombre))
+        {
+            Snackbar.Add(MenuTextos.NombreClienteObligatorio, Severity.Warning);
+            return false;
+        }
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+        var nombreNormalizado = _model.Nombre.Trim().ToUpperInvariant();
+
+        if (_mode == WizardMode.Create)
+        {
+            var existe = await db.Clientes.AnyAsync(c => c.Nombre.ToUpper().Trim() == nombreNormalizado);
+            if (existe)
+            {
+                Snackbar.Add(MenuTextos.ClienteExistente, Severity.Warning);
+                return false;
+            }
+        }
+        else
+        {
+            var clienteActual = await db.Clientes.AsNoTracking().FirstOrDefaultAsync(c => c.Id == _model.Id);
+            if (clienteActual is null)
+            {
+                Snackbar.Add(MenuTextos.DatosCorruptos, Severity.Warning);
+                return false;
+            }
+
+            if (clienteActual.Nombre.Trim().ToUpper() != nombreNormalizado)
+            {
+                var existeOtro = await db.Clientes.AnyAsync(c => c.Id != _model.Id && c.Nombre.ToUpper().Trim() == nombreNormalizado);
+                if (existeOtro)
+                {
+                    Snackbar.Add(MenuTextos.ClienteExistente, Severity.Warning);
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    // --- Carga y guardado -------------------------------------------------
+    //
+    // IMPORTANTE (alcance de esta fase): solo se leen/escriben los campos del
+    // paso "Datos generales" (Nombre, SapId, Alias, Comentarios, Responsable,
+    // Software, tipos de perfil, perfiles, manillas, soporte compás). El
+    // resto de categorías del cliente (Ventanas, Balconeras, Puertas,
+    // Correderas, Elevables/Plegables, Máquinas, Documentos, agujas,
+    // bisagras, cerraduras, cilindros, cremonas, seguridad...) NO se tocan
+    // aquí todavía: si un cliente ya tiene esos datos cargados desde la app
+    // legacy, se quedan intactos en BBDD hasta que migremos cada paso.
+
+    private async Task<ClientWizardModel?> CargarModeloAsync(int clienteId)
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var cliente = await db.Clientes.AsNoTracking().FirstOrDefaultAsync(c => c.Id == clienteId);
+        if (cliente is null)
+            return null;
+
+        return new ClientWizardModel
+        {
+            Id = cliente.Id,
+            Nombre = cliente.Nombre,
+            SapId = cliente.SapId,
+            Alias = cliente.Alias,
+            Comentarios = cliente.Comentarios,
+            ResponsableId = cliente.ResponsableId,
+            SoftwareList = await db.ClienteSoftwares.Where(x => x.ClienteId == clienteId).Select(x => x.SoftwareId).ToListAsync(),
+            PerfilTipoList = await db.ClientePerfilTipos.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilTipoId).ToListAsync(),
+            PerfilesList = await db.ClientePerfiles.Where(x => x.ClienteId == clienteId).Select(x => x.PerfilId).ToListAsync(),
+            ManillasList = await db.ClienteManillas.Where(x => x.ClienteId == clienteId).Select(x => x.ManillaId).ToListAsync(),
+            SoporteCompasList = await db.ClienteSoporteCompases.Where(x => x.ClienteId == clienteId).Select(x => x.SoporteCompasId).ToListAsync(),
+        };
+    }
+
+    private async Task CrearClienteAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var cliente = new Cliente
+        {
+            Nombre = _model.Nombre,
+            SapId = _model.SapId,
+            Alias = _model.Alias,
+            Comentarios = _model.Comentarios,
+            ResponsableId = _model.ResponsableId
+        };
+
+        db.Clientes.Add(cliente);
+        await db.SaveChangesAsync();
+
+        foreach (var perfilTipoId in _model.PerfilTipoList)
+            db.ClientePerfilTipos.Add(new ClientePerfilTipo { ClienteId = cliente.Id, PerfilTipoId = perfilTipoId });
+
+        foreach (var perfilId in _model.PerfilesList)
+            db.ClientePerfiles.Add(new ClientePerfil { ClienteId = cliente.Id, PerfilId = perfilId });
+
+        foreach (var manillaId in _model.ManillasList)
+            db.ClienteManillas.Add(new ClienteManilla { ClienteId = cliente.Id, ManillaId = manillaId });
+
+        foreach (var soporteCompasId in _model.SoporteCompasList)
+            db.ClienteSoporteCompases.Add(new ClienteSoporteCompas { ClienteId = cliente.Id, SoporteCompasId = soporteCompasId });
+
+        if (_model.SoftwareList.Count > 0)
+            db.ClienteSoftwares.Add(new ClienteSoftware { ClienteId = cliente.Id, SoftwareId = _model.SoftwareList[0] });
+
+        await db.SaveChangesAsync();
+    }
+
+    private async Task ActualizarClienteAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var cliente = await db.Clientes
+            .Include(c => c.ClientePerfilTipos)
+            .Include(c => c.ClientePerfiles)
+            .Include(c => c.ClienteManillas)
+            .Include(c => c.ClienteSoporteCompases)
+            .Include(c => c.ClienteSoftwares)
+            .FirstAsync(c => c.Id == _model.Id);
+
+        cliente.Nombre = _model.Nombre;
+        cliente.SapId = _model.SapId;
+        cliente.Alias = _model.Alias;
+        cliente.Comentarios = _model.Comentarios;
+        cliente.ResponsableId = _model.ResponsableId;
+
+        // Tipos de perfil
+        foreach (var eliminar in cliente.ClientePerfilTipos.Where(x => !_model.PerfilTipoList.Contains(x.PerfilTipoId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.PerfilTipoList.Where(id => !cliente.ClientePerfilTipos.Any(x => x.PerfilTipoId == id)))
+            cliente.ClientePerfilTipos.Add(new ClientePerfilTipo { ClienteId = cliente.Id, PerfilTipoId = id });
+
+        // Perfiles
+        foreach (var eliminar in cliente.ClientePerfiles.Where(x => !_model.PerfilesList.Contains(x.PerfilId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.PerfilesList.Where(id => !cliente.ClientePerfiles.Any(x => x.PerfilId == id)))
+            cliente.ClientePerfiles.Add(new ClientePerfil { ClienteId = cliente.Id, PerfilId = id });
+
+        // Manillas
+        foreach (var eliminar in cliente.ClienteManillas.Where(x => !_model.ManillasList.Contains(x.ManillaId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.ManillasList.Where(id => !cliente.ClienteManillas.Any(x => x.ManillaId == id)))
+            cliente.ClienteManillas.Add(new ClienteManilla { ClienteId = cliente.Id, ManillaId = id });
+
+        // Soporte compás
+        foreach (var eliminar in cliente.ClienteSoporteCompases.Where(x => !_model.SoporteCompasList.Contains(x.SoporteCompasId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.SoporteCompasList.Where(id => !cliente.ClienteSoporteCompases.Any(x => x.SoporteCompasId == id)))
+            cliente.ClienteSoporteCompases.Add(new ClienteSoporteCompas { ClienteId = cliente.Id, SoporteCompasId = id });
+
+        // Software (selección única, modelada como lista igual que en la app legacy)
+        foreach (var eliminar in cliente.ClienteSoftwares.Where(x => !_model.SoftwareList.Contains(x.SoftwareId)).ToList())
+            db.Remove(eliminar);
+        foreach (var id in _model.SoftwareList.Where(id => !cliente.ClienteSoftwares.Any(x => x.SoftwareId == id)))
+            cliente.ClienteSoftwares.Add(new ClienteSoftware { ClienteId = cliente.Id, SoftwareId = id });
+
+        await db.SaveChangesAsync();
+    }
+}

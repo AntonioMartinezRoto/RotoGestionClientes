@@ -41,3 +41,140 @@ html, body {
 .rgc-clientes-table {
     overflow-x: auto;
 }
+
+/* Wizard de Clientes (alta/edición) */
+
+.rgc-wizard {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+    gap: 1rem;
+}
+
+.rgc-wizard-header {
+    flex: 0 0 auto;
+}
+
+.rgc-wizard-body {
+    flex: 1 1 auto;
+    display: flex;
+    gap: 1.5rem;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.rgc-wizard-sidebar {
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow-y: auto;
+}
+
+.rgc-wizard-content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.rgc-wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    color: var(--mud-palette-text-secondary);
+}
+
+.rgc-wizard-step.rgc-clickable {
+    cursor: pointer;
+}
+
+.rgc-wizard-step.rgc-clickable:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.rgc-wizard-step-badge {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--mud-palette-action-default-hover);
+    color: var(--mud-palette-text-secondary);
+}
+
+.rgc-wizard-step-label {
+    font-size: 0.9rem;
+}
+
+.rgc-wizard-step-activo {
+    background: var(--mud-palette-primary-hover);
+    color: var(--mud-palette-primary);
+    font-weight: 600;
+}
+
+.rgc-wizard-step-activo .rgc-wizard-step-badge {
+    background: var(--mud-palette-primary);
+    color: var(--mud-palette-primary-text);
+}
+
+.rgc-wizard-step-completado .rgc-wizard-step-badge {
+    background: var(--mud-palette-success);
+    color: var(--mud-palette-success-text);
+}
+
+.rgc-wizard-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.rgc-wizard-footer {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--mud-palette-lines-default);
+}
+
+.rgc-check-grid-paper {
+    height: 100%;
+}
+
+.rgc-check-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* Responsive: por debajo de 900px la barra lateral del wizard pasa a ir
+   arriba, en horizontal y con scroll, en vez de recortarse. */
+@media (max-width: 900px) {
+    .rgc-wizard-body {
+        flex-direction: column;
+        overflow: visible;
+    }
+
+    .rgc-wizard-sidebar {
+        flex-direction: row;
+        flex: 0 0 auto;
+        overflow-x: auto;
+        overflow-y: visible;
+    }
+
+    .rgc-wizard-step-label {
+        white-space: nowrap;
+    }
+}

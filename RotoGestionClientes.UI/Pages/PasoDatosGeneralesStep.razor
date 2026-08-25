@@ -1,0 +1,250 @@
+@* Paso "Datos generales" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoDatosGenerales.cs (WinForms): nombre/alias/SapId/responsable/
+   software/comentarios + las 4 rejillas de selección (tipo de perfil,
+   perfil, manillas, soporte compás), con la misma regla de filtrado en
+   cascada tipo→perfil / tipo→soporte compás que la app legacy. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+
+@if (_cargando)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+}
+else
+{
+    <MudGrid>
+        <MudItem xs="12" md="6">
+            <MudTextField T="string" @bind-Value="Model.Nombre" Label="@MenuTextos.Nombre" Variant="Variant.Outlined"
+                          Required="true" RequiredError="@MenuTextos.NombreClienteObligatorio" Class="mb-4" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField T="string" @bind-Value="Model.SapId" Label="@MenuTextos.SapId" Variant="Variant.Outlined" Class="mb-4" />
+        </MudItem>
+        <MudItem xs="12" md="3">
+            <MudTextField T="string" @bind-Value="Model.Alias" Label="@MenuTextos.Alias" Variant="Variant.Outlined" Class="mb-4" />
+        </MudItem>
+
+        @if (_mostrarResponsable)
+        {
+            <MudItem xs="12" md="6">
+                <MudSelect T="int?" Value="Model.ResponsableId" ValueChanged="@(v => Model.ResponsableId = v)"
+                           Label="@MenuTextos.Responsable" Variant="Variant.Outlined" Clearable="true" Class="mb-4">
+                    @foreach (var usuario in _responsables)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)usuario.Id)">@usuario.Nombre</MudSelectItem>
+                    }
+                </MudSelect>
+            </MudItem>
+        }
+
+        <MudItem xs="12" md="6">
+            <MudSelect T="int?" Value="_softwareId" ValueChanged="OnSoftwareChanged"
+                       Label="@MenuTextos.Software" Variant="Variant.Outlined" Clearable="true" Class="mb-4">
+                @foreach (var software in _softwareOptions)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)software.Id)">@software.Nombre</MudSelectItem>
+                }
+            </MudSelect>
+        </MudItem>
+
+        <MudItem xs="12">
+            <MudTextField T="string" @bind-Value="Model.Comentarios" Label="@MenuTextos.Comentarios"
+                          Variant="Variant.Outlined" Lines="3" Class="mb-4" />
+        </MudItem>
+
+        <MudItem xs="12" md="6">
+            <SeleccionableGrid Title="@MenuTextos.TipoPerfil" Items="_tiposPerfil" OnToggle="OnTipoPerfilToggle"
+                                EmptyText="@MenuTextos.SinResultados" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <SeleccionableGrid Title="@MenuTextos.Perfil" Items="_perfiles" OnToggle="OnPerfilToggle"
+                                EmptyText="@MenuTextos.SeleccionaTipoPerfil" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <SeleccionableGrid Title="@MenuTextos.Manillas" Items="_manillas" OnToggle="OnManillaToggle"
+                                EmptyText="@MenuTextos.SinResultados" />
+        </MudItem>
+        <MudItem xs="12" md="6">
+            <SeleccionableGrid Title="@MenuTextos.SoporteCompas" Items="_soporteCompas" OnToggle="OnSoporteCompasToggle"
+                                EmptyText="@MenuTextos.SeleccionaTipoPerfil" />
+        </MudItem>
+    </MudGrid>
+}
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private bool _cargando = true;
+    private bool _mostrarResponsable = true;
+    private int? _softwareId;
+
+    private List<Usuario> _responsables = new();
+    private List<Software> _softwareOptions = new();
+    private List<SeleccionableItem> _tiposPerfil = new();
+    private List<SeleccionableItem> _perfiles = new();
+    private List<SeleccionableItem> _manillas = new();
+    private List<SeleccionableItem> _soporteCompas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        if (config is not null && Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+        {
+            // Misma regla que SetVisibilidadModoAplicacion() en la app WinForms actual.
+            _mostrarResponsable = edition != ApplicationEdition.Distributor;
+
+            // Un distribuidor siempre es responsable de sus propios clientes.
+            if (edition == ApplicationEdition.Distributor)
+                Model.ResponsableId = config.DistribuidorId;
+        }
+
+        _softwareOptions = await db.Softwares.Where(s => s.Activa).OrderBy(s => s.Id).AsNoTracking().ToListAsync();
+        _softwareId = Model.SoftwareList.Count > 0 ? Model.SoftwareList[0] : null;
+
+        if (_mostrarResponsable)
+            _responsables = await db.Usuarios.Where(u => u.Activa).OrderBy(u => u.Nombre).AsNoTracking().ToListAsync();
+
+        var tiposPerfil = await db.PerfilTipos.Where(p => p.Activa).OrderBy(p => p.Id).AsNoTracking().ToListAsync();
+        _tiposPerfil = tiposPerfil
+            .Select(t => new SeleccionableItem { Id = t.Id, Nombre = t.Nombre, Selected = Model.PerfilTipoList.Contains(t.Id) })
+            .ToList();
+
+        var manillas = await db.Manillas.Where(m => m.Activa).OrderBy(m => m.Id).AsNoTracking().ToListAsync();
+        _manillas = manillas
+            .Select(m => new SeleccionableItem { Id = m.Id, Nombre = m.Nombre, Selected = Model.ManillasList.Contains(m.Id) })
+            .ToList();
+
+        await CargarPerfilesFiltradosAsync();
+        await CargarSoporteCompasFiltradoAsync();
+
+        _cargando = false;
+    }
+
+    private async Task CargarPerfilesFiltradosAsync()
+    {
+        var tiposSeleccionados = _tiposPerfil.Where(t => t.Selected).Select(t => t.Id).ToList();
+        if (tiposSeleccionados.Count == 0)
+        {
+            _perfiles = new();
+            return;
+        }
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+        var perfiles = await db.Perfiles
+            .Where(p => tiposSeleccionados.Contains(p.PerfilTipoId))
+            .Include(p => p.PerfilTipo)
+            .AsNoTracking()
+            .ToListAsync();
+
+        _perfiles = perfiles
+            .Select(p => new SeleccionableItem
+            {
+                Id = p.Id,
+                Nombre = $"{p.Nombre} ({p.PerfilTipo.NombreAbreviado})",
+                Selected = Model.PerfilesList.Contains(p.Id)
+            })
+            .OrderBy(p => p.Nombre)
+            .ToList();
+    }
+
+    private async Task CargarSoporteCompasFiltradoAsync()
+    {
+        var tiposSeleccionados = _tiposPerfil.Where(t => t.Selected).Select(t => t.Id).ToList();
+        if (tiposSeleccionados.Count == 0)
+        {
+            _soporteCompas = new();
+            return;
+        }
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+        var items = await db.SoporteCompases
+            .Where(p => tiposSeleccionados.Contains(p.PerfilTipoId))
+            .AsNoTracking()
+            .ToListAsync();
+
+        _soporteCompas = items
+            .Select(p => new SeleccionableItem { Id = p.Id, Nombre = p.Nombre, Selected = Model.SoporteCompasList.Contains(p.Id) })
+            .OrderBy(p => p.Nombre)
+            .ToList();
+    }
+
+    private async Task OnTipoPerfilToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+
+        if (e.Selected)
+        {
+            if (!Model.PerfilTipoList.Contains(e.Item.Id))
+                Model.PerfilTipoList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.PerfilTipoList.Remove(e.Item.Id);
+
+            // Al desmarcar un tipo se desmarcan también sus perfiles y
+            // soportes compás asociados (igual que en la app legacy).
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            var perfilesDelTipo = await db.Perfiles.Where(p => p.PerfilTipoId == e.Item.Id).Select(p => p.Id).ToListAsync();
+            Model.PerfilesList.RemoveAll(id => perfilesDelTipo.Contains(id));
+
+            var soporteCompasDelTipo = await db.SoporteCompases.Where(p => p.PerfilTipoId == e.Item.Id).Select(p => p.Id).ToListAsync();
+            Model.SoporteCompasList.RemoveAll(id => soporteCompasDelTipo.Contains(id));
+        }
+
+        await CargarPerfilesFiltradosAsync();
+        await CargarSoporteCompasFiltradoAsync();
+    }
+
+    private void OnPerfilToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.PerfilesList.Contains(e.Item.Id))
+                Model.PerfilesList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.PerfilesList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnManillaToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.ManillasList.Contains(e.Item.Id))
+                Model.ManillasList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.ManillasList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnSoporteCompasToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.SoporteCompasList.Contains(e.Item.Id))
+                Model.SoporteCompasList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.SoporteCompasList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnSoftwareChanged(int? value)
+    {
+        _softwareId = value;
+        Model.SoftwareList.Clear();
+        if (value.HasValue)
+            Model.SoftwareList.Add(value.Value);
+    }
+}

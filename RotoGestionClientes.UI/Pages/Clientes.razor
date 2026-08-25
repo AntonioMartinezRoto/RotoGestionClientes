@@ -20,7 +20,7 @@
         </MudStack>
 
         <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="2">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="ShowComingSoon">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/clientes/nuevo"))">
                 @MenuTextos.NuevoCliente
             </MudButton>
             <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileUpload" OnClick="ShowComingSoon">
@@ -74,7 +74,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" OnClick="ShowComingSoon" />
                         </MudTooltip>
                         <MudTooltip Text="@MenuTextos.Editar">
-                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="ShowComingSoon" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => NavigationManager.NavigateTo($"/clientes/editar/{context.Id}"))" />
                         </MudTooltip>
                         <MudTooltip Text="@MenuTextos.Exportar">
                             <MudIconButton Icon="@Icons.Material.Filled.Share" Size="Size.Small" OnClick="ShowComingSoon" />

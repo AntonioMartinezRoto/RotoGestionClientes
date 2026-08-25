@@ -154,4 +154,85 @@
   <data name="Cancelar" xml:space="preserve">
     <value>Cancelar</value>
   </data>
+  <data name="Atras" xml:space="preserve">
+    <value>Voltar</value>
+  </data>
+  <data name="Siguiente" xml:space="preserve">
+    <value>Seguinte</value>
+  </data>
+  <data name="Finalizar" xml:space="preserve">
+    <value>Finalizar</value>
+  </data>
+  <data name="Guardar" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="EditandoCliente" xml:space="preserve">
+    <value>A editar cliente</value>
+  </data>
+  <data name="CompletarDatosCliente" xml:space="preserve">
+    <value>Preencha os dados para criar o cliente</value>
+  </data>
+  <data name="DatosGenerales" xml:space="preserve">
+    <value>Dados gerais</value>
+  </data>
+  <data name="Ventanas" xml:space="preserve">
+    <value>Janelas</value>
+  </data>
+  <data name="Balconeras" xml:space="preserve">
+    <value>Portas de varanda</value>
+  </data>
+  <data name="Puertas" xml:space="preserve">
+    <value>Portas</value>
+  </data>
+  <data name="Correderas" xml:space="preserve">
+    <value>Correr</value>
+  </data>
+  <data name="ElevablesPlegables" xml:space="preserve">
+    <value>Elevável / Dobrável</value>
+  </data>
+  <data name="Maquinas" xml:space="preserve">
+    <value>Máquinas</value>
+  </data>
+  <data name="Documentos" xml:space="preserve">
+    <value>Documentos</value>
+  </data>
+  <data name="DatosCorruptos" xml:space="preserve">
+    <value>Os dados do cliente não são válidos.</value>
+  </data>
+  <data name="ClienteExistente" xml:space="preserve">
+    <value>Já existe um cliente com esse nome.</value>
+  </data>
+  <data name="NombreClienteObligatorio" xml:space="preserve">
+    <value>O nome do cliente é obrigatório.</value>
+  </data>
+  <data name="ClienteCreado" xml:space="preserve">
+    <value>Cliente criado com sucesso.</value>
+  </data>
+  <data name="ClienteActualizado" xml:space="preserve">
+    <value>Cliente atualizado com sucesso.</value>
+  </data>
+  <data name="Software" xml:space="preserve">
+    <value>Software</value>
+  </data>
+  <data name="SoporteCompas" xml:space="preserve">
+    <value>Suporte compasso</value>
+  </data>
+  <data name="TipoPerfil" xml:space="preserve">
+    <value>Tipo de perfil</value>
+  </data>
+  <data name="Perfil" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Manillas" xml:space="preserve">
+    <value>Puxadores</value>
+  </data>
+  <data name="Alias" xml:space="preserve">
+    <value>Alias</value>
+  </data>
+  <data name="SeleccionaTipoPerfil" xml:space="preserve">
+    <value>Selecione primeiro um tipo de perfil.</value>
+  </data>
+  <data name="PasoProximamenteTexto" xml:space="preserve">
+    <value>Esta etapa ainda não está disponível na nova versão. Pode completá-la a partir da aplicação atual (RGC); assim que migrarmos esta etapa, os dados aparecerão aqui.</value>
+  </data>
 </root>
