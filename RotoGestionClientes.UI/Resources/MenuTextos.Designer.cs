@@ -81,6 +81,12 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string TotalClientes => ResourceManager.GetString("TotalClientes", resourceCulture)!;
 
+        public static string AccesoTipoPerfilPVC => ResourceManager.GetString("AccesoTipoPerfilPVC", resourceCulture)!;
+
+        public static string AccesoTipoPerfilAluminio => ResourceManager.GetString("AccesoTipoPerfilAluminio", resourceCulture)!;
+
+        public static string AccesoMaquinasMesaHerraje => ResourceManager.GetString("AccesoMaquinasMesaHerraje", resourceCulture)!;
+
         public static string NuevoCliente => ResourceManager.GetString("NuevoCliente", resourceCulture)!;
 
         public static string ImportarCliente => ResourceManager.GetString("ImportarCliente", resourceCulture)!;
@@ -386,6 +392,12 @@ namespace RotoGestionClientes.UI.Resources
         public static string ArchivoGeneradoCorrectamente => ResourceManager.GetString("ArchivoGeneradoCorrectamente", resourceCulture)!;
 
         public static string ErrorGenerarConfig => ResourceManager.GetString("ErrorGenerarConfig", resourceCulture)!;
+
+        public static string ExportarPdf => ResourceManager.GetString("ExportarPdf", resourceCulture)!;
+
+        public static string PdfGeneradoCorrectamente => ResourceManager.GetString("PdfGeneradoCorrectamente", resourceCulture)!;
+
+        public static string ErrorGenerarPdf => ResourceManager.GetString("ErrorGenerarPdf", resourceCulture)!;
 
         public static string Cerrar => ResourceManager.GetString("Cerrar", resourceCulture)!;
 

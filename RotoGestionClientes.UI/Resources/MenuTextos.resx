@@ -103,6 +103,15 @@
   <data name="TotalClientes" xml:space="preserve">
     <value>Clientes totales</value>
   </data>
+  <data name="AccesoTipoPerfilPVC" xml:space="preserve">
+    <value>Tipo de perfil PVC</value>
+  </data>
+  <data name="AccesoTipoPerfilAluminio" xml:space="preserve">
+    <value>Tipo de perfil Aluminio</value>
+  </data>
+  <data name="AccesoMaquinasMesaHerraje" xml:space="preserve">
+    <value>Máquinas: Mesa de herraje</value>
+  </data>
   <data name="NuevoCliente" xml:space="preserve">
     <value>Nuevo cliente</value>
   </data>
@@ -221,7 +230,7 @@
     <value>DLO</value>
   </data>
   <data name="Consumen" xml:space="preserve">
-    <value>Consumen</value>
+    <value>Consumen Plegables</value>
   </data>
   <data name="Maquinas" xml:space="preserve">
     <value>Máquinas</value>
@@ -561,6 +570,15 @@
   </data>
   <data name="ErrorGenerarConfig" xml:space="preserve">
     <value>Error al generar el fichero de configuración.</value>
+  </data>
+  <data name="ExportarPdf" xml:space="preserve">
+    <value>Exportar a PDF</value>
+  </data>
+  <data name="PdfGeneradoCorrectamente" xml:space="preserve">
+    <value>PDF generado correctamente.</value>
+  </data>
+  <data name="ErrorGenerarPdf" xml:space="preserve">
+    <value>Error al generar el PDF.</value>
   </data>
   <data name="Cerrar" xml:space="preserve">
     <value>Cerrar</value>

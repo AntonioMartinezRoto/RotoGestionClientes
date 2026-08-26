@@ -99,6 +99,23 @@
 @code {
     private sealed record CategoriaFiltro(InformeFiltroTipo Tipo, string Label, string Icon);
 
+    // Presets opcionales por querystring (usados por los accesos rápidos de
+    // Pages/Home.razor, p.ej. "/informes?tipoPerfilId=2") para llegar a este
+    // menú con un filtro ya aplicado en vez de tener que abrirlo a mano.
+    // Se identifican por Id, NO por nombre: PerfilTipo/MaquinaTipos son
+    // catálogos "cerrados" (mismos Id en CreateDb.txt y CreateDb-PT.txt,
+    // aunque el texto cambie de idioma) y además cada distribuidor tiene su
+    // propia base de datos con sus propios textos, así que un filtro por
+    // nombre ("PVC", "Mesa de herraje"...) no cruzaría bien en Portugal ni en
+    // ninguna otra edición/distribuidor. Ver Categorias()/IdsPreset* más abajo.
+    [SupplyParameterFromQuery(Name = "tipoPerfilId")]
+    [Parameter]
+    public int? PresetTipoPerfilId { get; set; }
+
+    [SupplyParameterFromQuery(Name = "maquinaId")]
+    [Parameter]
+    public int? PresetMaquinaId { get; set; }
+
     private Dictionary<InformeFiltroTipo, List<int>> _filtrosSeleccionados = new();
     private List<ClienteInformeItem> _resultadoActual = new();
     private List<ClienteInformeItem> _resultadoFiltrado = new();
@@ -118,11 +135,29 @@
             _mostrarResponsables = edition != ApplicationEdition.Distributor;
         }
 
+        if (PresetTipoPerfilId.HasValue)
+            await AplicarFiltroPresetIdAsync(InformeFiltroTipo.TipoPerfil, PresetTipoPerfilId.Value);
+
+        if (PresetMaquinaId.HasValue)
+            await AplicarFiltroPresetIdAsync(InformeFiltroTipo.Maquina, PresetMaquinaId.Value);
+
         // A petición del usuario: la grid arranca con TODOS los clientes (sin
         // filtros aplicados) en vez de vacía hasta pulsar "Buscar". Como
-        // _filtrosSeleccionados está vacío en este punto, BuscarAsync() trae
-        // el listado completo sin restricción alguna.
+        // _filtrosSeleccionados está vacío en este punto (salvo que se haya
+        // aplicado algún preset de arriba), BuscarAsync() trae el listado
+        // completo, o ya filtrado por el preset.
         await BuscarAsync();
+    }
+
+    // Deja preseleccionado, como si el usuario lo hubiera marcado a mano en
+    // el diálogo de filtro, el Id indicado -- pero solo si de verdad existe
+    // en esta base de datos (por si el Id del catálogo cambiara en el
+    // futuro, o el registro estuviera desactivado/eliminado).
+    private async Task AplicarFiltroPresetIdAsync(InformeFiltroTipo tipo, int id)
+    {
+        var items = await ObtenerItemsFiltroAsync(tipo);
+        if (items.Any(i => i.Id == id))
+            _filtrosSeleccionados[tipo] = new List<int> { id };
     }
 
     private IEnumerable<CategoriaFiltro> Categorias()

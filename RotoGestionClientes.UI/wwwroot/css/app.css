@@ -58,8 +58,17 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     text-align: center;
     cursor: pointer;
+    /* MudGrid ya estira cada MudItem de una fila a la altura del más alto
+       (flexbox, align-items:stretch por defecto), pero esta tarjeta (el
+       MudPaper de dentro) no lo heredaba porque no tenía altura del 100%:
+       por eso Crear actualización / Actualizar datos Roto (sin miniaturas
+       debajo) se veían más bajas que Clientes/Informes/Mantenimiento. Con
+       height:100% todas ocupan el alto de la fila y quedan alineadas. */
+    height: 100%;
+    box-sizing: border-box;
     transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
@@ -68,12 +77,14 @@ html, body {
     transform: translateY(-2px);
 }
 
-/* La tarjeta de Clientes es la única que combina el acceso principal
-   (clic en icono+título, igual que el resto de tarjetas) con dos accesos
-   secundarios (Nuevo cliente / Importar cliente) para que se entienda que
-   están relacionados con ella. Por eso no lleva cursor/@onclick en el
-   MudPaper completo como las demás, sino solo en .rgc-home-access-main. */
-.rgc-home-access-clientes {
+/* Las tarjetas de Clientes e Informes combinan el acceso principal (clic en
+   icono+título, igual que el resto de tarjetas) con varios accesos
+   secundarios en miniatura debajo (Nuevo cliente/Importar/Exportar en la de
+   Clientes; los filtros rápidos de Tipo de perfil/Máquinas en la de
+   Informes) para que se entienda que están relacionados con ella. Por eso no
+   llevan cursor/@onclick en el MudPaper completo como las demás tarjetas,
+   sino solo en .rgc-home-access-main. */
+.rgc-home-access-grouped {
     cursor: default;
 }
 

@@ -54,10 +54,16 @@
                     <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.ResumenCliente</MudText>
                 </div>
             </MudStack>
-            <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Edit"
-                       OnClick="@(() => NavigationManager.NavigateTo($"/clientes/editar/{_dto.Id}"))">
-                @MenuTextos.Editar
-            </MudButton>
+            <MudStack Row="true" Spacing="2">
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" StartIcon="@Icons.Material.Filled.PictureAsPdf"
+                           OnClick="ExportarPdfAsync" Disabled="_exportandoPdf">
+                    @MenuTextos.ExportarPdf
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Edit"
+                           OnClick="@(() => NavigationManager.NavigateTo($"/clientes/editar/{_dto.Id}"))">
+                    @MenuTextos.Editar
+                </MudButton>
+            </MudStack>
         </MudStack>
 
         <MudGrid Spacing="2">
@@ -478,6 +484,7 @@
     private ClienteResumenDto? _dto;
     private bool _cargando = true;
     private bool _mostrarResponsable = true;
+    private bool _exportandoPdf;
 
     protected override async Task OnInitializedAsync()
     {
@@ -527,5 +534,31 @@
         var base64 = Convert.ToBase64String(documentoBd.Contenido);
         await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", documentoBd.NombreFicheroOriginal, base64);
         Snackbar.Add(MenuTextos.DocumentoDescargado, Severity.Success);
+    }
+
+    private async Task ExportarPdfAsync()
+    {
+        var dto = _dto;
+        if (dto is null)
+            return;
+
+        _exportandoPdf = true;
+        try
+        {
+            var pdf = await Task.Run(() => ClienteResumenPdfBuilder.Construir(dto, _mostrarResponsable));
+            var base64 = Convert.ToBase64String(pdf);
+            var nombreArchivo = $"{ClienteExportBuilder.LimpiarNombreFichero(dto.Nombre)}_resumen.pdf";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+            Snackbar.Add(MenuTextos.PdfGeneradoCorrectamente, Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorGenerarPdf, Severity.Error);
+        }
+        finally
+        {
+            _exportandoPdf = false;
+        }
     }
 }

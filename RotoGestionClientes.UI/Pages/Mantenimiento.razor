@@ -3,7 +3,11 @@
    Clientes — perfiles, software, marcas y tipos de máquina, empresas de
    mantenimiento, seguridad de ventana, cremonas pasivas, manillas, bisagras,
    cerraduras y usuarios. Selector de categoría a la izquierda + listado con
-   alta/edición a la derecha (MaestroEditDialog), igual que en la app legacy. *@
+   alta/edición a la derecha (MaestroEditDialog), igual que en la app legacy.
+   Admite preseleccionar categoría por query string (?tabla=Usuario) desde
+   los accesos rápidos en miniatura de Pages/Home.razor: se pasa el nombre
+   del propio enum MaestroTipo, no un Id ni un texto de catálogo, así que no
+   hay ningún problema de idioma/distribuidor al resolverlo. *@
 @page "/mantenimiento"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IDialogService DialogService
@@ -107,9 +111,22 @@
 </MudContainer>
 
 @code {
+    [SupplyParameterFromQuery(Name = "tabla")]
+    [Parameter]
+    public string? PresetTabla { get; set; }
+
     private MaestroTipo? _tablaActual;
     private bool _cargando;
     private List<MaestroGridItem> _items = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrEmpty(PresetTabla) && Enum.TryParse<MaestroTipo>(PresetTabla, out var tipo))
+        {
+            _tablaActual = tipo;
+            await CargarItemsAsync();
+        }
+    }
 
     private async Task OnCategoriaSeleccionadaAsync(MaestroTipo? tipo)
     {

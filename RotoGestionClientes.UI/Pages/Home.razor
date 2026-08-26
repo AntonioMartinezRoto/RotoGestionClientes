@@ -5,9 +5,15 @@
    rejilla de accesos rápidos a los mismos módulos del menú lateral —
    replicando la MISMA lógica de visibilidad por edición que
    Layout/MainLayout.razor (SetVisibilidadModoAplicacion en la app legacy).
-   El acceso a Clientes incluye además, en el mismo bloque, dos accesos
-   secundarios (Nuevo cliente / Importar cliente) para que se entienda que
-   están relacionados con él, igual que en la cabecera de Pages/Clientes.razor. *@
+   Los accesos a Clientes, Informes y (solo edición Sede/Internal, ver
+   mostrarMantenimiento) Mantenimiento incluyen además, en el mismo bloque,
+   varios accesos secundarios en miniatura (Nuevo cliente/Importar/Exportar
+   en el de Clientes; filtros rápidos de Tipo de perfil/Máquinas en el de
+   Informes; Usuarios/Bisagras/Cerraduras en el de Mantenimiento) para que se
+   entienda que están relacionados con ellos. Todas las tarjetas de accesos
+   rápidos (agrupadas o no) usan la misma altura — ver .rgc-home-access en
+   app.css — para que la rejilla quede alineada aunque unas tengan miniaturas
+   debajo y otras no. *@
 @page "/"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IAppHost AppHost
@@ -53,7 +59,7 @@
 
     <MudGrid Spacing="3">
         <MudItem xs="12" sm="6" md="4" lg="3">
-            <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-clientes pa-4">
+            <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-grouped pa-4">
                 <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/clientes"))">
                     <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Size="Size.Large" />
                     <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Clientes</MudText>
@@ -67,9 +73,62 @@
                         <MudIconButton Icon="@Icons.Material.Filled.FileDownload" Size="Size.Small" Color="Color.Primary"
                                        OnClick="AbrirImportacionAsync" />
                     </MudTooltip>
+                    <MudTooltip Text="@MenuTextos.ExportarClientes">
+                        <MudIconButton Icon="@Icons.Material.Filled.FileUpload" Size="Size.Small" Color="Color.Primary"
+                                       OnClick="AbrirExportacionMultipleAsync" />
+                    </MudTooltip>
                 </MudStack>
             </MudPaper>
         </MudItem>
+
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-grouped pa-4">
+                <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/informes"))">
+                    <MudIcon Icon="@Icons.Material.Filled.Assessment" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Informes</MudText>
+                </div>
+                <MudStack Row="true" Justify="Justify.Center" Spacing="1" Class="mt-2">
+                    <MudTooltip Text="@MenuTextos.AccesoTipoPerfilAluminio">
+                        <MudIconButton Icon="@Icons.Material.Filled.Straighten" Size="Size.Small" Color="Color.Primary"
+                                       OnClick="@(() => NavigationManager.NavigateTo($"/informes?tipoPerfilId={PerfilTipoIdAluminio}"))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@MenuTextos.AccesoTipoPerfilPVC">
+                        <MudIconButton Icon="@Icons.Material.Filled.Straighten" Size="Size.Small" Color="Color.Primary"
+                                       OnClick="@(() => NavigationManager.NavigateTo($"/informes?tipoPerfilId={PerfilTipoIdPvc}"))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@MenuTextos.AccesoMaquinasMesaHerraje">
+                        <MudIconButton Icon="@Icons.Material.Filled.Category" Size="Size.Small" Color="Color.Primary"
+                                       OnClick="@(() => NavigationManager.NavigateTo($"/informes?maquinaId={MaquinaTipoIdMesaHerraje}"))" />
+                    </MudTooltip>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
+        @if (_mostrarMantenimiento)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-grouped pa-4">
+                    <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/mantenimiento"))">
+                        <MudIcon Icon="@Icons.Material.Filled.Build" Color="Color.Primary" Size="Size.Large" />
+                        <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Mantenimiento</MudText>
+                    </div>
+                    <MudStack Row="true" Justify="Justify.Center" Spacing="1" Class="mt-2">
+                        <MudTooltip Text="@MenuTextos.Usuarios">
+                            <MudIconButton Icon="@Icons.Material.Filled.People" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo($"/mantenimiento?tabla={MaestroTipo.Usuario}"))" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.Bisagras">
+                            <MudIconButton Icon="@RgcIcons.Bisagras" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo($"/mantenimiento?tabla={MaestroTipo.BisagraPuerta}"))" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.Cerraduras">
+                            <MudIconButton Icon="@Icons.Material.Filled.VpnKey" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo($"/mantenimiento?tabla={MaestroTipo.CerraduraPuerta}"))" />
+                        </MudTooltip>
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        }
 
         @foreach (var item in _accesos.Where(a => a.Visible))
         {
@@ -85,9 +144,18 @@
 
 @code {
     private int? _totalClientes;
+    private bool _mostrarMantenimiento;
     private List<AccesoRapido> _accesos = new();
 
     private sealed record AccesoRapido(string Label, string Icon, bool Visible, Action OnClick);
+
+    // Ids fijos de dbo.PerfilTipo / dbo.MaquinaTipos: catálogos "cerrados"
+    // con el mismo Id en CreateDb.txt (ES) y CreateDb-PT.txt (PT) aunque el
+    // Nombre/Descripcion cambie de idioma o de distribuidor. Si algún día se
+    // reordenan esos scripts, estos números hay que revisarlos a la vez.
+    private const int PerfilTipoIdAluminio = 1;
+    private const int PerfilTipoIdPvc = 2;
+    private const int MaquinaTipoIdMesaHerraje = 4;
 
     protected override async Task OnInitializedAsync()
     {
@@ -127,10 +195,13 @@
                 break;
         }
 
+        _mostrarMantenimiento = mostrarMantenimiento;
+
+        // Clientes, Informes y Mantenimiento NO están en esta lista: se
+        // dibujan aparte, como tarjetas "agrupadas" con sus propios accesos
+        // secundarios en miniatura debajo (ver el marcado más arriba).
         _accesos =
         [
-            new AccesoRapido(MenuTextos.Mantenimiento, Icons.Material.Filled.Build, mostrarMantenimiento, () => NavigationManager.NavigateTo("/mantenimiento")),
-            new AccesoRapido(MenuTextos.Informes, Icons.Material.Filled.Assessment, true, () => NavigationManager.NavigateTo("/informes")),
             new AccesoRapido(MenuTextos.CrearActualizacion, Icons.Material.Filled.CloudUpload, mostrarCrearActualizacion, () => NavigationManager.NavigateTo("/crear-actualizacion")),
             new AccesoRapido(MenuTextos.ActualizarDatos, Icons.Material.Filled.CloudDownload, mostrarActualizarDatos, () => NavigationManager.NavigateTo("/actualizar-datos")),
         ];
@@ -154,5 +225,17 @@
         {
             await CargarTotalClientesAsync();
         }
+    }
+
+    private async Task AbrirExportacionMultipleAsync()
+    {
+        var parametros = new DialogParameters();
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<ClienteExportDialog>(MenuTextos.SeleccionarClientes, parametros, opciones);
+        await dialogo.Result;
+
+        // El diálogo no cambia datos de cliente, solo exporta, así que no
+        // hace falta recargar el total de clientes al cerrarse.
     }
 }
