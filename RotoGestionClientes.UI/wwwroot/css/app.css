@@ -12,9 +12,18 @@ html, body {
    retirada) por una cabecera corporativa compacta seguida de tarjetas de
    datos rápidos y accesos directos a los módulos del menú lateral. */
 .rgc-home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* AppbarHeight (RgcTheme.cs) restado para centrar en el alto visible
+       real, no en el de toda la ventana. Si el contenido crece más que la
+       ventana, min-height solo actúa como suelo: el flex pasa a alto
+       automático y no recorta ni desplaza nada hacia arriba. */
+    min-height: calc(100vh - 64px);
     padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .rgc-home-hero {
@@ -57,6 +66,23 @@ html, body {
 .rgc-home-access:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transform: translateY(-2px);
+}
+
+/* La tarjeta de Clientes es la única que combina el acceso principal
+   (clic en icono+título, igual que el resto de tarjetas) con dos accesos
+   secundarios (Nuevo cliente / Importar cliente) para que se entienda que
+   están relacionados con ella. Por eso no lleva cursor/@onclick en el
+   MudPaper completo como las demás, sino solo en .rgc-home-access-main. */
+.rgc-home-access-clientes {
+    cursor: default;
+}
+
+.rgc-home-access-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
 }
 
 /* Responsive: en ventanas estrechas la cabecera pasa a columna y el

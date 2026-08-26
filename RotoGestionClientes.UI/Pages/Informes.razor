@@ -131,6 +131,7 @@
             yield return new(InformeFiltroTipo.Responsable, MenuTextos.Responsables, Icons.Material.Filled.People);
 
         yield return new(InformeFiltroTipo.Software, MenuTextos.Softwares, Icons.Material.Filled.Apps);
+        yield return new(InformeFiltroTipo.TipoPerfil, MenuTextos.TipoPerfil, Icons.Material.Filled.Straighten);
         yield return new(InformeFiltroTipo.Perfil, MenuTextos.Perfiles, RgcIcons.Perfiles);
         yield return new(InformeFiltroTipo.Manilla, MenuTextos.Manillas, RgcIcons.Manillas);
         yield return new(InformeFiltroTipo.Bisagra, MenuTextos.Bisagras, RgcIcons.Bisagras);
@@ -160,6 +161,11 @@
             InformeFiltroTipo.Perfil => await db.Perfiles
                 .OrderBy(x => x.Nombre)
                 .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre + " (" + x.PerfilTipo.NombreAbreviado + ")" })
+                .ToListAsync(),
+
+            InformeFiltroTipo.TipoPerfil => await db.PerfilTipos
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
                 .ToListAsync(),
 
             InformeFiltroTipo.Bisagra => await db.Bisagras
@@ -239,6 +245,9 @@
 
         if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Perfil, out var perfiles) && perfiles.Count > 0)
             query = query.Where(c => c.ClientePerfiles.Any(cp => perfiles.Contains(cp.PerfilId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.TipoPerfil, out var tiposPerfil) && tiposPerfil.Count > 0)
+            query = query.Where(c => c.ClientePerfilTipos.Any(cpt => tiposPerfil.Contains(cpt.PerfilTipoId)));
 
         if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Responsable, out var responsables) && responsables.Count > 0)
             query = query.Where(c => c.ResponsableId.HasValue && responsables.Contains(c.ResponsableId.Value));

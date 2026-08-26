@@ -51,7 +51,8 @@ namespace RotoGestionClientes
             Perfil,
             Responsable,
             Maquina,
-            Cerradura
+            Cerradura,
+            TipoPerfil
         }
         public enum ApplicationEdition
         {

@@ -86,10 +86,10 @@
     <value>Brevemente</value>
   </data>
   <data name="ProximamenteTexto" xml:space="preserve">
-    <value>Este módulo ainda não está disponível na nova versão. Entretanto, continue a usar a aplicação atual (RGC) para esta secção.</value>
+    <value>Este módulo ainda não está disponível na nova versão. Entretanto, continue a usar a aplicação atual (RotoGestionClientes) para esta secção.</value>
   </data>
   <data name="Bienvenida" xml:space="preserve">
-    <value>Bem-vindo ao RGC</value>
+    <value>Bem-vindo ao RotoGestionClientes</value>
   </data>
   <data name="BienvenidaTexto" xml:space="preserve">
     <value>Selecione uma opção do menu para começar.</value>
@@ -305,7 +305,7 @@
     <value>Selecione primeiro um tipo de perfil.</value>
   </data>
   <data name="PasoProximamenteTexto" xml:space="preserve">
-    <value>Esta etapa ainda não está disponível na nova versão. Pode completá-la a partir da aplicação atual (RGC); assim que migrarmos esta etapa, os dados aparecerão aqui.</value>
+    <value>Esta etapa ainda não está disponível na nova versão. Pode completá-la a partir da aplicação atual (RotoGestionClientes); assim que migrarmos esta etapa, os dados aparecerão aqui.</value>
   </data>
   <data name="Oscilobatientes" xml:space="preserve">
     <value>Oscilobatentes</value>

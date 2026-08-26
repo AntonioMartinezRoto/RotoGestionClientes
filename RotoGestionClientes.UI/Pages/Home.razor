@@ -4,17 +4,21 @@
    rápidos (clientes totales, versión de datos, versión de la app) y una
    rejilla de accesos rápidos a los mismos módulos del menú lateral —
    replicando la MISMA lógica de visibilidad por edición que
-   Layout/MainLayout.razor (SetVisibilidadModoAplicacion en la app legacy). *@
+   Layout/MainLayout.razor (SetVisibilidadModoAplicacion en la app legacy).
+   El acceso a Clientes incluye además, en el mismo bloque, dos accesos
+   secundarios (Nuevo cliente / Importar cliente) para que se entienda que
+   están relacionados con él, igual que en la cabecera de Pages/Clientes.razor. *@
 @page "/"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IAppHost AppHost
 @inject VersionDatosState VersionDatosState
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 @using Microsoft.EntityFrameworkCore
 
 <div class="rgc-home">
     <div class="rgc-home-hero">
-        <img src="_content/RotoGestionClientes.UI/images/hero.png" alt="RGC" />
+        <img src="_content/RotoGestionClientes.UI/images/app-icon.png" alt="RotoGestionClientes" />
         <div>
             <MudText Typo="Typo.h4" Class="mb-1">@MenuTextos.Bienvenida</MudText>
             <MudText Typo="Typo.body1">@MenuTextos.BienvenidaTexto</MudText>
@@ -48,6 +52,25 @@
     <MudText Typo="Typo.h6" Class="mt-6 mb-3">@MenuTextos.AccesosRapidos</MudText>
 
     <MudGrid Spacing="3">
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-clientes pa-4">
+                <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/clientes"))">
+                    <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Clientes</MudText>
+                </div>
+                <MudStack Row="true" Justify="Justify.Center" Spacing="1" Class="mt-2">
+                    <MudTooltip Text="@MenuTextos.NuevoCliente">
+                        <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Color="Color.Primary"
+                                       OnClick="@(() => NavigationManager.NavigateTo("/clientes/nuevo"))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@MenuTextos.ImportarCliente">
+                        <MudIconButton Icon="@Icons.Material.Filled.FileDownload" Size="Size.Small" Color="Color.Primary"
+                                       OnClick="AbrirImportacionAsync" />
+                    </MudTooltip>
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
         @foreach (var item in _accesos.Where(a => a.Visible))
         {
             <MudItem xs="12" sm="6" md="4" lg="3">
@@ -68,10 +91,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await CargarTotalClientesAsync();
+
         await using var db = await DbFactory.CreateDbContextAsync();
-
-        _totalClientes = await db.Clientes.CountAsync();
-
         var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
 
         var edition = ApplicationEdition.Internal;
@@ -107,11 +129,30 @@
 
         _accesos =
         [
-            new AccesoRapido(MenuTextos.Clientes, Icons.Material.Filled.People, true, () => NavigationManager.NavigateTo("/clientes")),
             new AccesoRapido(MenuTextos.Mantenimiento, Icons.Material.Filled.Build, mostrarMantenimiento, () => NavigationManager.NavigateTo("/mantenimiento")),
             new AccesoRapido(MenuTextos.Informes, Icons.Material.Filled.Assessment, true, () => NavigationManager.NavigateTo("/informes")),
             new AccesoRapido(MenuTextos.CrearActualizacion, Icons.Material.Filled.CloudUpload, mostrarCrearActualizacion, () => NavigationManager.NavigateTo("/crear-actualizacion")),
             new AccesoRapido(MenuTextos.ActualizarDatos, Icons.Material.Filled.CloudDownload, mostrarActualizarDatos, () => NavigationManager.NavigateTo("/actualizar-datos")),
         ];
+    }
+
+    private async Task CargarTotalClientesAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+        _totalClientes = await db.Clientes.CountAsync();
+    }
+
+    private async Task AbrirImportacionAsync()
+    {
+        var parametros = new DialogParameters();
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<ClienteImportDialog>(MenuTextos.ImportarCliente, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+        {
+            await CargarTotalClientesAsync();
+        }
     }
 }
