@@ -1,8 +1,7 @@
 @* Réplica moderna de Clientes/ClientesMain.cs (WinForms).
    Listado + búsqueda + eliminación + exportar/importar (individual y
-   múltiple) ya migrados. El resto de acciones (ver resumen, generar
-   configurador) siguen cableadas pero muestran "Próximamente" hasta que se
-   migren en fases siguientes. *@
+   múltiple) + generar configurador ya migrados. Solo queda "Ver resumen"
+   cableado pero mostrando "Próximamente" hasta que se migre. *@
 @page "/clientes"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
@@ -14,6 +13,7 @@
 @using Microsoft.JSInterop
 @using System.Text
 @using System.Text.Json
+@using System.Xml.Linq
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
     <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4" Wrap="Wrap.Wrap" Spacing="4">
@@ -85,7 +85,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Share" Size="Size.Small" OnClick="@(() => ExportarClienteAsync(context))" />
                         </MudTooltip>
                         <MudTooltip Text="@MenuTextos.CrearConfigurador">
-                            <MudIconButton Icon="@Icons.Material.Filled.Settings" Size="Size.Small" OnClick="ShowComingSoon" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Settings" Size="Size.Small" OnClick="@(() => GenerarConfigAsync(context))" />
                         </MudTooltip>
                         <MudTooltip Text="@MenuTextos.Eliminar">
                             <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error" OnClick="@(() => EliminarCliente(context))" />
@@ -223,6 +223,35 @@
         catch
         {
             Snackbar.Add(MenuTextos.ErrorAlExportar, Severity.Error);
+        }
+    }
+
+    private async Task GenerarConfigAsync(ClienteGridItem cliente)
+    {
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            var xml = await ClienteConfigBuilder.ConstruirAsync(db, cliente.Id);
+            if (xml is null)
+            {
+                Snackbar.Add(MenuTextos.ClienteNoEncontrado, Severity.Warning);
+                return;
+            }
+
+            using var ms = new MemoryStream();
+            xml.Save(ms);
+
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var nombreArchivo = $"{ClienteExportBuilder.LimpiarNombreFichero(cliente.Nombre)}.rotoconfig";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+
+            Snackbar.Add(MenuTextos.ArchivoGeneradoCorrectamente, Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorGenerarConfig, Severity.Error);
         }
     }
 

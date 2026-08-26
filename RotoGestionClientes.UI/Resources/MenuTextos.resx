@@ -547,6 +547,12 @@
   <data name="ClienteExistenteImportado" xml:space="preserve">
     <value>Ya existía un cliente con ese nombre (o una variante), así que se ha importado como:</value>
   </data>
+  <data name="ArchivoGeneradoCorrectamente" xml:space="preserve">
+    <value>Archivo generado correctamente.</value>
+  </data>
+  <data name="ErrorGenerarConfig" xml:space="preserve">
+    <value>Error al generar el fichero de configuración.</value>
+  </data>
   <data name="Cerrar" xml:space="preserve">
     <value>Cerrar</value>
   </data>

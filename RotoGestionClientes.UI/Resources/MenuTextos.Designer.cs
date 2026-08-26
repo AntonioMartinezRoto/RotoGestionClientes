@@ -377,6 +377,10 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string ClienteExistenteImportado => ResourceManager.GetString("ClienteExistenteImportado", resourceCulture)!;
 
+        public static string ArchivoGeneradoCorrectamente => ResourceManager.GetString("ArchivoGeneradoCorrectamente", resourceCulture)!;
+
+        public static string ErrorGenerarConfig => ResourceManager.GetString("ErrorGenerarConfig", resourceCulture)!;
+
         public static string Cerrar => ResourceManager.GetString("Cerrar", resourceCulture)!;
 
         public static string ClientesImportadosCorrectamente => ResourceManager.GetString("ClientesImportadosCorrectamente", resourceCulture)!;
