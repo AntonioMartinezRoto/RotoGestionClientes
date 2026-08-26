@@ -1,7 +1,7 @@
 @* Réplica moderna de Clientes/ClientesMain.cs (WinForms).
    Listado + búsqueda + eliminación + exportar/importar (individual y
-   múltiple) + generar configurador ya migrados. Solo queda "Ver resumen"
-   cableado pero mostrando "Próximamente" hasta que se migre. *@
+   múltiple) + generar configurador + ver resumen (Pages/ClienteResumen.razor)
+   ya migrados. *@
 @page "/clientes"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
@@ -76,7 +76,7 @@
                     <MudTd DataLabel="@MenuTextos.Comentarios">@context.Comentarios</MudTd>
                     <MudTd DataLabel="@MenuTextos.Acciones" Style="text-align:right; white-space:nowrap">
                         <MudTooltip Text="@MenuTextos.VerResumen">
-                            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" OnClick="ShowComingSoon" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Visibility" Size="Size.Small" OnClick="@(() => NavigationManager.NavigateTo($"/clientes/resumen/{context.Id}"))" />
                         </MudTooltip>
                         <MudTooltip Text="@MenuTextos.Editar">
                             <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => NavigationManager.NavigateTo($"/clientes/editar/{context.Id}"))" />
@@ -284,10 +284,5 @@
     private void VolverMenu()
     {
         NavigationManager.NavigateTo("/");
-    }
-
-    private void ShowComingSoon()
-    {
-        Snackbar.Add(MenuTextos.ProximamenteTexto, Severity.Info, config => { config.SnackbarVariant = Variant.Filled; });
     }
 }

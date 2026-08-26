@@ -1,0 +1,23 @@
+@* Pequeño componente reutilizable de Pages/ClienteResumen.razor: pinta una
+   lista de nombres (maestros seleccionados por el cliente) como chips en
+   fila, o un texto atenuado "Ninguno" si la lista está vacía. Sustituye al
+   listado de bullets en una caja de texto de solo lectura que usaba
+   Clientes/ClienteResumen.cs (WinForms) por algo más rápido de leer de un
+   vistazo. *@
+@if (Items is null || Items.Count == 0)
+{
+    <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.Ninguno</MudText>
+}
+else
+{
+    <MudStack Row="true" Wrap="Wrap.Wrap" Spacing="1">
+        @foreach (var item in Items)
+        {
+            <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Default">@item</MudChip>
+        }
+    </MudStack>
+}
+
+@code {
+    [Parameter, EditorRequired] public List<string> Items { get; set; } = new();
+}

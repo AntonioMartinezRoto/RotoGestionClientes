@@ -384,5 +384,15 @@ namespace RotoGestionClientes.UI.Resources
         public static string Cerrar => ResourceManager.GetString("Cerrar", resourceCulture)!;
 
         public static string ClientesImportadosCorrectamente => ResourceManager.GetString("ClientesImportadosCorrectamente", resourceCulture)!;
+
+        public static string ResumenCliente => ResourceManager.GetString("ResumenCliente", resourceCulture)!;
+
+        public static string VolverListado => ResourceManager.GetString("VolverListado", resourceCulture)!;
+
+        public static string PorteroElectrico => ResourceManager.GetString("PorteroElectrico", resourceCulture)!;
+
+        public static string Ninguno => ResourceManager.GetString("Ninguno", resourceCulture)!;
+
+        public static string ObservacionesParalelas => ResourceManager.GetString("ObservacionesParalelas", resourceCulture)!;
     }
 }

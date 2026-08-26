@@ -1,0 +1,43 @@
+@* Pequeño componente reutilizable de Pages/ClienteResumen.razor: pinta el
+   modo de aguja de montaje de un cliente (Todos / Por perfil), igual que
+   FormatearAgujasBalconera/FormatearAgujasPuerta en Clientes/ClienteResumen.cs
+   (WinForms), pero también reutilizado aquí para "puerta secundaria", sección
+   que la app legacy nunca llegó a mostrar en su resumen. *@
+@using static RotoGestionClientes.Enums
+
+@if (Data.Tipo == (int)AgujaMode.Todos)
+{
+    if (string.IsNullOrEmpty(Data.NombreTodos))
+    {
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.Ninguno</MudText>
+    }
+    else
+    {
+        <MudChip T="string" Size="Size.Small" Variant="Variant.Outlined" Color="Color.Primary">@Data.NombreTodos</MudChip>
+    }
+}
+else
+{
+    if (Data.PorPerfil.Count == 0)
+    {
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.Ninguno</MudText>
+    }
+    else
+    {
+        <MudSimpleTable Dense="true" Style="width: 100%; max-width: 480px;">
+            <tbody>
+                @foreach (var linea in Data.PorPerfil)
+                {
+                    <tr>
+                        <td>@linea.Perfil</td>
+                        <td>@linea.Aguja</td>
+                    </tr>
+                }
+            </tbody>
+        </MudSimpleTable>
+    }
+}
+
+@code {
+    [Parameter, EditorRequired] public AgujaResumenDto Data { get; set; } = new();
+}

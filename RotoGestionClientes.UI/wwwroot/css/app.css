@@ -202,6 +202,31 @@ html, body {
     height: 160px;
 }
 
+/* Pages/ClienteResumen.razor: tarjetas de resumen en rejilla, pensadas para
+   minimizar el scroll. A diferencia de .rgc-step-images (imágenes grandes en
+   su propia fila, usadas en el asistente de alta/edición), aquí las mismas
+   imágenes de modelo se muestran en miniatura junto al título de cada
+   tarjeta para ahorrar espacio vertical. */
+.rgc-resumen-card {
+    height: 100%;
+}
+
+.rgc-resumen-thumbs {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.rgc-resumen-thumbs img {
+    height: 56px;
+    width: auto;
+    object-fit: contain;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 4px;
+    background: var(--mud-palette-background);
+    padding: 2px;
+}
+
 /* Responsive: por debajo de 900px la barra lateral del wizard pasa a ir
    arriba, en horizontal y con scroll, en vez de recortarse. El resto del
    wizard mantiene overflow:hidden para que la barra de navegación inferior

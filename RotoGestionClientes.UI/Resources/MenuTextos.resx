@@ -559,4 +559,19 @@
   <data name="ClientesImportadosCorrectamente" xml:space="preserve">
     <value>Se han importado {0} clientes correctamente.</value>
   </data>
+  <data name="ResumenCliente" xml:space="preserve">
+    <value>Resumen del cliente</value>
+  </data>
+  <data name="VolverListado" xml:space="preserve">
+    <value>Volver al listado</value>
+  </data>
+  <data name="PorteroElectrico" xml:space="preserve">
+    <value>Portero eléctrico</value>
+  </data>
+  <data name="Ninguno" xml:space="preserve">
+    <value>Ninguno</value>
+  </data>
+  <data name="ObservacionesParalelas" xml:space="preserve">
+    <value>Observaciones (paralelas)</value>
+  </data>
 </root>
