@@ -8,6 +8,7 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
 @inject VersionDatosState VersionDatosState
+@inject AuditoriaService AuditoriaService
 @using Microsoft.EntityFrameworkCore
 
 <MudDialog>
@@ -193,6 +194,8 @@
         {
             await using var db = await DbFactory.CreateDbContextAsync();
 
+            var entidadId = 0;
+
             switch (Tipo)
             {
                 case MaestroTipo.Perfil:
@@ -206,6 +209,7 @@
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
                         entity.PerfilTipoId = _perfilTipoId!.Value;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -219,6 +223,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -232,6 +237,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -245,6 +251,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -258,6 +265,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -271,6 +279,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -284,6 +293,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -297,6 +307,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -310,6 +321,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -323,6 +335,7 @@
                         }
                         entity.Descripcion = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -337,9 +350,13 @@
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
                         entity.EsDistribuidor = _esDistribuidor;
+                        entidadId = entity.Id;
                     }
                     break;
             }
+
+            var accionAuditoria = Id is null ? AuditoriaAccionTipo.Crear : AuditoriaAccionTipo.Modificar;
+            AuditoriaService.Registrar(db, accionAuditoria, Tipo.ToString(), entidadId, nombre);
 
             var nuevaVersion = await IncrementarVersionDatosAsync(db);
             await db.SaveChangesAsync();

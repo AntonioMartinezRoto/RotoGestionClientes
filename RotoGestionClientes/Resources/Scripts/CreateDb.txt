@@ -7,6 +7,22 @@ CREATE TABLE dbo.Usuario
 	
 );
 
+INSERT INTO dbo.Usuario (Id, Nombre, EsDistribuidor, Activa)
+VALUES 
+(1, 'Sergio González', 0, 1),
+(2, 'Agustín Canepa', 0, 1),
+(3, 'Albert Blas', 0, 1),
+(4, 'Antonio Barba', 0, 1),
+(5, 'Miguel Pereira', 0, 1),
+(6, 'Rotofer', 1, 1),
+(7, 'Alcantarilla', 1, 1),
+(8, 'Ignacio', 1, 1),
+(9, 'AluYPvc', 1, 1),
+(10, 'Comalfer', 1, 1),
+(11, 'Sumpai', 1, 1),
+(12, 'Fernasol', 1, 1),
+(13, 'Mapeal', 1, 1),
+(14, 'Centro del Accesorio', 1, 1);
 
 CREATE TABLE dbo.Cliente
 (
@@ -53,6 +69,15 @@ CREATE TABLE dbo.PerfilTipo
 );
 GO
 
+INSERT INTO dbo.PerfilTipo (Id, Nombre, NombreAbreviado, Activa)
+VALUES 
+(1, 'Aluminio', 'ALU', 1),
+(2, 'PVC', 'PVC', 1),
+(3, 'Madera', 'MAD', 1),
+(4, 'Aluminio-PVC', 'PAX', 1);
+GO
+
+
 CREATE TABLE dbo.ClientePerfilTipo
 (
     ClienteId INT NOT NULL,
@@ -89,6 +114,28 @@ CREATE TABLE dbo.Perfil
 );
 GO
 
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(1, 'Aluplast', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(2, 'Cortizo', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(3, 'Deceuninck', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(4, 'Dimex', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(5, 'Gealan', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(6, 'Kommerling', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(7, 'Kbe', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(8, 'Profilplast', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(9, 'Refine', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(10, 'Rehau', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(11, 'Schuco', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(12, 'Salamander', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(13, 'Veka', 2, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(14, 'Indalsu', 1, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(15, 'Itesal', 1, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(16, 'Centroalum', 1, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(17, 'Strugal', 1, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(18, 'Cortizo', 1, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(19, 'Aluvision', 1, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(20, 'Alas Ibérica', 1, 1);
+  INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(21, 'Alueuropa', 1, 1);
+
 
 CREATE TABLE dbo.ClientePerfil
 (
@@ -120,6 +167,19 @@ GO
         PRIMARY KEY CLUSTERED (Id),
 
 );
+GO
+
+
+INSERT INTO dbo.[Software] (Id, Nombre, Activa)
+VALUES 
+(1, 'PrefSuite', 1),
+(2, 'Hetmo', 1),
+(3, 'Gesfacil', 1),
+(4, 'WinPerfil', 1),
+(5, 'Sicar', 1),
+(6, 'EmmegiSoft', 1),
+(7, 'Orgadata', 1),
+(8, 'Opera', 1);
 GO
 
 CREATE TABLE dbo.ClienteSoftware
@@ -161,6 +221,14 @@ GO
 GO
 
 
+INSERT INTO dbo.SoporteCompas (Id, Nombre, Activa, PerfilTipoId)
+VALUES 
+(1, '6/130', 1, 2),
+(2, '6/150', 1, 2),
+(3, '3/130', 1, 1)
+GO
+
+
 CREATE TABLE dbo.ClienteSoporteCompas
 (
     ClienteId INT NOT NULL,
@@ -196,6 +264,16 @@ CREATE TABLE dbo.MaquinaTipos
 );
 GO
 
+INSERT INTO dbo.MaquinaTipos (Id, Descripcion, Mecaniza, Automatica, Activa)
+VALUES 
+(1, 'Tronzadora', 0, 0, 1),
+(2, 'Centro de mecanizado (Macros)', 1, 0, 1),
+(3, 'Centro de mecanizado (3D)', 1, 0, 1),
+(4, 'Mesa de herraje', 0, 0, 1),
+(5, 'Mesa de herraje (Autómatica)', 0, 1, 1),
+(6, 'Soldadora', 0, 0, 1),
+(7, 'Robot cerraderos', 0, 0, 1);
+GO
 
 CREATE TABLE dbo.MaquinaMarcas
 (
@@ -209,7 +287,21 @@ CREATE TABLE dbo.MaquinaMarcas
 );
 GO
 
-
+INSERT INTO dbo.MaquinaMarcas (Id, Nombre, Modelo, Activa)
+VALUES 
+(1, 'Schirmer', NULL, 1),
+(2, 'Urban', NULL, 1),
+(3, 'Yilmaz', NULL, 1),
+(4, 'Kaban', NULL, 1),
+(5, 'Thorwersten', NULL, 1),
+(6, 'Graf', NULL, 1),
+(7, 'Mecal', NULL, 1),
+(8, 'Pertici', NULL, 1),
+(9, 'Fom', NULL, 1),
+(10, 'Rotox', NULL, 1),
+(11, 'Murat', NULL, 1),
+(12, 'Inter MH', NULL, 1);
+GO
 
 CREATE TABLE dbo.MaquinaMantenimiento
 (
@@ -220,6 +312,17 @@ CREATE TABLE dbo.MaquinaMantenimiento
     CONSTRAINT PK_MaquinaMantenimiento
         PRIMARY KEY CLUSTERED (Id)
 );
+GO
+
+INSERT INTO dbo.MaquinaMantenimiento (Id, Nombre, Activa)
+VALUES 
+(1, 'Disomac', 1),
+(2, 'Mecal', 1),
+(3, 'Vema', 1),
+(4, 'Vraia', 1),
+(5, 'Maquintec', 1),
+(6, 'Daser', 1),
+(7, 'Haffner', 1);
 GO
 
 CREATE TABLE dbo.ClienteMaquina
@@ -252,6 +355,8 @@ CREATE TABLE dbo.ClienteMaquina
 		REFERENCES dbo.MaquinaMantenimiento(Id)
 );
 GO
+
+
  
 CREATE TABLE dbo.Aperturas
 (
@@ -264,6 +369,17 @@ CREATE TABLE dbo.Aperturas
     CONSTRAINT UQ_Aperturas
         UNIQUE (Nombre),);
 GO
+
+
+INSERT INTO dbo.Aperturas (Nombre)
+VALUES 
+('Practicable'),
+('Oscilobatiente'),
+('Corredera'),
+('Osciloparalela'),
+('Elevable'),
+('Plegable');
+GO
  
  CREATE TABLE dbo.ModeloTipo
 (
@@ -275,7 +391,16 @@ GO
 
     CONSTRAINT UQ_ModeloTipo
         UNIQUE (Nombre),);
-GO 
+GO
+
+INSERT INTO dbo.ModeloTipo (Nombre)
+VALUES 
+('Ventana'),
+('Balconera'),
+('Puerta')
+GO
+ 
+ 
  
 CREATE TABLE dbo.SeguridadVentana
 (
@@ -290,6 +415,14 @@ CREATE TABLE dbo.SeguridadVentana
         UNIQUE (Nombre),);
 GO
 
+INSERT INTO dbo.SeguridadVentana (Id, Nombre, Activa)
+VALUES 
+(1, 'Básica', 1),
+(2, 'RC1', 0),
+(3, 'RC2', 1)
+GO
+
+ 
  
 CREATE TABLE dbo.CremonaPasivaVentanaTipos
 (
@@ -304,6 +437,15 @@ CREATE TABLE dbo.CremonaPasivaVentanaTipos
         UNIQUE (Nombre),);
 GO
 
+INSERT INTO dbo.CremonaPasivaVentanaTipos (Id, Nombre, Activa)
+VALUES 
+(1, 'Cremona', 1),
+(2, 'Perimetral', 1),
+(3, 'Click y pasador', 1),
+(4, 'Falso compás', 1)
+GO
+
+ 
  CREATE TABLE dbo.ClienteCremonaPasivaVentana
 (
     ClienteId INT NOT NULL,
@@ -414,6 +556,18 @@ CREATE TABLE dbo.Manilla
         UNIQUE (Nombre),);
 GO
 
+
+INSERT INTO dbo.Manilla (Id, Nombre, Activa)
+VALUES 
+(1, 'Rotoline', 1),
+(2, 'Rotoswing', 1),
+(3, 'Rotosamba', 1),
+(4, 'Rotoline Secustik', 1),
+(5, 'Rotoswing Secustik', 1),
+(6, 'Rotosamba Secustik', 1);
+GO
+
+
 CREATE TABLE dbo.ClienteManilla
 (
     ClienteId INT NOT NULL,
@@ -447,6 +601,19 @@ CREATE TABLE dbo.Agujas
 GO
 
 
+INSERT INTO dbo.Agujas (Id, Nombre, Activa)
+VALUES 
+(1, '8', 1),
+(2, '15', 1),
+(3, '25', 1),
+(4, '30', 1),
+(5, '35', 1),
+(6, '40', 1),
+(7, '45', 1),
+(8, '50', 1),
+(9, '55', 1);
+GO
+
 CREATE TABLE dbo.AgujasCorredera
 (
     Id INT NOT NULL,
@@ -458,6 +625,13 @@ CREATE TABLE dbo.AgujasCorredera
 
     CONSTRAINT UQ_AgujasCorredera
         UNIQUE (Nombre),);
+GO
+
+
+INSERT INTO dbo.AgujasCorredera (Id, Nombre, Activa)
+VALUES 
+(1, '7', 1),
+(2, '17', 1);
 GO
 
 CREATE TABLE dbo.ClienteAgujasCorredera
@@ -492,6 +666,12 @@ CREATE TABLE dbo.AgujasDefinicion
 GO
 
 
+INSERT INTO dbo.AgujasDefinicion (Id, Nombre)
+VALUES 
+(1, 'Todos'),
+(2, 'Por perfil');
+GO
+
 CREATE TABLE dbo.AgujasModelo
 (
     Id INT NOT NULL,
@@ -504,6 +684,14 @@ CREATE TABLE dbo.AgujasModelo
         UNIQUE (Nombre),);
 GO
 
+
+INSERT INTO dbo.AgujasModelo (Id, Nombre)
+VALUES 
+(1, 'Balconera'),
+(2, 'Puerta Secundaria'),
+(3, 'Puerta'),
+(4, 'Ventana');
+GO
 
 CREATE TABLE dbo.ClienteAgujas
 (
@@ -592,6 +780,18 @@ CREATE TABLE dbo.BisagraPuerta
 GO
 
 
+INSERT INTO dbo.BisagraPuerta (Id, Nombre, Activa)
+VALUES 
+(1, 'SOLID B', 1),
+(2, 'PS27', 1),
+(3, 'PS23', 1),
+(4, 'PB10', 1),
+(5, '150P', 0),
+(6, 'SCR', 1),
+(7, 'SIN BISAGRAS', 1);
+
+GO
+
 CREATE TABLE dbo.ClienteBisagraPuerta
 (
     ClienteId INT NOT NULL,
@@ -644,6 +844,13 @@ CREATE TABLE dbo.CerraduraPuertaSec
 GO
 
 
+INSERT INTO dbo.CerraduraPuertaSec (Id, Nombre, Activa)
+VALUES 
+(1, 'Acc. Manilla', 1),
+(2, 'Acc. Bombillo', 1);
+
+GO
+
 CREATE TABLE dbo.ClienteCerraduraPuertaSec
 (
     ClienteId INT NOT NULL,
@@ -676,6 +883,21 @@ CREATE TABLE dbo.CerraduraPuerta
         UNIQUE (Nombre),);
 GO
 
+
+INSERT INTO dbo.CerraduraPuerta (Id, Nombre, Activa)
+VALUES 
+(1, '1 punto', 1),
+(2, 'Bulones', 1),
+(3, 'Pestillos', 1),
+(4, 'Tandeo', 1),
+(5, 'A700', 1),
+(6, 'Combinada', 1),
+(7, 'Eneo A', 1),
+(8, 'E700', 1),
+(9, 'Eneo CC', 1),
+(10, 'Combinada 5P', 1);
+
+GO
 
 CREATE TABLE dbo.ClienteCerraduraPuerta
 (
@@ -726,6 +948,13 @@ CREATE TABLE dbo.CilindroTipo
 GO
 
 
+INSERT INTO dbo.CilindroTipo (Id, Nombre, Activa)
+VALUES 
+(1, 'Seguridad', 1),
+(2, 'Serreta', 1);
+
+GO
+
 CREATE TABLE dbo.Cilindro
 (
     Id INT NOT NULL,
@@ -744,6 +973,47 @@ CREATE TABLE dbo.Cilindro
 );
 GO
 
+
+INSERT INTO dbo.Cilindro (Id, CilindroTipoId, MedidaInterior, MedidaExterior, Nomenclatura, Activa)
+VALUES 
+(1,1,35,65,'35-65',1),
+(2,1,35,75,'35-75',1),
+(3,1,40,40,'40-40',1),
+(4,1,40,45,'40-45',1),
+(5,1,40,50,'40-50',1),
+(6,1,40,60,'40-60',1),
+(7,1,45,45,'45-45',1),
+(8,1,45,50,'45-50',1),
+(9,1,45,55,'45-55',1),
+(10,1,55,60,'55-60',1),
+(11,2,31,31,'31-31',1),
+(12,2,31,35,'31-35',1),
+(13,2,31,40,'31-40',1),
+(14,2,31,45,'31-45',1),
+(15,2,31,50,'31-50',1),
+(16,2,31,55,'31-55',1),
+(17,2,31,60,'31-60',1),
+(18,2,31,70,'31-70',1),
+(19,2,35,35,'35-35',1),
+(20,2,35,40,'35-40',1),
+(21,2,35,45,'35-45',1),
+(22,2,35,50,'35-50',1),
+(23,2,35,55,'35-55',1),
+(24,2,40,40,'40-40',1),
+(25,2,40,45,'40-45',1),
+(26,2,40,50,'40-50',1),
+(27,2,40,55,'40-55',1),
+(28,2,40,60,'40-60',1),
+(29,2,40,70,'40-70',1),
+(30,2,45,45,'45-45',1),
+(31,2,45,50,'45-50',1),
+(32,2,45,60,'45-60',1),
+(33,2,45,55,'45-55',1),
+(34,2,50,50,'50-50',1),
+(35,2,50,60,'50-60',1),
+(36,2,50,70,'50-70',1);
+
+GO
 
 CREATE TABLE dbo.ClienteCilindro
 (
@@ -839,6 +1109,15 @@ CREATE TABLE dbo.SoporteMarcoConfig
 GO
 
 
+INSERT INTO dbo.SoporteMarcoConfig (Id, Nombre, Activa)
+VALUES 
+(1, 'Centro de mecanizado', 1),
+(2, 'Plantilla', 1),
+(3, 'Banco de marcos', 1);
+
+GO
+
+
 CREATE TABLE dbo.ClienteConfiguracionMaquinas
 (
     ClienteId INT NOT NULL,
@@ -869,274 +1148,18 @@ CREATE TABLE dbo.ConfiguracionAplicacion
 	Idioma NVARCHAR(10) NOT NULL
 );
 
-INSERT INTO dbo.Usuario (Id, Nombre, EsDistribuidor, Activa)
-VALUES 
-(1, 'Sergio González', 0, 1),
-(2, 'Agustín Canepa', 0, 1),
-(3, 'Albert Blas', 0, 1),
-(4, 'Antonio Barba', 0, 1),
-(5, 'Miguel Pereira', 0, 1),
-(6, 'Rotofer', 1, 1),
-(7, 'Alcantarilla', 1, 1),
-(8, 'Ignacio', 1, 1),
-(9, 'AluYPvc', 1, 1),
-(10, 'Comalfer', 1, 1),
-(11, 'Sumpai', 1, 1),
-(12, 'Fernasol', 1, 1),
-(13, 'Mapeal', 1, 1),
-(14, 'Centro del Accesorio', 1, 1);
-
-INSERT INTO dbo.PerfilTipo (Id, Nombre, NombreAbreviado, Activa)
-VALUES 
-(1, 'Alumínio', 'ALU', 1),
-(2, 'PVC', 'PVC', 1),
-(3, 'Madeira', 'MAD', 1),
-(4, 'Alumínio-PVC', 'PAX', 1);
-
-
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(1, 'Aluplast', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(2, 'Cortizo', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(3, 'Deceuninck', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(4, 'Dimex', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(5, 'Gealan', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(6, 'Kommerling', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(7, 'Kbe', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(8, 'Profilplast', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(9, 'Refine', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(10, 'Rehau', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(11, 'Schuco', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(12, 'Salamander', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(13, 'Veka', 2, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(14, 'Indalsu', 1, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(15, 'Itesal', 1, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(16, 'Centroalum', 1, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(17, 'Strugal', 1, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(18, 'Cortizo', 1, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(19, 'Aluvision', 1, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(20, 'Alas Ibérica', 1, 1);
-INSERT INTO Perfil (Id, Nombre, PerfilTipoId, Activa) VALUES(21, 'Alueuropa', 1, 1);
-
-
-INSERT INTO dbo.[Software] (Id, Nombre, Activa)
-VALUES 
-(1, 'PrefSuite', 1),
-(2, 'Hetmo', 1),
-(3, 'Gesfacil', 1),
-(4, 'WinPerfil', 1),
-(5, 'Sicar', 1),
-(6, 'EmmegiSoft', 1),
-(7, 'Orgadata', 1),
-(8, 'Opera', 1);
-
-INSERT INTO dbo.SoporteCompas (Id, Nombre, Activa, PerfilTipoId)
-VALUES 
-(1, '6/130', 1, 2),
-(2, '6/150', 1, 2),
-(3, '3/130', 1, 1);
-
-INSERT INTO dbo.MaquinaTipos (Id, Descripcion, Mecaniza, Automatica, Activa)
-VALUES 
-(1, 'Serra de corte', 0, 0, 1),
-(2, 'Centro de maquinagem (Macros)', 1, 0, 1),
-(3, 'Centro de maquinagem (3D)', 1, 0, 1),
-(4, 'Mesa de ferragens', 0, 0, 1),
-(5, 'Mesa de ferragens (Autómatica)', 0, 1, 1),
-(6, 'Máquina de soldar', 0, 0, 1),
-(7, 'Robôs para fechaduras', 0, 0, 1);
-
-INSERT INTO dbo.MaquinaMarcas (Id, Nombre, Modelo, Activa)
-VALUES 
-(1, 'Schirmer', NULL, 1),
-(2, 'Urban', NULL, 1),
-(3, 'Yilmaz', NULL, 1),
-(4, 'Kaban', NULL, 1),
-(5, 'Thorwersten', NULL, 1),
-(6, 'Graf', NULL, 1),
-(7, 'Mecal', NULL, 1),
-(8, 'Pertici', NULL, 1),
-(9, 'Fom', NULL, 1),
-(10, 'Rotox', NULL, 1),
-(11, 'Murat', NULL, 1),
-(12, 'Inter MH', NULL, 1);
-
-
-INSERT INTO dbo.MaquinaMantenimiento (Id, Nombre, Activa)
-VALUES 
-(1, 'Disomac', 1),
-(2, 'Mecal', 1),
-(3, 'Vema', 1),
-(4, 'Vraia', 1),
-(5, 'Maquintec', 1),
-(6, 'Daser', 1),
-(7, 'Haffner', 1);
-
-INSERT INTO dbo.Aperturas (Nombre)
-VALUES 
-('Practicable'),
-('Oscilobatente'),
-('Corrediças'),
-('Osciloparalela'),
-('Elevável'),
-('Dobrável');
-
-
-INSERT INTO dbo.ModeloTipo (Nombre)
-VALUES 
-('Janela'),
-('Varanda'),
-('Porta')
-
-INSERT INTO dbo.SeguridadVentana (Id, Nombre, Activa)
-VALUES 
-(1, 'Básica', 1),
-(2, 'RC1', 0),
-(3, 'RC2', 1)
-
-
-INSERT INTO dbo.CremonaPasivaVentanaTipos (Id, Nombre, Activa)
-VALUES 
-(1, 'Cremona', 1),
-(2, 'Perimetral', 1),
-(3, 'Click y pasador', 1),
-(4, 'Falso compás', 1)
-
-INSERT INTO dbo.Manilla (Id, Nombre, Activa)
-VALUES 
-(1, 'Rotoline', 1),
-(2, 'Rotoswing', 1),
-(3, 'Rotosamba', 1),
-(4, 'Rotoline Secustik', 1),
-(5, 'Rotoswing Secustik', 1),
-(6, 'Rotosamba Secustik', 1);
-
-
-INSERT INTO dbo.Agujas (Id, Nombre, Activa)
-VALUES 
-(1, '8', 1),
-(2, '15', 1),
-(3, '25', 1),
-(4, '30', 1),
-(5, '35', 1),
-(6, '40', 1),
-(7, '45', 1),
-(8, '50', 1),
-(9, '55', 1);
-
-
-INSERT INTO dbo.AgujasCorredera (Id, Nombre, Activa)
-VALUES 
-(1, '7', 1),
-(2, '17', 1);
-
-INSERT INTO dbo.AgujasDefinicion (Id, Nombre)
-VALUES 
-(1, 'Todos'),
-(2, 'Por perfil');
-
-
-INSERT INTO dbo.AgujasModelo (Id, Nombre)
-VALUES 
-(1, 'Varanda'),
-(2, 'Porta lateral'),
-(3, 'Porta'),
-(4, 'Janela');
-
-
-INSERT INTO dbo.BisagraPuerta (Id, Nombre, Activa)
-VALUES 
-(1, 'SOLID B', 1),
-(2, 'PS27', 1),
-(3, 'PS23', 1),
-(4, 'PB10', 1),
-(5, '150P', 0),
-(6, 'SCR', 1),
-(7, 'SIN BISAGRAS', 1);
-
-
-INSERT INTO dbo.CerraduraPuertaSec (Id, Nombre, Activa)
-VALUES 
-(1, 'Acc. Manilla', 1),
-(2, 'Acc. Lâmpada', 1);
-
-
-INSERT INTO dbo.CerraduraPuerta (Id, Nombre, Activa)
-VALUES 
-(1, '1 punto', 1),
-(2, 'Bulones', 1),
-(3, 'Pestillos', 1),
-(4, 'Tandeo', 1),
-(5, 'A700', 1),
-(6, 'Combinada', 1),
-(7, 'Eneo A', 1),
-(8, 'E700', 1),
-(9, 'Eneo CC', 1),
-(10, 'Combinada 5P', 1);
-
- 
-INSERT INTO dbo.CilindroTipo (Id, Nombre, Activa)
-VALUES 
-(1, 'Segurança', 1),
-(2, 'Serreta', 1);
-
-
-INSERT INTO dbo.Cilindro (Id, CilindroTipoId, MedidaInterior, MedidaExterior, Nomenclatura, Activa)
-VALUES 
-(1,1,35,65,'35-65',1),
-(2,1,35,75,'35-75',1),
-(3,1,40,40,'40-40',1),
-(4,1,40,45,'40-45',1),
-(5,1,40,50,'40-50',1),
-(6,1,40,60,'40-60',1),
-(7,1,45,45,'45-45',1),
-(8,1,45,50,'45-50',1),
-(9,1,45,55,'45-55',1),
-(10,1,55,60,'55-60',1),
-(11,2,31,31,'31-31',1),
-(12,2,31,35,'31-35',1),
-(13,2,31,40,'31-40',1),
-(14,2,31,45,'31-45',1),
-(15,2,31,50,'31-50',1),
-(16,2,31,55,'31-55',1),
-(17,2,31,60,'31-60',1),
-(18,2,31,70,'31-70',1),
-(19,2,35,35,'35-35',1),
-(20,2,35,40,'35-40',1),
-(21,2,35,45,'35-45',1),
-(22,2,35,50,'35-50',1),
-(23,2,35,55,'35-55',1),
-(24,2,40,40,'40-40',1),
-(25,2,40,45,'40-45',1),
-(26,2,40,50,'40-50',1),
-(27,2,40,55,'40-55',1),
-(28,2,40,60,'40-60',1),
-(29,2,40,70,'40-70',1),
-(30,2,45,45,'45-45',1),
-(31,2,45,50,'45-50',1),
-(32,2,45,60,'45-60',1),
-(33,2,45,55,'45-55',1),
-(34,2,50,50,'50-50',1),
-(35,2,50,60,'50-60',1),
-(36,2,50,70,'50-70',1);
-
-
-INSERT INTO dbo.SoporteMarcoConfig (Id, Nombre, Activa)
-VALUES 
-(1, 'Centro de maquinagem', 1),
-(2, 'Modelo', 1),
-(3, 'Banco de marcos', 1);
-
 INSERT INTO dbo.ConfiguracionAplicacion
-VALUES (1, '1.0', 'Distributor', 6, 'PT');
-
+VALUES (1, '1.0', 'Internal', NULL, 'ES');
 
 
 
 -- ---------------------------------------------------------------------
 -- Auditoría de acciones + cuentas de acceso a la aplicación (login).
--- Mismo esquema que CreateDb.txt (ES): CuentaUsuario y AuditoriaAccion no
--- son catálogos de texto por distribuidor, así que no hace falta traducir
--- nada aquí salvo, en su caso, el NombreMostrado de cada cuenta que se cree
--- desde la app.
+-- CuentaUsuario es independiente de dbo.Usuario (que es el maestro de
+-- "Responsable" asignado a un Cliente, sin contraseña ni rol): no hay que
+-- confundirlos. Ambas tablas usan IDENTITY (como dbo.Cliente), no el Id
+-- manual de los maestros de Mantenimiento, porque no son catálogos
+-- cerrados sembrados igual en todas las bases de datos.
 -- ---------------------------------------------------------------------
 
 CREATE TABLE dbo.CuentaUsuario
@@ -1149,6 +1172,12 @@ CREATE TABLE dbo.CuentaUsuario
     Activa BIT NOT NULL DEFAULT (1),
     DebeCambiarPassword BIT NOT NULL DEFAULT (1),
     FechaCreacion DATETIME2 NOT NULL DEFAULT (SYSUTCDATETIME()),
+    -- 0 (por defecto): acceso a todos los módulos que ya permita la edición
+    -- de la app (Internal/Distributor/Debug), igual que antes de existir
+    -- esta columna. 1: el acceso se limita exactamente a los módulos que
+    -- tenga esta cuenta en dbo.CuentaUsuarioPermiso (puede ser ninguno). No
+    -- se aplica a Rol='Administrador', que siempre tiene acceso a todo.
+    RestringirModulos BIT NOT NULL DEFAULT (0),
 
     CONSTRAINT PK_CuentaUsuario
         PRIMARY KEY CLUSTERED (Id),
@@ -1158,10 +1187,12 @@ CREATE TABLE dbo.CuentaUsuario
 );
 GO
 
--- Cuenta Administrador inicial. Login: admin / Contraseña inicial:
--- Roto2026! -- DebeCambiarPassword=1 obliga a cambiarla en el primer inicio
--- de sesión. Mismo hash V3 de PasswordHasher<CuentaUsuario> que en
--- CreateDb.txt (ES): es la credencial de arranque, no depende del idioma.
+-- Cuenta Administrador inicial para poder entrar por primera vez tras crear
+-- la base de datos. Login: admin / Contraseña inicial: Roto2026!
+-- DebeCambiarPassword=1 obliga a cambiarla en el primer inicio de sesión.
+-- El hash ya está en el formato V3 de
+-- Microsoft.AspNetCore.Identity.PasswordHasher<CuentaUsuario> que usará la
+-- app para validarlo (PBKDF2-HMACSHA256, 100.000 iteraciones, sal propia).
 INSERT INTO dbo.CuentaUsuario (Login, NombreMostrado, PasswordHash, Rol, Activa, DebeCambiarPassword, FechaCreacion)
 VALUES ('admin', 'Administrador', 'AQAAAAEAAYagAAAAENG4EB1HCiYMH8HnQ6stwaY7oHPrzVA1b4BZfb7LLla1TMtIIwhUK/ThAp+brhp1xw==', 'Administrador', 1, 1, SYSUTCDATETIME());
 GO
@@ -1184,5 +1215,30 @@ CREATE TABLE dbo.AuditoriaAccion
         FOREIGN KEY (CuentaUsuarioId)
         REFERENCES dbo.CuentaUsuario(Id)
         ON DELETE SET NULL
+);
+GO
+
+-- Módulos concedidos a una cuenta Usuario cuando RestringirModulos = 1 (ver
+-- columna en dbo.CuentaUsuario más arriba). Solo tiene sentido para Rol =
+-- 'Usuario': una cuenta Administrador siempre tiene acceso a todo y no usa
+-- esta tabla. Modulo guarda el nombre del enum Enums.Modulo tal cual (código
+-- interno, no texto a traducir), igual que Rol o Accion en las tablas
+-- anteriores.
+CREATE TABLE dbo.CuentaUsuarioPermiso
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    CuentaUsuarioId INT NOT NULL,
+    Modulo NVARCHAR(30) NOT NULL,
+
+    CONSTRAINT PK_CuentaUsuarioPermiso
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_CuentaUsuarioPermiso_CuentaUsuario
+        FOREIGN KEY (CuentaUsuarioId)
+        REFERENCES dbo.CuentaUsuario(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT UQ_CuentaUsuarioPermiso_Cuenta_Modulo
+        UNIQUE (CuentaUsuarioId, Modulo)
 );
 GO

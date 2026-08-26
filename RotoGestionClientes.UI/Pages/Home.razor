@@ -20,6 +20,7 @@
 @inject VersionDatosState VersionDatosState
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 
 <div class="rgc-home">
@@ -58,51 +59,57 @@
     <MudText Typo="Typo.h6" Class="mt-6 mb-3">@MenuTextos.AccesosRapidos</MudText>
 
     <MudGrid Spacing="3">
-        <MudItem xs="12" sm="6" md="4" lg="3">
-            <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-grouped pa-4">
-                <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/clientes"))">
-                    <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Size="Size.Large" />
-                    <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Clientes</MudText>
-                </div>
-                <MudStack Row="true" Justify="Justify.Center" Spacing="1" Class="mt-2">
-                    <MudTooltip Text="@MenuTextos.NuevoCliente">
-                        <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Color="Color.Primary"
-                                       OnClick="@(() => NavigationManager.NavigateTo("/clientes/nuevo"))" />
-                    </MudTooltip>
-                    <MudTooltip Text="@MenuTextos.ImportarCliente">
-                        <MudIconButton Icon="@Icons.Material.Filled.FileDownload" Size="Size.Small" Color="Color.Primary"
-                                       OnClick="AbrirImportacionAsync" />
-                    </MudTooltip>
-                    <MudTooltip Text="@MenuTextos.ExportarClientes">
-                        <MudIconButton Icon="@Icons.Material.Filled.FileUpload" Size="Size.Small" Color="Color.Primary"
-                                       OnClick="AbrirExportacionMultipleAsync" />
-                    </MudTooltip>
-                </MudStack>
-            </MudPaper>
-        </MudItem>
+        @if (_mostrarClientes)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-grouped pa-4">
+                    <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/clientes"))">
+                        <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Size="Size.Large" />
+                        <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Clientes</MudText>
+                    </div>
+                    <MudStack Row="true" Justify="Justify.Center" Spacing="1" Class="mt-2">
+                        <MudTooltip Text="@MenuTextos.NuevoCliente">
+                            <MudIconButton Icon="@Icons.Material.Filled.Add" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo("/clientes/nuevo"))" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.ImportarCliente">
+                            <MudIconButton Icon="@Icons.Material.Filled.FileDownload" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="AbrirImportacionAsync" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.ExportarClientes">
+                            <MudIconButton Icon="@Icons.Material.Filled.FileUpload" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="AbrirExportacionMultipleAsync" />
+                        </MudTooltip>
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        }
 
-        <MudItem xs="12" sm="6" md="4" lg="3">
-            <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-grouped pa-4">
-                <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/informes"))">
-                    <MudIcon Icon="@Icons.Material.Filled.Assessment" Color="Color.Primary" Size="Size.Large" />
-                    <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Informes</MudText>
-                </div>
-                <MudStack Row="true" Justify="Justify.Center" Spacing="1" Class="mt-2">
-                    <MudTooltip Text="@MenuTextos.AccesoTipoPerfilAluminio">
-                        <MudIconButton Icon="@Icons.Material.Filled.Straighten" Size="Size.Small" Color="Color.Primary"
-                                       OnClick="@(() => NavigationManager.NavigateTo($"/informes?tipoPerfilId={PerfilTipoIdAluminio}"))" />
-                    </MudTooltip>
-                    <MudTooltip Text="@MenuTextos.AccesoTipoPerfilPVC">
-                        <MudIconButton Icon="@Icons.Material.Filled.Straighten" Size="Size.Small" Color="Color.Primary"
-                                       OnClick="@(() => NavigationManager.NavigateTo($"/informes?tipoPerfilId={PerfilTipoIdPvc}"))" />
-                    </MudTooltip>
-                    <MudTooltip Text="@MenuTextos.AccesoMaquinasMesaHerraje">
-                        <MudIconButton Icon="@Icons.Material.Filled.Category" Size="Size.Small" Color="Color.Primary"
-                                       OnClick="@(() => NavigationManager.NavigateTo($"/informes?maquinaId={MaquinaTipoIdMesaHerraje}"))" />
-                    </MudTooltip>
-                </MudStack>
-            </MudPaper>
-        </MudItem>
+        @if (_mostrarInformes)
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudPaper Outlined="true" Class="rgc-home-access rgc-home-access-grouped pa-4">
+                    <div class="rgc-home-access-main" @onclick="@(() => NavigationManager.NavigateTo("/informes"))">
+                        <MudIcon Icon="@Icons.Material.Filled.Assessment" Color="Color.Primary" Size="Size.Large" />
+                        <MudText Typo="Typo.subtitle1" Class="mt-2">@MenuTextos.Informes</MudText>
+                    </div>
+                    <MudStack Row="true" Justify="Justify.Center" Spacing="1" Class="mt-2">
+                        <MudTooltip Text="@MenuTextos.AccesoTipoPerfilAluminio">
+                            <MudIconButton Icon="@Icons.Material.Filled.Straighten" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo($"/informes?tipoPerfilId={PerfilTipoIdAluminio}"))" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.AccesoTipoPerfilPVC">
+                            <MudIconButton Icon="@Icons.Material.Filled.Straighten" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo($"/informes?tipoPerfilId={PerfilTipoIdPvc}"))" />
+                        </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.AccesoMaquinasMesaHerraje">
+                            <MudIconButton Icon="@Icons.Material.Filled.Category" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo($"/informes?maquinaId={MaquinaTipoIdMesaHerraje}"))" />
+                        </MudTooltip>
+                    </MudStack>
+                </MudPaper>
+            </MudItem>
+        }
 
         @if (_mostrarMantenimiento)
         {
@@ -144,7 +151,9 @@
 
 @code {
     private int? _totalClientes;
+    private bool _mostrarClientes;
     private bool _mostrarMantenimiento;
+    private bool _mostrarInformes;
     private List<AccesoRapido> _accesos = new();
 
     private sealed record AccesoRapido(string Label, string Icon, bool Visible, Action OnClick);
@@ -171,7 +180,10 @@
         }
 
         // Misma regla de visibilidad que Main.SetVisibilidadModoAplicacion()
-        // en la app WinForms actual / Layout/MainLayout.razor.
+        // en la app WinForms actual / Layout/MainLayout.razor, combinada con
+        // los permisos por módulo de la cuenta (SesionState.TieneAccesoModulo)
+        // -- mismo criterio que MainLayout.razor para que el Dashboard nunca
+        // muestre un acceso rápido a algo que el menú lateral ya oculta.
         bool mostrarMantenimiento;
         bool mostrarCrearActualizacion;
         bool mostrarActualizarDatos;
@@ -195,7 +207,11 @@
                 break;
         }
 
-        _mostrarMantenimiento = mostrarMantenimiento;
+        _mostrarClientes = SesionState.TieneAccesoModulo(Modulo.Clientes);
+        _mostrarInformes = SesionState.TieneAccesoModulo(Modulo.Informes);
+        _mostrarMantenimiento = mostrarMantenimiento && SesionState.TieneAccesoModulo(Modulo.Mantenimiento);
+        mostrarCrearActualizacion = mostrarCrearActualizacion && SesionState.TieneAccesoModulo(Modulo.CrearActualizacion);
+        mostrarActualizarDatos = mostrarActualizarDatos && SesionState.TieneAccesoModulo(Modulo.ActualizarDatos);
 
         // Clientes, Informes y Mantenimiento NO están en esta lista: se
         // dibujan aparte, como tarjetas "agrupadas" con sus propios accesos

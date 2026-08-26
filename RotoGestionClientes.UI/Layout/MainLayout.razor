@@ -5,6 +5,7 @@
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
 @inject VersionDatosState VersionDatosState
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 
 <MudThemeProvider Theme="RgcTheme.Theme" />
@@ -12,46 +13,59 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-<MudLayout>
-    <MudAppBar Elevation="1">
-        <MudImage Src="_content/RotoGestionClientes.UI/images/logo-main.png" Height="34" ObjectFit="ObjectFit.Contain" Class="mr-4" />
-        <MudText Typo="Typo.h6">@MenuTextos.MenuPrincipal</MudText>
-        <MudText Typo="Typo.caption" Class="mud-text-secondary ml-2 rgc-appbar-version">v@(AppHost.AppVersion)</MudText>
-        <MudSpacer />
-    </MudAppBar>
-
-    <MudDrawer Open="true" Elevation="0" Variant="DrawerVariant.Persistent" ClipMode="DrawerClipMode.Always">
-        <div class="rgc-nav-container">
-            <MudNavMenu Class="pa-2">
-                @foreach (var item in _menuItems.Where(i => i.Visible && !i.EsSalir))
-                {
-                    <MudNavLink Icon="@item.Icon" IconColor="Color.Primary" OnClick="@item.OnClick" Class="rgc-nav-link">
-                        @item.Label
-                    </MudNavLink>
-                }
-            </MudNavMenu>
-
+@if (!SesionState.EstaAutenticado)
+{
+    @* Ni @Body ni el Router se llegan a renderizar mientras no haya sesión:
+       no es solo ocultar el menú, es que ninguna página es alcanzable. *@
+    <Login />
+}
+else
+{
+    <MudLayout>
+        <MudAppBar Elevation="1">
+            <MudImage Src="_content/RotoGestionClientes.UI/images/logo-main.png" Height="34" ObjectFit="ObjectFit.Contain" Class="mr-4" />
+            <MudText Typo="Typo.h6">@MenuTextos.MenuPrincipal</MudText>
+            <MudText Typo="Typo.caption" Class="mud-text-secondary ml-2 rgc-appbar-version">v@(AppHost.AppVersion)</MudText>
             <MudSpacer />
+            <MudText Typo="Typo.body2" Class="mr-2">@SesionState.NombreMostrado</MudText>
+            <MudTooltip Text="@MenuTextos.CerrarSesion">
+                <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="CerrarSesion" />
+            </MudTooltip>
+        </MudAppBar>
 
-            @{
-                var salir = _menuItems.FirstOrDefault(i => i.EsSalir);
-            }
-            @if (salir is not null)
-            {
-                <MudDivider />
+        <MudDrawer Open="true" Elevation="0" Variant="DrawerVariant.Persistent" ClipMode="DrawerClipMode.Always">
+            <div class="rgc-nav-container">
                 <MudNavMenu Class="pa-2">
-                    <MudNavLink Icon="@salir.Icon" IconColor="Color.Error" OnClick="@salir.OnClick" Class="rgc-nav-link rgc-nav-link-salir">
-                        @salir.Label
-                    </MudNavLink>
+                    @foreach (var item in _menuItems.Where(i => i.Visible && !i.EsSalir))
+                    {
+                        <MudNavLink Icon="@item.Icon" IconColor="Color.Primary" OnClick="@item.OnClick" Class="rgc-nav-link">
+                            @item.Label
+                        </MudNavLink>
+                    }
                 </MudNavMenu>
-            }
-        </div>
-    </MudDrawer>
 
-    <MudMainContent>
-        @Body
-    </MudMainContent>
-</MudLayout>
+                <MudSpacer />
+
+                @{
+                    var salir = _menuItems.FirstOrDefault(i => i.EsSalir);
+                }
+                @if (salir is not null)
+                {
+                    <MudDivider />
+                    <MudNavMenu Class="pa-2">
+                        <MudNavLink Icon="@salir.Icon" IconColor="Color.Error" OnClick="@salir.OnClick" Class="rgc-nav-link rgc-nav-link-salir">
+                            @salir.Label
+                        </MudNavLink>
+                    </MudNavMenu>
+                }
+            </div>
+        </MudDrawer>
+
+        <MudMainContent>
+            @Body
+        </MudMainContent>
+    </MudLayout>
+}
 
 @code {
     private List<MenuItem> _menuItems = new();
@@ -60,12 +74,45 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // MainLayout no se reinstancia al navegar entre páginas, así que
-        // escuchamos VersionDatosState.Changed para refrescar la cabecera al
-        // instante cuando se guarda un maestro en Mantenimiento (ver
-        // MaestroEditDialog), sin depender de recargar la página.
+        // MainLayout no se reinstancia al navegar entre páginas ni al hacer
+        // login/logout, así que escuchamos ambos eventos para refrescar la
+        // cabecera/menú al instante: VersionDatosState cuando se guarda un
+        // maestro en Mantenimiento (ver MaestroEditDialog), SesionState
+        // cuando Login.razor concede acceso o al cerrar sesión.
         VersionDatosState.Changed += OnVersionDatosCambiada;
+        SesionState.Changed += OnSesionCambiada;
 
+        if (SesionState.EstaAutenticado)
+        {
+            await CargarMenuAsync();
+        }
+    }
+
+    private void OnSesionCambiada()
+    {
+        InvokeAsync(async () =>
+        {
+            if (SesionState.EstaAutenticado)
+            {
+                await CargarMenuAsync();
+            }
+            else
+            {
+                _menuItems = new();
+                // Que la próxima vez que entre alguien empiece en el
+                // Dashboard, no en la página en la que estaba quien acaba de
+                // cerrar sesión.
+                NavigationManager.NavigateTo("/");
+            }
+
+            StateHasChanged();
+        });
+    }
+
+    private void CerrarSesion() => SesionState.CerrarSesion();
+
+    private async Task CargarMenuAsync()
+    {
         await using var db = await DbFactory.CreateDbContextAsync();
 
         var config = await db.ConfiguracionAplicacion
@@ -81,7 +128,12 @@
         }
 
         // Misma regla de visibilidad que Main.SetVisibilidadModoAplicacion()
-        // en la app WinForms actual.
+        // en la app WinForms actual, combinada con los permisos por módulo
+        // de la cuenta (SesionState.TieneAccesoModulo -- ver
+        // CuentaUsuario.RestringirModulos): un módulo solo se muestra si la
+        // edición lo permite Y la cuenta tiene acceso a él. Esto es solo
+        // ocultar el enlace, no protección real: cada página vuelve a
+        // comprobar ambas cosas por su cuenta en OnInitializedAsync.
         bool mostrarMantenimiento;
         bool mostrarCrearActualizacion;
         bool mostrarActualizarDatos;
@@ -105,13 +157,25 @@
                 break;
         }
 
+        var mostrarClientes = SesionState.TieneAccesoModulo(Modulo.Clientes);
+        mostrarMantenimiento = mostrarMantenimiento && SesionState.TieneAccesoModulo(Modulo.Mantenimiento);
+        var mostrarInformes = SesionState.TieneAccesoModulo(Modulo.Informes);
+        mostrarCrearActualizacion = mostrarCrearActualizacion && SesionState.TieneAccesoModulo(Modulo.CrearActualizacion);
+        mostrarActualizarDatos = mostrarActualizarDatos && SesionState.TieneAccesoModulo(Modulo.ActualizarDatos);
+
         _menuItems =
         [
-            new MenuItem(MenuTextos.Clientes, Icons.Material.Filled.People, true, () => NavigationManager.NavigateTo("/clientes")),
+            new MenuItem(MenuTextos.Clientes, Icons.Material.Filled.People, mostrarClientes, () => NavigationManager.NavigateTo("/clientes")),
             new MenuItem(MenuTextos.Mantenimiento, Icons.Material.Filled.Build, mostrarMantenimiento, () => NavigationManager.NavigateTo("/mantenimiento")),
-            new MenuItem(MenuTextos.Informes, Icons.Material.Filled.Assessment, true, () => NavigationManager.NavigateTo("/informes")),
+            new MenuItem(MenuTextos.Informes, Icons.Material.Filled.Assessment, mostrarInformes, () => NavigationManager.NavigateTo("/informes")),
             new MenuItem(MenuTextos.CrearActualizacion, Icons.Material.Filled.CloudUpload, mostrarCrearActualizacion, () => NavigationManager.NavigateTo("/crear-actualizacion")),
             new MenuItem(MenuTextos.ActualizarDatos, Icons.Material.Filled.CloudDownload, mostrarActualizarDatos, () => NavigationManager.NavigateTo("/actualizar-datos")),
+            // Solo visibles para Administrador. Esto es solo ocultar el
+            // enlace, no protección real: tanto Pages/Auditoria.razor como
+            // Pages/CuentasUsuario.razor vuelven a comprobar el rol por su
+            // cuenta en OnInitializedAsync.
+            new MenuItem(MenuTextos.Auditoria, Icons.Material.Filled.History, SesionState.Rol == Rol.Administrador, () => NavigationManager.NavigateTo("/auditoria")),
+            new MenuItem(MenuTextos.CuentasUsuario, Icons.Material.Filled.SupervisorAccount, SesionState.Rol == Rol.Administrador, () => NavigationManager.NavigateTo("/cuentas")),
             new MenuItem(MenuTextos.Salir, Icons.Material.Filled.ExitToApp, true, AppHost.Exit, EsSalir: true),
         ];
     }
@@ -126,5 +190,6 @@
     public void Dispose()
     {
         VersionDatosState.Changed -= OnVersionDatosCambiada;
+        SesionState.Changed -= OnSesionCambiada;
     }
 }

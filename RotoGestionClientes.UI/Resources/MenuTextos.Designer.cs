@@ -412,5 +412,127 @@ namespace RotoGestionClientes.UI.Resources
         public static string Ninguno => ResourceManager.GetString("Ninguno", resourceCulture)!;
 
         public static string ObservacionesParalelas => ResourceManager.GetString("ObservacionesParalelas", resourceCulture)!;
+
+        public static string UsuarioLogin => ResourceManager.GetString("UsuarioLogin", resourceCulture)!;
+
+        public static string Contrasena => ResourceManager.GetString("Contrasena", resourceCulture)!;
+
+        public static string Entrar => ResourceManager.GetString("Entrar", resourceCulture)!;
+
+        public static string CerrarSesion => ResourceManager.GetString("CerrarSesion", resourceCulture)!;
+
+        public static string NuevaContrasena => ResourceManager.GetString("NuevaContrasena", resourceCulture)!;
+
+        public static string ConfirmarContrasena => ResourceManager.GetString("ConfirmarContrasena", resourceCulture)!;
+
+        public static string GuardarContrasena => ResourceManager.GetString("GuardarContrasena", resourceCulture)!;
+
+        public static string DebeCambiarPasswordTexto => ResourceManager.GetString("DebeCambiarPasswordTexto", resourceCulture)!;
+
+        public static string CredencialesIncompletas => ResourceManager.GetString("CredencialesIncompletas", resourceCulture)!;
+
+        public static string CredencialesIncorrectas => ResourceManager.GetString("CredencialesIncorrectas", resourceCulture)!;
+
+        public static string PasswordDemasiadoCorta => ResourceManager.GetString("PasswordDemasiadoCorta", resourceCulture)!;
+
+        public static string PasswordsNoCoinciden => ResourceManager.GetString("PasswordsNoCoinciden", resourceCulture)!;
+
+        public static string ErrorGenerico => ResourceManager.GetString("ErrorGenerico", resourceCulture)!;
+
+        public static string Auditoria => ResourceManager.GetString("Auditoria", resourceCulture)!;
+
+        public static string AccionCrear => ResourceManager.GetString("AccionCrear", resourceCulture)!;
+
+        public static string AccionModificar => ResourceManager.GetString("AccionModificar", resourceCulture)!;
+
+        public static string AccionEliminar => ResourceManager.GetString("AccionEliminar", resourceCulture)!;
+
+        public static string Entidad => ResourceManager.GetString("Entidad", resourceCulture)!;
+
+        public static string Accion => ResourceManager.GetString("Accion", resourceCulture)!;
+
+        public static string FechaHora => ResourceManager.GetString("FechaHora", resourceCulture)!;
+
+        public static string Detalle => ResourceManager.GetString("Detalle", resourceCulture)!;
+
+        public static string FechaDesde => ResourceManager.GetString("FechaDesde", resourceCulture)!;
+
+        public static string FechaHasta => ResourceManager.GetString("FechaHasta", resourceCulture)!;
+
+        public static string UsuarioFiltro => ResourceManager.GetString("UsuarioFiltro", resourceCulture)!;
+
+        public static string AuditoriaLimiteAviso => ResourceManager.GetString("AuditoriaLimiteAviso", resourceCulture)!;
+
+        public static string CuentasUsuario => ResourceManager.GetString("CuentasUsuario", resourceCulture)!;
+
+        public static string NuevaCuenta => ResourceManager.GetString("NuevaCuenta", resourceCulture)!;
+
+        public static string NombreMostrado => ResourceManager.GetString("NombreMostrado", resourceCulture)!;
+
+        public static string Rol => ResourceManager.GetString("Rol", resourceCulture)!;
+
+        public static string RolAdministrador => ResourceManager.GetString("RolAdministrador", resourceCulture)!;
+
+        public static string RolUsuario => ResourceManager.GetString("RolUsuario", resourceCulture)!;
+
+        public static string Estado => ResourceManager.GetString("Estado", resourceCulture)!;
+
+        public static string CuentaActiva => ResourceManager.GetString("CuentaActiva", resourceCulture)!;
+
+        public static string CuentaInactiva => ResourceManager.GetString("CuentaInactiva", resourceCulture)!;
+
+        public static string CuentaPropia => ResourceManager.GetString("CuentaPropia", resourceCulture)!;
+
+        public static string FechaCreacion => ResourceManager.GetString("FechaCreacion", resourceCulture)!;
+
+        public static string PendienteCambioPassword => ResourceManager.GetString("PendienteCambioPassword", resourceCulture)!;
+
+        public static string ResetearPassword => ResourceManager.GetString("ResetearPassword", resourceCulture)!;
+
+        public static string ResetearPasswordTexto => ResourceManager.GetString("ResetearPasswordTexto", resourceCulture)!;
+
+        public static string PasswordTemporal => ResourceManager.GetString("PasswordTemporal", resourceCulture)!;
+
+        public static string ConfirmarPasswordTemporal => ResourceManager.GetString("ConfirmarPasswordTemporal", resourceCulture)!;
+
+        public static string PasswordReseteada => ResourceManager.GetString("PasswordReseteada", resourceCulture)!;
+
+        public static string Activar => ResourceManager.GetString("Activar", resourceCulture)!;
+
+        public static string Desactivar => ResourceManager.GetString("Desactivar", resourceCulture)!;
+
+        public static string ActivarCuentaTitulo => ResourceManager.GetString("ActivarCuentaTitulo", resourceCulture)!;
+
+        public static string DesactivarCuentaTitulo => ResourceManager.GetString("DesactivarCuentaTitulo", resourceCulture)!;
+
+        public static string ConfirmarActivarCuenta => ResourceManager.GetString("ConfirmarActivarCuenta", resourceCulture)!;
+
+        public static string ConfirmarDesactivarCuenta => ResourceManager.GetString("ConfirmarDesactivarCuenta", resourceCulture)!;
+
+        public static string EliminarCuentaTitulo => ResourceManager.GetString("EliminarCuentaTitulo", resourceCulture)!;
+
+        public static string ConfirmarEliminarCuenta => ResourceManager.GetString("ConfirmarEliminarCuenta", resourceCulture)!;
+
+        public static string CuentaCreada => ResourceManager.GetString("CuentaCreada", resourceCulture)!;
+
+        public static string CuentaActualizada => ResourceManager.GetString("CuentaActualizada", resourceCulture)!;
+
+        public static string CuentaEliminada => ResourceManager.GetString("CuentaEliminada", resourceCulture)!;
+
+        public static string LoginObligatorio => ResourceManager.GetString("LoginObligatorio", resourceCulture)!;
+
+        public static string LoginYaExiste => ResourceManager.GetString("LoginYaExiste", resourceCulture)!;
+
+        public static string NoPuedesEliminarTuPropiaCuenta => ResourceManager.GetString("NoPuedesEliminarTuPropiaCuenta", resourceCulture)!;
+
+        public static string NoPuedesDesactivarTuPropiaCuenta => ResourceManager.GetString("NoPuedesDesactivarTuPropiaCuenta", resourceCulture)!;
+
+        public static string DebeHaberUnAdministrador => ResourceManager.GetString("DebeHaberUnAdministrador", resourceCulture)!;
+
+        public static string SinCuentas => ResourceManager.GetString("SinCuentas", resourceCulture)!;
+
+        public static string IniciarSesionTitulo => ResourceManager.GetString("IniciarSesionTitulo", resourceCulture)!;
+
+        public static string ModulosPermitidos => ResourceManager.GetString("ModulosPermitidos", resourceCulture)!;
     }
 }

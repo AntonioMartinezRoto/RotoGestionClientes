@@ -116,6 +116,41 @@ html, body {
     max-width: 420px;
 }
 
+/* Pages/Auditoria.razor: filtros de fecha/entidad de la tabla de auditoría,
+   junto con .rgc-search para el filtro de texto de usuario. */
+.rgc-auditoria-fecha {
+    min-width: 160px;
+}
+
+.rgc-auditoria-select {
+    min-width: 200px;
+}
+
+/* Layout/MainLayout.razor: pantalla de login (Pages/Login.razor), mostrada
+   en vez de todo el AppBar/Drawer mientras no hay sesión. A diferencia de
+   .rgc-home no hay AppBar que restar del alto: ocupa toda la ventana. */
+.rgc-login {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+    background: var(--mud-palette-background);
+}
+
+.rgc-login-card {
+    width: 100%;
+    max-width: 380px;
+}
+
+.rgc-login-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
 .rgc-clientes-table {
     overflow-x: auto;
 }

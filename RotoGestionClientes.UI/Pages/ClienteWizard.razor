@@ -7,6 +7,8 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
 @inject NavigationManager NavigationManager
+@inject AuditoriaService AuditoriaService
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 @using System.ComponentModel
 
@@ -139,6 +141,16 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Defensa además de la ocultación del menú/Dashboard (MainLayout.razor
+        // / Home.razor): sin esto, cualquiera podría llegar aquí navegando
+        // directamente a /clientes/nuevo o /clientes/editar/{id} aunque el
+        // enlace no se le muestre.
+        if (!SesionState.TieneAccesoModulo(Modulo.Clientes))
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
         _pasos =
         [
             MenuTextos.DatosGenerales,
@@ -582,6 +594,8 @@
                 AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.Puerta);
         }
 
+        AuditoriaService.Registrar(db, AuditoriaAccionTipo.Crear, "Cliente", cliente.Id, cliente.Nombre);
+
         await db.SaveChangesAsync();
     }
 
@@ -895,6 +909,8 @@
             if (_model.AgujaPuertaTipo == (int)AgujaMode.PorPerfil)
                 AgregarAgujasModeloPerfil(db, cliente.Id, (int)AgujasTipoModelo.Puerta);
         }
+
+        AuditoriaService.Registrar(db, AuditoriaAccionTipo.Modificar, "Cliente", cliente.Id, cliente.Nombre);
 
         await db.SaveChangesAsync();
     }

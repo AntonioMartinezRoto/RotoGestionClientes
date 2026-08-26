@@ -1,0 +1,357 @@
+@* Pantalla de gestión de cuentas de acceso (dbo.CuentaUsuario): alta, edición
+   (nombre mostrado, rol, activa/inactiva), reseteo de contraseña y baja.
+   Solo para Administrador -- mismo patrón de defensa en dos capas que
+   Pages/Auditoria.razor: MainLayout.razor solo oculta el enlace del menú a
+   quien no sea Administrador, así que esta página vuelve a comprobar el rol
+   ella misma en OnInitializedAsync y redirige al Dashboard si no corresponde.
+
+   Reglas de seguridad aplicadas también en CuentaUsuarioEditDialog.razor:
+   - Nadie puede eliminar ni desactivar su propia cuenta (evita quedarte
+     fuera de tu propia sesión sin querer).
+   - Siempre debe quedar al menos una cuenta Administrador activa: no se
+     puede eliminar, desactivar ni degradar a Usuario la última que quede. *@
+@page "/cuentas"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+@inject SesionState SesionState
+@inject AuditoriaService AuditoriaService
+@using Microsoft.EntityFrameworkCore
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4" Wrap="Wrap.Wrap" Spacing="4">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+            <MudTooltip Text="@MenuTextos.VolverMenu">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+            </MudTooltip>
+            <MudText Typo="Typo.h5">@MenuTextos.CuentasUsuario</MudText>
+        </MudStack>
+
+        @if (_autorizado)
+        {
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="AbrirNuevaCuentaAsync">
+                @MenuTextos.NuevaCuenta
+            </MudButton>
+        }
+    </MudStack>
+
+    @if (_autorizado)
+    {
+        <MudPaper Class="pa-4" Elevation="1">
+            <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-3" Wrap="Wrap.Wrap" Spacing="3">
+                <MudTextField T="string" Value="_filtro" ValueChanged="OnFiltroChanged" Immediate="true"
+                              Label="@MenuTextos.Buscar" Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                              Class="rgc-search" />
+                <MudText Typo="Typo.subtitle2" Class="mud-text-secondary">
+                    @MenuTextos.Total: @_cuentasFiltradas.Count
+                </MudText>
+            </MudStack>
+
+            @if (_cargando)
+            {
+                <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+            }
+            else
+            {
+                <MudTable Items="_cuentasFiltradas" Hover="true" Dense="true" Bordered="false" Striped="true">
+                    <HeaderContent>
+                        <MudTh>@MenuTextos.UsuarioLogin</MudTh>
+                        <MudTh>@MenuTextos.NombreMostrado</MudTh>
+                        <MudTh>@MenuTextos.Rol</MudTh>
+                        <MudTh>@MenuTextos.Estado</MudTh>
+                        <MudTh>@MenuTextos.FechaCreacion</MudTh>
+                        <MudTh Style="text-align:right">@MenuTextos.Acciones</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="@MenuTextos.UsuarioLogin">
+                            @context.Login
+                            @if (context.Id == SesionState.CuentaUsuarioId)
+                            {
+                                <span class="mud-text-secondary ml-1">@MenuTextos.CuentaPropia</span>
+                            }
+                            @if (context.DebeCambiarPassword)
+                            {
+                                <MudTooltip Text="@MenuTextos.PendienteCambioPassword">
+                                    <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Color="Color.Warning" Class="ml-1" />
+                                </MudTooltip>
+                            }
+                        </MudTd>
+                        <MudTd DataLabel="@MenuTextos.NombreMostrado">@context.NombreMostrado</MudTd>
+                        <MudTd DataLabel="@MenuTextos.Rol">
+                            <MudChip T="string" Size="Size.Small" Color="@(context.Rol == nameof(Rol.Administrador) ? Color.Primary : Color.Default)" Variant="Variant.Filled">
+                                @EtiquetaRol(context.Rol)
+                            </MudChip>
+                        </MudTd>
+                        <MudTd DataLabel="@MenuTextos.Estado">
+                            <MudChip T="string" Size="Size.Small" Color="@(context.Activa ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                @(context.Activa ? MenuTextos.CuentaActiva : MenuTextos.CuentaInactiva)
+                            </MudChip>
+                        </MudTd>
+                        <MudTd DataLabel="@MenuTextos.FechaCreacion">@context.FechaCreacion.ToLocalTime().ToString("dd/MM/yyyy")</MudTd>
+                        <MudTd DataLabel="@MenuTextos.Acciones" Style="text-align:right; white-space:nowrap">
+                            <MudTooltip Text="@MenuTextos.Editar">
+                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => AbrirEditarCuentaAsync(context))" />
+                            </MudTooltip>
+                            <MudTooltip Text="@MenuTextos.ResetearPassword">
+                                <MudIconButton Icon="@Icons.Material.Filled.VpnKey" Size="Size.Small" OnClick="@(() => AbrirResetearPasswordAsync(context))" />
+                            </MudTooltip>
+                            <MudTooltip Text="@(context.Activa ? MenuTextos.Desactivar : MenuTextos.Activar)">
+                                <MudIconButton Icon="@(context.Activa ? Icons.Material.Filled.Block : Icons.Material.Filled.CheckCircle)" Size="Size.Small"
+                                               Disabled="@(context.Id == SesionState.CuentaUsuarioId)"
+                                               OnClick="@(() => ToggleActivaAsync(context))" />
+                            </MudTooltip>
+                            <MudTooltip Text="@MenuTextos.Eliminar">
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small" Color="Color.Error"
+                                               Disabled="@(context.Id == SesionState.CuentaUsuarioId)"
+                                               OnClick="@(() => EliminarCuentaAsync(context))" />
+                            </MudTooltip>
+                        </MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudText Class="pa-4 mud-text-secondary">@MenuTextos.SinCuentas</MudText>
+                    </NoRecordsContent>
+                </MudTable>
+            }
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    private sealed class CuentaUsuarioGridItem
+    {
+        public int Id { get; set; }
+        public string Login { get; set; } = string.Empty;
+        public string NombreMostrado { get; set; } = string.Empty;
+        public string Rol { get; set; } = string.Empty;
+        public bool Activa { get; set; }
+        public bool DebeCambiarPassword { get; set; }
+        public DateTime FechaCreacion { get; set; }
+    }
+
+    private bool _autorizado;
+    private bool _cargando = true;
+    private string _filtro = string.Empty;
+    private List<CuentaUsuarioGridItem> _allCuentas = new();
+    private List<CuentaUsuarioGridItem> _cuentasFiltradas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Defensa además de la ocultación del menú (MainLayout.razor): sin
+        // esto, cualquiera podría llegar aquí navegando directamente a
+        // /cuentas aunque el enlace no se le muestre.
+        if (!SesionState.EstaAutenticado || SesionState.Rol != Rol.Administrador)
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        _autorizado = true;
+        await CargarCuentasAsync();
+    }
+
+    private async Task CargarCuentasAsync()
+    {
+        _cargando = true;
+        StateHasChanged();
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        // Proyección explícita para no traer PasswordHash a memoria del
+        // cliente (Blazor) sin necesidad: aquí nunca se muestra ni se usa.
+        _allCuentas = await db.CuentasUsuario
+            .AsNoTracking()
+            .OrderBy(c => c.Login)
+            .Select(c => new CuentaUsuarioGridItem
+            {
+                Id = c.Id,
+                Login = c.Login,
+                NombreMostrado = c.NombreMostrado,
+                Rol = c.Rol,
+                Activa = c.Activa,
+                DebeCambiarPassword = c.DebeCambiarPassword,
+                FechaCreacion = c.FechaCreacion,
+            })
+            .ToListAsync();
+
+        _cargando = false;
+        AplicarFiltro();
+    }
+
+    private void OnFiltroChanged(string value)
+    {
+        _filtro = value;
+        AplicarFiltro();
+    }
+
+    private void AplicarFiltro()
+    {
+        var filtro = _filtro.Trim();
+
+        _cuentasFiltradas = string.IsNullOrWhiteSpace(filtro)
+            ? _allCuentas
+            : _allCuentas
+                .Where(c => c.Login.Contains(filtro, StringComparison.OrdinalIgnoreCase)
+                         || c.NombreMostrado.Contains(filtro, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+    }
+
+    private static string EtiquetaRol(string valor) => valor switch
+    {
+        nameof(Rol.Administrador) => MenuTextos.RolAdministrador,
+        nameof(Rol.Usuario) => MenuTextos.RolUsuario,
+        _ => valor,
+    };
+
+    private async Task AbrirNuevaCuentaAsync()
+    {
+        var titulo = $"{MenuTextos.Nuevo} — {MenuTextos.CuentasUsuario}";
+        var parametros = new DialogParameters { ["Titulo"] = titulo };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<CuentaUsuarioEditDialog>(titulo, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+        {
+            await CargarCuentasAsync();
+        }
+    }
+
+    private async Task AbrirEditarCuentaAsync(CuentaUsuarioGridItem cuenta)
+    {
+        var titulo = $"{MenuTextos.Editar} — {MenuTextos.CuentasUsuario}";
+        var parametros = new DialogParameters
+        {
+            ["Titulo"] = titulo,
+            ["Id"] = cuenta.Id,
+        };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<CuentaUsuarioEditDialog>(titulo, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+        {
+            await CargarCuentasAsync();
+        }
+    }
+
+    private async Task AbrirResetearPasswordAsync(CuentaUsuarioGridItem cuenta)
+    {
+        var parametros = new DialogParameters
+        {
+            ["CuentaUsuarioId"] = cuenta.Id,
+            ["Login"] = cuenta.Login,
+        };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<CuentaUsuarioResetPasswordDialog>(MenuTextos.ResetearPassword, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+        {
+            await CargarCuentasAsync();
+        }
+    }
+
+    private async Task ToggleActivaAsync(CuentaUsuarioGridItem cuenta)
+    {
+        if (cuenta.Id == SesionState.CuentaUsuarioId)
+        {
+            Snackbar.Add(MenuTextos.NoPuedesDesactivarTuPropiaCuenta, Severity.Warning);
+            return;
+        }
+
+        var activar = !cuenta.Activa;
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var cuentaBd = await db.CuentasUsuario.FirstOrDefaultAsync(c => c.Id == cuenta.Id);
+        if (cuentaBd is null)
+        {
+            Snackbar.Add(MenuTextos.SinCuentas, Severity.Warning);
+            await CargarCuentasAsync();
+            return;
+        }
+
+        if (!activar && cuentaBd.Rol == nameof(Rol.Administrador) && await EsUltimoAdministradorActivoAsync(db, cuentaBd.Id))
+        {
+            Snackbar.Add(MenuTextos.DebeHaberUnAdministrador, Severity.Warning);
+            return;
+        }
+
+        bool? confirmado = await DialogService.ShowMessageBoxAsync(
+            activar ? MenuTextos.ActivarCuentaTitulo : MenuTextos.DesactivarCuentaTitulo,
+            $"{(activar ? MenuTextos.ConfirmarActivarCuenta : MenuTextos.ConfirmarDesactivarCuenta)} \"{cuentaBd.Login}\"?",
+            yesText: activar ? MenuTextos.Activar : MenuTextos.Desactivar,
+            cancelText: MenuTextos.Cancelar);
+
+        if (confirmado != true)
+            return;
+
+        cuentaBd.Activa = activar;
+
+        AuditoriaService.Registrar(db, AuditoriaAccionTipo.Modificar, "CuentaUsuario", cuentaBd.Id, $"{cuentaBd.Login} — {(activar ? MenuTextos.Activar : MenuTextos.Desactivar)}");
+        await db.SaveChangesAsync();
+
+        await CargarCuentasAsync();
+    }
+
+    private async Task EliminarCuentaAsync(CuentaUsuarioGridItem cuenta)
+    {
+        if (cuenta.Id == SesionState.CuentaUsuarioId)
+        {
+            Snackbar.Add(MenuTextos.NoPuedesEliminarTuPropiaCuenta, Severity.Warning);
+            return;
+        }
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var cuentaBd = await db.CuentasUsuario.FirstOrDefaultAsync(c => c.Id == cuenta.Id);
+        if (cuentaBd is null)
+        {
+            await CargarCuentasAsync();
+            return;
+        }
+
+        if (cuentaBd.Rol == nameof(Rol.Administrador) && await EsUltimoAdministradorActivoAsync(db, cuentaBd.Id))
+        {
+            Snackbar.Add(MenuTextos.DebeHaberUnAdministrador, Severity.Warning);
+            return;
+        }
+
+        bool? confirmado = await DialogService.ShowMessageBoxAsync(
+            MenuTextos.EliminarCuentaTitulo,
+            $"{MenuTextos.ConfirmarEliminarCuenta} \"{cuentaBd.Login}\"?",
+            yesText: MenuTextos.Eliminar,
+            cancelText: MenuTextos.Cancelar);
+
+        if (confirmado != true)
+            return;
+
+        AuditoriaService.Registrar(db, AuditoriaAccionTipo.Eliminar, "CuentaUsuario", cuentaBd.Id, cuentaBd.Login);
+
+        db.CuentasUsuario.Remove(cuentaBd);
+        await db.SaveChangesAsync();
+
+        Snackbar.Add(MenuTextos.CuentaEliminada, Severity.Success, config => { config.SnackbarVariant = Variant.Filled; });
+
+        await CargarCuentasAsync();
+    }
+
+    // Comprueba si, quitando la cuenta cuentaIdExcluir de la ecuación (porque
+    // se va a eliminar, desactivar o dejar de ser Administrador), quedaría
+    // alguna otra cuenta Administrador activa. Se usa tanto aquí como en
+    // CuentaUsuarioEditDialog.razor para no dejar nunca la aplicación sin
+    // ningún Administrador que pueda gestionar cuentas.
+    private static async Task<bool> EsUltimoAdministradorActivoAsync(ApplicationDbContext db, int cuentaIdExcluir)
+    {
+        var quedanOtrosAdmins = await db.CuentasUsuario
+            .AnyAsync(c => c.Id != cuentaIdExcluir && c.Rol == nameof(Rol.Administrador) && c.Activa);
+        return !quedanOtrosAdmins;
+    }
+
+    private void VolverMenu() => NavigationManager.NavigateTo("/");
+}

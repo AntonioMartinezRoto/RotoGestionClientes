@@ -26,6 +26,14 @@
          por debajo de un umbral, o iText, que exige AGPL o licencia
          comercial de pago). -->
     <PackageReference Include="PdfSharpCore" Version="1.3.67" />
+    <!-- PasswordHasher<TUser> para las cuentas de acceso (CuentaUsuario):
+         hash PBKDF2-HMACSHA256 con sal por cuenta, sin arrastrar todo
+         ASP.NET Core Identity (EF/Roles/etc.), que sería innecesario en una
+         app de escritorio de un único usuario por sesión. Se usará en la
+         pantalla de login y en la futura gestión de cuentas; el Id del
+         Administrador inicial ya sembrado en CreateDb.txt/CreateDb-PT.txt
+         se generó con este mismo formato (V3). -->
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" Version="10.0.3" />
   </ItemGroup>
 
   <ItemGroup>

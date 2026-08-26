@@ -29,6 +29,7 @@
 @inject NavigationManager NavigationManager
 @inject ISnackbar Snackbar
 @inject IJSRuntime JsRuntime
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.JSInterop
 @using static RotoGestionClientes.Enums
@@ -488,6 +489,16 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Defensa además de la ocultación del menú/Dashboard (MainLayout.razor
+        // / Home.razor): sin esto, cualquiera podría llegar aquí navegando
+        // directamente a /clientes/resumen/{id} aunque el enlace no se le
+        // muestre.
+        if (!SesionState.TieneAccesoModulo(Modulo.Clientes))
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
         await using var db = await DbFactory.CreateDbContextAsync();
 
         var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();

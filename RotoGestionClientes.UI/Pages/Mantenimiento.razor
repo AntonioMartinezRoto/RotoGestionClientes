@@ -12,6 +12,7 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
@@ -121,6 +122,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Defensa además de la ocultación del menú/Dashboard (MainLayout.razor
+        // / Home.razor): sin esto, cualquiera podría llegar aquí navegando
+        // directamente a /mantenimiento aunque el enlace no se le muestre.
+        if (!SesionState.TieneAccesoModulo(Modulo.Mantenimiento))
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
         if (!string.IsNullOrEmpty(PresetTabla) && Enum.TryParse<MaestroTipo>(PresetTabla, out var tipo))
         {
             _tablaActual = tipo;

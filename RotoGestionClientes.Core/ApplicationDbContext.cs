@@ -55,6 +55,9 @@ namespace RotoGestionClientes
         public DbSet<ClienteConfiguracionMaquinas> ClienteConfiguracionMaquinas { get; set; } = null!;
         public DbSet<ConfiguracionAplicacion> ConfiguracionAplicacion { get; set; } = null!;
         public DbSet<Usuario> Usuarios { get; set; } = null!;
+        public DbSet<CuentaUsuario> CuentasUsuario { get; set; } = null!;
+        public DbSet<AuditoriaAccion> AuditoriaAcciones { get; set; } = null!;
+        public DbSet<CuentaUsuarioPermiso> CuentaUsuarioPermisos { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -837,6 +840,94 @@ namespace RotoGestionClientes
 
                 entity.Property(e => e.Activa)
                       .IsRequired();
+            });
+            modelBuilder.Entity<CuentaUsuario>(entity =>
+            {
+                entity.ToTable("CuentaUsuario", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Login)
+                      .IsRequired();
+                entity.HasIndex(e => e.Login)
+                      .IsUnique();
+
+                entity.Property(e => e.NombreMostrado)
+                      .IsRequired();
+
+                entity.Property(e => e.PasswordHash)
+                      .IsRequired();
+
+                entity.Property(e => e.Rol)
+                      .IsRequired();
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
+
+                entity.Property(e => e.DebeCambiarPassword)
+                      .IsRequired();
+
+                entity.Property(e => e.FechaCreacion)
+                      .IsRequired();
+
+                entity.Property(e => e.RestringirModulos)
+                      .IsRequired();
+            });
+            modelBuilder.Entity<AuditoriaAccion>(entity =>
+            {
+                entity.ToTable("AuditoriaAccion", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.FechaHora)
+                      .IsRequired();
+
+                entity.Property(e => e.UsuarioNombre)
+                      .IsRequired();
+
+                entity.Property(e => e.Entidad)
+                      .IsRequired();
+
+                entity.Property(e => e.Accion)
+                      .IsRequired();
+
+                entity.Property(e => e.Detalle);
+
+                // Sin cascada: borrar una cuenta no debe borrar ni bloquear
+                // su histórico de auditoría (ver comentario en el modelo).
+                entity.HasOne(e => e.CuentaUsuario)
+                      .WithMany(p => p.AuditoriaAcciones)
+                      .HasForeignKey(e => e.CuentaUsuarioId)
+                      .OnDelete(DeleteBehavior.SetNull);
+            });
+            modelBuilder.Entity<CuentaUsuarioPermiso>(entity =>
+            {
+                entity.ToTable("CuentaUsuarioPermiso", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Id)
+                      .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Modulo)
+                      .IsRequired();
+
+                // Con cascada, a diferencia de AuditoriaAccion: al eliminar
+                // una cuenta (CuentasUsuario.razor) no tiene sentido dejar
+                // huérfanas sus filas de permisos, que no son un histórico.
+                entity.HasOne(e => e.CuentaUsuario)
+                      .WithMany(p => p.Permisos)
+                      .HasForeignKey(e => e.CuentaUsuarioId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.CuentaUsuarioId, e.Modulo })
+                      .IsUnique();
             });
         }
     }

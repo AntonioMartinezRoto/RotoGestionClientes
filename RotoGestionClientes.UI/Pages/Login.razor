@@ -1,0 +1,158 @@
+@* Pantalla de login. MainLayout.razor la muestra en vez de todo el chrome
+   habitual (AppBar/Drawer/@@Body) mientras SesionState.EstaAutenticado sea
+   false -- @@Body ni siquiera se renderiza en ese caso, así que no hay
+   ninguna página accesible sin haber iniciado sesión.
+
+   Dos pasos: credenciales, y --si la cuenta tiene DebeCambiarPassword (alta
+   nueva o reseteo de contraseña por un Administrador)-- fijar una
+   contraseña nueva antes de conceder acceso. Ver Services/AuthService.cs
+   para por qué el cambio de sesión se retrasa hasta que ese paso termina. *@
+@inject AuthService AuthService
+
+<div class="rgc-login">
+    <MudPaper Outlined="true" Class="rgc-login-card pa-8">
+        <div class="rgc-login-header">
+            <MudImage Src="_content/RotoGestionClientes.UI/images/logo-main.png" Height="40" ObjectFit="ObjectFit.Contain" />
+            <MudText Typo="Typo.h5" Class="mt-3">@MenuTextos.IniciarSesionTitulo</MudText>
+        </div>
+
+        @if (_paso == PasoLogin.Credenciales)
+        {
+            <MudTextField T="string" @bind-Value="_login" Label="@MenuTextos.UsuarioLogin" Variant="Variant.Outlined"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person"
+                          Disabled="_cargando" Immediate="true" Class="mt-4"
+                          OnKeyDown="@(async e => { if (e.Key == "Enter") await EntrarAsync(); })" />
+
+            <MudTextField T="string" @bind-Value="_password" Label="@MenuTextos.Contrasena" Variant="Variant.Outlined"
+                          InputType="InputType.Password" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
+                          Disabled="_cargando" Immediate="true" Class="mt-3"
+                          OnKeyDown="@(async e => { if (e.Key == "Enter") await EntrarAsync(); })" />
+
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <MudAlert Severity="Severity.Error" Dense="true" Class="mt-3">@_error</MudAlert>
+            }
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mt-4"
+                       Disabled="_cargando" OnClick="EntrarAsync">
+                @MenuTextos.Entrar
+            </MudButton>
+        }
+        else
+        {
+            <MudText Typo="Typo.body2" Class="mt-4 mb-2">@MenuTextos.DebeCambiarPasswordTexto</MudText>
+
+            <MudTextField T="string" @bind-Value="_nuevaPassword" Label="@MenuTextos.NuevaContrasena" Variant="Variant.Outlined"
+                          InputType="InputType.Password" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
+                          Disabled="_cargando" Immediate="true" Class="mt-2" />
+
+            <MudTextField T="string" @bind-Value="_confirmarPassword" Label="@MenuTextos.ConfirmarContrasena" Variant="Variant.Outlined"
+                          InputType="InputType.Password" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Lock"
+                          Disabled="_cargando" Immediate="true" Class="mt-3"
+                          OnKeyDown="@(async e => { if (e.Key == "Enter") await GuardarNuevaPasswordAsync(); })" />
+
+            @if (!string.IsNullOrEmpty(_error))
+            {
+                <MudAlert Severity="Severity.Error" Dense="true" Class="mt-3">@_error</MudAlert>
+            }
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mt-4"
+                       Disabled="_cargando" OnClick="GuardarNuevaPasswordAsync">
+                @MenuTextos.GuardarContrasena
+            </MudButton>
+        }
+    </MudPaper>
+</div>
+
+@code {
+    private enum PasoLogin { Credenciales, CambiarPassword }
+
+    private const int LongitudMinimaPassword = 8;
+
+    private PasoLogin _paso = PasoLogin.Credenciales;
+    private string _login = string.Empty;
+    private string _password = string.Empty;
+    private string _nuevaPassword = string.Empty;
+    private string _confirmarPassword = string.Empty;
+    private string? _error;
+    private bool _cargando;
+    private CuentaUsuario? _cuentaPendiente;
+
+    private async Task EntrarAsync()
+    {
+        if (_cargando)
+            return;
+
+        if (string.IsNullOrWhiteSpace(_login) || string.IsNullOrWhiteSpace(_password))
+        {
+            _error = MenuTextos.CredencialesIncompletas;
+            return;
+        }
+
+        _cargando = true;
+        _error = null;
+
+        try
+        {
+            var resultado = await AuthService.VerificarCredencialesAsync(_login.Trim(), _password);
+
+            if (!resultado.Exito || resultado.Cuenta is null)
+            {
+                _error = MenuTextos.CredencialesIncorrectas;
+                return;
+            }
+
+            if (resultado.RequiereCambioPassword)
+            {
+                _cuentaPendiente = resultado.Cuenta;
+                _password = string.Empty;
+                _paso = PasoLogin.CambiarPassword;
+            }
+            else
+            {
+                AuthService.EstablecerSesion(resultado.Cuenta);
+            }
+        }
+        finally
+        {
+            _cargando = false;
+        }
+    }
+
+    private async Task GuardarNuevaPasswordAsync()
+    {
+        if (_cargando || _cuentaPendiente is null)
+            return;
+
+        if (_nuevaPassword.Length < LongitudMinimaPassword)
+        {
+            _error = MenuTextos.PasswordDemasiadoCorta;
+            return;
+        }
+
+        if (_nuevaPassword != _confirmarPassword)
+        {
+            _error = MenuTextos.PasswordsNoCoinciden;
+            return;
+        }
+
+        _cargando = true;
+        _error = null;
+
+        try
+        {
+            var cuentaActualizada = await AuthService.CambiarPasswordAsync(_cuentaPendiente.Id, _nuevaPassword);
+            if (cuentaActualizada is null)
+            {
+                _error = MenuTextos.ErrorGenerico;
+                return;
+            }
+
+            AuthService.EstablecerSesion(cuentaActualizada);
+        }
+        finally
+        {
+            _cargando = false;
+        }
+    }
+}

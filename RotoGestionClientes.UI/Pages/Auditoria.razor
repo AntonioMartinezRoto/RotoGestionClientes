@@ -1,0 +1,228 @@
+@* Pantalla de auditoría: histórico de dbo.AuditoriaAccion (altas, ediciones
+   y bajas de maestros y de clientes -- ver Services/AuditoriaService.cs).
+   Solo para cuentas con Rol Administrador: MainLayout.razor solo enseña el
+   enlace del menú a un Administrador, pero eso es solo ocultar el acceso, no
+   protegerlo -- por eso esta página vuelve a comprobar el rol ella misma en
+   OnInitializedAsync y, si no corresponde, redirige al Dashboard. Mismo
+   patrón de filtros + tabla que Pages/Informes.razor, con paginación
+   (MudTablePager) porque este histórico, a diferencia del listado de
+   clientes, crece sin límite con el tiempo. *@
+@page "/auditoria"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject SesionState SesionState
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Class="mb-4">
+        <MudTooltip Text="@MenuTextos.VolverMenu">
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+        </MudTooltip>
+        <MudText Typo="Typo.h5">@MenuTextos.Auditoria</MudText>
+    </MudStack>
+
+    @if (_autorizado)
+    {
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudStack Row="true" Wrap="Wrap.Wrap" AlignItems="AlignItems.End" Spacing="3" Class="mb-3">
+                <MudDatePicker Label="@MenuTextos.FechaDesde" @bind-Date="_fechaDesde" Variant="Variant.Outlined"
+                               Margin="Margin.Dense" Editable="true" DateFormat="dd/MM/yyyy" Class="rgc-auditoria-fecha" />
+                <MudDatePicker Label="@MenuTextos.FechaHasta" @bind-Date="_fechaHasta" Variant="Variant.Outlined"
+                               Margin="Margin.Dense" Editable="true" DateFormat="dd/MM/yyyy" Class="rgc-auditoria-fecha" />
+
+                <MudSelect T="string?" Label="@MenuTextos.Entidad" Value="_entidadSeleccionada" ValueChanged="@(v => _entidadSeleccionada = v)"
+                           Variant="Variant.Outlined" Margin="Margin.Dense" Class="rgc-auditoria-select">
+                    <MudSelectItem T="string?" Value="@((string?)null)">@MenuTextos.Todos</MudSelectItem>
+                    @foreach (var entidad in EntidadesConocidas)
+                    {
+                        <MudSelectItem T="string?" Value="@entidad.Valor">@entidad.Etiqueta()</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="AuditoriaAccionTipo?" Label="@MenuTextos.Accion" Value="_accionSeleccionada" ValueChanged="@(v => _accionSeleccionada = v)"
+                           Variant="Variant.Outlined" Margin="Margin.Dense" Class="rgc-auditoria-select">
+                    <MudSelectItem T="AuditoriaAccionTipo?" Value="@((AuditoriaAccionTipo?)null)">@MenuTextos.Todos</MudSelectItem>
+                    <MudSelectItem T="AuditoriaAccionTipo?" Value="AuditoriaAccionTipo.Crear">@MenuTextos.AccionCrear</MudSelectItem>
+                    <MudSelectItem T="AuditoriaAccionTipo?" Value="AuditoriaAccionTipo.Modificar">@MenuTextos.AccionModificar</MudSelectItem>
+                    <MudSelectItem T="AuditoriaAccionTipo?" Value="AuditoriaAccionTipo.Eliminar">@MenuTextos.AccionEliminar</MudSelectItem>
+                </MudSelect>
+
+                <MudTextField T="string" @bind-Value="_usuarioTexto" Label="@MenuTextos.UsuarioFiltro" Variant="Variant.Outlined"
+                              Margin="Margin.Dense" Immediate="true" Class="rgc-search" />
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="BuscarAsync" Disabled="_buscando">
+                    @MenuTextos.Buscar
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" OnClick="LimpiarFiltrosAsync">
+                    @MenuTextos.LimpiarFiltros
+                </MudButton>
+
+                <MudSpacer />
+                <MudText Typo="Typo.subtitle2" Class="mud-text-secondary">@MenuTextos.TotalRegistros@(_resultado.Count)</MudText>
+            </MudStack>
+
+            @if (_resultado.Count >= LimiteResultados)
+            {
+                <MudAlert Severity="Severity.Info" Dense="true" Class="mb-3">@MenuTextos.AuditoriaLimiteAviso</MudAlert>
+            }
+
+            @if (_buscando)
+            {
+                <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+            }
+            else
+            {
+                <MudTable Items="_resultado" Hover="true" Dense="true" Bordered="false" Striped="true">
+                    <HeaderContent>
+                        <MudTh>@MenuTextos.FechaHora</MudTh>
+                        <MudTh>@MenuTextos.UsuarioFiltro</MudTh>
+                        <MudTh>@MenuTextos.Entidad</MudTh>
+                        <MudTh>@MenuTextos.Accion</MudTh>
+                        <MudTh>@MenuTextos.Detalle</MudTh>
+                    </HeaderContent>
+                    <RowTemplate>
+                        <MudTd DataLabel="@MenuTextos.FechaHora">@context.FechaHora.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</MudTd>
+                        <MudTd DataLabel="@MenuTextos.UsuarioFiltro">@context.UsuarioNombre</MudTd>
+                        <MudTd DataLabel="@MenuTextos.Entidad">@EtiquetaEntidad(context.Entidad)</MudTd>
+                        <MudTd DataLabel="@MenuTextos.Accion">
+                            <MudChip T="string" Size="Size.Small" Color="@ColorAccion(context.Accion)" Variant="Variant.Filled">
+                                @EtiquetaAccion(context.Accion)
+                            </MudChip>
+                        </MudTd>
+                        <MudTd DataLabel="@MenuTextos.Detalle">@context.Detalle</MudTd>
+                    </RowTemplate>
+                    <NoRecordsContent>
+                        <MudText Class="pa-4 mud-text-secondary">@MenuTextos.SinResultados</MudText>
+                    </NoRecordsContent>
+                    <PagerContent>
+                        <MudTablePager />
+                    </PagerContent>
+                </MudTable>
+            }
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    private const int LimiteResultados = 500;
+
+    private static readonly (string Valor, Func<string> Etiqueta)[] EntidadesConocidas =
+    [
+        ("Cliente", () => MenuTextos.Clientes),
+        (MaestroTipo.Perfil.ToString(), () => MenuTextos.Perfiles),
+        (MaestroTipo.Software.ToString(), () => MenuTextos.Software),
+        (MaestroTipo.Manilla.ToString(), () => MenuTextos.Manillas),
+        (MaestroTipo.SeguridadVentana.ToString(), () => MenuTextos.SeguridadVentana),
+        (MaestroTipo.CremonaPasivaVentana.ToString(), () => MenuTextos.Pasivas),
+        (MaestroTipo.BisagraPuerta.ToString(), () => MenuTextos.Bisagras),
+        (MaestroTipo.MaquinaMantenimiento.ToString(), () => MenuTextos.MantenimientoMaquina),
+        (MaestroTipo.MaquinaMarcas.ToString(), () => MenuTextos.MarcasMaquinas),
+        (MaestroTipo.MaquinaTipo.ToString(), () => MenuTextos.TipoMaquinas),
+        (MaestroTipo.CerraduraPuerta.ToString(), () => MenuTextos.Cerraduras),
+        (MaestroTipo.Usuario.ToString(), () => MenuTextos.Usuarios),
+        ("CuentaUsuario", () => MenuTextos.CuentasUsuario),
+    ];
+
+    private bool _autorizado;
+    private bool _buscando;
+
+    private DateTime? _fechaDesde;
+    private DateTime? _fechaHasta;
+    private string? _entidadSeleccionada;
+    private AuditoriaAccionTipo? _accionSeleccionada;
+    private string _usuarioTexto = string.Empty;
+
+    private List<AuditoriaAccion> _resultado = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Defensa además de la ocultación del menú (MainLayout.razor): sin
+        // esto, cualquiera podría llegar aquí navegando directamente a
+        // /auditoria aunque el enlace no se le muestre.
+        if (!SesionState.EstaAutenticado || SesionState.Rol != Rol.Administrador)
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        _autorizado = true;
+        await BuscarAsync();
+    }
+
+    private async Task BuscarAsync()
+    {
+        _buscando = true;
+        StateHasChanged();
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        IQueryable<AuditoriaAccion> query = db.AuditoriaAcciones.AsNoTracking();
+
+        if (_fechaDesde.HasValue)
+        {
+            var desdeUtc = DateTime.SpecifyKind(_fechaDesde.Value.Date, DateTimeKind.Local).ToUniversalTime();
+            query = query.Where(a => a.FechaHora >= desdeUtc);
+        }
+
+        if (_fechaHasta.HasValue)
+        {
+            // Hasta el final del día seleccionado (inclusive), no solo su medianoche.
+            var hastaUtc = DateTime.SpecifyKind(_fechaHasta.Value.Date.AddDays(1), DateTimeKind.Local).ToUniversalTime();
+            query = query.Where(a => a.FechaHora < hastaUtc);
+        }
+
+        if (!string.IsNullOrEmpty(_entidadSeleccionada))
+            query = query.Where(a => a.Entidad == _entidadSeleccionada);
+
+        if (_accionSeleccionada.HasValue)
+        {
+            var accionTexto = _accionSeleccionada.Value.ToString();
+            query = query.Where(a => a.Accion == accionTexto);
+        }
+
+        if (!string.IsNullOrWhiteSpace(_usuarioTexto))
+        {
+            var texto = _usuarioTexto.Trim();
+            query = query.Where(a => a.UsuarioNombre.Contains(texto));
+        }
+
+        _resultado = await query
+            .OrderByDescending(a => a.FechaHora)
+            .Take(LimiteResultados)
+            .ToListAsync();
+
+        _buscando = false;
+    }
+
+    private async Task LimpiarFiltrosAsync()
+    {
+        _fechaDesde = null;
+        _fechaHasta = null;
+        _entidadSeleccionada = null;
+        _accionSeleccionada = null;
+        _usuarioTexto = string.Empty;
+
+        await BuscarAsync();
+    }
+
+    private static string EtiquetaEntidad(string valor) =>
+        EntidadesConocidas.FirstOrDefault(e => e.Valor == valor).Etiqueta?.Invoke() ?? valor;
+
+    private static string EtiquetaAccion(string valor) => valor switch
+    {
+        nameof(AuditoriaAccionTipo.Crear) => MenuTextos.AccionCrear,
+        nameof(AuditoriaAccionTipo.Modificar) => MenuTextos.AccionModificar,
+        nameof(AuditoriaAccionTipo.Eliminar) => MenuTextos.AccionEliminar,
+        _ => valor,
+    };
+
+    private static Color ColorAccion(string valor) => valor switch
+    {
+        nameof(AuditoriaAccionTipo.Crear) => Color.Success,
+        nameof(AuditoriaAccionTipo.Modificar) => Color.Info,
+        nameof(AuditoriaAccionTipo.Eliminar) => Color.Error,
+        _ => Color.Default,
+    };
+
+    private void VolverMenu() => NavigationManager.NavigateTo("/");
+}

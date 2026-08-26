@@ -9,6 +9,8 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
 @inject ClientesListState ListState
+@inject AuditoriaService AuditoriaService
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.JSInterop
 @using System.Text
@@ -109,6 +111,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Defensa además de la ocultación del menú/Dashboard (MainLayout.razor
+        // / Home.razor): sin esto, cualquiera podría llegar aquí navegando
+        // directamente a /clientes aunque el enlace no se le muestre.
+        if (!SesionState.TieneAccesoModulo(Modulo.Clientes))
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
         // Recuperamos el filtro guardado en el estado compartido (sobrevive a
         // la navegación, p.ej. al volver de editar un cliente).
         _filtro = ListState.Filtro;
@@ -190,6 +201,8 @@
             await CargarClientesAsync();
             return;
         }
+
+        AuditoriaService.Registrar(db, AuditoriaAccionTipo.Eliminar, "Cliente", clienteBd.Id, clienteBd.Nombre);
 
         db.Clientes.Remove(clienteBd);
         await db.SaveChangesAsync();

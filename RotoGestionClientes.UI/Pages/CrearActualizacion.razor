@@ -11,6 +11,7 @@
 @inject IJSRuntime JsRuntime
 @inject ISnackbar Snackbar
 @inject VersionDatosState VersionDatosState
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.JSInterop
 @using System.Text
@@ -48,7 +49,16 @@
     protected override async Task OnInitializedAsync()
     {
         // Misma regla de visibilidad que Main.SetVisibilidadModoAplicacion():
-        // este módulo no existe para la edición Distribuidor.
+        // este módulo no existe para la edición Distribuidor. Se combina con
+        // el permiso por módulo de la cuenta (SesionState.TieneAccesoModulo):
+        // esto es la comprobación real, no solo ocultar el enlace del menú
+        // (Layout/MainLayout.razor / Pages/Home.razor).
+        if (!SesionState.TieneAccesoModulo(Modulo.CrearActualizacion))
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
         await using var db = await DbFactory.CreateDbContextAsync();
 
         var config = await db.ConfiguracionAplicacion
