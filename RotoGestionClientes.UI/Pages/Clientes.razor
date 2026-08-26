@@ -1,7 +1,7 @@
 @* Réplica moderna de Clientes/ClientesMain.cs (WinForms).
-   Listado + búsqueda + eliminación + exportar (individual y múltiple) ya
-   migrados. El resto de acciones (ver resumen, generar configurador,
-   importar) siguen cableadas pero muestran "Próximamente" hasta que se
+   Listado + búsqueda + eliminación + exportar/importar (individual y
+   múltiple) ya migrados. El resto de acciones (ver resumen, generar
+   configurador) siguen cableadas pero muestran "Próximamente" hasta que se
    migren en fases siguientes. *@
 @page "/clientes"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
@@ -28,7 +28,7 @@
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/clientes/nuevo"))">
                 @MenuTextos.NuevoCliente
             </MudButton>
-            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="ShowComingSoon">
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="AbrirImportacionAsync">
                 @MenuTextos.ImportarCliente
             </MudButton>
             <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileUpload" OnClick="AbrirExportacionMultipleAsync">
@@ -236,6 +236,20 @@
 
         // El diálogo no cambia datos de cliente, solo exporta, así que no
         // hace falta recargar la lista al cerrarse.
+    }
+
+    private async Task AbrirImportacionAsync()
+    {
+        var parametros = new DialogParameters();
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<ClienteImportDialog>(MenuTextos.ImportarCliente, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+        {
+            await CargarClientesAsync();
+        }
     }
 
     private void VolverMenu()

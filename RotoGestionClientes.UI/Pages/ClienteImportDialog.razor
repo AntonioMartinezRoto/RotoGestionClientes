@@ -1,0 +1,311 @@
+@* Réplica moderna de Services/ClienteImportService.cs (WinForms), ampliada
+   para admitir también la importación en bloque: la app legacy solo
+   importaba un .roto cada vez (con un OpenFileDialog), porque el botón
+   "Exportar clientes" guardaba un .roto suelto por cliente en una carpeta.
+   Como aquí la exportación múltiple genera un único .zip con todos los
+   .roto dentro (ver ClienteExportDialog.razor), este diálogo admite tanto
+   un .roto individual como un .zip con varios .roto — cada fichero dentro
+   del zip se importa de forma independiente (uno inválido no aborta el
+   resto) y al final se muestra un resumen por fichero: importado, importado
+   con el nombre renombrado (duplicado) o con error. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@using Microsoft.EntityFrameworkCore
+@using System.IO.Compression
+@using System.Text
+@using System.Text.Json
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@MenuTextos.ImportarCliente</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudStack Spacing="4" Style="min-width: 420px;">
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.ImportarClienteDescripcion</MudText>
+
+            <MudFileUpload T="IBrowserFile" FilesChanged="OnArchivoSeleccionadoAsync" Accept=".roto,.zip"
+                           MaxFileSize="TamanoMaximoBytes" Disabled="_procesando">
+                <CustomContent Context="cargador">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.AttachFile"
+                                   OnClick="@(() => cargador.OpenFilePickerAsync())" Disabled="_procesando">
+                            @MenuTextos.SeleccionarArchivoImportacion
+                        </MudButton>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                            @(_nombreFichero ?? MenuTextos.NingunFichero)
+                        </MudText>
+                    </MudStack>
+                </CustomContent>
+            </MudFileUpload>
+
+            @if (_procesando)
+            {
+                <MudStack Spacing="1">
+                    <MudProgressLinear Value="_progresoPorcentaje" Color="Color.Primary" Rounded="true" />
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                        @_progresoActual @MenuTextos.De @_progresoTotal — @_clienteActual (@_progresoPorcentaje%)
+                    </MudText>
+                </MudStack>
+            }
+
+            @if (_resultados.Count > 0)
+            {
+                <MudStack Spacing="1" Style="max-height: 280px; overflow-y: auto;">
+                    @foreach (var resultado in _resultados)
+                    {
+                        <MudAlert Severity="@ObtenerSeveridad(resultado)" Dense="true">
+                            <MudText Typo="Typo.body2">@resultado.Fichero</MudText>
+                            @if (resultado.Exito)
+                            {
+                                @if (resultado.Renombrado)
+                                {
+                                    <MudText Typo="Typo.caption">
+                                        @MenuTextos.ClienteExistenteImportado "@resultado.NombreFinal"
+                                    </MudText>
+                                }
+                                else
+                                {
+                                    <MudText Typo="Typo.caption">@MenuTextos.ClienteImportado</MudText>
+                                }
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.caption">@resultado.MensajeError</MudText>
+                            }
+                        </MudAlert>
+                    }
+                </MudStack>
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cerrar" Disabled="_procesando">
+            @(_resultados.Count > 0 ? MenuTextos.Cerrar : MenuTextos.Cancelar)
+        </MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ImportarAsync"
+                   Disabled="@(_procesando || _contenido is null)">
+            @MenuTextos.ImportarCliente
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    private sealed class ResultadoArchivo
+    {
+        public string Fichero { get; set; } = string.Empty;
+        public bool Exito { get; set; }
+        public string? NombreFinal { get; set; }
+        public bool Renombrado { get; set; }
+        public string? MensajeError { get; set; }
+    }
+
+    private const long TamanoMaximoBytes = 100 * 1024 * 1024; // 100 MB: un .zip con varios clientes y documentos puede pesar bastante
+
+    private string? _nombreFichero;
+    private byte[]? _contenido;
+    private bool _procesando;
+    private bool _huboExito;
+
+    private int _progresoActual;
+    private int _progresoTotal;
+    private int _progresoPorcentaje;
+    private string _clienteActual = string.Empty;
+
+    private readonly List<ResultadoArchivo> _resultados = new();
+
+    private async Task OnArchivoSeleccionadoAsync(IBrowserFile? archivo)
+    {
+        if (archivo is null)
+            return;
+
+        await using var stream = archivo.OpenReadStream(TamanoMaximoBytes);
+        using var memoria = new MemoryStream();
+        await stream.CopyToAsync(memoria);
+
+        _contenido = memoria.ToArray();
+        _nombreFichero = archivo.Name;
+        _resultados.Clear();
+    }
+
+    private async Task ImportarAsync()
+    {
+        if (_contenido is null || _nombreFichero is null)
+        {
+            Snackbar.Add(MenuTextos.SeleccionarFicheroObligatorio, Severity.Warning);
+            return;
+        }
+
+        var extension = Path.GetExtension(_nombreFichero).ToLowerInvariant();
+
+        if (extension != ".roto" && extension != ".zip")
+        {
+            Snackbar.Add(MenuTextos.FormatoArchivoNoValido, Severity.Warning);
+            return;
+        }
+
+        _procesando = true;
+        _resultados.Clear();
+        _progresoActual = 0;
+        _progresoTotal = 0;
+        _progresoPorcentaje = 0;
+        StateHasChanged();
+
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            if (extension == ".roto")
+            {
+                await ImportarFicheroRotoAsync(db, _nombreFichero, _contenido);
+            }
+            else
+            {
+                await ImportarZipAsync(db, _contenido);
+            }
+        }
+        finally
+        {
+            _procesando = false;
+        }
+
+        _huboExito = _resultados.Any(r => r.Exito);
+
+        if (_huboExito)
+        {
+            var exitosos = _resultados.Count(r => r.Exito);
+            Snackbar.Add(string.Format(MenuTextos.ClientesImportadosCorrectamente, exitosos), Severity.Success);
+        }
+        else
+        {
+            Snackbar.Add(MenuTextos.ErrorAlImportar, Severity.Error);
+        }
+    }
+
+    private async Task ImportarFicheroRotoAsync(ApplicationDbContext db, string nombreFichero, byte[] contenido)
+    {
+        _progresoTotal = 1;
+        _progresoActual = 1;
+        _clienteActual = nombreFichero;
+        _progresoPorcentaje = 0;
+        StateHasChanged();
+
+        var resultado = await ImportarUnaEntradaAsync(db, nombreFichero, () => Task.FromResult<string?>(Encoding.UTF8.GetString(contenido)));
+
+        _progresoPorcentaje = 100;
+        _resultados.Add(resultado);
+    }
+
+    private async Task ImportarZipAsync(ApplicationDbContext db, byte[] contenido)
+    {
+        using var zipStream = new MemoryStream(contenido);
+
+        ZipArchive zip;
+        try
+        {
+            zip = new ZipArchive(zipStream, ZipArchiveMode.Read);
+        }
+        catch
+        {
+            _resultados.Add(new ResultadoArchivo
+            {
+                Fichero = _nombreFichero ?? string.Empty,
+                Exito = false,
+                MensajeError = MenuTextos.ArchivoNoValido,
+            });
+            return;
+        }
+
+        using (zip)
+        {
+            var entradasRoto = zip.Entries
+                .Where(e => e.Name.EndsWith(".roto", StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+            if (entradasRoto.Count == 0)
+            {
+                _resultados.Add(new ResultadoArchivo
+                {
+                    Fichero = _nombreFichero ?? string.Empty,
+                    Exito = false,
+                    MensajeError = MenuTextos.ZipSinFicherosRoto,
+                });
+                return;
+            }
+
+            _progresoTotal = entradasRoto.Count;
+
+            foreach (var entrada in entradasRoto)
+            {
+                _progresoActual++;
+                _clienteActual = entrada.Name;
+                _progresoPorcentaje = (_progresoActual * 100) / _progresoTotal;
+                StateHasChanged();
+                await Task.Yield();
+
+                var resultado = await ImportarUnaEntradaAsync(db, entrada.Name, async () =>
+                {
+                    await using var entradaStream = entrada.Open();
+                    using var lector = new StreamReader(entradaStream, Encoding.UTF8);
+                    return await lector.ReadToEndAsync();
+                });
+
+                _resultados.Add(resultado);
+            }
+        }
+    }
+
+    private async Task<ResultadoArchivo> ImportarUnaEntradaAsync(ApplicationDbContext db, string nombreFichero, Func<Task<string?>> leerJsonAsync)
+    {
+        var resultado = new ResultadoArchivo { Fichero = nombreFichero };
+
+        ClienteExportDto? dto;
+        try
+        {
+            var json = await leerJsonAsync();
+            dto = string.IsNullOrWhiteSpace(json) ? null : JsonSerializer.Deserialize<ClienteExportDto>(json);
+        }
+        catch (JsonException)
+        {
+            dto = null;
+        }
+
+        if (dto?.Cliente is null)
+        {
+            resultado.Exito = false;
+            resultado.MensajeError = MenuTextos.ArchivoNoValido;
+            return resultado;
+        }
+
+        var importResultado = await ClienteImportBuilder.ImportarAsync(db, dto.Cliente);
+        db.ChangeTracker.Clear();
+
+        resultado.Exito = importResultado.Exito;
+        resultado.NombreFinal = importResultado.NombreFinal;
+        resultado.Renombrado = importResultado.NombreDuplicado;
+        resultado.MensajeError = importResultado.Exito ? null : MenuTextos.ErrorAlImportar;
+
+        return resultado;
+    }
+
+    private static Severity ObtenerSeveridad(ResultadoArchivo resultado)
+    {
+        if (!resultado.Exito)
+            return Severity.Error;
+
+        return resultado.Renombrado ? Severity.Warning : Severity.Success;
+    }
+
+    private void Cerrar()
+    {
+        if (_huboExito)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        else
+        {
+            MudDialog.Cancel();
+        }
+    }
+}

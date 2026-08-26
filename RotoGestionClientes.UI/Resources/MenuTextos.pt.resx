@@ -517,4 +517,40 @@
   <data name="De" xml:space="preserve">
     <value>de</value>
   </data>
+  <data name="ImportarClienteDescripcion" xml:space="preserve">
+    <value>Selecione um ficheiro .roto (um cliente) ou .zip (vários clientes) para o importar.</value>
+  </data>
+  <data name="SeleccionarArchivoImportacion" xml:space="preserve">
+    <value>Selecionar ficheiro (.roto ou .zip)</value>
+  </data>
+  <data name="FormatoArchivoNoValido" xml:space="preserve">
+    <value>Apenas são admitidos ficheiros .roto ou .zip.</value>
+  </data>
+  <data name="ZipSinFicherosRoto" xml:space="preserve">
+    <value>O ficheiro .zip não contém nenhum ficheiro .roto.</value>
+  </data>
+  <data name="SeleccionarFicheroObligatorio" xml:space="preserve">
+    <value>Selecione um ficheiro antes de continuar.</value>
+  </data>
+  <data name="ArchivoNoValido" xml:space="preserve">
+    <value>O ficheiro não é um ficheiro .roto válido.</value>
+  </data>
+  <data name="ClienteImportado" xml:space="preserve">
+    <value>Cliente importado com sucesso.</value>
+  </data>
+  <data name="ErrorAlImportar" xml:space="preserve">
+    <value>Erro ao importar o cliente.</value>
+  </data>
+  <data name="NombreAsignado" xml:space="preserve">
+    <value>Nome atribuído:</value>
+  </data>
+  <data name="ClienteExistenteImportado" xml:space="preserve">
+    <value>Já existia um cliente com esse nome (ou uma variação), por isso foi importado como:</value>
+  </data>
+  <data name="Cerrar" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="ClientesImportadosCorrectamente" xml:space="preserve">
+    <value>Foram importados {0} clientes com sucesso.</value>
+  </data>
 </root>

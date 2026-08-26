@@ -356,5 +356,29 @@ namespace RotoGestionClientes.UI.Resources
         public static string ClientesExportadosCorrectamente => ResourceManager.GetString("ClientesExportadosCorrectamente", resourceCulture)!;
 
         public static string De => ResourceManager.GetString("De", resourceCulture)!;
+
+        public static string ImportarClienteDescripcion => ResourceManager.GetString("ImportarClienteDescripcion", resourceCulture)!;
+
+        public static string SeleccionarArchivoImportacion => ResourceManager.GetString("SeleccionarArchivoImportacion", resourceCulture)!;
+
+        public static string FormatoArchivoNoValido => ResourceManager.GetString("FormatoArchivoNoValido", resourceCulture)!;
+
+        public static string ZipSinFicherosRoto => ResourceManager.GetString("ZipSinFicherosRoto", resourceCulture)!;
+
+        public static string SeleccionarFicheroObligatorio => ResourceManager.GetString("SeleccionarFicheroObligatorio", resourceCulture)!;
+
+        public static string ArchivoNoValido => ResourceManager.GetString("ArchivoNoValido", resourceCulture)!;
+
+        public static string ClienteImportado => ResourceManager.GetString("ClienteImportado", resourceCulture)!;
+
+        public static string ErrorAlImportar => ResourceManager.GetString("ErrorAlImportar", resourceCulture)!;
+
+        public static string NombreAsignado => ResourceManager.GetString("NombreAsignado", resourceCulture)!;
+
+        public static string ClienteExistenteImportado => ResourceManager.GetString("ClienteExistenteImportado", resourceCulture)!;
+
+        public static string Cerrar => ResourceManager.GetString("Cerrar", resourceCulture)!;
+
+        public static string ClientesImportadosCorrectamente => ResourceManager.GetString("ClientesImportadosCorrectamente", resourceCulture)!;
     }
 }
