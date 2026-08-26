@@ -1,0 +1,228 @@
+@* Réplica moderna de Clientes/ClienteExportacion.cs (WinForms): selección
+   múltiple de clientes (con filtro de texto y "seleccionar todos") para
+   exportarlos de una vez. A diferencia de la app legacy — que pide una
+   carpeta con FolderBrowserDialog y escribe un .roto por cliente dentro,
+   mostrando una barra de progreso modal (ExportProgressForm) — aquí se
+   empaquetan todos los .roto seleccionados en un único .zip que se
+   descarga con el mismo patrón rgcDescargarArchivo ya usado en el resto de
+   la app, porque el navegador/WebView2 no permite elegir una carpeta y
+   escribir varios ficheros sueltos en ella. La barra de progreso se
+   mantiene (dentro del propio diálogo) para no perder ese feedback en
+   exportaciones con muchos clientes. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IJSRuntime JsRuntime
+@inject ISnackbar Snackbar
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+@using System.IO.Compression
+@using System.Text
+@using System.Text.Json
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@MenuTextos.SeleccionarClientes</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudStack Spacing="3" Style="min-width: 380px;">
+            <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Wrap="Wrap.Wrap" Spacing="2">
+                <MudTextField T="string" Value="_filtro" ValueChanged="OnFiltroChanged" Immediate="true"
+                              Label="@MenuTextos.Buscar" Variant="Variant.Outlined" Margin="Margin.Dense"
+                              Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" />
+                <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.Seleccionados: @_seleccionadosCount</MudText>
+            </MudStack>
+
+            <MudCheckBox T="bool" Value="_seleccionarTodos" ValueChanged="OnSeleccionarTodosChanged"
+                         Label="@MenuTextos.SeleccionarTodos" Dense="true" Color="Color.Primary" />
+
+            <div class="rgc-check-grid" style="max-height: 320px;">
+                @if (_cargando)
+                {
+                    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-2" />
+                }
+                else if (_clientesFiltrados.Count == 0)
+                {
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary pa-2">@MenuTextos.SinResultados</MudText>
+                }
+                else
+                {
+                    @foreach (var item in _clientesFiltrados)
+                    {
+                        <MudCheckBox T="bool" Value="item.Seleccionado" ValueChanged="@(v => OnItemChanged(item, v))"
+                                     Label="@item.Nombre" Dense="true" Color="Color.Primary" />
+                    }
+                }
+            </div>
+
+            @if (_exportando)
+            {
+                <MudStack Spacing="1">
+                    <MudProgressLinear Value="_progresoPorcentaje" Color="Color.Primary" Rounded="true" />
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">
+                        @_progresoActual @MenuTextos.De @_progresoTotal — @_clienteActual (@_progresoPorcentaje%)
+                    </MudText>
+                </MudStack>
+            }
+        </MudStack>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancelar" Disabled="_exportando">@MenuTextos.Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="ExportarAsync" Disabled="_exportando">
+            @MenuTextos.Exportar
+        </MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    private sealed class ClienteExportItem
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public bool Seleccionado { get; set; }
+    }
+
+    private List<ClienteExportItem> _todosLosClientes = new();
+    private List<ClienteExportItem> _clientesFiltrados = new();
+    private string _filtro = string.Empty;
+    private bool _seleccionarTodos;
+    private int _seleccionadosCount;
+    private bool _cargando = true;
+
+    private bool _exportando;
+    private int _progresoActual;
+    private int _progresoTotal;
+    private int _progresoPorcentaje;
+    private string _clienteActual = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        _todosLosClientes = await db.Clientes
+            .AsNoTracking()
+            .OrderBy(x => x.Nombre)
+            .Select(x => new ClienteExportItem { Id = x.Id, Nombre = x.Nombre })
+            .ToListAsync();
+
+        _cargando = false;
+        AplicarFiltro();
+    }
+
+    private void OnFiltroChanged(string value)
+    {
+        _filtro = value;
+        AplicarFiltro();
+    }
+
+    private void AplicarFiltro()
+    {
+        var filtro = _filtro.Trim();
+
+        _clientesFiltrados = string.IsNullOrWhiteSpace(filtro)
+            ? _todosLosClientes
+            : _todosLosClientes
+                .Where(x => !string.IsNullOrEmpty(x.Nombre) && x.Nombre.Contains(filtro, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+        ActualizarSeleccionarTodos();
+    }
+
+    private void OnItemChanged(ClienteExportItem item, bool valor)
+    {
+        item.Seleccionado = valor;
+        ActualizarContador();
+        ActualizarSeleccionarTodos();
+    }
+
+    private void OnSeleccionarTodosChanged(bool valor)
+    {
+        _seleccionarTodos = valor;
+
+        // Igual que en la app legacy: "seleccionar todos" solo afecta a los
+        // clientes visibles con el filtro actual, no a la lista completa.
+        foreach (var item in _clientesFiltrados)
+        {
+            item.Seleccionado = valor;
+        }
+
+        ActualizarContador();
+    }
+
+    private void ActualizarContador()
+    {
+        _seleccionadosCount = _todosLosClientes.Count(x => x.Seleccionado);
+    }
+
+    private void ActualizarSeleccionarTodos()
+    {
+        _seleccionarTodos = _clientesFiltrados.Count > 0 && _clientesFiltrados.All(x => x.Seleccionado);
+    }
+
+    private async Task ExportarAsync()
+    {
+        var seleccionados = _todosLosClientes.Where(x => x.Seleccionado).ToList();
+
+        if (seleccionados.Count == 0)
+        {
+            Snackbar.Add(MenuTextos.SeleccioneUnCliente, Severity.Warning);
+            return;
+        }
+
+        _exportando = true;
+        _progresoActual = 0;
+        _progresoTotal = seleccionados.Count;
+        _progresoPorcentaje = 0;
+        _clienteActual = string.Empty;
+        StateHasChanged();
+
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            using var zipStream = new MemoryStream();
+            using (var zip = new ZipArchive(zipStream, ZipArchiveMode.Create, leaveOpen: true))
+            {
+                foreach (var cliente in seleccionados)
+                {
+                    _progresoActual++;
+                    _clienteActual = cliente.Nombre;
+                    _progresoPorcentaje = (_progresoActual * 100) / _progresoTotal;
+                    StateHasChanged();
+                    await Task.Yield();
+
+                    var dto = await ClienteExportBuilder.ConstruirAsync(db, cliente.Id);
+                    if (dto is null)
+                        continue;
+
+                    var json = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
+                    var nombreEntrada = $"{ClienteExportBuilder.LimpiarNombreFichero(dto.Cliente.Nombre)}.roto";
+
+                    var entrada = zip.CreateEntry(nombreEntrada, CompressionLevel.Optimal);
+                    await using var entradaStream = entrada.Open();
+                    await using var escritor = new StreamWriter(entradaStream, Encoding.UTF8);
+                    await escritor.WriteAsync(json);
+                }
+            }
+
+            var base64 = Convert.ToBase64String(zipStream.ToArray());
+            var nombreZip = $"ClientesExportados_{DateTime.Now:yyyyMMdd_HHmmss}.zip";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreZip, base64);
+
+            Snackbar.Add(string.Format(MenuTextos.ClientesExportadosCorrectamente, seleccionados.Count), Severity.Success);
+
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorAlExportar, Severity.Error);
+        }
+        finally
+        {
+            _exportando = false;
+        }
+    }
+
+    private void Cancelar() => MudDialog.Cancel();
+}

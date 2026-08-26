@@ -1,15 +1,19 @@
 @* Réplica moderna de Clientes/ClientesMain.cs (WinForms).
-   Listado + búsqueda + eliminación reales; el resto de acciones (ver
-   resumen, editar, exportar, generar configurador, nuevo, importar,
-   exportar múltiples) están cableadas pero muestran "Próximamente" hasta
-   que se migren en fases siguientes (el wizard de alta/edición). *@
+   Listado + búsqueda + eliminación + exportar (individual y múltiple) ya
+   migrados. El resto de acciones (ver resumen, generar configurador,
+   importar) siguen cableadas pero muestran "Próximamente" hasta que se
+   migren en fases siguientes. *@
 @page "/clientes"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
 @inject ClientesListState ListState
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+@using System.Text
+@using System.Text.Json
 
 <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
     <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4" Wrap="Wrap.Wrap" Spacing="4">
@@ -24,10 +28,10 @@
             <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => NavigationManager.NavigateTo("/clientes/nuevo"))">
                 @MenuTextos.NuevoCliente
             </MudButton>
-            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileUpload" OnClick="ShowComingSoon">
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="ShowComingSoon">
                 @MenuTextos.ImportarCliente
             </MudButton>
-            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="ShowComingSoon">
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.FileUpload" OnClick="AbrirExportacionMultipleAsync">
                 @MenuTextos.ExportarClientes
             </MudButton>
         </MudStack>
@@ -78,7 +82,7 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small" OnClick="@(() => NavigationManager.NavigateTo($"/clientes/editar/{context.Id}"))" />
                         </MudTooltip>
                         <MudTooltip Text="@MenuTextos.Exportar">
-                            <MudIconButton Icon="@Icons.Material.Filled.Share" Size="Size.Small" OnClick="ShowComingSoon" />
+                            <MudIconButton Icon="@Icons.Material.Filled.Share" Size="Size.Small" OnClick="@(() => ExportarClienteAsync(context))" />
                         </MudTooltip>
                         <MudTooltip Text="@MenuTextos.CrearConfigurador">
                             <MudIconButton Icon="@Icons.Material.Filled.Settings" Size="Size.Small" OnClick="ShowComingSoon" />
@@ -193,6 +197,45 @@
         Snackbar.Add($"{MenuTextos.Eliminar}: {cliente.Nombre}", Severity.Success, config => { config.SnackbarVariant = Variant.Filled; });
 
         await CargarClientesAsync();
+    }
+
+    private async Task ExportarClienteAsync(ClienteGridItem cliente)
+    {
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            var dto = await ClienteExportBuilder.ConstruirAsync(db, cliente.Id);
+            if (dto is null)
+            {
+                Snackbar.Add(MenuTextos.ClienteNoEncontrado, Severity.Warning);
+                return;
+            }
+
+            var json = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
+            var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
+            var nombreArchivo = $"{ClienteExportBuilder.LimpiarNombreFichero(dto.Cliente.Nombre)}.roto";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+
+            Snackbar.Add(MenuTextos.ClienteExportado, Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorAlExportar, Severity.Error);
+        }
+    }
+
+    private async Task AbrirExportacionMultipleAsync()
+    {
+        var parametros = new DialogParameters();
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<ClienteExportDialog>(MenuTextos.SeleccionarClientes, parametros, opciones);
+        await dialogo.Result;
+
+        // El diálogo no cambia datos de cliente, solo exporta, así que no
+        // hace falta recargar la lista al cerrarse.
     }
 
     private void VolverMenu()

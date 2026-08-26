@@ -338,5 +338,23 @@ namespace RotoGestionClientes.UI.Resources
         public static string ErrorImportarDatos => ResourceManager.GetString("ErrorImportarDatos", resourceCulture)!;
 
         public static string DatosActualizadosVersion => ResourceManager.GetString("DatosActualizadosVersion", resourceCulture)!;
+
+        public static string SeleccionarClientes => ResourceManager.GetString("SeleccionarClientes", resourceCulture)!;
+
+        public static string SeleccionarTodos => ResourceManager.GetString("SeleccionarTodos", resourceCulture)!;
+
+        public static string Seleccionados => ResourceManager.GetString("Seleccionados", resourceCulture)!;
+
+        public static string SeleccioneUnCliente => ResourceManager.GetString("SeleccioneUnCliente", resourceCulture)!;
+
+        public static string ClienteExportado => ResourceManager.GetString("ClienteExportado", resourceCulture)!;
+
+        public static string ClienteNoEncontrado => ResourceManager.GetString("ClienteNoEncontrado", resourceCulture)!;
+
+        public static string ErrorAlExportar => ResourceManager.GetString("ErrorAlExportar", resourceCulture)!;
+
+        public static string ClientesExportadosCorrectamente => ResourceManager.GetString("ClientesExportadosCorrectamente", resourceCulture)!;
+
+        public static string De => ResourceManager.GetString("De", resourceCulture)!;
     }
 }

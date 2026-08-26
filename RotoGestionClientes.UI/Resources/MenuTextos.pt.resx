@@ -490,4 +490,31 @@
   <data name="DatosActualizadosVersion" xml:space="preserve">
     <value>Dados mestres atualizados para a versão {0}.</value>
   </data>
+  <data name="SeleccionarClientes" xml:space="preserve">
+    <value>Selecione os clientes para exportar</value>
+  </data>
+  <data name="SeleccionarTodos" xml:space="preserve">
+    <value>Selecionar tudo</value>
+  </data>
+  <data name="Seleccionados" xml:space="preserve">
+    <value>Selecionados</value>
+  </data>
+  <data name="SeleccioneUnCliente" xml:space="preserve">
+    <value>Selecione pelo menos um cliente.</value>
+  </data>
+  <data name="ClienteExportado" xml:space="preserve">
+    <value>Cliente exportado com sucesso.</value>
+  </data>
+  <data name="ClienteNoEncontrado" xml:space="preserve">
+    <value>O cliente não foi encontrado.</value>
+  </data>
+  <data name="ErrorAlExportar" xml:space="preserve">
+    <value>Erro ao exportar o cliente.</value>
+  </data>
+  <data name="ClientesExportadosCorrectamente" xml:space="preserve">
+    <value>Foram exportados {0} clientes com sucesso.</value>
+  </data>
+  <data name="De" xml:space="preserve">
+    <value>de</value>
+  </data>
 </root>
