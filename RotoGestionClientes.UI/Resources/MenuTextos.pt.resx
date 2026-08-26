@@ -1,0 +1,604 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="MenuPrincipal" xml:space="preserve">
+    <value>Menu principal</value>
+  </data>
+  <data name="Clientes" xml:space="preserve">
+    <value>Clientes</value>
+  </data>
+  <data name="Mantenimiento" xml:space="preserve">
+    <value>Manutenção</value>
+  </data>
+  <data name="Informes" xml:space="preserve">
+    <value>Relatórios</value>
+  </data>
+  <data name="CrearActualizacion" xml:space="preserve">
+    <value>Criar atualização de dados</value>
+  </data>
+  <data name="ActualizarDatos" xml:space="preserve">
+    <value>Atualizar dados Roto</value>
+  </data>
+  <data name="Salir" xml:space="preserve">
+    <value>Sair</value>
+  </data>
+  <data name="VersionDatos" xml:space="preserve">
+    <value>Versão de dados</value>
+  </data>
+  <data name="ProximamenteTitulo" xml:space="preserve">
+    <value>Brevemente</value>
+  </data>
+  <data name="ProximamenteTexto" xml:space="preserve">
+    <value>Este módulo ainda não está disponível na nova versão. Entretanto, continue a usar a aplicação atual (RotoGestionClientes) para esta secção.</value>
+  </data>
+  <data name="Bienvenida" xml:space="preserve">
+    <value>Bem-vindo ao RotoGestionClientes</value>
+  </data>
+  <data name="BienvenidaTexto" xml:space="preserve">
+    <value>Selecione uma opção do menu para começar.</value>
+  </data>
+  <data name="AccesosRapidos" xml:space="preserve">
+    <value>Acessos rápidos</value>
+  </data>
+  <data name="VersionApp" xml:space="preserve">
+    <value>Versão da aplicação</value>
+  </data>
+  <data name="TotalClientes" xml:space="preserve">
+    <value>Clientes totais</value>
+  </data>
+  <data name="AccesoTipoPerfilPVC" xml:space="preserve">
+    <value>Tipo de perfil PVC</value>
+  </data>
+  <data name="AccesoTipoPerfilAluminio" xml:space="preserve">
+    <value>Tipo de perfil Alumínio</value>
+  </data>
+  <data name="AccesoMaquinasMesaHerraje" xml:space="preserve">
+    <value>Máquinas: Mesa de ferragens</value>
+  </data>
+  <data name="NuevoCliente" xml:space="preserve">
+    <value>Novo cliente</value>
+  </data>
+  <data name="ImportarCliente" xml:space="preserve">
+    <value>Importar cliente</value>
+  </data>
+  <data name="ExportarClientes" xml:space="preserve">
+    <value>Exportar clientes</value>
+  </data>
+  <data name="VolverMenu" xml:space="preserve">
+    <value>Voltar ao menu</value>
+  </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Buscar" xml:space="preserve">
+    <value>Pesquisar</value>
+  </data>
+  <data name="SapId" xml:space="preserve">
+    <value>Id SAP</value>
+  </data>
+  <data name="Nombre" xml:space="preserve">
+    <value>Nome</value>
+  </data>
+  <data name="Responsable" xml:space="preserve">
+    <value>Responsável</value>
+  </data>
+  <data name="Comentarios" xml:space="preserve">
+    <value>Comentários</value>
+  </data>
+  <data name="Acciones" xml:space="preserve">
+    <value>Ações</value>
+  </data>
+  <data name="VerResumen" xml:space="preserve">
+    <value>Ver resumo</value>
+  </data>
+  <data name="Editar" xml:space="preserve">
+    <value>Editar</value>
+  </data>
+  <data name="Exportar" xml:space="preserve">
+    <value>Exportar</value>
+  </data>
+  <data name="CrearConfigurador" xml:space="preserve">
+    <value>Criar configurador</value>
+  </data>
+  <data name="Eliminar" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="EliminarClienteTitulo" xml:space="preserve">
+    <value>Eliminar cliente</value>
+  </data>
+  <data name="ConfirmarEliminarCliente" xml:space="preserve">
+    <value>Tem a certeza que pretende eliminar o cliente</value>
+  </data>
+  <data name="SinResultados" xml:space="preserve">
+    <value>Não foram encontrados clientes.</value>
+  </data>
+  <data name="SinMaquinas" xml:space="preserve">
+    <value>Não há máquinas registadas.</value>
+  </data>
+  <data name="SinDocumentos" xml:space="preserve">
+    <value>Não há documentos.</value>
+  </data>
+  <data name="Cancelar" xml:space="preserve">
+    <value>Cancelar</value>
+  </data>
+  <data name="Atras" xml:space="preserve">
+    <value>Voltar</value>
+  </data>
+  <data name="Siguiente" xml:space="preserve">
+    <value>Seguinte</value>
+  </data>
+  <data name="Finalizar" xml:space="preserve">
+    <value>Finalizar</value>
+  </data>
+  <data name="Guardar" xml:space="preserve">
+    <value>Guardar</value>
+  </data>
+  <data name="EditandoCliente" xml:space="preserve">
+    <value>A editar cliente</value>
+  </data>
+  <data name="CompletarDatosCliente" xml:space="preserve">
+    <value>Preencha os dados para criar o cliente</value>
+  </data>
+  <data name="DatosGenerales" xml:space="preserve">
+    <value>Dados gerais</value>
+  </data>
+  <data name="Ventanas" xml:space="preserve">
+    <value>Janelas</value>
+  </data>
+  <data name="Balconeras" xml:space="preserve">
+    <value>Portas de varanda</value>
+  </data>
+  <data name="Puertas" xml:space="preserve">
+    <value>Portas</value>
+  </data>
+  <data name="Correderas" xml:space="preserve">
+    <value>Correr</value>
+  </data>
+  <data name="Bombillo" xml:space="preserve">
+    <value>Cilindro</value>
+  </data>
+  <data name="ElevablesPlegables" xml:space="preserve">
+    <value>Elevável / Dobrável</value>
+  </data>
+  <data name="Elevables" xml:space="preserve">
+    <value>Eleváveis</value>
+  </data>
+  <data name="Plegables" xml:space="preserve">
+    <value>Dobráveis</value>
+  </data>
+  <data name="Estandar" xml:space="preserve">
+    <value>Padrão</value>
+  </data>
+  <data name="Dlo" xml:space="preserve">
+    <value>DLO</value>
+  </data>
+  <data name="Consumen" xml:space="preserve">
+    <value>Consomem Dobráveis</value>
+  </data>
+  <data name="Maquinas" xml:space="preserve">
+    <value>Máquinas</value>
+  </data>
+  <data name="Documentos" xml:space="preserve">
+    <value>Documentos</value>
+  </data>
+  <data name="Documento" xml:space="preserve">
+    <value>Documento</value>
+  </data>
+  <data name="DocumentoObligatorio" xml:space="preserve">
+    <value>Tem de selecionar um documento.</value>
+  </data>
+  <data name="Fichero" xml:space="preserve">
+    <value>Ficheiro</value>
+  </data>
+  <data name="IndicarNombreDoc" xml:space="preserve">
+    <value>Deve indicar um nome para o documento.</value>
+  </data>
+  <data name="NingunFichero" xml:space="preserve">
+    <value>Nenhum ficheiro selecionado</value>
+  </data>
+  <data name="NombreDocumento" xml:space="preserve">
+    <value>Nome do documento</value>
+  </data>
+  <data name="SeleccionarDocumento" xml:space="preserve">
+    <value>Selecionar documento</value>
+  </data>
+  <data name="AnadirDocumento" xml:space="preserve">
+    <value>Adicionar documento</value>
+  </data>
+  <data name="EliminarDocumentoTitulo" xml:space="preserve">
+    <value>Eliminar documento</value>
+  </data>
+  <data name="ConfirmarEliminarDocumento" xml:space="preserve">
+    <value>Tem a certeza que pretende eliminar este documento?</value>
+  </data>
+  <data name="DebeGuardarClienteDescarga" xml:space="preserve">
+    <value>Deve guardar o cliente antes de transferir o documento.</value>
+  </data>
+  <data name="DocumentoNoEncontrado" xml:space="preserve">
+    <value>Não foi possível encontrar o documento.</value>
+  </data>
+  <data name="DocumentoDescargado" xml:space="preserve">
+    <value>Documento transferido com sucesso.</value>
+  </data>
+  <data name="DatosCorruptos" xml:space="preserve">
+    <value>Os dados do cliente não são válidos.</value>
+  </data>
+  <data name="ClienteExistente" xml:space="preserve">
+    <value>Já existe um cliente com esse nome.</value>
+  </data>
+  <data name="NombreClienteObligatorio" xml:space="preserve">
+    <value>O nome do cliente é obrigatório.</value>
+  </data>
+  <data name="ClienteCreado" xml:space="preserve">
+    <value>Cliente criado com sucesso.</value>
+  </data>
+  <data name="ClienteActualizado" xml:space="preserve">
+    <value>Cliente atualizado com sucesso.</value>
+  </data>
+  <data name="Software" xml:space="preserve">
+    <value>Software</value>
+  </data>
+  <data name="SoporteCompas" xml:space="preserve">
+    <value>Suporte compasso</value>
+  </data>
+  <data name="TipoPerfil" xml:space="preserve">
+    <value>Tipo de perfil</value>
+  </data>
+  <data name="Perfil" xml:space="preserve">
+    <value>Perfil</value>
+  </data>
+  <data name="Manillas" xml:space="preserve">
+    <value>Puxadores</value>
+  </data>
+  <data name="Alias" xml:space="preserve">
+    <value>Alias</value>
+  </data>
+  <data name="SeleccionaTipoPerfil" xml:space="preserve">
+    <value>Selecione primeiro um tipo de perfil.</value>
+  </data>
+  <data name="PasoProximamenteTexto" xml:space="preserve">
+    <value>Esta etapa ainda não está disponível na nova versão. Pode completá-la a partir da aplicação atual (RotoGestionClientes); assim que migrarmos esta etapa, os dados aparecerão aqui.</value>
+  </data>
+  <data name="Oscilobatientes" xml:space="preserve">
+    <value>Oscilobatentes</value>
+  </data>
+  <data name="Seguridad" xml:space="preserve">
+    <value>Segurança</value>
+  </data>
+  <data name="HojaPasiva" xml:space="preserve">
+    <value>Folha passiva</value>
+  </data>
+  <data name="Practicables" xml:space="preserve">
+    <value>Praticáveis</value>
+  </data>
+  <data name="PuertaSecundaria" xml:space="preserve">
+    <value>Porta secundária</value>
+  </data>
+  <data name="Aguja" xml:space="preserve">
+    <value>Agulha</value>
+  </data>
+  <data name="Todos" xml:space="preserve">
+    <value>Todos</value>
+  </data>
+  <data name="PorPerfil" xml:space="preserve">
+    <value>Por perfil</value>
+  </data>
+  <data name="Bisagras" xml:space="preserve">
+    <value>Dobradiças</value>
+  </data>
+  <data name="Cerraduras" xml:space="preserve">
+    <value>Fechaduras</value>
+  </data>
+  <data name="DefinirAgujaPerfil" xml:space="preserve">
+    <value>Definir agulha por perfil</value>
+  </data>
+  <data name="ConfigurarPorPerfil" xml:space="preserve">
+    <value>Configurar por perfil</value>
+  </data>
+  <data name="Cilindros" xml:space="preserve">
+    <value>Cilindros</value>
+  </data>
+  <data name="SeleccionarCilindros" xml:space="preserve">
+    <value>Selecionar cilindros</value>
+  </data>
+  <data name="ConfigurarCilindros" xml:space="preserve">
+    <value>Configurar cilindros</value>
+  </data>
+  <data name="Tipo" xml:space="preserve">
+    <value>Tipo</value>
+  </data>
+  <data name="Marca" xml:space="preserve">
+    <value>Marca</value>
+  </data>
+  <data name="BisagrasSoldadora" xml:space="preserve">
+    <value>Dobradiças na máquina de soldar</value>
+  </data>
+  <data name="TripleTaladroCentro" xml:space="preserve">
+    <value>Broca tripla num centro de maquinagem</value>
+  </data>
+  <data name="SoporteMarco" xml:space="preserve">
+    <value>Suporte de moldura</value>
+  </data>
+  <data name="CentroMecanizado" xml:space="preserve">
+    <value>Centro de maquinagem</value>
+  </data>
+  <data name="Plantilla" xml:space="preserve">
+    <value>Modelo</value>
+  </data>
+  <data name="BancoMarcos" xml:space="preserve">
+    <value>Banco de marcos</value>
+  </data>
+  <data name="TipoMaquinaObligatorio" xml:space="preserve">
+    <value>Deve selecionar um tipo de máquina.</value>
+  </data>
+  <data name="MantenimientoObligatorio" xml:space="preserve">
+    <value>Deve selecionar uma empresa de manutenção.</value>
+  </data>
+  <data name="AnadirMaquina" xml:space="preserve">
+    <value>Adicionar máquina</value>
+  </data>
+  <data name="EditarMaquina" xml:space="preserve">
+    <value>Editar máquina</value>
+  </data>
+  <data name="EliminarMaquinaTitulo" xml:space="preserve">
+    <value>Eliminar máquina</value>
+  </data>
+  <data name="ConfirmarEliminarMaquina" xml:space="preserve">
+    <value>Tem a certeza que pretende eliminar esta máquina?</value>
+  </data>
+  <data name="Interior" xml:space="preserve">
+    <value>Interior</value>
+  </data>
+  <data name="Exterior" xml:space="preserve">
+    <value>Exterior</value>
+  </data>
+  <data name="Nomenclatura" xml:space="preserve">
+    <value>Nomenclatura</value>
+  </data>
+  <data name="Si" xml:space="preserve">
+    <value>Sim</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Não</value>
+  </data>
+  <data name="Usuarios" xml:space="preserve">
+    <value>Utilizadores</value>
+  </data>
+  <data name="Perfiles" xml:space="preserve">
+    <value>Perfis</value>
+  </data>
+  <data name="MarcasMaquinas" xml:space="preserve">
+    <value>Marcas de máquinas</value>
+  </data>
+  <data name="MantenimientoMaquina" xml:space="preserve">
+    <value>Manutenção de máquinas</value>
+  </data>
+  <data name="TipoMaquinas" xml:space="preserve">
+    <value>Tipo de máquinas</value>
+  </data>
+  <data name="SeguridadVentana" xml:space="preserve">
+    <value>Segurança das janelas</value>
+  </data>
+  <data name="Pasivas" xml:space="preserve">
+    <value>Passivas</value>
+  </data>
+  <data name="Activo" xml:space="preserve">
+    <value>Ativo</value>
+  </data>
+  <data name="EsDistribuidor" xml:space="preserve">
+    <value>É distribuidor</value>
+  </data>
+  <data name="NombreObligatorio" xml:space="preserve">
+    <value>O nome é obrigatório.</value>
+  </data>
+  <data name="Nuevo" xml:space="preserve">
+    <value>Novo</value>
+  </data>
+  <data name="TipoPerfilObligatorio" xml:space="preserve">
+    <value>Deve selecionar um tipo de perfil.</value>
+  </data>
+  <data name="SeleccionaCategoria" xml:space="preserve">
+    <value>Selecione uma categoria à esquerda para ver e editar os seus dados.</value>
+  </data>
+  <data name="TotalRegistros" xml:space="preserve">
+    <value>Total de registos: </value>
+  </data>
+  <data name="LimpiarFiltros" xml:space="preserve">
+    <value>Limpar filtros</value>
+  </data>
+  <data name="ExportarExcel" xml:space="preserve">
+    <value>Exportar para o Excel</value>
+  </data>
+  <data name="NoDatosExportar" xml:space="preserve">
+    <value>Não há dados para exportar.</value>
+  </data>
+  <data name="ExcelExportadoCorrectamente" xml:space="preserve">
+    <value>Ficheiro Excel criado com sucesso.</value>
+  </data>
+  <data name="Seleccionar" xml:space="preserve">
+    <value>Selecionar</value>
+  </data>
+  <data name="Responsables" xml:space="preserve">
+    <value>Responsáveis</value>
+  </data>
+  <data name="Softwares" xml:space="preserve">
+    <value>Softwares</value>
+  </data>
+  <data name="CrearActualizacionDescripcion" xml:space="preserve">
+    <value>Gera um ficheiro com os dados mestres atuais para o distribuir aos distribuidores.</value>
+  </data>
+  <data name="ActualizarDatosDescripcion" xml:space="preserve">
+    <value>Selecione o ficheiro de atualização de dados mestres enviado pela sede para o aplicar.</value>
+  </data>
+  <data name="SeleccionarArchivoActualizacion" xml:space="preserve">
+    <value>Selecionar ficheiro de atualização</value>
+  </data>
+  <data name="AplicarActualizacion" xml:space="preserve">
+    <value>Aplicar atualização</value>
+  </data>
+  <data name="ArchivoActualizacionObligatorio" xml:space="preserve">
+    <value>Selecione um ficheiro de atualização antes de continuar.</value>
+  </data>
+  <data name="DatosExportadosCorrectamente" xml:space="preserve">
+    <value>Dados exportados corretamente.</value>
+  </data>
+  <data name="ErrorExportarDatos" xml:space="preserve">
+    <value>Erro ao exportar os dados mestres.</value>
+  </data>
+  <data name="ErrorImportarDatos" xml:space="preserve">
+    <value>Erro ao importar os dados mestres. Verifique se o ficheiro selecionado é válido.</value>
+  </data>
+  <data name="DatosActualizadosVersion" xml:space="preserve">
+    <value>Dados mestres atualizados para a versão {0}.</value>
+  </data>
+  <data name="SeleccionarClientes" xml:space="preserve">
+    <value>Selecione os clientes para exportar</value>
+  </data>
+  <data name="SeleccionarTodos" xml:space="preserve">
+    <value>Selecionar tudo</value>
+  </data>
+  <data name="Seleccionados" xml:space="preserve">
+    <value>Selecionados</value>
+  </data>
+  <data name="SeleccioneUnCliente" xml:space="preserve">
+    <value>Selecione pelo menos um cliente.</value>
+  </data>
+  <data name="ClienteExportado" xml:space="preserve">
+    <value>Cliente exportado com sucesso.</value>
+  </data>
+  <data name="ClienteNoEncontrado" xml:space="preserve">
+    <value>O cliente não foi encontrado.</value>
+  </data>
+  <data name="ErrorAlExportar" xml:space="preserve">
+    <value>Erro ao exportar o cliente.</value>
+  </data>
+  <data name="ClientesExportadosCorrectamente" xml:space="preserve">
+    <value>Foram exportados {0} clientes com sucesso.</value>
+  </data>
+  <data name="De" xml:space="preserve">
+    <value>de</value>
+  </data>
+  <data name="ImportarClienteDescripcion" xml:space="preserve">
+    <value>Selecione um ficheiro .roto (um cliente) ou .zip (vários clientes) para o importar.</value>
+  </data>
+  <data name="SeleccionarArchivoImportacion" xml:space="preserve">
+    <value>Selecionar ficheiro (.roto ou .zip)</value>
+  </data>
+  <data name="FormatoArchivoNoValido" xml:space="preserve">
+    <value>Apenas são admitidos ficheiros .roto ou .zip.</value>
+  </data>
+  <data name="ZipSinFicherosRoto" xml:space="preserve">
+    <value>O ficheiro .zip não contém nenhum ficheiro .roto.</value>
+  </data>
+  <data name="SeleccionarFicheroObligatorio" xml:space="preserve">
+    <value>Selecione um ficheiro antes de continuar.</value>
+  </data>
+  <data name="ArchivoNoValido" xml:space="preserve">
+    <value>O ficheiro não é um ficheiro .roto válido.</value>
+  </data>
+  <data name="ClienteImportado" xml:space="preserve">
+    <value>Cliente importado com sucesso.</value>
+  </data>
+  <data name="ErrorAlImportar" xml:space="preserve">
+    <value>Erro ao importar o cliente.</value>
+  </data>
+  <data name="NombreAsignado" xml:space="preserve">
+    <value>Nome atribuído:</value>
+  </data>
+  <data name="ClienteExistenteImportado" xml:space="preserve">
+    <value>Já existia um cliente com esse nome (ou uma variação), por isso foi importado como:</value>
+  </data>
+  <data name="ArchivoGeneradoCorrectamente" xml:space="preserve">
+    <value>Ficheiro gerado com sucesso.</value>
+  </data>
+  <data name="ErrorGenerarConfig" xml:space="preserve">
+    <value>Erro ao gerar o ficheiro de configuração.</value>
+  </data>
+  <data name="ExportarPdf" xml:space="preserve">
+    <value>Exportar para PDF</value>
+  </data>
+  <data name="PdfGeneradoCorrectamente" xml:space="preserve">
+    <value>PDF gerado com sucesso.</value>
+  </data>
+  <data name="ErrorGenerarPdf" xml:space="preserve">
+    <value>Erro ao gerar o PDF.</value>
+  </data>
+  <data name="Cerrar" xml:space="preserve">
+    <value>Fechar</value>
+  </data>
+  <data name="ClientesImportadosCorrectamente" xml:space="preserve">
+    <value>Foram importados {0} clientes com sucesso.</value>
+  </data>
+  <data name="ResumenCliente" xml:space="preserve">
+    <value>Resumo do cliente</value>
+  </data>
+  <data name="VolverListado" xml:space="preserve">
+    <value>Voltar à lista</value>
+  </data>
+  <data name="PorteroElectrico" xml:space="preserve">
+    <value>Porteiro elétrico</value>
+  </data>
+  <data name="Ninguno" xml:space="preserve">
+    <value>Nenhum</value>
+  </data>
+  <data name="ObservacionesParalelas" xml:space="preserve">
+    <value>Observações (paralelas)</value>
+  </data>
+</root>

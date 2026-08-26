@@ -1,0 +1,175 @@
+@* Paso "Balconeras" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoBalconeras.cs (WinForms): agrupa dos áreas — Balconeras
+   (seguridad, hoja pasiva y aguja de montaje) y Puerta secundaria
+   (bisagras, cerraduras y aguja de montaje) — más un campo de
+   observaciones común a ambas, igual que en la app legacy. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+
+@if (_cargando)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+}
+else
+{
+    <MudStack Spacing="4">
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Balconeras</MudText>
+            <div class="rgc-step-images">
+                <img src="_content/RotoGestionClientes.UI/images/wizard/balconera.png" alt="@MenuTextos.Balconeras" />
+                <img src="_content/RotoGestionClientes.UI/images/wizard/balconera-practicable.png" alt="@MenuTextos.Balconeras" />
+            </div>
+            <MudGrid Class="mb-4">
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.Seguridad" Items="_seguridad" OnToggle="OnSeguridadToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.HojaPasiva" Items="_cremonaPasiva" OnToggle="OnCremonaPasivaToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+            </MudGrid>
+            <AgujaSelector Model="Model" AgujaModeloTipoId="@((int)AgujasTipoModelo.Balconera)"
+                            Tipo="Model.AgujaBalconeraTipo" TipoChanged="OnAgujaBalconeraTipoChanged"
+                            AgujaId="Model.AgujaBalconera" AgujaIdChanged="OnAgujaBalconeraIdChanged"
+                            Agujas="_agujas" DialogTitulo="@MenuTextos.DefinirAgujaPerfil" />
+        </MudPaper>
+
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.PuertaSecundaria</MudText>
+            <div class="rgc-step-images">
+                <img src="_content/RotoGestionClientes.UI/images/wizard/puerta-secundaria.png" alt="@MenuTextos.PuertaSecundaria" />
+            </div>
+            <MudGrid Class="mb-4">
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.Bisagras" Items="_bisagras" OnToggle="OnBisagraToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.Cerraduras" Items="_cerraduras" OnToggle="OnCerraduraToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+            </MudGrid>
+            <AgujaSelector Model="Model" AgujaModeloTipoId="@((int)AgujasTipoModelo.PuertaSecundaria)"
+                            Tipo="Model.AgujaPuertaSecTipo" TipoChanged="OnAgujaPuertaSecTipoChanged"
+                            AgujaId="Model.AgujaPuertaSec" AgujaIdChanged="OnAgujaPuertaSecIdChanged"
+                            Agujas="_agujas" DialogTitulo="@MenuTextos.DefinirAgujaPerfil" />
+        </MudPaper>
+
+        <MudTextField T="string" @bind-Value="Model.ObservacionesBalconeras" Label="@MenuTextos.Comentarios"
+                      Variant="Variant.Outlined" Lines="3" />
+    </MudStack>
+}
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private bool _cargando = true;
+    private List<SeleccionableItem> _seguridad = new();
+    private List<SeleccionableItem> _cremonaPasiva = new();
+    private List<SeleccionableItem> _bisagras = new();
+    private List<SeleccionableItem> _cerraduras = new();
+    private List<Aguja> _agujas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var seguridad = await db.SeguridadVentanas.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _seguridad = seguridad
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.SeguridadBalconeraList.Contains(f.Id) })
+            .ToList();
+
+        // A diferencia de la hoja practicable del paso "Ventanas", aquí SÍ se
+        // incluyen los tipos de cremona "Perimetral" (misma lógica que
+        // RellenarGridCremonaPasivas() en PasoBalconeras.cs, que no aplica la
+        // exclusión que sí usa PasoVentanas.cs para hojas practicables).
+        var cremonas = await db.CremonaPasivaVentanaTipos.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _cremonaPasiva = cremonas
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.CremonaPasivaBalconeraList.Contains(f.Id) })
+            .ToList();
+
+        var bisagras = await db.Bisagras.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _bisagras = bisagras
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.BisagrasPuertaSecList.Contains(f.Id) })
+            .ToList();
+
+        var cerraduras = await db.CerradurasPuertaSec.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _cerraduras = cerraduras
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.CerradurasPuertaSecList.Contains(f.Id) })
+            .ToList();
+
+        _agujas = await db.Agujas.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+
+        // Igual que PasoBalconeras_Load en la app legacy: si el cliente es
+        // nuevo (o todavía no tenía guardado un modo de aguja), el modo por
+        // defecto es "Todos".
+        if (Model.AgujaBalconeraTipo == 0)
+            Model.AgujaBalconeraTipo = (int)AgujaMode.Todos;
+        if (Model.AgujaPuertaSecTipo == 0)
+            Model.AgujaPuertaSecTipo = (int)AgujaMode.Todos;
+
+        _cargando = false;
+    }
+
+    private void OnSeguridadToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.SeguridadBalconeraList.Contains(e.Item.Id))
+                Model.SeguridadBalconeraList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.SeguridadBalconeraList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnCremonaPasivaToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.CremonaPasivaBalconeraList.Contains(e.Item.Id))
+                Model.CremonaPasivaBalconeraList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.CremonaPasivaBalconeraList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnBisagraToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.BisagrasPuertaSecList.Contains(e.Item.Id))
+                Model.BisagrasPuertaSecList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.BisagrasPuertaSecList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnCerraduraToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.CerradurasPuertaSecList.Contains(e.Item.Id))
+                Model.CerradurasPuertaSecList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.CerradurasPuertaSecList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnAgujaBalconeraTipoChanged(int tipo) => Model.AgujaBalconeraTipo = tipo;
+    private void OnAgujaBalconeraIdChanged(int? id) => Model.AgujaBalconera = id;
+    private void OnAgujaPuertaSecTipoChanged(int tipo) => Model.AgujaPuertaSecTipo = tipo;
+    private void OnAgujaPuertaSecIdChanged(int? id) => Model.AgujaPuertaSec = id;
+}

@@ -1,0 +1,55 @@
+@* Paso "Elevables/Plegables" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoElevablesPlegables.cs (WinForms): dos bloques independientes,
+   uno para Elevables (Estándar sí/no, DLO sí/no, observaciones) y otro para
+   Plegables (Consumen sí/no, observaciones). No hay listas de selección en
+   este paso, solo interruptores Sí/No y comentarios. *@
+<MudStack Spacing="4">
+    <MudPaper Outlined="true" Class="pa-4">
+        <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Elevables</MudText>
+        <div class="rgc-step-images">
+            <img src="_content/RotoGestionClientes.UI/images/wizard/elevable.png" alt="@MenuTextos.Elevables" />
+        </div>
+        <MudStack Row="true" Spacing="6" Wrap="Wrap.Wrap" Class="mb-4">
+            <div>
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@MenuTextos.Estandar</MudText>
+                <MudRadioGroup T="bool" Value="Model.Elevable_Estandar" ValueChanged="OnEstandarChanged">
+                    <MudRadio T="bool" Value="true" Color="Color.Primary">@MenuTextos.Si</MudRadio>
+                    <MudRadio T="bool" Value="false" Color="Color.Primary">@MenuTextos.No</MudRadio>
+                </MudRadioGroup>
+            </div>
+            <div>
+                <MudText Typo="Typo.subtitle2" Class="mb-2">@MenuTextos.Dlo</MudText>
+                <MudRadioGroup T="bool" Value="Model.Elevable_Dlo" ValueChanged="OnDloChanged">
+                    <MudRadio T="bool" Value="true" Color="Color.Primary">@MenuTextos.Si</MudRadio>
+                    <MudRadio T="bool" Value="false" Color="Color.Primary">@MenuTextos.No</MudRadio>
+                </MudRadioGroup>
+            </div>
+        </MudStack>
+        <MudTextField T="string" @bind-Value="Model.ObservacionesElevables" Label="@MenuTextos.Comentarios"
+                      Variant="Variant.Outlined" Lines="3" />
+    </MudPaper>
+
+    <MudPaper Outlined="true" Class="pa-4">
+        <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Plegables</MudText>
+        <div class="rgc-step-images">
+            <img src="_content/RotoGestionClientes.UI/images/wizard/plegable.png" alt="@MenuTextos.Plegables" />
+        </div>
+        <div class="mb-4">
+            <MudText Typo="Typo.subtitle2" Class="mb-2">@MenuTextos.Consumen</MudText>
+            <MudRadioGroup T="bool" Value="Model.Plegable_Consumen" ValueChanged="OnConsumenChanged">
+                <MudRadio T="bool" Value="true" Color="Color.Primary">@MenuTextos.Si</MudRadio>
+                <MudRadio T="bool" Value="false" Color="Color.Primary">@MenuTextos.No</MudRadio>
+            </MudRadioGroup>
+        </div>
+        <MudTextField T="string" @bind-Value="Model.ObservacionesPlegables" Label="@MenuTextos.Comentarios"
+                      Variant="Variant.Outlined" Lines="3" />
+    </MudPaper>
+</MudStack>
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private void OnEstandarChanged(bool valor) => Model.Elevable_Estandar = valor;
+    private void OnDloChanged(bool valor) => Model.Elevable_Dlo = valor;
+    private void OnConsumenChanged(bool valor) => Model.Plegable_Consumen = valor;
+}

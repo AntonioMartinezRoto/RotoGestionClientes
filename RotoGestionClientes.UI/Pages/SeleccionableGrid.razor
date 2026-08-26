@@ -1,0 +1,28 @@
+@* Rejilla de checkboxes reutilizable para los pasos del wizard de Clientes
+   (tipos de perfil, perfiles, manillas, soporte compás...). Sustituye a los
+   DataGridView con columna de checkbox de la app WinForms legacy. *@
+<MudPaper Outlined="true" Class="pa-3 rgc-check-grid-paper">
+    <MudText Typo="Typo.subtitle2" Class="mb-2">@Title</MudText>
+
+    @if (Items is null || Items.Count == 0)
+    {
+        <MudText Typo="Typo.body2" Class="mud-text-secondary">@EmptyText</MudText>
+    }
+    else
+    {
+        <div class="rgc-check-grid">
+            @foreach (var item in Items)
+            {
+                <MudCheckBox T="bool" Value="item.Selected" ValueChanged="@(v => OnToggle.InvokeAsync((item, v)))"
+                             Label="@item.Nombre" Dense="true" Color="Color.Primary" />
+            }
+        </div>
+    }
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public string Title { get; set; } = string.Empty;
+    [Parameter] public IReadOnlyList<SeleccionableItem>? Items { get; set; }
+    [Parameter, EditorRequired] public EventCallback<(SeleccionableItem Item, bool Selected)> OnToggle { get; set; }
+    [Parameter] public string EmptyText { get; set; } = string.Empty;
+}

@@ -1,0 +1,108 @@
+@* Diálogo "Seleccionar cilindros": lista de cilindros activos con checkbox,
+   agrupados por tipo y medidas. Réplica moderna de Clientes/Cilindros.cs
+   (WinForms). *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@MenuTextos.SeleccionarCilindros</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else if (_filas.Count == 0)
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinResultados</MudText>
+        }
+        else
+        {
+            <MudSimpleTable Dense="true" Style="width: 100%; max-height: 60vh; overflow-y: auto;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>@MenuTextos.Tipo</th>
+                        <th>@MenuTextos.Interior</th>
+                        <th>@MenuTextos.Exterior</th>
+                        <th>@MenuTextos.Nomenclatura</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var fila in _filas)
+                    {
+                        <tr>
+                            <td>
+                                <MudCheckBox T="bool" Value="fila.Selected" ValueChanged="@(v => fila.Selected = v)"
+                                             Dense="true" Color="Color.Primary" />
+                            </td>
+                            <td>@fila.CilindroTipoNombre</td>
+                            <td>@fila.MedidaInterior</td>
+                            <td>@fila.MedidaExterior</td>
+                            <td>@fila.Nomenclatura</td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancelar">@MenuTextos.Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Aceptar">@MenuTextos.Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private bool _cargando = true;
+    private List<Fila> _filas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var cilindros = await db.Cilindros
+            .Include(c => c.CilindroTipo)
+            .Where(c => c.Activa)
+            .AsNoTracking()
+            .ToListAsync();
+
+        _filas = cilindros
+            .Select(c => new Fila
+            {
+                Id = c.Id,
+                Selected = Model.CilindroList.Contains(c.Id),
+                CilindroTipoNombre = c.CilindroTipo.Nombre,
+                MedidaInterior = c.MedidaInterior,
+                MedidaExterior = c.MedidaExterior,
+                Nomenclatura = c.Nomenclatura
+            })
+            .OrderBy(f => f.CilindroTipoNombre)
+            .ThenBy(f => f.MedidaInterior)
+            .ThenBy(f => f.MedidaExterior)
+            .ToList();
+
+        _cargando = false;
+    }
+
+    private void Aceptar()
+    {
+        Model.CilindroList = _filas.Where(f => f.Selected).Select(f => f.Id).ToList();
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancelar() => MudDialog.Cancel();
+
+    private class Fila
+    {
+        public int Id { get; set; }
+        public bool Selected { get; set; }
+        public string CilindroTipoNombre { get; set; } = string.Empty;
+        public int MedidaInterior { get; set; }
+        public int MedidaExterior { get; set; }
+        public string Nomenclatura { get; set; } = string.Empty;
+    }
+}

@@ -189,7 +189,8 @@ namespace RotoGestionClientes
                         .Select(x => new MaestroDto
                         {
                             Id = x.Id,
-                            Nombre = x.Nombre
+                            Nombre = x.Nombre,
+                            Activa = x.Activa
                         })
                         .ToList(),
 

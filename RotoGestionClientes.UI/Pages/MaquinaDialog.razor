@@ -1,0 +1,143 @@
+@* Diálogo "Añadir/Editar máquina": tipo, marca (opcional), empresa de
+   mantenimiento y observaciones. Réplica moderna de
+   Clientes/DefinicionMaquinas.cs (WinForms). Al aceptar, añade o reemplaza
+   la entrada correspondiente directamente en Model.MaquinasList — igual
+   convención que el resto de diálogos del wizard (CilindrosDialog,
+   AgujaPorPerfilDialog), que mutan el modelo compartido en vez de devolver
+   datos a través de DialogResult. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@using Microsoft.EntityFrameworkCore
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Titulo</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else
+        {
+            <MudStack Spacing="3">
+                <MudSelect T="int?" Label="@MenuTextos.Tipo" Value="_tipoId" ValueChanged="@(v => _tipoId = v)"
+                           Variant="Variant.Outlined">
+                    @foreach (var tipo in _tipos)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)tipo.Id)">@tipo.Descripcion</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int?" Label="@MenuTextos.Marca" Value="_marcaId" ValueChanged="@(v => _marcaId = v)"
+                           Variant="Variant.Outlined">
+                    <MudSelectItem T="int?" Value="@((int?)null)">—</MudSelectItem>
+                    @foreach (var marca in _marcas)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)marca.Id)">@marca.Nombre</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudSelect T="int?" Label="@MenuTextos.Mantenimiento" Value="_mantenimientoId" ValueChanged="@(v => _mantenimientoId = v)"
+                           Variant="Variant.Outlined">
+                    @foreach (var mantenimiento in _mantenimientos)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)mantenimiento.Id)">@mantenimiento.Nombre</MudSelectItem>
+                    }
+                </MudSelect>
+
+                <MudTextField T="string" @bind-Value="_observaciones" Label="@MenuTextos.Comentarios"
+                              Variant="Variant.Outlined" Lines="3" />
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancelar">@MenuTextos.Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Aceptar">@MenuTextos.Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+    [Parameter, EditorRequired] public string Titulo { get; set; } = string.Empty;
+    [Parameter] public ClienteMaquinaItem? Item { get; set; }
+
+    private bool _cargando = true;
+    private List<MaquinaTipo> _tipos = new();
+    private List<MaquinaMarca> _marcas = new();
+    private List<MaquinaMantenimiento> _mantenimientos = new();
+
+    private int? _tipoId;
+    private int? _marcaId;
+    private int? _mantenimientoId;
+    private string? _observaciones;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        _tipos = await db.MaquinasTipos.Where(x => x.Activa).OrderBy(x => x.Descripcion).AsNoTracking().ToListAsync();
+        _marcas = await db.MaquinasMarcas.Where(x => x.Activa).OrderBy(x => x.Nombre).AsNoTracking().ToListAsync();
+        _mantenimientos = await db.MaquinasMantenimiento.Where(x => x.Activa).OrderBy(x => x.Nombre).AsNoTracking().ToListAsync();
+
+        if (Item is not null)
+        {
+            _tipoId = Item.MaquinaTipoId;
+            _marcaId = Item.MaquinaMarcaId;
+            _mantenimientoId = Item.MaquinaMantenimientoId;
+            _observaciones = Item.Observaciones;
+        }
+
+        _cargando = false;
+    }
+
+    private void Aceptar()
+    {
+        var tipo = _tipos.FirstOrDefault(t => t.Id == _tipoId);
+        if (tipo is null)
+        {
+            Snackbar.Add(MenuTextos.TipoMaquinaObligatorio, Severity.Warning);
+            return;
+        }
+
+        var mantenimiento = _mantenimientos.FirstOrDefault(m => m.Id == _mantenimientoId);
+        if (mantenimiento is null)
+        {
+            Snackbar.Add(MenuTextos.MantenimientoObligatorio, Severity.Warning);
+            return;
+        }
+
+        var marca = _marcas.FirstOrDefault(m => m.Id == _marcaId);
+
+        var resultado = new ClienteMaquinaItem
+        {
+            Id = Item?.Id,
+            MaquinaTipoId = tipo.Id,
+            Descripcion = tipo.Descripcion,
+            MaquinaMarcaId = marca?.Id,
+            MarcaNombre = marca?.Nombre,
+            MaquinaMantenimientoId = mantenimiento.Id,
+            MantenimientoNombre = mantenimiento.Nombre,
+            Observaciones = string.IsNullOrWhiteSpace(_observaciones) ? null : _observaciones.Trim()
+        };
+
+        if (Item is null)
+        {
+            Model.MaquinasList.Add(resultado);
+        }
+        else
+        {
+            var indice = Model.MaquinasList.IndexOf(Item);
+            if (indice >= 0)
+                Model.MaquinasList[indice] = resultado;
+            else
+                Model.MaquinasList.Add(resultado);
+        }
+
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private void Cancelar() => MudDialog.Cancel();
+}

@@ -1,0 +1,165 @@
+@* Réplica moderna de Main.ExportarDatosMaestros() (WinForms): genera un
+   fichero .rotodata (JSON) con una foto de los datos maestros actuales y lo
+   descarga en el navegador/WebView2 (mismo patrón rgcDescargarArchivo usado
+   en el export de Excel de Informes), para distribuirlo a los
+   distribuidores y que lo apliquen desde "Actualizar datos Roto". Solo
+   visible en la edición Interna/Debug (igual que SetVisibilidadModoAplicacion
+   en Main.cs). *@
+@page "/crear-actualizacion"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+@inject ISnackbar Snackbar
+@inject VersionDatosState VersionDatosState
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+@using System.Text
+@using System.Text.Json
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Class="mb-4">
+        <MudTooltip Text="@MenuTextos.VolverMenu">
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+        </MudTooltip>
+        <MudText Typo="Typo.h5">@MenuTextos.CrearActualizacion</MudText>
+    </MudStack>
+
+    <MudPaper Outlined="true" Class="pa-6">
+        <MudStack Spacing="4">
+            <MudText Typo="Typo.body1">@MenuTextos.CrearActualizacionDescripcion</MudText>
+
+            <MudText Typo="Typo.subtitle2" Class="mud-text-secondary">
+                @MenuTextos.VersionDatos @(VersionDatosState.Version ?? "—")
+            </MudText>
+
+            <div>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload"
+                           OnClick="GenerarActualizacionAsync" Disabled="_generando">
+                    @MenuTextos.CrearActualizacion
+                </MudButton>
+            </div>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private bool _generando;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Misma regla de visibilidad que Main.SetVisibilidadModoAplicacion():
+        // este módulo no existe para la edición Distribuidor.
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
+        var edition = ApplicationEdition.Internal;
+        if (config is not null)
+        {
+            Enum.TryParse(config.AppEdition, out edition);
+        }
+
+        if (edition == ApplicationEdition.Distributor)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task GenerarActualizacionAsync()
+    {
+        _generando = true;
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            var version = (await db.ConfiguracionAplicacion.AsNoTracking().FirstAsync()).VersionMaestros;
+
+            // Misma composición del paquete que Main.ExportarDatosMaestros().
+            var dto = new MaestrosExportDto
+            {
+                VersionMaestros = version,
+
+                Softwares = await db.Softwares.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                PerfilTipos = await db.PerfilTipos.AsNoTracking()
+                    .Select(x => new PerfilTipoDto { Id = x.Id, Nombre = x.Nombre, NombreAbreviado = x.NombreAbreviado })
+                    .ToListAsync(),
+
+                Perfiles = await db.Perfiles.AsNoTracking()
+                    .Select(x => new PerfilDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa, PerfilTipoId = x.PerfilTipoId })
+                    .ToListAsync(),
+
+                Manillas = await db.Manillas.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                // Corregido respecto a la app legacy: Main.ExportarDatosMaestros()
+                // no copiaba Activa para SoporteCompases, así que todos los
+                // registros llegaban al distribuidor desactivados. Aquí sí se
+                // incluye (y se ha corregido también en Main.cs para que
+                // ambas apps generen el mismo paquete durante la convivencia).
+                SoporteCompases = await db.SoporteCompases.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                SeguridadVentanas = await db.SeguridadVentanas.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                CremonaPasivaVentanas = await db.CremonaPasivaVentanaTipos.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                Bisagras = await db.Bisagras.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                CerradurasPuerta = await db.CerradurasPuerta.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                CerradurasPuertaSec = await db.CerradurasPuertaSec.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                Agujas = await db.Agujas.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                MaquinasTipo = await db.MaquinasTipos.AsNoTracking()
+                    .Select(x => new MaquinaTipoDto { Id = x.Id, Descripcion = x.Descripcion, Activa = x.Activa })
+                    .ToListAsync(),
+
+                MaquinasMarca = await db.MaquinasMarcas.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+
+                MaquinasMantenimiento = await db.MaquinasMantenimiento.AsNoTracking()
+                    .Select(x => new MaestroDto { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                    .ToListAsync(),
+            };
+
+            var json = JsonSerializer.Serialize(dto, new JsonSerializerOptions { WriteIndented = true });
+            var base64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(json));
+            var nombreArchivo = $"Maestros_v{version}.rotodata";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+
+            Snackbar.Add(MenuTextos.DatosExportadosCorrectamente, Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorExportarDatos, Severity.Error);
+        }
+        finally
+        {
+            _generando = false;
+        }
+    }
+
+    private void VolverMenu() => NavigationManager.NavigateTo("/");
+}

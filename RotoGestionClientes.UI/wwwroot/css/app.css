@@ -1,0 +1,353 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+#app {
+    height: 100vh;
+}
+
+/* Pages/Home.razor: dashboard de inicio. Sustituye a la primera versión
+   (imagen + texto centrados a pantalla completa, clase .rgc-hero ya
+   retirada) por una cabecera corporativa compacta seguida de tarjetas de
+   datos rápidos y accesos directos a los módulos del menú lateral. */
+.rgc-home {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* AppbarHeight (RgcTheme.cs) restado para centrar en el alto visible
+       real, no en el de toda la ventana. Si el contenido crece más que la
+       ventana, min-height solo actúa como suelo: el flex pasa a alto
+       automático y no recorta ni desplaza nada hacia arriba. */
+    min-height: calc(100vh - 64px);
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.rgc-home-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--mud-palette-primary);
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+}
+
+.rgc-home-hero img {
+    height: 72px;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.rgc-home-hero .mud-typography {
+    color: #FFFFFF;
+}
+
+.rgc-home-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.25rem;
+}
+
+.rgc-home-access {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    /* MudGrid ya estira cada MudItem de una fila a la altura del más alto
+       (flexbox, align-items:stretch por defecto), pero esta tarjeta (el
+       MudPaper de dentro) no lo heredaba porque no tenía altura del 100%:
+       por eso Crear actualización / Actualizar datos Roto (sin miniaturas
+       debajo) se veían más bajas que Clientes/Informes/Mantenimiento. Con
+       height:100% todas ocupan el alto de la fila y quedan alineadas. */
+    height: 100%;
+    box-sizing: border-box;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.rgc-home-access:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Las tarjetas de Clientes e Informes combinan el acceso principal (clic en
+   icono+título, igual que el resto de tarjetas) con varios accesos
+   secundarios en miniatura debajo (Nuevo cliente/Importar/Exportar en la de
+   Clientes; los filtros rápidos de Tipo de perfil/Máquinas en la de
+   Informes) para que se entienda que están relacionados con ella. Por eso no
+   llevan cursor/@onclick en el MudPaper completo como las demás tarjetas,
+   sino solo en .rgc-home-access-main. */
+.rgc-home-access-grouped {
+    cursor: default;
+}
+
+.rgc-home-access-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+}
+
+/* Responsive: en ventanas estrechas la cabecera pasa a columna y el
+   contenido reduce márgenes, en vez de recortarse como en la versión
+   WinForms de tamaño fijo. */
+@media (max-width: 600px) {
+    .rgc-home {
+        padding: 1rem;
+    }
+
+    .rgc-home-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.25rem;
+    }
+}
+
+.rgc-search {
+    min-width: 260px;
+    max-width: 420px;
+}
+
+.rgc-clientes-table {
+    overflow-x: auto;
+}
+
+/* Menú lateral (Layout/MainLayout.razor): el contenedor ocupa toda la
+   altura del drawer para poder empujar "Salir" al fondo con un MudSpacer,
+   separado del resto de opciones para que no se confunda con ellas. */
+.rgc-nav-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.rgc-nav-link-salir .mud-nav-link-text {
+    color: var(--mud-palette-error);
+}
+
+.rgc-appbar-version {
+    align-self: flex-end;
+    margin-bottom: 2px;
+}
+
+/* Wizard de Clientes (alta/edición)
+   Se ancla al viewport con position:fixed (en vez de depender de que los
+   contenedores de MudBlazor tengan una altura acotada) para que la barra de
+   navegación inferior (Cancelar/Atrás/Siguiente/Guardar) quede SIEMPRE a la
+   misma altura, sin que el usuario tenga que hacer scroll de página para
+   encontrarla al cambiar de paso. Solo el contenido del paso actual
+   (.rgc-wizard-content) y la barra lateral en móvil hacen scroll interno.
+   Los valores de top/left coinciden con AppbarHeight (64px) y
+   DrawerWidthLeft (290px) definidos en RgcTheme.cs; si el menú lateral se
+   hace colapsable/responsive en el futuro, este left deberá revisarse. */
+
+.rgc-wizard {
+    position: fixed;
+    top: 64px;
+    left: 290px;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 2rem;
+    box-sizing: border-box;
+    gap: 1rem;
+    overflow: hidden;
+}
+
+.rgc-wizard-header {
+    flex: 0 0 auto;
+}
+
+.rgc-wizard-body {
+    flex: 1 1 auto;
+    display: flex;
+    gap: 1.5rem;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.rgc-wizard-sidebar {
+    flex: 0 0 260px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    overflow-y: auto;
+}
+
+.rgc-wizard-content {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.rgc-wizard-step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 8px;
+    color: var(--mud-palette-text-secondary);
+}
+
+.rgc-wizard-step.rgc-clickable {
+    cursor: pointer;
+}
+
+.rgc-wizard-step.rgc-clickable:hover {
+    background: var(--mud-palette-action-default-hover);
+}
+
+.rgc-wizard-step-badge {
+    flex: 0 0 auto;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--mud-palette-action-default-hover);
+    color: var(--mud-palette-text-secondary);
+}
+
+.rgc-wizard-step-label {
+    font-size: 0.9rem;
+}
+
+.rgc-wizard-step-activo {
+    background: var(--mud-palette-primary-hover);
+    color: var(--mud-palette-primary);
+    font-weight: 600;
+}
+
+.rgc-wizard-step-activo .rgc-wizard-step-badge {
+    background: var(--mud-palette-primary);
+    color: var(--mud-palette-primary-text);
+}
+
+.rgc-wizard-step-completado .rgc-wizard-step-badge {
+    background: var(--mud-palette-success);
+    color: var(--mud-palette-success-text);
+}
+
+.rgc-wizard-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.rgc-wizard-footer {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--mud-palette-lines-default);
+}
+
+.rgc-check-grid-paper {
+    height: 100%;
+}
+
+.rgc-check-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+/* Imágenes representativas de cada paso/área (equivalentes a los PictureBox
+   de la app legacy). Fila horizontal con scroll si no caben, altura acotada
+   para que nunca desplacen a la barra de navegación inferior. */
+.rgc-step-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.rgc-step-images img {
+    height: 120px;
+    width: auto;
+    max-width: 100%;
+    object-fit: contain;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 4px;
+    background: var(--mud-palette-background);
+    padding: 0.25rem;
+}
+
+.rgc-step-images-placeholder {
+    justify-content: center;
+}
+
+.rgc-step-images-placeholder img {
+    height: 160px;
+}
+
+/* Pages/ClienteResumen.razor: tarjetas de resumen en rejilla, pensadas para
+   minimizar el scroll. A diferencia de .rgc-step-images (imágenes grandes en
+   su propia fila, usadas en el asistente de alta/edición), aquí las mismas
+   imágenes de modelo se muestran en miniatura junto al título de cada
+   tarjeta para ahorrar espacio vertical. */
+.rgc-resumen-card {
+    height: 100%;
+}
+
+.rgc-resumen-thumbs {
+    display: flex;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.rgc-resumen-thumbs img {
+    height: 56px;
+    width: auto;
+    object-fit: contain;
+    border: 1px solid var(--mud-palette-lines-default);
+    border-radius: 4px;
+    background: var(--mud-palette-background);
+    padding: 2px;
+}
+
+/* Responsive: por debajo de 900px la barra lateral del wizard pasa a ir
+   arriba, en horizontal y con scroll, en vez de recortarse. El resto del
+   wizard mantiene overflow:hidden para que la barra de navegación inferior
+   (position:fixed en .rgc-wizard) siga sin necesitar scroll de página. */
+@media (max-width: 900px) {
+    .rgc-wizard-body {
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .rgc-wizard-sidebar {
+        flex-direction: row;
+        flex: 0 0 auto;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .rgc-wizard-step-label {
+        white-space: nowrap;
+    }
+}
+
+/* Botones de categoría de filtro del módulo de Informes (sidebar izquierda):
+   texto alineado a la izquierda en vez de centrado, para que se lean como
+   una lista de opciones en vez de como botones de acción sueltos. */
+.rgc-informes-filtro-btn {
+    justify-content: flex-start;
+}

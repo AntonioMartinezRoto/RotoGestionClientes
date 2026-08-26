@@ -1,0 +1,392 @@
+@* Diálogo genérico de alta/edición de "maestro" (tabla de referencia).
+   Réplica moderna de Mantenimiento/MaestroEditForm.cs (WinForms): un mismo
+   formulario (Nombre + Activo, con un combo de Tipo de perfil solo para
+   Perfiles y un checkbox "Es distribuidor" solo para Usuarios) que sirve
+   para las 11 categorías de maestros del módulo de Mantenimiento. Al
+   guardar, incrementa ConfiguracionAplicacion.VersionMaestros igual que
+   IncrementarVersionDatos() en la app legacy. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject VersionDatosState VersionDatosState
+@using Microsoft.EntityFrameworkCore
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Titulo</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else
+        {
+            <MudStack Spacing="3">
+                <MudTextField T="string" @bind-Value="_nombre" Label="@MenuTextos.Nombre" Variant="Variant.Outlined"
+                              Required="true" RequiredError="@MenuTextos.NombreObligatorio" />
+
+                @if (Tipo == MaestroTipo.Perfil)
+                {
+                    <MudSelect T="int?" Label="@MenuTextos.Tipo" Value="_perfilTipoId" ValueChanged="@(v => _perfilTipoId = v)"
+                               Variant="Variant.Outlined">
+                        @foreach (var tipo in _perfilTipos)
+                        {
+                            <MudSelectItem T="int?" Value="@((int?)tipo.Id)">@tipo.Nombre</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+
+                <MudCheckBox T="bool" @bind-Value="_activo" Label="@MenuTextos.Activo" Color="Color.Primary" />
+
+                @if (Tipo == MaestroTipo.Usuario)
+                {
+                    <MudCheckBox T="bool" @bind-Value="_esDistribuidor" Label="@MenuTextos.EsDistribuidor" Color="Color.Primary" />
+                }
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancelar">@MenuTextos.Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AceptarAsync" Disabled="_guardando">@MenuTextos.Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter, EditorRequired] public string Titulo { get; set; } = string.Empty;
+    [Parameter, EditorRequired] public MaestroTipo Tipo { get; set; }
+    [Parameter] public int? Id { get; set; }
+
+    private bool _cargando = true;
+    private bool _guardando;
+
+    private string _nombre = string.Empty;
+    private bool _activo = true;
+    private bool _esDistribuidor;
+    private int? _perfilTipoId;
+    private List<PerfilTipo> _perfilTipos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        if (Tipo == MaestroTipo.Perfil)
+            _perfilTipos = await db.PerfilTipos.Where(x => x.Activa).OrderBy(x => x.Nombre).AsNoTracking().ToListAsync();
+
+        if (Id.HasValue)
+        {
+            switch (Tipo)
+            {
+                case MaestroTipo.Perfil:
+                    {
+                        var e = await db.Perfiles.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                        _perfilTipoId = e.PerfilTipoId;
+                    }
+                    break;
+
+                case MaestroTipo.Software:
+                    {
+                        var e = await db.Softwares.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.Manilla:
+                    {
+                        var e = await db.Manillas.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.CerraduraPuerta:
+                    {
+                        var e = await db.CerradurasPuerta.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.BisagraPuerta:
+                    {
+                        var e = await db.Bisagras.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.SeguridadVentana:
+                    {
+                        var e = await db.SeguridadVentanas.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.CremonaPasivaVentana:
+                    {
+                        var e = await db.CremonaPasivaVentanaTipos.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.MaquinaMantenimiento:
+                    {
+                        var e = await db.MaquinasMantenimiento.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.MaquinaMarcas:
+                    {
+                        var e = await db.MaquinasMarcas.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.MaquinaTipo:
+                    {
+                        var e = await db.MaquinasTipos.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Descripcion;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.Usuario:
+                    {
+                        var e = await db.Usuarios.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                        _esDistribuidor = e.EsDistribuidor;
+                    }
+                    break;
+            }
+        }
+
+        _cargando = false;
+    }
+
+    private async Task AceptarAsync()
+    {
+        var nombre = _nombre.Trim();
+        if (string.IsNullOrWhiteSpace(nombre))
+        {
+            Snackbar.Add(MenuTextos.NombreObligatorio, Severity.Warning);
+            return;
+        }
+
+        if (Tipo == MaestroTipo.Perfil && !_perfilTipoId.HasValue)
+        {
+            Snackbar.Add(MenuTextos.TipoPerfilObligatorio, Severity.Warning);
+            return;
+        }
+
+        _guardando = true;
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            switch (Tipo)
+            {
+                case MaestroTipo.Perfil:
+                    {
+                        var entity = Id is null ? new Perfil() : await db.Perfiles.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<Perfil>(db);
+                            db.Perfiles.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                        entity.PerfilTipoId = _perfilTipoId!.Value;
+                    }
+                    break;
+
+                case MaestroTipo.Software:
+                    {
+                        var entity = Id is null ? new Software() : await db.Softwares.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<Software>(db);
+                            db.Softwares.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.Manilla:
+                    {
+                        var entity = Id is null ? new Manilla() : await db.Manillas.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<Manilla>(db);
+                            db.Manillas.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.CerraduraPuerta:
+                    {
+                        var entity = Id is null ? new CerraduraPuerta() : await db.CerradurasPuerta.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<CerraduraPuerta>(db);
+                            db.CerradurasPuerta.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.BisagraPuerta:
+                    {
+                        var entity = Id is null ? new Bisagra() : await db.Bisagras.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<Bisagra>(db);
+                            db.Bisagras.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.SeguridadVentana:
+                    {
+                        var entity = Id is null ? new SeguridadVentana() : await db.SeguridadVentanas.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<SeguridadVentana>(db);
+                            db.SeguridadVentanas.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.CremonaPasivaVentana:
+                    {
+                        var entity = Id is null ? new CremonaPasivaVentanaTipos() : await db.CremonaPasivaVentanaTipos.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<CremonaPasivaVentanaTipos>(db);
+                            db.CremonaPasivaVentanaTipos.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.MaquinaMantenimiento:
+                    {
+                        var entity = Id is null ? new MaquinaMantenimiento() : await db.MaquinasMantenimiento.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<MaquinaMantenimiento>(db);
+                            db.MaquinasMantenimiento.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.MaquinaMarcas:
+                    {
+                        var entity = Id is null ? new MaquinaMarca() : await db.MaquinasMarcas.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<MaquinaMarca>(db);
+                            db.MaquinasMarcas.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.MaquinaTipo:
+                    {
+                        var entity = Id is null ? new MaquinaTipo() : await db.MaquinasTipos.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<MaquinaTipo>(db);
+                            db.MaquinasTipos.Add(entity);
+                        }
+                        entity.Descripcion = nombre;
+                        entity.Activa = _activo;
+                    }
+                    break;
+
+                case MaestroTipo.Usuario:
+                    {
+                        var entity = Id is null ? new Usuario() : await db.Usuarios.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<Usuario>(db);
+                            db.Usuarios.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                        entity.EsDistribuidor = _esDistribuidor;
+                    }
+                    break;
+            }
+
+            var nuevaVersion = await IncrementarVersionDatosAsync(db);
+            await db.SaveChangesAsync();
+
+            // Refleja al instante la nueva versión en la cabecera de la app
+            // (MainLayout), que no se reinstancia al navegar y por tanto no
+            // se enteraría del cambio salvo por este aviso explícito.
+            VersionDatosState.Establecer(nuevaVersion);
+
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        finally
+        {
+            _guardando = false;
+        }
+    }
+
+    private void Cancelar() => MudDialog.Cancel();
+
+    // Igual que NuevoId<T>() en MaestroEditForm.cs: estas tablas de maestros
+    // no usan IDENTITY (Id se asigna a mano), así que el siguiente Id
+    // disponible es el máximo actual + 1.
+    private static async Task<int> NuevoIdAsync<TEntity>(ApplicationDbContext db) where TEntity : class
+    {
+        var ids = await db.Set<TEntity>().Select(x => EF.Property<int>(x, "Id")).ToListAsync();
+        return ids.Count > 0 ? ids.Max() + 1 : 1;
+    }
+
+    // Igual que IncrementarVersionDatos() en MaestroEditForm.cs. Devuelve la
+    // nueva versión para poder reflejarla al instante en la cabecera de la
+    // app (VersionDatosState) sin esperar a un SaveChangesAsync posterior.
+    private static async Task<string> IncrementarVersionDatosAsync(ApplicationDbContext db)
+    {
+        var configuracion = await db.ConfiguracionAplicacion.FirstAsync();
+        var partes = configuracion.VersionMaestros.Split('.');
+
+        var mayor = int.Parse(partes[0]);
+        var menor = int.Parse(partes[1]);
+
+        menor++;
+        if (menor > 99)
+        {
+            mayor++;
+            menor = 0;
+        }
+
+        configuracion.VersionMaestros = $"{mayor}.{menor}";
+        return configuracion.VersionMaestros;
+    }
+}

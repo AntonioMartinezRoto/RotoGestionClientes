@@ -1,0 +1,63 @@
+@* Selector de "aguja de montaje": modo "Todos" (una única aguja para todos
+   los perfiles) o "Por perfil" (abre el diálogo de configuración por
+   perfil). Réplica moderna de InitializeAgujaBalconera / InitializeAgujaPuertaSec
+   en Clientes/PasoBalconeras.cs (WinForms). Reutilizable para Balconera,
+   Puerta secundaria y, en el futuro, Puerta. *@
+@inject IDialogService DialogService
+
+<MudPaper Outlined="true" Class="pa-4">
+    <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Aguja</MudText>
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4" Wrap="Wrap.Wrap">
+        <MudRadioGroup T="int" Value="Tipo" ValueChanged="@(v => TipoChanged.InvokeAsync(v))">
+            <MudRadio T="int" Value="1" Color="Color.Primary">@MenuTextos.Todos</MudRadio>
+            <MudRadio T="int" Value="2" Color="Color.Primary">@MenuTextos.PorPerfil</MudRadio>
+        </MudRadioGroup>
+
+        @if (Tipo == 2)
+        {
+            <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Tune" OnClick="AbrirDialogoAsync">
+                @MenuTextos.ConfigurarPorPerfil
+            </MudButton>
+        }
+        else
+        {
+            <MudSelect T="int?" Value="AgujaId" ValueChanged="@(v => AgujaIdChanged.InvokeAsync(v))"
+                       Label="@MenuTextos.Aguja" Variant="Variant.Outlined" Dense="true" Style="min-width: 220px;">
+                @foreach (var aguja in Agujas)
+                {
+                    <MudSelectItem T="int?" Value="@((int?)aguja.Id)">@aguja.Nombre</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </MudStack>
+</MudPaper>
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+    [Parameter, EditorRequired] public int AgujaModeloTipoId { get; set; }
+    [Parameter, EditorRequired] public int Tipo { get; set; }
+    [Parameter] public EventCallback<int> TipoChanged { get; set; }
+    [Parameter, EditorRequired] public int? AgujaId { get; set; }
+    [Parameter] public EventCallback<int?> AgujaIdChanged { get; set; }
+    [Parameter, EditorRequired] public IReadOnlyList<Aguja> Agujas { get; set; } = Array.Empty<Aguja>();
+    [Parameter, EditorRequired] public string DialogTitulo { get; set; } = string.Empty;
+
+    private async Task AbrirDialogoAsync()
+    {
+        var parametros = new DialogParameters
+        {
+            ["Model"] = Model,
+            ["AgujaModeloTipoId"] = AgujaModeloTipoId,
+            ["Titulo"] = DialogTitulo
+        };
+
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        // ShowAsync solo espera a que el diálogo se abra, no a que se
+        // cierre; esperamos también el Result para que, al volver aquí,
+        // cualquier estado que dependa de los datos que el diálogo acaba de
+        // guardar en Model se vuelva a renderizar correctamente.
+        var dialogo = await DialogService.ShowAsync<AgujaPorPerfilDialog>(DialogTitulo, parametros, opciones);
+        await dialogo.Result;
+    }
+}

@@ -1,3 +1,6 @@
 <Solution>
   <Project Path="RotoGestionClientes.csproj" />
+  <Project Path="RotoGestionClientes.Core\RotoGestionClientes.Core.csproj" />
+  <Project Path="RotoGestionClientes.UI\RotoGestionClientes.UI.csproj" />
+  <Project Path="RotoGestionClientes.Desktop\RotoGestionClientes.Desktop.csproj" />
 </Solution>

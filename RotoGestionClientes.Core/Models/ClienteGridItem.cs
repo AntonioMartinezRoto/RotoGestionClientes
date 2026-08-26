@@ -1,0 +1,15 @@
+﻿
+namespace RotoGestionClientes
+{
+    public class ClienteGridItem
+    {
+        public int Id { get; set; }
+        public string? Nombre { get; set; }
+        public string? SapId{ get; set; }
+        public string? Alias { get; set; }
+        public string? Comentarios { get; set; }
+        public string? ObservacionesVentanas{ get; set; }
+        public string? ObservacionesBalconeras { get; set; }
+        public string? Responsable { get; set; }
+    }
+}

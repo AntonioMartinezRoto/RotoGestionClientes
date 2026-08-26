@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>RotoGestionClientes.UI</RootNamespace>
+  </PropertyGroup>
+
+  <!--
+    Razor Class Library con la UI moderna (Blazor + MudBlazor) del menú
+    principal. No depende de WinForms: el objetivo es poder reutilizar estos
+    mismos componentes en el futuro desde cualquier host de Blazor Hybrid
+    (WinForms hoy; WPF u otro más adelante si hiciera falta) sin reescribirlos.
+  -->
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.11" />
+    <PackageReference Include="MudBlazor" Version="9.8.0" />
+    <!-- Misma versión que usa RotoGestionClientes.csproj (legacy) para
+         generar el Excel del módulo de Informes. -->
+    <PackageReference Include="NPOI" Version="2.8.0" />
+    <!-- Genera el PDF del botón "Exportar a PDF" de ClienteResumen.razor.
+         Licencia MIT sin límite de ingresos de la empresa (a diferencia de
+         QuestPDF, cuya licencia gratuita solo cubre empresas con ingresos
+         por debajo de un umbral, o iText, que exige AGPL o licencia
+         comercial de pago). -->
+    <PackageReference Include="PdfSharpCore" Version="1.3.67" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RotoGestionClientes.Core\RotoGestionClientes.Core.csproj" />
+  </ItemGroup>
+
+  <!--
+    Estas imágenes viven en wwwroot (se sirven normalmente como static web
+    asset para los <img> de Blazor) pero además se embeben aquí como recurso
+    incrustado del ensamblado, porque Services/ClienteResumenPdfBuilder.cs
+    necesita sus bytes en tiempo de ejecución para dibujarlas dentro del PDF
+    generado, y un .exe publicado como single-file no garantiza que wwwroot
+    exista como carpeta suelta en disco. LogicalName fijo para no depender
+    del algoritmo de nombrado por defecto (RootNamespace + ruta).
+  -->
+  <ItemGroup>
+    <EmbeddedResource Include="wwwroot\images\logo-pdf.png" LogicalName="RotoGestionClientes.UI.Pdf.logo.png" />
+    <EmbeddedResource Include="wwwroot\images\wizard\ventana-oscilobatiente-1h.png" LogicalName="RotoGestionClientes.UI.Pdf.ventanas.png" />
+    <EmbeddedResource Include="wwwroot\images\wizard\balconera.png" LogicalName="RotoGestionClientes.UI.Pdf.balconeras.png" />
+    <EmbeddedResource Include="wwwroot\images\wizard\puerta.png" LogicalName="RotoGestionClientes.UI.Pdf.puertas.png" />
+    <EmbeddedResource Include="wwwroot\images\wizard\corredera.png" LogicalName="RotoGestionClientes.UI.Pdf.correderas.png" />
+    <EmbeddedResource Include="wwwroot\images\wizard\elevable.png" LogicalName="RotoGestionClientes.UI.Pdf.elevables.png" />
+    <EmbeddedResource Include="wwwroot\images\wizard\maquina.png" LogicalName="RotoGestionClientes.UI.Pdf.maquinas.png" />
+    <EmbeddedResource Include="wwwroot\images\wizard\documento.png" LogicalName="RotoGestionClientes.UI.Pdf.documentos.png" />
+  </ItemGroup>
+
+</Project>

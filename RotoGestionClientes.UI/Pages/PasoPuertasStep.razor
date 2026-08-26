@@ -1,0 +1,139 @@
+@* Paso "Puertas" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoPuertas.cs (WinForms): bisagras, cerraduras, aguja de
+   montaje, cilindros y observaciones. El grupo "Portero eléctrico" de la
+   app legacy está oculto también allí (group_Portero.Visible = false) y por
+   eso no se muestra aquí tampoco; su valor se carga y se vuelve a guardar
+   sin cambios para no perderlo. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IDialogService DialogService
+@using Microsoft.EntityFrameworkCore
+
+@if (_cargando)
+{
+    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+}
+else
+{
+    <MudStack Spacing="4">
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Puertas</MudText>
+            <div class="rgc-step-images">
+                <img src="_content/RotoGestionClientes.UI/images/wizard/puerta.png" alt="@MenuTextos.Puertas" />
+            </div>
+            <MudGrid Class="mb-4">
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.Bisagras" Items="_bisagras" OnToggle="OnBisagraToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    <SeleccionableGrid Title="@MenuTextos.Cerraduras" Items="_cerraduras" OnToggle="OnCerraduraToggle"
+                                        EmptyText="@MenuTextos.SinResultados" />
+                </MudItem>
+            </MudGrid>
+            <AgujaSelector Model="Model" AgujaModeloTipoId="@((int)AgujasTipoModelo.Puerta)"
+                            Tipo="Model.AgujaPuertaTipo" TipoChanged="OnAgujaPuertaTipoChanged"
+                            AgujaId="Model.AgujaPuerta" AgujaIdChanged="OnAgujaPuertaIdChanged"
+                            Agujas="_agujas" DialogTitulo="@MenuTextos.DefinirAgujaPerfil" />
+        </MudPaper>
+
+        <MudPaper Outlined="true" Class="pa-4">
+            <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Cilindros</MudText>
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="4" Wrap="Wrap.Wrap">
+                <MudRadioGroup T="bool" Value="Model.Cilindro" ValueChanged="OnCilindroChanged">
+                    <MudRadio T="bool" Value="true" Color="Color.Primary">@MenuTextos.Si</MudRadio>
+                    <MudRadio T="bool" Value="false" Color="Color.Primary">@MenuTextos.No</MudRadio>
+                </MudRadioGroup>
+
+                @if (Model.Cilindro)
+                {
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Tune" OnClick="AbrirCilindrosAsync">
+                        @MenuTextos.ConfigurarCilindros
+                    </MudButton>
+                }
+            </MudStack>
+        </MudPaper>
+
+        <MudTextField T="string" @bind-Value="Model.ObservacionesPuertas" Label="@MenuTextos.Comentarios"
+                      Variant="Variant.Outlined" Lines="3" />
+    </MudStack>
+}
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private bool _cargando = true;
+    private List<SeleccionableItem> _bisagras = new();
+    private List<SeleccionableItem> _cerraduras = new();
+    private List<Aguja> _agujas = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var bisagras = await db.Bisagras.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _bisagras = bisagras
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.BisagrasPuertaList.Contains(f.Id) })
+            .ToList();
+
+        var cerraduras = await db.CerradurasPuerta.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+        _cerraduras = cerraduras
+            .Select(f => new SeleccionableItem { Id = f.Id, Nombre = f.Nombre, Selected = Model.CerradurasPuertaList.Contains(f.Id) })
+            .ToList();
+
+        _agujas = await db.Agujas.Where(f => f.Activa).OrderBy(f => f.Id).AsNoTracking().ToListAsync();
+
+        // Igual que PasoPuertas_Load en la app legacy: si el cliente es
+        // nuevo (o todavía no tenía guardado un modo de aguja), el modo por
+        // defecto es "Todos".
+        if (Model.AgujaPuertaTipo == 0)
+            Model.AgujaPuertaTipo = (int)AgujaMode.Todos;
+
+        _cargando = false;
+    }
+
+    private void OnBisagraToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.BisagrasPuertaList.Contains(e.Item.Id))
+                Model.BisagrasPuertaList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.BisagrasPuertaList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnCerraduraToggle((SeleccionableItem Item, bool Selected) e)
+    {
+        e.Item.Selected = e.Selected;
+        if (e.Selected)
+        {
+            if (!Model.CerradurasPuertaList.Contains(e.Item.Id))
+                Model.CerradurasPuertaList.Add(e.Item.Id);
+        }
+        else
+        {
+            Model.CerradurasPuertaList.Remove(e.Item.Id);
+        }
+    }
+
+    private void OnAgujaPuertaTipoChanged(int tipo) => Model.AgujaPuertaTipo = tipo;
+    private void OnAgujaPuertaIdChanged(int? id) => Model.AgujaPuerta = id;
+
+    private void OnCilindroChanged(bool valor) => Model.Cilindro = valor;
+
+    private async Task AbrirCilindrosAsync()
+    {
+        var parametros = new DialogParameters { ["Model"] = Model };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Medium, FullWidth = true, CloseOnEscapeKey = true };
+
+        // ShowAsync solo espera a que el diálogo se abra, no a que se
+        // cierre; esperamos también el Result para que, al volver aquí,
+        // esta pantalla se vuelva a renderizar con los cilindros que el
+        // diálogo acaba de guardar en Model.
+        var dialogo = await DialogService.ShowAsync<CilindrosDialog>(MenuTextos.SeleccionarCilindros, parametros, opciones);
+        await dialogo.Result;
+    }
+}

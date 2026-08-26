@@ -1,0 +1,113 @@
+@* Paso "Documentos" del wizard de Clientes. Réplica moderna de
+   Clientes/PasoDocumentosAsociados.cs (WinForms): lista de documentos
+   adjuntos del cliente (añadir vía diálogo, descargar, eliminar con
+   confirmación) más observaciones. La app legacy no mostraba ninguna imagen
+   representativa en este paso; aquí sí se añade una (documento.png), igual
+   que el resto de pasos, para que sea igual de gráfico que "Máquinas". *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IDialogService DialogService
+@inject IJSRuntime JsRuntime
+@inject ISnackbar Snackbar
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+
+<MudStack Spacing="4">
+    <MudPaper Outlined="true" Class="pa-4">
+        <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Documentos</MudText>
+        <div class="rgc-step-images">
+            <img src="_content/RotoGestionClientes.UI/images/wizard/documento.png" alt="@MenuTextos.Documentos" />
+        </div>
+
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+            <MudText Typo="Typo.subtitle2">@MenuTextos.Documentos</MudText>
+            <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled"
+                           Size="Size.Small" OnClick="AbrirAnadirDocumentoAsync" />
+        </MudStack>
+
+        @if (Model.DocumentosList.Count == 0)
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinDocumentos</MudText>
+        }
+        else
+        {
+            <MudSimpleTable Dense="true" Style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>@MenuTextos.Documento</th>
+                        <th>@MenuTextos.Fichero</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var documento in Model.DocumentosList)
+                    {
+                        <tr>
+                            <td>@documento.Nombre</td>
+                            <td>@documento.NombreFicheroOriginal</td>
+                            <td>
+                                <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                               OnClick="@(() => DescargarDocumentoAsync(documento))" />
+                                <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small"
+                                               OnClick="@(() => EliminarDocumentoAsync(documento))" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </MudSimpleTable>
+        }
+    </MudPaper>
+
+    <MudTextField T="string" @bind-Value="Model.ObservacionesDocumentos" Label="@MenuTextos.Comentarios"
+                  Variant="Variant.Outlined" Lines="3" />
+</MudStack>
+
+@code {
+    [Parameter, EditorRequired] public ClientWizardModel Model { get; set; } = null!;
+
+    private async Task AbrirAnadirDocumentoAsync()
+    {
+        var parametros = new DialogParameters { ["Model"] = Model };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+        var dialogo = await DialogService.ShowAsync<DocumentoDialog>(MenuTextos.AnadirDocumento, parametros, opciones);
+        await dialogo.Result;
+    }
+
+    private async Task EliminarDocumentoAsync(ClienteDocumentoItem documento)
+    {
+        bool? confirmado = await DialogService.ShowMessageBoxAsync(
+            MenuTextos.EliminarDocumentoTitulo,
+            MenuTextos.ConfirmarEliminarDocumento,
+            yesText: MenuTextos.Eliminar,
+            cancelText: MenuTextos.Cancelar);
+
+        if (confirmado != true)
+            return;
+
+        Model.DocumentosList.Remove(documento);
+    }
+
+    private async Task DescargarDocumentoAsync(ClienteDocumentoItem documento)
+    {
+        // Igual que DescargarDocumento() en la app legacy: solo se puede
+        // descargar un documento que ya esté guardado en BBDD (con Id real).
+        // Los recién añadidos en esta misma sesión del wizard todavía no lo
+        // tienen porque el guardado real ocurre al terminar el wizard.
+        if (!documento.Id.HasValue || documento.Id.Value <= 0)
+        {
+            Snackbar.Add(MenuTextos.DebeGuardarClienteDescarga, Severity.Info);
+            return;
+        }
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+        var documentoBd = await db.ClienteDocumentos.AsNoTracking().FirstOrDefaultAsync(d => d.Id == documento.Id.Value);
+        if (documentoBd is null)
+        {
+            Snackbar.Add(MenuTextos.DocumentoNoEncontrado, Severity.Error);
+            return;
+        }
+
+        var base64 = Convert.ToBase64String(documentoBd.Contenido);
+        await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", documentoBd.NombreFicheroOriginal, base64);
+        Snackbar.Add(MenuTextos.DocumentoDescargado, Severity.Success);
+    }
+}

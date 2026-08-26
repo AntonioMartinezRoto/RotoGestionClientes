@@ -1,0 +1,15 @@
+@* Componente raíz que aloja el BlazorWebView del host de escritorio.
+   Monta el Router para que, a medida que se migren módulos (Clientes,
+   Mantenimiento, Informes...), baste con añadir páginas nuevas con @@page
+   sin tocar ni el host WinForms ni este fichero. *@
+
+<Router AppAssembly="typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="typeof(MainLayout)">
+            <MudText Typo="Typo.h5" Class="pa-8">Página no encontrada.</MudText>
+        </LayoutView>
+    </NotFound>
+</Router>

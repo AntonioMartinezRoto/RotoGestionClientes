@@ -1,0 +1,240 @@
+@* Réplica moderna de Main.ImportarDatosMaestros() (WinForms): aplica un
+   fichero .rotodata (generado desde "Crear actualización de datos" en la
+   sede) sobre los datos maestros locales, creando o actualizando cada
+   registro y guardando la nueva versión de datos maestros. Solo visible en
+   la edición Distribuidor/Debug (igual que SetVisibilidadModoAplicacion en
+   Main.cs). Al terminar avisa a VersionDatosState para que la cabecera
+   (MainLayout) refleje la nueva versión al instante, igual que ya ocurre
+   tras guardar en Mantenimiento. *@
+@page "/actualizar-datos"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject VersionDatosState VersionDatosState
+@using Microsoft.EntityFrameworkCore
+@using System.IO
+@using System.Text
+@using System.Text.Json
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Class="mb-4">
+        <MudTooltip Text="@MenuTextos.VolverMenu">
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+        </MudTooltip>
+        <MudText Typo="Typo.h5">@MenuTextos.ActualizarDatos</MudText>
+    </MudStack>
+
+    <MudPaper Outlined="true" Class="pa-6">
+        <MudStack Spacing="4">
+            <MudText Typo="Typo.body1">@MenuTextos.ActualizarDatosDescripcion</MudText>
+
+            <MudText Typo="Typo.subtitle2" Class="mud-text-secondary">
+                @MenuTextos.VersionDatos @(VersionDatosState.Version ?? "—")
+            </MudText>
+
+            <MudFileUpload T="IBrowserFile" FilesChanged="OnArchivoSeleccionadoAsync" Accept=".rotodata" MaxFileSize="TamanoMaximoBytes">
+                <CustomContent Context="cargador">
+                    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                        <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.AttachFile"
+                                   OnClick="@(() => cargador.OpenFilePickerAsync())">
+                            @MenuTextos.SeleccionarArchivoActualizacion
+                        </MudButton>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">
+                            @(_nombreFichero ?? MenuTextos.NingunFichero)
+                        </MudText>
+                    </MudStack>
+                </CustomContent>
+            </MudFileUpload>
+
+            <div>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.CloudDownload"
+                           OnClick="AplicarActualizacionAsync" Disabled="_procesando">
+                    @MenuTextos.AplicarActualizacion
+                </MudButton>
+            </div>
+        </MudStack>
+    </MudPaper>
+</MudContainer>
+
+@code {
+    private const long TamanoMaximoBytes = 10 * 1024 * 1024; // 10 MB, de sobra para un paquete de datos maestros
+
+    private string? _nombreFichero;
+    private string? _contenido;
+    private bool _procesando;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Misma regla de visibilidad que Main.SetVisibilidadModoAplicacion():
+        // este módulo no existe para la edición Interna.
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
+        var edition = ApplicationEdition.Internal;
+        if (config is not null)
+        {
+            Enum.TryParse(config.AppEdition, out edition);
+        }
+
+        if (edition == ApplicationEdition.Internal)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    private async Task OnArchivoSeleccionadoAsync(IBrowserFile? archivo)
+    {
+        if (archivo is null)
+            return;
+
+        await using var stream = archivo.OpenReadStream(TamanoMaximoBytes);
+        using var lector = new StreamReader(stream, Encoding.UTF8);
+
+        _contenido = await lector.ReadToEndAsync();
+        _nombreFichero = archivo.Name;
+    }
+
+    private async Task AplicarActualizacionAsync()
+    {
+        if (_contenido is null)
+        {
+            Snackbar.Add(MenuTextos.ArchivoActualizacionObligatorio, Severity.Warning);
+            return;
+        }
+
+        _procesando = true;
+        try
+        {
+            MaestrosExportDto? dto;
+            try
+            {
+                dto = JsonSerializer.Deserialize<MaestrosExportDto>(_contenido);
+            }
+            catch (JsonException)
+            {
+                dto = null;
+            }
+
+            if (dto is null)
+            {
+                Snackbar.Add(MenuTextos.ErrorImportarDatos, Severity.Error);
+                return;
+            }
+
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            // Mismos Upsert que Main.ImportarDatosMaestros(), tabla a tabla.
+            UpsertMaestro(dto.Softwares, db.Softwares, id => new Software { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertPerfilTipos(dto.PerfilTipos, db);
+            UpsertPerfiles(dto.Perfiles, db);
+            UpsertMaestro(dto.Manillas, db.Manillas, id => new Manilla { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.SoporteCompases, db.SoporteCompases, id => new SoporteCompas { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.SeguridadVentanas, db.SeguridadVentanas, id => new SeguridadVentana { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.CremonaPasivaVentanas, db.CremonaPasivaVentanaTipos, id => new CremonaPasivaVentanaTipos { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.Bisagras, db.Bisagras, id => new Bisagra { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.CerradurasPuerta, db.CerradurasPuerta, id => new CerraduraPuerta { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.CerradurasPuertaSec, db.CerradurasPuertaSec, id => new CerraduraPuertaSec { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.Agujas, db.Agujas, id => new Aguja { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaquinaTipos(dto.MaquinasTipo, db);
+            UpsertMaestro(dto.MaquinasMarca, db.MaquinasMarcas, id => new MaquinaMarca { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+            UpsertMaestro(dto.MaquinasMantenimiento, db.MaquinasMantenimiento, id => new MaquinaMantenimiento { Id = id }, (e, item) => { e.Nombre = item.Nombre; e.Activa = item.Activa; });
+
+            var config = await db.ConfiguracionAplicacion.FirstAsync();
+            config.VersionMaestros = dto.VersionMaestros;
+
+            await db.SaveChangesAsync();
+
+            // A diferencia de la app legacy (que solo actualiza el status
+            // strip del propio formulario), aquí se notifica a
+            // VersionDatosState para que la cabecera se refresque al
+            // instante sin depender de recargar la página.
+            VersionDatosState.Establecer(dto.VersionMaestros);
+
+            Snackbar.Add(string.Format(MenuTextos.DatosActualizadosVersion, dto.VersionMaestros), Severity.Success);
+
+            _nombreFichero = null;
+            _contenido = null;
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorImportarDatos, Severity.Error);
+        }
+        finally
+        {
+            _procesando = false;
+        }
+    }
+
+    private static void UpsertMaestro<TEntity>(
+        IEnumerable<MaestroDto> origen,
+        DbSet<TEntity> tabla,
+        Func<int, TEntity> crear,
+        Action<TEntity, MaestroDto> actualizar) where TEntity : class
+    {
+        foreach (var item in origen)
+        {
+            var entidad = tabla.Find(item.Id);
+            if (entidad is null)
+            {
+                entidad = crear(item.Id);
+                tabla.Add(entidad);
+            }
+
+            actualizar(entidad, item);
+        }
+    }
+
+    private static void UpsertMaquinaTipos(List<MaquinaTipoDto> origen, ApplicationDbContext db)
+    {
+        foreach (var item in origen)
+        {
+            var entidad = db.MaquinasTipos.Find(item.Id);
+            if (entidad is null)
+            {
+                entidad = new MaquinaTipo { Id = item.Id };
+                db.MaquinasTipos.Add(entidad);
+            }
+
+            entidad.Descripcion = item.Descripcion;
+            entidad.Activa = item.Activa;
+        }
+    }
+
+    private static void UpsertPerfilTipos(List<PerfilTipoDto> origen, ApplicationDbContext db)
+    {
+        foreach (var item in origen)
+        {
+            var entidad = db.PerfilTipos.Find(item.Id);
+            if (entidad is null)
+            {
+                entidad = new PerfilTipo { Id = item.Id };
+                db.PerfilTipos.Add(entidad);
+            }
+
+            entidad.Nombre = item.Nombre;
+            entidad.NombreAbreviado = item.NombreAbreviado;
+        }
+    }
+
+    private static void UpsertPerfiles(List<PerfilDto> origen, ApplicationDbContext db)
+    {
+        foreach (var item in origen)
+        {
+            var entidad = db.Perfiles.Find(item.Id);
+            if (entidad is null)
+            {
+                entidad = new Perfil { Id = item.Id };
+                db.Perfiles.Add(entidad);
+            }
+
+            entidad.Nombre = item.Nombre;
+            entidad.Activa = item.Activa;
+            entidad.PerfilTipoId = item.PerfilTipoId;
+        }
+    }
+
+    private void VolverMenu() => NavigationManager.NavigateTo("/");
+}

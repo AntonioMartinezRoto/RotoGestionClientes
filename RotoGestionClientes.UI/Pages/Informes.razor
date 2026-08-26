@@ -1,0 +1,431 @@
+@* Réplica moderna de Informes/InformesMain.cs (WinForms): listado de
+   clientes filtrable por Software, Perfiles, Manillas, Bisagras,
+   Cerraduras, Tipo de máquina y Responsable (cada uno con su propio
+   selector múltiple, FiltroDialog), más una búsqueda de texto libre sobre
+   el resultado y exportación a Excel. *@
+@page "/informes"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+@inject ISnackbar Snackbar
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+@using NPOI.OpenXmlFormats.Spreadsheet
+@using NPOI.SS
+@using NPOI.SS.Util
+@using NPOI.XSSF.UserModel
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3" Class="mb-4">
+        <MudTooltip Text="@MenuTextos.VolverMenu">
+            <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+        </MudTooltip>
+        <MudText Typo="Typo.h5">@MenuTextos.Informes</MudText>
+    </MudStack>
+
+    <MudGrid>
+        <MudItem xs="12" md="3">
+            <MudPaper Outlined="true" Class="pa-2">
+                <MudStack Spacing="1">
+                    @foreach (var categoria in Categorias())
+                    {
+                        var tieneSeleccion = _filtrosSeleccionados.TryGetValue(categoria.Tipo, out var ids) && ids.Count > 0;
+                        <MudButton FullWidth="true"
+                                   Variant="@(tieneSeleccion ? Variant.Filled : Variant.Outlined)"
+                                   Color="@(tieneSeleccion ? Color.Primary : Color.Default)"
+                                   StartIcon="@categoria.Icon"
+                                   Class="rgc-informes-filtro-btn"
+                                   OnClick="@(() => AbrirFiltroAsync(categoria.Tipo, categoria.Label))">
+                            @categoria.Label
+                        </MudButton>
+                    }
+                </MudStack>
+            </MudPaper>
+        </MudItem>
+
+        <MudItem xs="12" md="9">
+            <MudPaper Outlined="true" Class="pa-4">
+                <MudStack Row="true" Wrap="Wrap.Wrap" AlignItems="AlignItems.Center" Spacing="3" Class="mb-3">
+                    <MudTextField T="string" Value="_filtroTexto" ValueChanged="OnFiltroTextoChanged" Immediate="true"
+                                  Label="@MenuTextos.Buscar" Variant="Variant.Outlined" Margin="Margin.Dense"
+                                  Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search"
+                                  Class="rgc-search" />
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="BuscarAsync" Disabled="_buscando">
+                        @MenuTextos.Buscar
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined" OnClick="LimpiarFiltrosAsync">
+                        @MenuTextos.LimpiarFiltros
+                    </MudButton>
+                    <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="ExportarExcelAsync" Disabled="_exportando">
+                        @MenuTextos.ExportarExcel
+                    </MudButton>
+                    <MudSpacer />
+                    <MudText Typo="Typo.subtitle2" Class="mud-text-secondary">@MenuTextos.TotalRegistros@(_resultadoFiltrado.Count)</MudText>
+                </MudStack>
+
+                @if (_buscando)
+                {
+                    <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+                }
+                else
+                {
+                    <MudTable Items="_resultadoFiltrado" Hover="true" Dense="true" Bordered="false" Striped="true"
+                              Class="rgc-clientes-table">
+                        <HeaderContent>
+                            <MudTh>@MenuTextos.Nombre</MudTh>
+                            <MudTh>@MenuTextos.Software</MudTh>
+                            <MudTh>@MenuTextos.Perfiles</MudTh>
+                            <MudTh>@MenuTextos.Cerraduras</MudTh>
+                            <MudTh>@MenuTextos.Bisagras</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="@MenuTextos.Nombre">@context.Nombre</MudTd>
+                            <MudTd DataLabel="@MenuTextos.Software">@context.Software</MudTd>
+                            <MudTd DataLabel="@MenuTextos.Perfiles">@context.Perfiles</MudTd>
+                            <MudTd DataLabel="@MenuTextos.Cerraduras">@context.Cerraduras</MudTd>
+                            <MudTd DataLabel="@MenuTextos.Bisagras">@context.Bisagras</MudTd>
+                        </RowTemplate>
+                        <NoRecordsContent>
+                            <MudText Class="pa-4 mud-text-secondary">@MenuTextos.SinResultados</MudText>
+                        </NoRecordsContent>
+                    </MudTable>
+                }
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+@code {
+    private sealed record CategoriaFiltro(InformeFiltroTipo Tipo, string Label, string Icon);
+
+    // Presets opcionales por querystring (usados por los accesos rápidos de
+    // Pages/Home.razor, p.ej. "/informes?tipoPerfilId=2") para llegar a este
+    // menú con un filtro ya aplicado en vez de tener que abrirlo a mano.
+    // Se identifican por Id, NO por nombre: PerfilTipo/MaquinaTipos son
+    // catálogos "cerrados" (mismos Id en CreateDb.txt y CreateDb-PT.txt,
+    // aunque el texto cambie de idioma) y además cada distribuidor tiene su
+    // propia base de datos con sus propios textos, así que un filtro por
+    // nombre ("PVC", "Mesa de herraje"...) no cruzaría bien en Portugal ni en
+    // ninguna otra edición/distribuidor. Ver Categorias()/IdsPreset* más abajo.
+    [SupplyParameterFromQuery(Name = "tipoPerfilId")]
+    [Parameter]
+    public int? PresetTipoPerfilId { get; set; }
+
+    [SupplyParameterFromQuery(Name = "maquinaId")]
+    [Parameter]
+    public int? PresetMaquinaId { get; set; }
+
+    private Dictionary<InformeFiltroTipo, List<int>> _filtrosSeleccionados = new();
+    private List<ClienteInformeItem> _resultadoActual = new();
+    private List<ClienteInformeItem> _resultadoFiltrado = new();
+    private string _filtroTexto = string.Empty;
+    private bool _mostrarResponsables = true;
+    private bool _buscando;
+    private bool _exportando;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        if (config is not null && Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+        {
+            // Misma regla que SetVisibilidadModoAplicacion() en la app WinForms actual.
+            _mostrarResponsables = edition != ApplicationEdition.Distributor;
+        }
+
+        if (PresetTipoPerfilId.HasValue)
+            await AplicarFiltroPresetIdAsync(InformeFiltroTipo.TipoPerfil, PresetTipoPerfilId.Value);
+
+        if (PresetMaquinaId.HasValue)
+            await AplicarFiltroPresetIdAsync(InformeFiltroTipo.Maquina, PresetMaquinaId.Value);
+
+        // A petición del usuario: la grid arranca con TODOS los clientes (sin
+        // filtros aplicados) en vez de vacía hasta pulsar "Buscar". Como
+        // _filtrosSeleccionados está vacío en este punto (salvo que se haya
+        // aplicado algún preset de arriba), BuscarAsync() trae el listado
+        // completo, o ya filtrado por el preset.
+        await BuscarAsync();
+    }
+
+    // Deja preseleccionado, como si el usuario lo hubiera marcado a mano en
+    // el diálogo de filtro, el Id indicado -- pero solo si de verdad existe
+    // en esta base de datos (por si el Id del catálogo cambiara en el
+    // futuro, o el registro estuviera desactivado/eliminado).
+    private async Task AplicarFiltroPresetIdAsync(InformeFiltroTipo tipo, int id)
+    {
+        var items = await ObtenerItemsFiltroAsync(tipo);
+        if (items.Any(i => i.Id == id))
+            _filtrosSeleccionados[tipo] = new List<int> { id };
+    }
+
+    private IEnumerable<CategoriaFiltro> Categorias()
+    {
+        if (_mostrarResponsables)
+            yield return new(InformeFiltroTipo.Responsable, MenuTextos.Responsables, Icons.Material.Filled.People);
+
+        yield return new(InformeFiltroTipo.Software, MenuTextos.Softwares, Icons.Material.Filled.Apps);
+        yield return new(InformeFiltroTipo.TipoPerfil, MenuTextos.TipoPerfil, Icons.Material.Filled.Straighten);
+        yield return new(InformeFiltroTipo.Perfil, MenuTextos.Perfiles, RgcIcons.Perfiles);
+        yield return new(InformeFiltroTipo.Manilla, MenuTextos.Manillas, RgcIcons.Manillas);
+        yield return new(InformeFiltroTipo.Bisagra, MenuTextos.Bisagras, RgcIcons.Bisagras);
+        yield return new(InformeFiltroTipo.Cerradura, MenuTextos.Cerraduras, Icons.Material.Filled.VpnKey);
+        yield return new(InformeFiltroTipo.Maquina, MenuTextos.Maquinas, Icons.Material.Filled.Category);
+    }
+
+    private async Task<List<FiltroItem>> ObtenerItemsFiltroAsync(InformeFiltroTipo tipo)
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        // Igual que en la app legacy: se listan TODOS los valores (incluidos
+        // los inactivos), no solo los activos, para poder seguir filtrando
+        // por datos históricos de clientes ya existentes.
+        return tipo switch
+        {
+            InformeFiltroTipo.Software => await db.Softwares
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            InformeFiltroTipo.Manilla => await db.Manillas
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            InformeFiltroTipo.Perfil => await db.Perfiles
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre + " (" + x.PerfilTipo.NombreAbreviado + ")" })
+                .ToListAsync(),
+
+            InformeFiltroTipo.TipoPerfil => await db.PerfilTipos
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            InformeFiltroTipo.Bisagra => await db.Bisagras
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            InformeFiltroTipo.Maquina => await db.MaquinasTipos
+                .OrderBy(x => x.Descripcion)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Descripcion })
+                .ToListAsync(),
+
+            InformeFiltroTipo.Cerradura => await db.CerradurasPuerta
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            InformeFiltroTipo.Responsable => await db.Usuarios
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            _ => new List<FiltroItem>()
+        };
+    }
+
+    private async Task AbrirFiltroAsync(InformeFiltroTipo tipo, string label)
+    {
+        var items = await ObtenerItemsFiltroAsync(tipo);
+
+        if (_filtrosSeleccionados.TryGetValue(tipo, out var idsSeleccionados))
+        {
+            foreach (var item in items)
+                item.Selected = idsSeleccionados.Contains(item.Id);
+        }
+
+        var titulo = $"{MenuTextos.Seleccionar} — {label}";
+        var parametros = new DialogParameters { ["Titulo"] = titulo, ["Items"] = items };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<FiltroDialog>(titulo, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is null || resultado.Canceled)
+            return;
+
+        var seleccionados = (List<int>)resultado.Data!;
+        if (seleccionados.Count > 0)
+            _filtrosSeleccionados[tipo] = seleccionados;
+        else
+            _filtrosSeleccionados.Remove(tipo);
+    }
+
+    private async Task BuscarAsync()
+    {
+        _buscando = true;
+        StateHasChanged();
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        IQueryable<Cliente> query = db.Clientes;
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Software, out var softwares) && softwares.Count > 0)
+            query = query.Where(c => c.ClienteSoftwares.Any(cs => softwares.Contains(cs.SoftwareId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Manilla, out var manillas) && manillas.Count > 0)
+            query = query.Where(c => c.ClienteManillas.Any(cm => manillas.Contains(cm.ManillaId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Bisagra, out var bisagras) && bisagras.Count > 0)
+            query = query.Where(c => c.ClienteBisagraPuertas.Any(cb => bisagras.Contains(cb.BisagraPuertaId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Maquina, out var maquinas) && maquinas.Count > 0)
+            query = query.Where(c => c.ClienteMaquinas.Any(cm => maquinas.Contains(cm.MaquinaTipoId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Cerradura, out var cerraduras) && cerraduras.Count > 0)
+            query = query.Where(c => c.ClienteCerradurasPuerta.Any(cc => cerraduras.Contains(cc.CerraduraPuertaId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Perfil, out var perfiles) && perfiles.Count > 0)
+            query = query.Where(c => c.ClientePerfiles.Any(cp => perfiles.Contains(cp.PerfilId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.TipoPerfil, out var tiposPerfil) && tiposPerfil.Count > 0)
+            query = query.Where(c => c.ClientePerfilTipos.Any(cpt => tiposPerfil.Contains(cpt.PerfilTipoId)));
+
+        if (_filtrosSeleccionados.TryGetValue(InformeFiltroTipo.Responsable, out var responsables) && responsables.Count > 0)
+            query = query.Where(c => c.ResponsableId.HasValue && responsables.Contains(c.ResponsableId.Value));
+
+        _resultadoActual = await query
+            .Select(c => new ClienteInformeItem
+            {
+                Id = c.Id,
+                Nombre = c.Nombre,
+                Software = string.Join(" - ", c.ClienteSoftwares.Select(cs => cs.Software.Nombre)),
+                Perfiles = string.Join(" - ", c.ClientePerfiles.Select(cp => cp.Perfil.Nombre + " (" + cp.Perfil.PerfilTipo.NombreAbreviado + ")")),
+                Bisagras = string.Join(" - ", c.ClienteBisagraPuertas.Select(cb => cb.Bisagra.Nombre)),
+                Cerraduras = string.Join(" - ", c.ClienteCerradurasPuerta.Select(cc => cc.CerraduraPuerta.Nombre))
+            })
+            .OrderBy(c => c.Nombre)
+            .ToListAsync();
+
+        _buscando = false;
+        AplicarFiltroTexto();
+    }
+
+    private void AplicarFiltroTexto()
+    {
+        var texto = _filtroTexto.Trim();
+
+        _resultadoFiltrado = string.IsNullOrWhiteSpace(texto)
+            ? _resultadoActual
+            : _resultadoActual
+                .Where(x =>
+                    (x.Nombre ?? string.Empty).Contains(texto, StringComparison.OrdinalIgnoreCase)
+                    || (x.Software ?? string.Empty).Contains(texto, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+    }
+
+    private void OnFiltroTextoChanged(string value)
+    {
+        _filtroTexto = value;
+        AplicarFiltroTexto();
+    }
+
+    private async Task LimpiarFiltrosAsync()
+    {
+        _filtrosSeleccionados.Clear();
+        _filtroTexto = string.Empty;
+
+        // Igual que en la carga inicial: al no quedar ningún filtro
+        // seleccionado, BuscarAsync() vuelve a traer todos los registros en
+        // vez de dejar la grid vacía.
+        await BuscarAsync();
+    }
+
+    private async Task ExportarExcelAsync()
+    {
+        if (_resultadoFiltrado.Count == 0)
+        {
+            Snackbar.Add(MenuTextos.NoDatosExportar, Severity.Info);
+            return;
+        }
+
+        _exportando = true;
+        try
+        {
+            string[] columnas = { MenuTextos.Nombre, MenuTextos.Software, MenuTextos.Perfiles, MenuTextos.Cerraduras, MenuTextos.Bisagras };
+
+            using var workbook = new XSSFWorkbook();
+            var sheet = workbook.CreateSheet(MenuTextos.Clientes);
+
+            var headerStyle = workbook.CreateCellStyle();
+            var headerFont = workbook.CreateFont();
+            headerFont.IsBold = true;
+            headerFont.Color = NPOI.SS.UserModel.IndexedColors.White.Index;
+            headerStyle.SetFont(headerFont);
+            headerStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+
+            var header = sheet.CreateRow(0);
+            for (var i = 0; i < columnas.Length; i++)
+            {
+                header.CreateCell(i).SetCellValue(columnas[i]);
+                header.GetCell(i).CellStyle = headerStyle;
+            }
+
+            var rowIndex = 1;
+            foreach (var item in _resultadoFiltrado)
+            {
+                var row = sheet.CreateRow(rowIndex++);
+                row.CreateCell(0).SetCellValue(item.Nombre ?? string.Empty);
+                row.CreateCell(1).SetCellValue(item.Software ?? string.Empty);
+                row.CreateCell(2).SetCellValue(item.Perfiles ?? string.Empty);
+                row.CreateCell(3).SetCellValue(item.Cerraduras ?? string.Empty);
+                row.CreateCell(4).SetCellValue(item.Bisagras ?? string.Empty);
+            }
+
+            var totalRows = _resultadoFiltrado.Count + 1;
+            var area = new AreaReference(
+                new CellReference(0, 0),
+                new CellReference(totalRows - 1, columnas.Length - 1),
+                SpreadsheetVersion.EXCEL2007);
+
+            var xssfSheet = (XSSFSheet)sheet;
+            var table = xssfSheet.CreateTable();
+            var ctTable = table.GetCTTable();
+
+            ctTable.id = 1;
+            ctTable.name = "TablaClientes";
+            ctTable.displayName = "TablaClientes";
+            ctTable.@ref = area.FormatAsString();
+
+            ctTable.tableColumns = new CT_TableColumns();
+            ctTable.tableColumns.count = 5;
+
+            for (var i = 0; i < columnas.Length; i++)
+            {
+                var columna = ctTable.tableColumns.AddNewTableColumn();
+                columna.id = (uint)(i + 1);
+                columna.name = columnas[i];
+            }
+
+            var estilo = ctTable.AddNewTableStyleInfo();
+            estilo.name = "TableStyleMedium2";
+            estilo.showRowStripes = true;
+            estilo.showColumnStripes = false;
+
+            sheet.SetColumnWidth(0, 9000);
+            sheet.SetColumnWidth(1, 12000);
+            sheet.SetColumnWidth(2, 20000);
+            sheet.SetColumnWidth(3, 20000);
+            sheet.SetColumnWidth(4, 20000);
+
+            using var ms = new MemoryStream();
+            workbook.Write(ms, leaveOpen: true);
+
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var nombreArchivo = $"{MenuTextos.Clientes}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+
+            Snackbar.Add(MenuTextos.ExcelExportadoCorrectamente, Severity.Success);
+        }
+        finally
+        {
+            _exportando = false;
+        }
+    }
+
+    private void VolverMenu() => NavigationManager.NavigateTo("/");
+}

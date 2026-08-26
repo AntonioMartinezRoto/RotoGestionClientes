@@ -1,0 +1,564 @@
+@* Réplica moderna, ampliada, de Clientes/ClienteResumen.cs (WinForms): "Ver
+   resumen" de un cliente. Muestra TODA la información capturada del cliente
+   sin necesidad de entrar a editarlo, organizada en las mismas secciones que
+   el asistente de alta/edición (mismas imágenes de modelos, en miniatura,
+   para que resulte fácil de leer de un vistazo).
+
+   Respecto a la app legacy se han migrado tal cual los datos que ya
+   mostraba (perfiles, manillas, seguridad, hoja pasiva, agujas, máquinas,
+   documentos...) y, a petición expresa, se ha añadido información del
+   cliente que existe en BBDD pero que el resumen legacy nunca mostraba:
+   Alias siempre visible, tipos de perfil, soporte compás, la sección
+   completa de "Puerta secundaria" (bisagras/cerraduras/aguja — legacy no la
+   mostraba en absoluto), cilindros de puerta y de corredera, agujas de
+   corredera, "Portero eléctrico" (oculto también en el propio wizard de
+   edición, pero aquí sí se muestra por ser un dato real del cliente),
+   "Bisagras en soldadora" / "Triple taladro" / "Soporte de marco", las
+   observaciones específicas de cada sección (legacy solo mostraba el
+   comentario general) y el fichero real de cada documento adjunto, con
+   opción de descargarlo.
+
+   El diseño está pensado para minimizar el scroll: las secciones se
+   distribuyen en una rejilla de 1/2/3 columnas según el ancho de pantalla
+   (en vez de una única columna larga), las imágenes de modelo se muestran
+   en miniatura junto al título de cada tarjeta (no en una fila aparte) y
+   las observaciones de una sección solo ocupan espacio cuando el cliente
+   realmente tiene algo escrito ahí. *@
+@page "/clientes/resumen/{Id:int}"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+@inject IJSRuntime JsRuntime
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+@using static RotoGestionClientes.Enums
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-3">
+    @if (_cargando)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+    }
+    else if (_dto is null)
+    {
+        <MudAlert Severity="Severity.Warning">@MenuTextos.ClienteNoEncontrado</MudAlert>
+    }
+    else
+    {
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-3" Wrap="Wrap.Wrap" Spacing="3">
+            <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="2">
+                <MudTooltip Text="@MenuTextos.VolverListado">
+                    <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" OnClick="@(() => NavigationManager.NavigateTo("/clientes"))" />
+                </MudTooltip>
+                <div>
+                    <MudText Typo="Typo.h6">@_dto.Nombre</MudText>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.ResumenCliente</MudText>
+                </div>
+            </MudStack>
+            <MudStack Row="true" Spacing="2">
+                <MudButton Variant="Variant.Outlined" Color="Color.Default" Size="Size.Small" StartIcon="@Icons.Material.Filled.PictureAsPdf"
+                           OnClick="ExportarPdfAsync" Disabled="_exportandoPdf">
+                    @MenuTextos.ExportarPdf
+                </MudButton>
+                <MudButton Variant="Variant.Outlined" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Edit"
+                           OnClick="@(() => NavigationManager.NavigateTo($"/clientes/editar/{_dto.Id}"))">
+                    @MenuTextos.Editar
+                </MudButton>
+            </MudStack>
+        </MudStack>
+
+        <MudGrid Spacing="2">
+
+            @* ---------- Datos generales (ancho completo) ---------- *@
+            <MudItem xs="12">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudText Typo="Typo.subtitle1" Class="mb-2">@MenuTextos.DatosGenerales</MudText>
+
+                    <MudGrid Spacing="2" Class="mb-2">
+                        <MudItem xs="6" sm="4" md="2">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.SapId</MudText>
+                            <MudText Typo="Typo.body2">@(string.IsNullOrWhiteSpace(_dto.SapId) ? MenuTextos.Ninguno : _dto.SapId)</MudText>
+                        </MudItem>
+                        <MudItem xs="6" sm="4" md="2">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Alias</MudText>
+                            <MudText Typo="Typo.body2">@(string.IsNullOrWhiteSpace(_dto.Alias) ? MenuTextos.Ninguno : _dto.Alias)</MudText>
+                        </MudItem>
+                        @if (_mostrarResponsable)
+                        {
+                            <MudItem xs="6" sm="4" md="2">
+                                <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Responsable</MudText>
+                                <MudText Typo="Typo.body2">@(string.IsNullOrWhiteSpace(_dto.ResponsableNombre) ? MenuTextos.Ninguno : _dto.ResponsableNombre)</MudText>
+                            </MudItem>
+                        }
+                    </MudGrid>
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.Comentarios))
+                    {
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Comentarios</MudText>
+                        <MudText Typo="Typo.body2" Class="mb-2" Style="white-space: pre-line;">@_dto.Comentarios</MudText>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesParalelas))
+                    {
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.ObservacionesParalelas</MudText>
+                        <MudText Typo="Typo.body2" Class="mb-2" Style="white-space: pre-line;">@_dto.ObservacionesParalelas</MudText>
+                    }
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="12" sm="6" md="4" lg="2">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Software</MudText>
+                            <ResumenListaChips Items="_dto.Softwares" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6" md="4" lg="2">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.TipoPerfil</MudText>
+                            <ResumenListaChips Items="_dto.PerfilTipos" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6" md="4" lg="3">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Perfiles</MudText>
+                            <ResumenListaChips Items="_dto.Perfiles" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6" md="4" lg="2">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Manillas</MudText>
+                            <ResumenListaChips Items="_dto.Manillas" />
+                        </MudItem>
+                        <MudItem xs="12" sm="6" md="4" lg="3">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.SoporteCompas</MudText>
+                            <ResumenListaChips Items="_dto.SoporteCompas" />
+                        </MudItem>
+                    </MudGrid>
+                </MudPaper>
+            </MudItem>
+
+            @* ---------- Ventanas ---------- *@
+            <MudItem xs="12" sm="6" lg="4">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.Ventanas</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/ventana-oscilobatiente-1h.png" alt="@MenuTextos.Oscilobatientes" />
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/ventana-practicable-1h.png" alt="@MenuTextos.Practicables" />
+                        </div>
+                    </MudStack>
+
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Oscilobatientes</MudText>
+                    <MudGrid Spacing="2" Class="mb-1">
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Seguridad</MudText>
+                            <ResumenListaChips Items="_dto.SeguridadVentanas" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.HojaPasiva</MudText>
+                            <ResumenListaChips Items="_dto.CremonaPasivaVentanas" />
+                        </MudItem>
+                    </MudGrid>
+
+                    <MudDivider Class="my-2" />
+
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Practicables</MudText>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.HojaPasiva</MudText>
+                    <ResumenListaChips Items="_dto.CremonaPasivaVentanasPract" />
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesVentanas))
+                    {
+                        <MudDivider Class="my-2" />
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Comentarios</MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line;">@_dto.ObservacionesVentanas</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+
+            @* ---------- Balconeras ---------- *@
+            <MudItem xs="12" sm="6" lg="4">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.Balconeras</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/balconera.png" alt="@MenuTextos.Balconeras" />
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/puerta-secundaria.png" alt="@MenuTextos.PuertaSecundaria" />
+                        </div>
+                    </MudStack>
+
+                    <MudGrid Spacing="2" Class="mb-1">
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Seguridad</MudText>
+                            <ResumenListaChips Items="_dto.SeguridadBalconeras" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.HojaPasiva</MudText>
+                            <ResumenListaChips Items="_dto.CremonaPasivaBalconeras" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Aguja</MudText>
+                    <ResumenAguja Data="_dto.AgujaBalconera" />
+
+                    <MudDivider Class="my-2" />
+
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.PuertaSecundaria</MudText>
+                    <MudGrid Spacing="2" Class="mb-1">
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Bisagras</MudText>
+                            <ResumenListaChips Items="_dto.BisagrasPuertaSec" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Cerraduras</MudText>
+                            <ResumenListaChips Items="_dto.CerradurasPuertaSec" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Aguja</MudText>
+                    <ResumenAguja Data="_dto.AgujaPuertaSec" />
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesBalconeras))
+                    {
+                        <MudDivider Class="my-2" />
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Comentarios</MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line;">@_dto.ObservacionesBalconeras</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+
+            @* ---------- Puertas ---------- *@
+            <MudItem xs="12" sm="6" lg="4">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.Puertas</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/puerta.png" alt="@MenuTextos.Puertas" />
+                        </div>
+                    </MudStack>
+
+                    <MudGrid Spacing="2" Class="mb-1">
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Bisagras</MudText>
+                            <ResumenListaChips Items="_dto.BisagrasPuerta" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Cerraduras</MudText>
+                            <ResumenListaChips Items="_dto.CerradurasPuerta" />
+                        </MudItem>
+                    </MudGrid>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Aguja</MudText>
+                    <ResumenAguja Data="_dto.AgujaPuerta" />
+
+                    <MudStack Row="true" Spacing="4" Class="mt-2" Wrap="Wrap.Wrap">
+                        <div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.PorteroElectrico</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="@(_dto.PorteroElectrico ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                @(_dto.PorteroElectrico ? MenuTextos.Si : MenuTextos.No)
+                            </MudChip>
+                        </div>
+                        <div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Cilindros</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="@(_dto.Cilindro ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                @(_dto.Cilindro ? MenuTextos.Si : MenuTextos.No)
+                            </MudChip>
+                        </div>
+                    </MudStack>
+                    @if (_dto.Cilindro && _dto.Cilindros.Count > 0)
+                    {
+                        <div class="mt-1">
+                            <ResumenListaChips Items="_dto.Cilindros" />
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesPuertas))
+                    {
+                        <MudDivider Class="my-2" />
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Comentarios</MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line;">@_dto.ObservacionesPuertas</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+
+            @* ---------- Correderas ---------- *@
+            <MudItem xs="12" sm="6" lg="4">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.Correderas</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/corredera.png" alt="@MenuTextos.Correderas" />
+                        </div>
+                    </MudStack>
+
+                    <MudGrid Spacing="2">
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Aguja</MudText>
+                            <ResumenListaChips Items="_dto.AgujasCorredera" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Bombillo</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="@(_dto.CilindroCorredera ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                @(_dto.CilindroCorredera ? MenuTextos.Si : MenuTextos.No)
+                            </MudChip>
+                        </MudItem>
+                    </MudGrid>
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesCorrederas))
+                    {
+                        <MudDivider Class="my-2" />
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Comentarios</MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line;">@_dto.ObservacionesCorrederas</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+
+            @* ---------- Elevables / Plegables ---------- *@
+            <MudItem xs="12" sm="6" lg="4">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.ElevablesPlegables</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/elevable.png" alt="@MenuTextos.Elevables" />
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/plegable.png" alt="@MenuTextos.Plegables" />
+                        </div>
+                    </MudStack>
+
+                    @if (_dto.TieneConfigElevablePlegable)
+                    {
+                        <MudStack Row="true" Spacing="4" Wrap="Wrap.Wrap">
+                            <div>
+                                <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Estandar</MudText>
+                                <MudChip T="string" Size="Size.Small" Color="@(_dto.Elevable_Estandar ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                    @(_dto.Elevable_Estandar ? MenuTextos.Si : MenuTextos.No)
+                                </MudChip>
+                            </div>
+                            <div>
+                                <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Dlo</MudText>
+                                <MudChip T="string" Size="Size.Small" Color="@(_dto.Elevable_Dlo ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                    @(_dto.Elevable_Dlo ? MenuTextos.Si : MenuTextos.No)
+                                </MudChip>
+                            </div>
+                            <div>
+                                <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Consumen</MudText>
+                                <MudChip T="string" Size="Size.Small" Color="@(_dto.Plegable_Consumen ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                    @(_dto.Plegable_Consumen ? MenuTextos.Si : MenuTextos.No)
+                                </MudChip>
+                            </div>
+                        </MudStack>
+                    }
+                    else
+                    {
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.Ninguno</MudText>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesElevables) || !string.IsNullOrWhiteSpace(_dto.ObservacionesPlegables))
+                    {
+                        <MudDivider Class="my-2" />
+                    }
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesElevables))
+                    {
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Elevables</MudText>
+                        <MudText Typo="Typo.body2" Class="mb-1" Style="white-space: pre-line;">@_dto.ObservacionesElevables</MudText>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesPlegables))
+                    {
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Plegables</MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line;">@_dto.ObservacionesPlegables</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+
+            @* ---------- Máquinas ---------- *@
+            <MudItem xs="12" sm="6" lg="4">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.Maquinas</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/maquina.png" alt="@MenuTextos.Maquinas" />
+                        </div>
+                    </MudStack>
+
+                    @if (_dto.Maquinas.Count == 0)
+                    {
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mb-2">@MenuTextos.SinMaquinas</MudText>
+                    }
+                    else
+                    {
+                        <div style="overflow-x: auto;" class="mb-2">
+                            <MudSimpleTable Dense="true" Style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@MenuTextos.Tipo</th>
+                                        <th>@MenuTextos.Marca</th>
+                                        <th>@MenuTextos.Mantenimiento</th>
+                                        <th>@MenuTextos.Comentarios</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var maquina in _dto.Maquinas)
+                                    {
+                                        <tr>
+                                            <td>@maquina.Tipo</td>
+                                            <td>@(string.IsNullOrWhiteSpace(maquina.Marca) ? MenuTextos.Ninguno : maquina.Marca)</td>
+                                            <td>@maquina.Mantenimiento</td>
+                                            <td>@(string.IsNullOrWhiteSpace(maquina.Observaciones) ? MenuTextos.Ninguno : maquina.Observaciones)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </MudSimpleTable>
+                        </div>
+                    }
+
+                    <MudStack Row="true" Spacing="4" Wrap="Wrap.Wrap" Class="mb-1">
+                        <div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.BisagrasSoldadora</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="@(_dto.BisagraEnSoldadora ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                @(_dto.BisagraEnSoldadora ? MenuTextos.Si : MenuTextos.No)
+                            </MudChip>
+                        </div>
+                        <div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.TripleTaladroCentro</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="@(_dto.TripleTaladroCentro ? Color.Success : Color.Default)" Variant="Variant.Filled">
+                                @(_dto.TripleTaladroCentro ? MenuTextos.Si : MenuTextos.No)
+                            </MudChip>
+                        </div>
+                        <div>
+                            <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.SoporteMarco</MudText>
+                            <MudChip T="string" Size="Size.Small" Color="Color.Default" Variant="Variant.Filled">@NombreSoporteMarco(_dto.SoporteMarcoConfigId)</MudChip>
+                        </div>
+                    </MudStack>
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesMaquinas))
+                    {
+                        <MudDivider Class="my-2" />
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Comentarios</MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line;">@_dto.ObservacionesMaquinas</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+
+            @* ---------- Documentos ---------- *@
+            <MudItem xs="12" sm="6" lg="4">
+                <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.Documentos</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/documento.png" alt="@MenuTextos.Documentos" />
+                        </div>
+                    </MudStack>
+
+                    @if (_dto.Documentos.Count == 0)
+                    {
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mb-2">@MenuTextos.SinDocumentos</MudText>
+                    }
+                    else
+                    {
+                        <div style="overflow-x: auto;" class="mb-2">
+                            <MudSimpleTable Dense="true" Style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>@MenuTextos.Documento</th>
+                                        <th>@MenuTextos.Fichero</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var documento in _dto.Documentos)
+                                    {
+                                        <tr>
+                                            <td>@documento.Nombre</td>
+                                            <td>@documento.NombreFicheroOriginal</td>
+                                            <td>
+                                                <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                                               OnClick="@(() => DescargarDocumentoAsync(documento))" />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </MudSimpleTable>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(_dto.ObservacionesDocumentos))
+                    {
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.Comentarios</MudText>
+                        <MudText Typo="Typo.body2" Style="white-space: pre-line;">@_dto.ObservacionesDocumentos</MudText>
+                    }
+                </MudPaper>
+            </MudItem>
+
+        </MudGrid>
+    }
+</MudContainer>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private ClienteResumenDto? _dto;
+    private bool _cargando = true;
+    private bool _mostrarResponsable = true;
+    private bool _exportandoPdf;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        if (config is not null && Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+        {
+            // Misma regla que en Pages/Clientes.razor: no tiene sentido
+            // mostrar "Responsable" en la edición Distribuidor, donde ese
+            // campo siempre apunta al propio distribuidor.
+            _mostrarResponsable = edition != ApplicationEdition.Distributor;
+        }
+
+        _dto = await ClienteResumenBuilder.ConstruirAsync(db, Id);
+
+        _cargando = false;
+    }
+
+    // Se cualifica con el namespace completo porque "SoporteMarcoConfig" es
+    // ambiguo: además de este enum (RotoGestionClientes.Enums.SoporteMarcoConfig)
+    // existe una entidad de BBDD con el mismo nombre en RotoGestionClientes.
+    private static string NombreSoporteMarco(int soporteMarcoConfigId) => soporteMarcoConfigId switch
+    {
+        (int)RotoGestionClientes.Enums.SoporteMarcoConfig.CentroMecanizado => MenuTextos.CentroMecanizado,
+        (int)RotoGestionClientes.Enums.SoporteMarcoConfig.Plantilla => MenuTextos.Plantilla,
+        (int)RotoGestionClientes.Enums.SoporteMarcoConfig.BancoMarcos => MenuTextos.BancoMarcos,
+        _ => MenuTextos.Ninguno,
+    };
+
+    private async Task DescargarDocumentoAsync(ClienteResumenDocumentoDto documento)
+    {
+        if (documento.Id is null)
+        {
+            Snackbar.Add(MenuTextos.DocumentoNoEncontrado, Severity.Error);
+            return;
+        }
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+        var documentoBd = await db.ClienteDocumentos.AsNoTracking().FirstOrDefaultAsync(d => d.Id == documento.Id.Value);
+        if (documentoBd is null)
+        {
+            Snackbar.Add(MenuTextos.DocumentoNoEncontrado, Severity.Error);
+            return;
+        }
+
+        var base64 = Convert.ToBase64String(documentoBd.Contenido);
+        await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", documentoBd.NombreFicheroOriginal, base64);
+        Snackbar.Add(MenuTextos.DocumentoDescargado, Severity.Success);
+    }
+
+    private async Task ExportarPdfAsync()
+    {
+        var dto = _dto;
+        if (dto is null)
+            return;
+
+        _exportandoPdf = true;
+        try
+        {
+            var pdf = await Task.Run(() => ClienteResumenPdfBuilder.Construir(dto, _mostrarResponsable));
+            var base64 = Convert.ToBase64String(pdf);
+            var nombreArchivo = $"{ClienteExportBuilder.LimpiarNombreFichero(dto.Nombre)}_resumen.pdf";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+            Snackbar.Add(MenuTextos.PdfGeneradoCorrectamente, Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorGenerarPdf, Severity.Error);
+        }
+        finally
+        {
+            _exportandoPdf = false;
+        }
+    }
+}
