@@ -75,6 +75,12 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string BienvenidaTexto => ResourceManager.GetString("BienvenidaTexto", resourceCulture)!;
 
+        public static string AccesosRapidos => ResourceManager.GetString("AccesosRapidos", resourceCulture)!;
+
+        public static string VersionApp => ResourceManager.GetString("VersionApp", resourceCulture)!;
+
+        public static string TotalClientes => ResourceManager.GetString("TotalClientes", resourceCulture)!;
+
         public static string NuevoCliente => ResourceManager.GetString("NuevoCliente", resourceCulture)!;
 
         public static string ImportarCliente => ResourceManager.GetString("ImportarCliente", resourceCulture)!;

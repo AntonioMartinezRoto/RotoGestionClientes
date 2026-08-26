@@ -94,6 +94,15 @@
   <data name="BienvenidaTexto" xml:space="preserve">
     <value>Selecciona una opción del menú para empezar.</value>
   </data>
+  <data name="AccesosRapidos" xml:space="preserve">
+    <value>Accesos rápidos</value>
+  </data>
+  <data name="VersionApp" xml:space="preserve">
+    <value>Versión de la app</value>
+  </data>
+  <data name="TotalClientes" xml:space="preserve">
+    <value>Clientes totales</value>
+  </data>
   <data name="NuevoCliente" xml:space="preserve">
     <value>Nuevo cliente</value>
   </data>

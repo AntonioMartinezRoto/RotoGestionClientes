@@ -54,7 +54,7 @@
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="BuscarAsync" Disabled="_buscando">
                         @MenuTextos.Buscar
                     </MudButton>
-                    <MudButton Variant="Variant.Outlined" OnClick="LimpiarFiltros">
+                    <MudButton Variant="Variant.Outlined" OnClick="LimpiarFiltrosAsync">
                         @MenuTextos.LimpiarFiltros
                     </MudButton>
                     <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="ExportarExcelAsync" Disabled="_exportando">
@@ -117,6 +117,12 @@
             // Misma regla que SetVisibilidadModoAplicacion() en la app WinForms actual.
             _mostrarResponsables = edition != ApplicationEdition.Distributor;
         }
+
+        // A petición del usuario: la grid arranca con TODOS los clientes (sin
+        // filtros aplicados) en vez de vacía hasta pulsar "Buscar". Como
+        // _filtrosSeleccionados está vacío en este punto, BuscarAsync() trae
+        // el listado completo sin restricción alguna.
+        await BuscarAsync();
     }
 
     private IEnumerable<CategoriaFiltro> Categorias()
@@ -125,9 +131,9 @@
             yield return new(InformeFiltroTipo.Responsable, MenuTextos.Responsables, Icons.Material.Filled.People);
 
         yield return new(InformeFiltroTipo.Software, MenuTextos.Softwares, Icons.Material.Filled.Apps);
-        yield return new(InformeFiltroTipo.Perfil, MenuTextos.Perfiles, Icons.Material.Filled.Straighten);
-        yield return new(InformeFiltroTipo.Manilla, MenuTextos.Manillas, Icons.Material.Filled.MeetingRoom);
-        yield return new(InformeFiltroTipo.Bisagra, MenuTextos.Bisagras, Icons.Material.Filled.SettingsInputComponent);
+        yield return new(InformeFiltroTipo.Perfil, MenuTextos.Perfiles, RgcIcons.Perfiles);
+        yield return new(InformeFiltroTipo.Manilla, MenuTextos.Manillas, RgcIcons.Manillas);
+        yield return new(InformeFiltroTipo.Bisagra, MenuTextos.Bisagras, RgcIcons.Bisagras);
         yield return new(InformeFiltroTipo.Cerradura, MenuTextos.Cerraduras, Icons.Material.Filled.VpnKey);
         yield return new(InformeFiltroTipo.Maquina, MenuTextos.Maquinas, Icons.Material.Filled.Category);
     }
@@ -273,12 +279,15 @@
         AplicarFiltroTexto();
     }
 
-    private void LimpiarFiltros()
+    private async Task LimpiarFiltrosAsync()
     {
         _filtrosSeleccionados.Clear();
-        _resultadoActual = new();
-        _resultadoFiltrado = new();
         _filtroTexto = string.Empty;
+
+        // Igual que en la carga inicial: al no quedar ningún filtro
+        // seleccionado, BuscarAsync() vuelve a traer todos los registros en
+        // vez de dejar la grid vacía.
+        await BuscarAsync();
     }
 
     private async Task ExportarExcelAsync()

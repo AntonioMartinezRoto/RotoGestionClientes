@@ -7,29 +7,70 @@ html, body {
     height: 100vh;
 }
 
-.rgc-hero {
+/* Pages/Home.razor: dashboard de inicio. Sustituye a la primera versión
+   (imagen + texto centrados a pantalla completa, clase .rgc-hero ya
+   retirada) por una cabecera corporativa compacta seguida de tarjetas de
+   datos rápidos y accesos directos a los módulos del menú lateral. */
+.rgc-home {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.rgc-home-hero {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--mud-palette-primary);
+    color: #FFFFFF;
+    border-radius: 10px;
+    padding: 1.5rem 2rem;
+}
+
+.rgc-home-hero img {
+    height: 72px;
+    width: auto;
+    flex-shrink: 0;
+}
+
+.rgc-home-hero .mud-typography {
+    color: #FFFFFF;
+}
+
+.rgc-home-stat {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
-    height: 100%;
-    padding: 2rem;
+    gap: 0.25rem;
 }
 
-.rgc-hero img {
-    max-width: min(560px, 80%);
-    width: 100%;
-    height: auto;
-    margin-bottom: 1.5rem;
+.rgc-home-access {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
 }
 
-/* Responsive: en ventanas estrechas la cabecera reduce el título y el
-   contenido central reduce márgenes, en vez de recortarse como en la
-   versión WinForms de tamaño fijo. */
+.rgc-home-access:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Responsive: en ventanas estrechas la cabecera pasa a columna y el
+   contenido reduce márgenes, en vez de recortarse como en la versión
+   WinForms de tamaño fijo. */
 @media (max-width: 600px) {
-    .rgc-hero {
+    .rgc-home {
         padding: 1rem;
+    }
+
+    .rgc-home-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 1.25rem;
     }
 }
 
@@ -40,6 +81,24 @@ html, body {
 
 .rgc-clientes-table {
     overflow-x: auto;
+}
+
+/* Menú lateral (Layout/MainLayout.razor): el contenedor ocupa toda la
+   altura del drawer para poder empujar "Salir" al fondo con un MudSpacer,
+   separado del resto de opciones para que no se confunda con ellas. */
+.rgc-nav-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.rgc-nav-link-salir .mud-nav-link-text {
+    color: var(--mud-palette-error);
+}
+
+.rgc-appbar-version {
+    align-self: flex-end;
+    margin-bottom: 2px;
 }
 
 /* Wizard de Clientes (alta/edición)

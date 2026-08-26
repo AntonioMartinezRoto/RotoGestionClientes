@@ -12,23 +12,23 @@
 }
 else
 {
-    <MudGrid>
+    <MudGrid Spacing="2">
         <MudItem xs="12" md="6">
             <MudTextField T="string" @bind-Value="Model.Nombre" Label="@MenuTextos.Nombre" Variant="Variant.Outlined"
-                          Required="true" RequiredError="@MenuTextos.NombreClienteObligatorio" Class="mb-4" />
+                          Required="true" RequiredError="@MenuTextos.NombreClienteObligatorio" Margin="Margin.Dense" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudTextField T="string" @bind-Value="Model.SapId" Label="@MenuTextos.SapId" Variant="Variant.Outlined" Class="mb-4" />
+            <MudTextField T="string" @bind-Value="Model.SapId" Label="@MenuTextos.SapId" Variant="Variant.Outlined" Margin="Margin.Dense" />
         </MudItem>
         <MudItem xs="12" md="3">
-            <MudTextField T="string" @bind-Value="Model.Alias" Label="@MenuTextos.Alias" Variant="Variant.Outlined" Class="mb-4" />
+            <MudTextField T="string" @bind-Value="Model.Alias" Label="@MenuTextos.Alias" Variant="Variant.Outlined" Margin="Margin.Dense" />
         </MudItem>
 
         @if (_mostrarResponsable)
         {
             <MudItem xs="12" md="6">
                 <MudSelect T="int" Value="_responsableId" ValueChanged="OnResponsableChanged"
-                           Label="@MenuTextos.Responsable" Variant="Variant.Outlined" Class="mb-4">
+                           Label="@MenuTextos.Responsable" Variant="Variant.Outlined" Margin="Margin.Dense">
                     <MudSelectItem T="int" Value="0">—</MudSelectItem>
                     @foreach (var usuario in _responsables)
                     {
@@ -40,7 +40,7 @@ else
 
         <MudItem xs="12" md="6">
             <MudSelect T="int?" Value="_softwareId" ValueChanged="OnSoftwareChanged"
-                       Label="@MenuTextos.Software" Variant="Variant.Outlined" Clearable="true" Class="mb-4">
+                       Label="@MenuTextos.Software" Variant="Variant.Outlined" Clearable="true" Margin="Margin.Dense">
                 @foreach (var software in _softwareOptions)
                 {
                     <MudSelectItem T="int?" Value="@((int?)software.Id)">@software.Nombre</MudSelectItem>
@@ -50,7 +50,7 @@ else
 
         <MudItem xs="12">
             <MudTextField T="string" @bind-Value="Model.Comentarios" Label="@MenuTextos.Comentarios"
-                          Variant="Variant.Outlined" Lines="3" Class="mb-4" />
+                          Variant="Variant.Outlined" Lines="2" Margin="Margin.Dense" />
         </MudItem>
 
         <MudItem xs="12" md="6">

@@ -421,7 +421,12 @@
             @* ---------- Documentos ---------- *@
             <MudItem xs="12" sm="6" lg="4">
                 <MudPaper Outlined="true" Class="pa-3 rgc-resumen-card">
-                    <MudText Typo="Typo.subtitle1" Class="mb-2">@MenuTextos.Documentos</MudText>
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.Documentos</MudText>
+                        <div class="rgc-resumen-thumbs">
+                            <img src="_content/RotoGestionClientes.UI/images/wizard/documento.png" alt="@MenuTextos.Documentos" />
+                        </div>
+                    </MudStack>
 
                     @if (_dto.Documentos.Count == 0)
                     {

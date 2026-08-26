@@ -1,7 +1,117 @@
+@* Página de inicio. Réplica moderna del menú principal (Main.cs), pero en
+   forma de dashboard en vez de la lista de botones sin más contexto que
+   tenía la primera versión: cabecera corporativa compacta, tarjetas de datos
+   rápidos (clientes totales, versión de datos, versión de la app) y una
+   rejilla de accesos rápidos a los mismos módulos del menú lateral —
+   replicando la MISMA lógica de visibilidad por edición que
+   Layout/MainLayout.razor (SetVisibilidadModoAplicacion en la app legacy). *@
 @page "/"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IAppHost AppHost
+@inject VersionDatosState VersionDatosState
+@inject NavigationManager NavigationManager
+@using Microsoft.EntityFrameworkCore
 
-<div class="rgc-hero">
-    <img src="_content/RotoGestionClientes.UI/images/hero.png" alt="RGC" />
-    <MudText Typo="Typo.h4" Class="mb-2">@MenuTextos.Bienvenida</MudText>
-    <MudText Typo="Typo.body1" Class="mud-text-secondary">@MenuTextos.BienvenidaTexto</MudText>
+<div class="rgc-home">
+    <div class="rgc-home-hero">
+        <img src="_content/RotoGestionClientes.UI/images/hero.png" alt="RGC" />
+        <div>
+            <MudText Typo="Typo.h4" Class="mb-1">@MenuTextos.Bienvenida</MudText>
+            <MudText Typo="Typo.body1">@MenuTextos.BienvenidaTexto</MudText>
+        </div>
+    </div>
+
+    <MudGrid Class="mt-4" Spacing="3">
+        <MudItem xs="12" sm="4">
+            <MudPaper Outlined="true" Class="rgc-home-stat pa-4">
+                <MudIcon Icon="@Icons.Material.Filled.People" Color="Color.Primary" Size="Size.Large" />
+                <MudText Typo="Typo.h5">@(_totalClientes?.ToString() ?? "—")</MudText>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.TotalClientes</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudPaper Outlined="true" Class="rgc-home-stat pa-4">
+                <MudIcon Icon="@Icons.Material.Filled.Storage" Color="Color.Primary" Size="Size.Large" />
+                <MudText Typo="Typo.h5">@(VersionDatosState.Version ?? "—")</MudText>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.VersionDatos</MudText>
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12" sm="4">
+            <MudPaper Outlined="true" Class="rgc-home-stat pa-4">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Color="Color.Primary" Size="Size.Large" />
+                <MudText Typo="Typo.h5">v@(AppHost.AppVersion)</MudText>
+                <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.VersionApp</MudText>
+            </MudPaper>
+        </MudItem>
+    </MudGrid>
+
+    <MudText Typo="Typo.h6" Class="mt-6 mb-3">@MenuTextos.AccesosRapidos</MudText>
+
+    <MudGrid Spacing="3">
+        @foreach (var item in _accesos.Where(a => a.Visible))
+        {
+            <MudItem xs="12" sm="6" md="4" lg="3">
+                <MudPaper Outlined="true" Class="rgc-home-access pa-4" @onclick="@item.OnClick">
+                    <MudIcon Icon="@item.Icon" Color="Color.Primary" Size="Size.Large" />
+                    <MudText Typo="Typo.subtitle1" Class="mt-2">@item.Label</MudText>
+                </MudPaper>
+            </MudItem>
+        }
+    </MudGrid>
 </div>
+
+@code {
+    private int? _totalClientes;
+    private List<AccesoRapido> _accesos = new();
+
+    private sealed record AccesoRapido(string Label, string Icon, bool Visible, Action OnClick);
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        _totalClientes = await db.Clientes.CountAsync();
+
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+
+        var edition = ApplicationEdition.Internal;
+        if (config is not null)
+        {
+            Enum.TryParse(config.AppEdition, out edition);
+        }
+
+        // Misma regla de visibilidad que Main.SetVisibilidadModoAplicacion()
+        // en la app WinForms actual / Layout/MainLayout.razor.
+        bool mostrarMantenimiento;
+        bool mostrarCrearActualizacion;
+        bool mostrarActualizarDatos;
+
+        switch (edition)
+        {
+            case ApplicationEdition.Distributor:
+                mostrarMantenimiento = false;
+                mostrarCrearActualizacion = false;
+                mostrarActualizarDatos = true;
+                break;
+            case ApplicationEdition.Internal:
+                mostrarMantenimiento = true;
+                mostrarCrearActualizacion = true;
+                mostrarActualizarDatos = false;
+                break;
+            default: // Debug / desconocido: se muestra todo
+                mostrarMantenimiento = true;
+                mostrarCrearActualizacion = true;
+                mostrarActualizarDatos = true;
+                break;
+        }
+
+        _accesos =
+        [
+            new AccesoRapido(MenuTextos.Clientes, Icons.Material.Filled.People, true, () => NavigationManager.NavigateTo("/clientes")),
+            new AccesoRapido(MenuTextos.Mantenimiento, Icons.Material.Filled.Build, mostrarMantenimiento, () => NavigationManager.NavigateTo("/mantenimiento")),
+            new AccesoRapido(MenuTextos.Informes, Icons.Material.Filled.Assessment, true, () => NavigationManager.NavigateTo("/informes")),
+            new AccesoRapido(MenuTextos.CrearActualizacion, Icons.Material.Filled.CloudUpload, mostrarCrearActualizacion, () => NavigationManager.NavigateTo("/crear-actualizacion")),
+            new AccesoRapido(MenuTextos.ActualizarDatos, Icons.Material.Filled.CloudDownload, mostrarActualizarDatos, () => NavigationManager.NavigateTo("/actualizar-datos")),
+        ];
+    }
+}

@@ -1,8 +1,9 @@
 @* Paso "Documentos" del wizard de Clientes. Réplica moderna de
    Clientes/PasoDocumentosAsociados.cs (WinForms): lista de documentos
    adjuntos del cliente (añadir vía diálogo, descargar, eliminar con
-   confirmación) más observaciones. La app legacy no muestra ninguna imagen
-   representativa en este paso, así que aquí tampoco. *@
+   confirmación) más observaciones. La app legacy no mostraba ninguna imagen
+   representativa en este paso; aquí sí se añade una (documento.png), igual
+   que el resto de pasos, para que sea igual de gráfico que "Máquinas". *@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject IDialogService DialogService
 @inject IJSRuntime JsRuntime
@@ -12,8 +13,13 @@
 
 <MudStack Spacing="4">
     <MudPaper Outlined="true" Class="pa-4">
+        <MudText Typo="Typo.subtitle1" Class="mb-3">@MenuTextos.Documentos</MudText>
+        <div class="rgc-step-images">
+            <img src="_content/RotoGestionClientes.UI/images/wizard/documento.png" alt="@MenuTextos.Documentos" />
+        </div>
+
         <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
-            <MudText Typo="Typo.subtitle1">@MenuTextos.Documentos</MudText>
+            <MudText Typo="Typo.subtitle2">@MenuTextos.Documentos</MudText>
             <MudIconButton Icon="@Icons.Material.Filled.Add" Color="Color.Primary" Variant="Variant.Filled"
                            Size="Size.Small" OnClick="AbrirAnadirDocumentoAsync" />
         </MudStack>
