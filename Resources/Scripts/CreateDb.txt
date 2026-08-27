@@ -1152,3 +1152,62 @@ INSERT INTO dbo.ConfiguracionAplicacion
 VALUES (1, '1.0', 'Internal', NULL, 'ES');
 
 
+
+-- ---------------------------------------------------------------------
+-- Auditoría de acciones + cuentas de acceso a la aplicación (login).
+-- CuentaUsuario es independiente de dbo.Usuario (que es el maestro de
+-- "Responsable" asignado a un Cliente, sin contraseña ni rol): no hay que
+-- confundirlos. Ambas tablas usan IDENTITY (como dbo.Cliente), no el Id
+-- manual de los maestros de Mantenimiento, porque no son catálogos
+-- cerrados sembrados igual en todas las bases de datos.
+-- ---------------------------------------------------------------------
+
+CREATE TABLE dbo.CuentaUsuario
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    Login NVARCHAR(50) NOT NULL,
+    NombreMostrado NVARCHAR(100) NOT NULL,
+    PasswordHash NVARCHAR(256) NOT NULL,
+    Rol NVARCHAR(20) NOT NULL,
+    Activa BIT NOT NULL DEFAULT (1),
+    DebeCambiarPassword BIT NOT NULL DEFAULT (1),
+    FechaCreacion DATETIME2 NOT NULL DEFAULT (SYSUTCDATETIME()),
+
+    CONSTRAINT PK_CuentaUsuario
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT UQ_CuentaUsuario_Login
+        UNIQUE (Login)
+);
+GO
+
+-- Cuenta Administrador inicial para poder entrar por primera vez tras crear
+-- la base de datos. Login: admin / Contraseña inicial: Roto2026!
+-- DebeCambiarPassword=1 obliga a cambiarla en el primer inicio de sesión.
+-- El hash ya está en el formato V3 de
+-- Microsoft.AspNetCore.Identity.PasswordHasher<CuentaUsuario> que usará la
+-- app para validarlo (PBKDF2-HMACSHA256, 100.000 iteraciones, sal propia).
+INSERT INTO dbo.CuentaUsuario (Login, NombreMostrado, PasswordHash, Rol, Activa, DebeCambiarPassword, FechaCreacion)
+VALUES ('admin', 'Administrador', 'AQAAAAEAAYagAAAAENG4EB1HCiYMH8HnQ6stwaY7oHPrzVA1b4BZfb7LLla1TMtIIwhUK/ThAp+brhp1xw==', 'Administrador', 1, 1, SYSUTCDATETIME());
+GO
+
+CREATE TABLE dbo.AuditoriaAccion
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    FechaHora DATETIME2 NOT NULL DEFAULT (SYSUTCDATETIME()),
+    CuentaUsuarioId INT NULL,
+    UsuarioNombre NVARCHAR(100) NOT NULL,
+    Entidad NVARCHAR(50) NOT NULL,
+    EntidadId INT NULL,
+    Accion NVARCHAR(20) NOT NULL,
+    Detalle NVARCHAR(1000) NULL,
+
+    CONSTRAINT PK_AuditoriaAccion
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_AuditoriaAccion_CuentaUsuario
+        FOREIGN KEY (CuentaUsuarioId)
+        REFERENCES dbo.CuentaUsuario(Id)
+        ON DELETE SET NULL
+);
+GO

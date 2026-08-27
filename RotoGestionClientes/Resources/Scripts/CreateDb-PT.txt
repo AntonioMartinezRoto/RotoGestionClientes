@@ -1149,6 +1149,12 @@ CREATE TABLE dbo.CuentaUsuario
     Activa BIT NOT NULL DEFAULT (1),
     DebeCambiarPassword BIT NOT NULL DEFAULT (1),
     FechaCreacion DATETIME2 NOT NULL DEFAULT (SYSUTCDATETIME()),
+    -- 0 (por defecto): acceso a todos los módulos que ya permita la edición
+    -- de la app (Internal/Distributor/Debug), igual que antes de existir
+    -- esta columna. 1: el acceso se limita exactamente a los módulos que
+    -- tenga esta cuenta en dbo.CuentaUsuarioPermiso (puede ser ninguno). No
+    -- se aplica a Rol='Administrador', que siempre tiene acceso a todo.
+    RestringirModulos BIT NOT NULL DEFAULT (0),
 
     CONSTRAINT PK_CuentaUsuario
         PRIMARY KEY CLUSTERED (Id),
@@ -1184,5 +1190,30 @@ CREATE TABLE dbo.AuditoriaAccion
         FOREIGN KEY (CuentaUsuarioId)
         REFERENCES dbo.CuentaUsuario(Id)
         ON DELETE SET NULL
+);
+GO
+
+-- Módulos concedidos a una cuenta Usuario cuando RestringirModulos = 1 (ver
+-- columna en dbo.CuentaUsuario más arriba). Solo tiene sentido para Rol =
+-- 'Usuario': una cuenta Administrador siempre tiene acceso a todo y no usa
+-- esta tabla. Modulo guarda el nombre del enum Enums.Modulo tal cual (código
+-- interno, no texto a traducir), igual que Rol o Accion en las tablas
+-- anteriores.
+CREATE TABLE dbo.CuentaUsuarioPermiso
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    CuentaUsuarioId INT NOT NULL,
+    Modulo NVARCHAR(30) NOT NULL,
+
+    CONSTRAINT PK_CuentaUsuarioPermiso
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_CuentaUsuarioPermiso_CuentaUsuario
+        FOREIGN KEY (CuentaUsuarioId)
+        REFERENCES dbo.CuentaUsuario(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT UQ_CuentaUsuarioPermiso_Cuenta_Modulo
+        UNIQUE (CuentaUsuarioId, Modulo)
 );
 GO

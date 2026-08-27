@@ -60,6 +60,43 @@ namespace RotoGestionClientes
             Distributor,
             Debug
         }
+
+        // Rol de una CuentaUsuario (login). Administrador puede ver la
+        // auditoría y gestionar cuentas; Usuario es el comportamiento actual
+        // de la app sin restricciones adicionales (a futuro se podría
+        // limitar más). El nombre del enum se guarda tal cual en
+        // CuentaUsuario.Rol -- es un código interno, no texto a traducir,
+        // igual que ApplicationEdition en ConfiguracionAplicacion.AppEdition.
+        public enum Rol
+        {
+            Administrador,
+            Usuario
+        }
+
+        // Acción registrada en AuditoriaAccion. El nombre del enum se guarda
+        // tal cual en AuditoriaAccion.Accion.
+        public enum AuditoriaAccionTipo
+        {
+            Crear,
+            Modificar,
+            Eliminar
+        }
+
+        // Módulo de la app al que se le puede conceder o quitar acceso a una
+        // cuenta Rol=Usuario (ver CuentaUsuario.RestringirModulos y
+        // CuentaUsuarioPermiso). Administrador nunca pasa por esta lista:
+        // siempre tiene acceso a todo. Auditoría y Cuentas de usuario tampoco
+        // están aquí -- siguen siendo exclusivas de Administrador, no algo
+        // que se pueda conceder a un Usuario. El nombre del enum se guarda
+        // tal cual en CuentaUsuarioPermiso.Modulo.
+        public enum Modulo
+        {
+            Clientes,
+            Mantenimiento,
+            Informes,
+            CrearActualizacion,
+            ActualizarDatos
+        }
     }
 
 }

@@ -601,4 +601,190 @@
   <data name="ObservacionesParalelas" xml:space="preserve">
     <value>Observações (paralelas)</value>
   </data>
+  <data name="UsuarioLogin" xml:space="preserve">
+    <value>Utilizador</value>
+  </data>
+  <data name="Contrasena" xml:space="preserve">
+    <value>Palavra-passe</value>
+  </data>
+  <data name="Entrar" xml:space="preserve">
+    <value>Entrar</value>
+  </data>
+  <data name="CerrarSesion" xml:space="preserve">
+    <value>Terminar sessão</value>
+  </data>
+  <data name="NuevaContrasena" xml:space="preserve">
+    <value>Nova palavra-passe</value>
+  </data>
+  <data name="ConfirmarContrasena" xml:space="preserve">
+    <value>Confirmar palavra-passe</value>
+  </data>
+  <data name="GuardarContrasena" xml:space="preserve">
+    <value>Guardar palavra-passe</value>
+  </data>
+  <data name="DebeCambiarPasswordTexto" xml:space="preserve">
+    <value>Tens de definir uma palavra-passe nova para continuar.</value>
+  </data>
+  <data name="CredencialesIncompletas" xml:space="preserve">
+    <value>Introduz o teu utilizador e a tua palavra-passe.</value>
+  </data>
+  <data name="CredencialesIncorrectas" xml:space="preserve">
+    <value>Utilizador ou palavra-passe incorretos.</value>
+  </data>
+  <data name="PasswordDemasiadoCorta" xml:space="preserve">
+    <value>A palavra-passe deve ter pelo menos 8 caracteres.</value>
+  </data>
+  <data name="PasswordsNoCoinciden" xml:space="preserve">
+    <value>As palavras-passe não coincidem.</value>
+  </data>
+  <data name="ErrorGenerico" xml:space="preserve">
+    <value>Ocorreu um erro. Tenta novamente.</value>
+  </data>
+  <data name="Auditoria" xml:space="preserve">
+    <value>Auditoria</value>
+  </data>
+  <data name="AccionCrear" xml:space="preserve">
+    <value>Criar</value>
+  </data>
+  <data name="AccionModificar" xml:space="preserve">
+    <value>Modificar</value>
+  </data>
+  <data name="AccionEliminar" xml:space="preserve">
+    <value>Eliminar</value>
+  </data>
+  <data name="Entidad" xml:space="preserve">
+    <value>Entidade</value>
+  </data>
+  <data name="Accion" xml:space="preserve">
+    <value>Ação</value>
+  </data>
+  <data name="FechaHora" xml:space="preserve">
+    <value>Data e hora</value>
+  </data>
+  <data name="Detalle" xml:space="preserve">
+    <value>Detalhe</value>
+  </data>
+  <data name="FechaDesde" xml:space="preserve">
+    <value>Desde</value>
+  </data>
+  <data name="FechaHasta" xml:space="preserve">
+    <value>Até</value>
+  </data>
+  <data name="UsuarioFiltro" xml:space="preserve">
+    <value>Utilizador</value>
+  </data>
+  <data name="AuditoriaLimiteAviso" xml:space="preserve">
+    <value>Mostram-se os últimos 500 registos. Ajusta os filtros para ver mais.</value>
+  </data>
+  <data name="CuentasUsuario" xml:space="preserve">
+    <value>Contas de utilizador</value>
+  </data>
+  <data name="NuevaCuenta" xml:space="preserve">
+    <value>Nova conta</value>
+  </data>
+  <data name="NombreMostrado" xml:space="preserve">
+    <value>Nome apresentado</value>
+  </data>
+  <data name="Rol" xml:space="preserve">
+    <value>Função</value>
+  </data>
+  <data name="RolAdministrador" xml:space="preserve">
+    <value>Administrador</value>
+  </data>
+  <data name="RolUsuario" xml:space="preserve">
+    <value>Utilizador</value>
+  </data>
+  <data name="Estado" xml:space="preserve">
+    <value>Estado</value>
+  </data>
+  <data name="CuentaActiva" xml:space="preserve">
+    <value>Ativa</value>
+  </data>
+  <data name="CuentaInactiva" xml:space="preserve">
+    <value>Inativa</value>
+  </data>
+  <data name="CuentaPropia" xml:space="preserve">
+    <value>(tu)</value>
+  </data>
+  <data name="FechaCreacion" xml:space="preserve">
+    <value>Data de criação</value>
+  </data>
+  <data name="PendienteCambioPassword" xml:space="preserve">
+    <value>Mudança de palavra-passe pendente</value>
+  </data>
+  <data name="ResetearPassword" xml:space="preserve">
+    <value>Repor palavra-passe</value>
+  </data>
+  <data name="ResetearPasswordTexto" xml:space="preserve">
+    <value>Introduz a nova palavra-passe temporária. A conta terá de a alterar no próximo início de sessão.</value>
+  </data>
+  <data name="PasswordTemporal" xml:space="preserve">
+    <value>Palavra-passe temporária</value>
+  </data>
+  <data name="ConfirmarPasswordTemporal" xml:space="preserve">
+    <value>Confirmar palavra-passe temporária</value>
+  </data>
+  <data name="PasswordReseteada" xml:space="preserve">
+    <value>Palavra-passe reposta corretamente.</value>
+  </data>
+  <data name="Activar" xml:space="preserve">
+    <value>Ativar</value>
+  </data>
+  <data name="Desactivar" xml:space="preserve">
+    <value>Desativar</value>
+  </data>
+  <data name="ActivarCuentaTitulo" xml:space="preserve">
+    <value>Ativar conta</value>
+  </data>
+  <data name="DesactivarCuentaTitulo" xml:space="preserve">
+    <value>Desativar conta</value>
+  </data>
+  <data name="ConfirmarActivarCuenta" xml:space="preserve">
+    <value>Tens a certeza de que queres ativar a conta</value>
+  </data>
+  <data name="ConfirmarDesactivarCuenta" xml:space="preserve">
+    <value>Tens a certeza de que queres desativar a conta</value>
+  </data>
+  <data name="EliminarCuentaTitulo" xml:space="preserve">
+    <value>Eliminar conta</value>
+  </data>
+  <data name="ConfirmarEliminarCuenta" xml:space="preserve">
+    <value>Tens a certeza de que queres eliminar a conta</value>
+  </data>
+  <data name="CuentaCreada" xml:space="preserve">
+    <value>Conta criada corretamente.</value>
+  </data>
+  <data name="CuentaActualizada" xml:space="preserve">
+    <value>Conta atualizada corretamente.</value>
+  </data>
+  <data name="CuentaEliminada" xml:space="preserve">
+    <value>Conta eliminada corretamente.</value>
+  </data>
+  <data name="LoginObligatorio" xml:space="preserve">
+    <value>O utilizador é obrigatório.</value>
+  </data>
+  <data name="LoginYaExiste" xml:space="preserve">
+    <value>Já existe uma conta com esse utilizador.</value>
+  </data>
+  <data name="NoPuedesEliminarTuPropiaCuenta" xml:space="preserve">
+    <value>Não podes eliminar a tua própria conta.</value>
+  </data>
+  <data name="NoPuedesDesactivarTuPropiaCuenta" xml:space="preserve">
+    <value>Não podes desativar a tua própria conta.</value>
+  </data>
+  <data name="DebeHaberUnAdministrador" xml:space="preserve">
+    <value>Tem de existir pelo menos um Administrador ativo.</value>
+  </data>
+  <data name="SinCuentas" xml:space="preserve">
+    <value>Não foram encontradas contas.</value>
+  </data>
+  <data name="IniciarSesionTitulo" xml:space="preserve">
+    <value>Iniciar sessão</value>
+  </data>
+  <data name="ModulosPermitidos" xml:space="preserve">
+    <value>Módulos permitidos</value>
+  </data>
+  <data name="CuentaInactivaTexto" xml:space="preserve">
+    <value>Esta conta está desativada. Contacta um Administrador.</value>
+  </data>
 </root>

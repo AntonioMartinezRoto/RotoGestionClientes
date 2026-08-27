@@ -9,6 +9,7 @@
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JsRuntime
 @inject ISnackbar Snackbar
+@inject SesionState SesionState
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.JSInterop
 @using NPOI.OpenXmlFormats.Spreadsheet
@@ -126,6 +127,15 @@
 
     protected override async Task OnInitializedAsync()
     {
+        // Defensa además de la ocultación del menú/Dashboard (MainLayout.razor
+        // / Home.razor): sin esto, cualquiera podría llegar aquí navegando
+        // directamente a /informes aunque el enlace no se le muestre.
+        if (!SesionState.TieneAccesoModulo(Modulo.Informes))
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
         await using var db = await DbFactory.CreateDbContextAsync();
 
         var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();

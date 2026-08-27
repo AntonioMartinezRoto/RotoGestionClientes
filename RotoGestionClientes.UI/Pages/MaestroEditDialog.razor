@@ -8,6 +8,7 @@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
 @inject VersionDatosState VersionDatosState
+@inject AuditoriaService AuditoriaService
 @using Microsoft.EntityFrameworkCore
 
 <MudDialog>
@@ -66,6 +67,14 @@
     private bool _esDistribuidor;
     private int? _perfilTipoId;
     private List<PerfilTipo> _perfilTipos = new();
+
+    // Fotografía de los valores tal como estaban en la BBDD al abrir el
+    // diálogo (solo se rellenan cuando Id.HasValue), para poder detectar en
+    // AceptarAsync si Guardar realmente cambia algo -- ver huboCambios ahí.
+    private string _nombreOriginal = string.Empty;
+    private bool _activoOriginal;
+    private bool _esDistribuidorOriginal;
+    private int? _perfilTipoIdOriginal;
 
     protected override async Task OnInitializedAsync()
     {
@@ -168,6 +177,16 @@
                     }
                     break;
             }
+
+            // Fotografía tras el switch: cualquiera que sea el Tipo, en este
+            // punto _nombre/_activo/_perfilTipoId/_esDistribuidor tienen
+            // exactamente lo que había en la BBDD (los que no aplican a este
+            // Tipo se quedan en su valor por defecto en ambos lados, así que
+            // no afectan a la comparación).
+            _nombreOriginal = _nombre;
+            _activoOriginal = _activo;
+            _perfilTipoIdOriginal = _perfilTipoId;
+            _esDistribuidorOriginal = _esDistribuidor;
         }
 
         _cargando = false;
@@ -188,10 +207,29 @@
             return;
         }
 
+        // Si se está editando (Id.HasValue) y ninguno de los campos ha
+        // cambiado respecto a lo que había al abrir el diálogo, no hay nada
+        // que guardar: se evita registrar auditoría e incrementar
+        // VersionMaestros (que dispararía una descarga de actualización
+        // innecesaria en Distribuidor) por un "Guardar" que no modifica nada.
+        var huboCambios = Id is null
+            || nombre != _nombreOriginal
+            || _activo != _activoOriginal
+            || (Tipo == MaestroTipo.Perfil && _perfilTipoId != _perfilTipoIdOriginal)
+            || (Tipo == MaestroTipo.Usuario && _esDistribuidor != _esDistribuidorOriginal);
+
+        if (!huboCambios)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+            return;
+        }
+
         _guardando = true;
         try
         {
             await using var db = await DbFactory.CreateDbContextAsync();
+
+            var entidadId = 0;
 
             switch (Tipo)
             {
@@ -206,6 +244,7 @@
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
                         entity.PerfilTipoId = _perfilTipoId!.Value;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -219,6 +258,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -232,6 +272,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -245,6 +286,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -258,6 +300,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -271,6 +314,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -284,6 +328,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -297,6 +342,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -310,6 +356,7 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -323,6 +370,7 @@
                         }
                         entity.Descripcion = nombre;
                         entity.Activa = _activo;
+                        entidadId = entity.Id;
                     }
                     break;
 
@@ -337,9 +385,13 @@
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
                         entity.EsDistribuidor = _esDistribuidor;
+                        entidadId = entity.Id;
                     }
                     break;
             }
+
+            var accionAuditoria = Id is null ? AuditoriaAccionTipo.Crear : AuditoriaAccionTipo.Modificar;
+            AuditoriaService.Registrar(db, accionAuditoria, Tipo.ToString(), entidadId, nombre);
 
             var nuevaVersion = await IncrementarVersionDatosAsync(db);
             await db.SaveChangesAsync();

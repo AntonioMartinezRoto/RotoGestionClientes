@@ -1,0 +1,342 @@
+@* Diálogo de alta/edición de una cuenta de acceso (dbo.CuentaUsuario), abierto
+   desde Pages/CuentasUsuario.razor. El Login solo se puede fijar al crear: es
+   la clave de acceso, así que no se permite renombrarlo una vez creada la
+   cuenta (si hiciera falta cambiarlo, se elimina la cuenta y se crea una
+   nueva). Al crear, se pide una contraseña temporal y la cuenta queda con
+   DebeCambiarPassword=true -- igual que hace un reseteo (ver
+   CuentaUsuarioResetPasswordDialog.razor) -- así que la persona la cambia por
+   una propia en su primer inicio de sesión (ver Pages/Login.razor).
+
+   Regla de seguridad: si esta cuenta es la única Administrador activa, no se
+   puede guardar un cambio que la deje sin serlo (cambiar el rol a Usuario o
+   desmarcar Activa) -- ver EsUltimoAdministradorActivoAsync más abajo, misma
+   comprobación que usan el botón de desactivar y el de eliminar en
+   CuentasUsuario.razor para el mismo motivo. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject AuditoriaService AuditoriaService
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Titulo</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else
+        {
+            <MudStack Spacing="3">
+                <MudTextField T="string" @bind-Value="_login" Label="@MenuTextos.UsuarioLogin" Variant="Variant.Outlined"
+                              Disabled="Id.HasValue" Required="true" RequiredError="@MenuTextos.LoginObligatorio" />
+
+                <MudTextField T="string" @bind-Value="_nombreMostrado" Label="@MenuTextos.NombreMostrado" Variant="Variant.Outlined"
+                              Required="true" RequiredError="@MenuTextos.NombreObligatorio" />
+
+                <MudSelect T="Rol" Label="@MenuTextos.Rol" Value="_rol" ValueChanged="@(v => _rol = v)" Variant="Variant.Outlined">
+                    <MudSelectItem T="Rol" Value="Rol.Administrador">@MenuTextos.RolAdministrador</MudSelectItem>
+                    <MudSelectItem T="Rol" Value="Rol.Usuario">@MenuTextos.RolUsuario</MudSelectItem>
+                </MudSelect>
+
+                <MudCheckBox T="bool" @bind-Value="_activa" Label="@MenuTextos.Activo" Color="Color.Primary" />
+
+                @if (_rol == Rol.Usuario)
+                {
+                    <MudText Typo="Typo.subtitle2" Class="mt-2">@MenuTextos.ModulosPermitidos</MudText>
+                    @foreach (var modulo in _modulos)
+                    {
+                        <MudCheckBox T="bool" Value="modulo.Seleccionado" ValueChanged="@(v => modulo.Seleccionado = v)"
+                                     Label="@modulo.Label" Color="Color.Primary" />
+                    }
+                }
+
+                @if (!Id.HasValue)
+                {
+                    <MudTextField T="string" @bind-Value="_passwordTemporal" Label="@MenuTextos.PasswordTemporal" Variant="Variant.Outlined"
+                                  InputType="InputType.Password" Immediate="true" />
+
+                    <MudTextField T="string" @bind-Value="_confirmarPasswordTemporal" Label="@MenuTextos.ConfirmarPasswordTemporal" Variant="Variant.Outlined"
+                                  InputType="InputType.Password" Immediate="true" />
+                }
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancelar">@MenuTextos.Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AceptarAsync" Disabled="_guardando">@MenuTextos.Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    private const int LongitudMinimaPassword = 8;
+
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter, EditorRequired] public string Titulo { get; set; } = string.Empty;
+    [Parameter] public int? Id { get; set; }
+
+    private readonly PasswordHasher<CuentaUsuario> _hasher = new();
+
+    private bool _cargando = true;
+    private bool _guardando;
+
+    private string _login = string.Empty;
+    private string _nombreMostrado = string.Empty;
+    private Rol _rol = Rol.Usuario;
+    private bool _activa = true;
+    private string _passwordTemporal = string.Empty;
+    private string _confirmarPasswordTemporal = string.Empty;
+
+    private sealed class ModuloCheckbox
+    {
+        public Modulo Modulo { get; init; }
+        public string Label { get; init; } = string.Empty;
+        public bool Seleccionado { get; set; }
+    }
+
+    // Todos marcados por defecto tanto al crear como al editar una cuenta
+    // que nunca se ha personalizado (RestringirModulos=false): equivale al
+    // acceso total de hoy, hasta que el Administrador desmarque algo.
+    private List<ModuloCheckbox> _modulos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        // Igual que MainLayout.razor/Home.razor: Mantenimiento y Crear
+        // actualización no existen en la edición Distribuidor, y Actualizar
+        // datos no existe en la edición Interna. No tiene sentido dejar que
+        // el Administrador marque un módulo que ningún Usuario de esta base
+        // de datos podría usar nunca -- solo genera confusión.
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        var edition = ApplicationEdition.Internal;
+        if (config is not null)
+        {
+            Enum.TryParse(config.AppEdition, out edition);
+        }
+
+        bool mostrarMantenimiento;
+        bool mostrarCrearActualizacion;
+        bool mostrarActualizarDatos;
+
+        switch (edition)
+        {
+            case ApplicationEdition.Distributor:
+                mostrarMantenimiento = false;
+                mostrarCrearActualizacion = false;
+                mostrarActualizarDatos = true;
+                break;
+            case ApplicationEdition.Internal:
+                mostrarMantenimiento = true;
+                mostrarCrearActualizacion = true;
+                mostrarActualizarDatos = false;
+                break;
+            default: // Debug / desconocido: se muestra todo
+                mostrarMantenimiento = true;
+                mostrarCrearActualizacion = true;
+                mostrarActualizarDatos = true;
+                break;
+        }
+
+        _modulos = new List<ModuloCheckbox>
+        {
+            new() { Modulo = Modulo.Clientes, Label = MenuTextos.Clientes, Seleccionado = true },
+        };
+        if (mostrarMantenimiento)
+            _modulos.Add(new ModuloCheckbox { Modulo = Modulo.Mantenimiento, Label = MenuTextos.Mantenimiento, Seleccionado = true });
+        _modulos.Add(new ModuloCheckbox { Modulo = Modulo.Informes, Label = MenuTextos.Informes, Seleccionado = true });
+        if (mostrarCrearActualizacion)
+            _modulos.Add(new ModuloCheckbox { Modulo = Modulo.CrearActualizacion, Label = MenuTextos.CrearActualizacion, Seleccionado = true });
+        if (mostrarActualizarDatos)
+            _modulos.Add(new ModuloCheckbox { Modulo = Modulo.ActualizarDatos, Label = MenuTextos.ActualizarDatos, Seleccionado = true });
+
+        if (Id.HasValue)
+        {
+            var cuenta = await db.CuentasUsuario.AsNoTracking().Include(x => x.Permisos).FirstAsync(x => x.Id == Id.Value);
+
+            _login = cuenta.Login;
+            _nombreMostrado = cuenta.NombreMostrado;
+            _rol = Enum.TryParse<Rol>(cuenta.Rol, out var rol) ? rol : Rol.Usuario;
+            _activa = cuenta.Activa;
+
+            if (cuenta.RestringirModulos)
+            {
+                var permitidos = cuenta.Permisos
+                    .Select(p => Enum.TryParse<Modulo>(p.Modulo, out var m) ? (Modulo?)m : null)
+                    .Where(m => m.HasValue)
+                    .Select(m => m!.Value)
+                    .ToHashSet();
+
+                foreach (var modulo in _modulos)
+                {
+                    modulo.Seleccionado = permitidos.Contains(modulo.Modulo);
+                }
+            }
+        }
+
+        _cargando = false;
+    }
+
+    private async Task AceptarAsync()
+    {
+        var login = _login.Trim();
+        var nombreMostrado = _nombreMostrado.Trim();
+
+        if (string.IsNullOrWhiteSpace(login))
+        {
+            Snackbar.Add(MenuTextos.LoginObligatorio, Severity.Warning);
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(nombreMostrado))
+        {
+            Snackbar.Add(MenuTextos.NombreObligatorio, Severity.Warning);
+            return;
+        }
+
+        if (!Id.HasValue)
+        {
+            if (_passwordTemporal.Length < LongitudMinimaPassword)
+            {
+                Snackbar.Add(MenuTextos.PasswordDemasiadoCorta, Severity.Warning);
+                return;
+            }
+
+            if (_passwordTemporal != _confirmarPasswordTemporal)
+            {
+                Snackbar.Add(MenuTextos.PasswordsNoCoinciden, Severity.Warning);
+                return;
+            }
+        }
+
+        _guardando = true;
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            if (Id.HasValue)
+            {
+                var cuenta = await db.CuentasUsuario.FirstAsync(x => x.Id == Id.Value);
+
+                var eraAdminActivo = cuenta.Rol == nameof(Rol.Administrador) && cuenta.Activa;
+                var seguiraSiendoAdminActivo = _rol == Rol.Administrador && _activa;
+
+                if (eraAdminActivo && !seguiraSiendoAdminActivo && await EsUltimoAdministradorActivoAsync(db, cuenta.Id))
+                {
+                    Snackbar.Add(MenuTextos.DebeHaberUnAdministrador, Severity.Warning);
+                    return;
+                }
+
+                cuenta.NombreMostrado = nombreMostrado;
+                cuenta.Rol = _rol.ToString();
+                cuenta.Activa = _activa;
+
+                // Se reconstruyen los permisos por completo en cada guardado
+                // (se borran y, si procede, se vuelven a insertar) en vez de
+                // calcular el diff: más simple y no importa perder el Id de
+                // las filas antiguas, que no se referencian desde ningún
+                // otro sitio.
+                var permisosActuales = await db.CuentaUsuarioPermisos.Where(p => p.CuentaUsuarioId == cuenta.Id).ToListAsync();
+                db.CuentaUsuarioPermisos.RemoveRange(permisosActuales);
+
+                if (_rol == Rol.Usuario)
+                {
+                    var todosSeleccionados = _modulos.All(m => m.Seleccionado);
+                    // Con todos los módulos marcados no hace falta ninguna
+                    // fila: es exactamente el mismo comportamiento que
+                    // RestringirModulos=false (acceso a todo lo que permita
+                    // la edición), así que se deja así en vez de guardar 5
+                    // filas redundantes.
+                    cuenta.RestringirModulos = !todosSeleccionados;
+
+                    if (cuenta.RestringirModulos)
+                    {
+                        foreach (var modulo in _modulos.Where(m => m.Seleccionado))
+                        {
+                            db.CuentaUsuarioPermisos.Add(new CuentaUsuarioPermiso { CuentaUsuarioId = cuenta.Id, Modulo = modulo.Modulo.ToString() });
+                        }
+                    }
+                }
+                else
+                {
+                    // Administrador siempre tiene acceso a todo: no le
+                    // aplican permisos por módulo, y se limpia cualquier
+                    // configuración que pudiera haber quedado de cuando (si
+                    // fue el caso) esta cuenta era Usuario.
+                    cuenta.RestringirModulos = false;
+                }
+
+                AuditoriaService.Registrar(db, AuditoriaAccionTipo.Modificar, "CuentaUsuario", cuenta.Id, cuenta.Login);
+                await db.SaveChangesAsync();
+
+                Snackbar.Add(MenuTextos.CuentaActualizada, Severity.Success, config => { config.SnackbarVariant = Variant.Filled; });
+            }
+            else
+            {
+                var loginExistente = await db.CuentasUsuario.AnyAsync(x => x.Login == login);
+                if (loginExistente)
+                {
+                    Snackbar.Add(MenuTextos.LoginYaExiste, Severity.Warning);
+                    return;
+                }
+
+                var todosSeleccionados = _modulos.All(m => m.Seleccionado);
+
+                var cuenta = new CuentaUsuario
+                {
+                    Login = login,
+                    NombreMostrado = nombreMostrado,
+                    Rol = _rol.ToString(),
+                    Activa = _activa,
+                    DebeCambiarPassword = true,
+                    FechaCreacion = DateTime.UtcNow,
+                    PasswordHash = string.Empty,
+                    // Ver comentario equivalente en la rama de edición más
+                    // arriba: con todos los módulos marcados no hace falta
+                    // restringir nada. Nunca se aplica a Administrador.
+                    RestringirModulos = _rol == Rol.Usuario && !todosSeleccionados,
+                };
+                cuenta.PasswordHash = _hasher.HashPassword(cuenta, _passwordTemporal);
+
+                db.CuentasUsuario.Add(cuenta);
+                // Primer SaveChanges: asigna el Id (IDENTITY) antes de poder
+                // referenciarlo en los permisos y en la fila de auditoría,
+                // mismo patrón que ClienteWizard.razor usa para Cliente.
+                await db.SaveChangesAsync();
+
+                if (cuenta.RestringirModulos)
+                {
+                    foreach (var modulo in _modulos.Where(m => m.Seleccionado))
+                    {
+                        db.CuentaUsuarioPermisos.Add(new CuentaUsuarioPermiso { CuentaUsuarioId = cuenta.Id, Modulo = modulo.Modulo.ToString() });
+                    }
+                }
+
+                AuditoriaService.Registrar(db, AuditoriaAccionTipo.Crear, "CuentaUsuario", cuenta.Id, cuenta.Login);
+                await db.SaveChangesAsync();
+
+                Snackbar.Add(MenuTextos.CuentaCreada, Severity.Success, config => { config.SnackbarVariant = Variant.Filled; });
+            }
+
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        finally
+        {
+            _guardando = false;
+        }
+    }
+
+    // Misma comprobación que CuentasUsuario.razor: ¿quedaría alguna otra
+    // cuenta Administrador activa si esta dejara de serlo?
+    private static async Task<bool> EsUltimoAdministradorActivoAsync(ApplicationDbContext db, int cuentaIdExcluir)
+    {
+        var quedanOtrosAdmins = await db.CuentasUsuario
+            .AnyAsync(c => c.Id != cuentaIdExcluir && c.Rol == nameof(Rol.Administrador) && c.Activa);
+        return !quedanOtrosAdmins;
+    }
+
+    private void Cancelar() => MudDialog.Cancel();
+}

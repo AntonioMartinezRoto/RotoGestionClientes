@@ -45,6 +45,9 @@ internal static class Program
         services.AddSingleton<IAppHost, DesktopAppHost>();
         services.AddSingleton<ClientesListState>();
         services.AddSingleton<VersionDatosState>();
+        services.AddSingleton<SesionState>();
+        services.AddSingleton<AuthService>();
+        services.AddSingleton<AuditoriaService>();
 
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);
