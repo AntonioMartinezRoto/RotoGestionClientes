@@ -17,8 +17,8 @@
       ApplicationIcon/PackageIcon si se quiere mantener la identidad exacta.
     -->
     <AssemblyName>RGC-Nuevo</AssemblyName>
-    <AssemblyVersion>2.1.4</AssemblyVersion>
-    <FileVersion>2.1.4</FileVersion>
+    <AssemblyVersion>2.2.1</AssemblyVersion>
+    <FileVersion>2.2.1</FileVersion>
     <Version>0.1.0</Version>
     <Company>Roto-Frank S.A.</Company>
     <ApplicationIcon>Images\RGC_Logo_JAC.ico</ApplicationIcon>
