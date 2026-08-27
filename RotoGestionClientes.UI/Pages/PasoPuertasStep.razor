@@ -23,11 +23,11 @@ else
             <MudGrid Class="mb-4">
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.Bisagras" Items="_bisagras" OnToggle="OnBisagraToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.Cerraduras" Items="_cerraduras" OnToggle="OnCerraduraToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
             </MudGrid>
             <AgujaSelector Model="Model" AgujaModeloTipoId="@((int)AgujasTipoModelo.Puerta)"

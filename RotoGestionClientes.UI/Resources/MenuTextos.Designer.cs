@@ -129,6 +129,10 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string SinDocumentos => ResourceManager.GetString("SinDocumentos", resourceCulture)!;
 
+        public static string SinElementos => ResourceManager.GetString("SinElementos", resourceCulture)!;
+
+        public static string SinRegistros => ResourceManager.GetString("SinRegistros", resourceCulture)!;
+
         public static string Cancelar => ResourceManager.GetString("Cancelar", resourceCulture)!;
 
         public static string Atras => ResourceManager.GetString("Atras", resourceCulture)!;
@@ -307,8 +311,6 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string Activo => ResourceManager.GetString("Activo", resourceCulture)!;
 
-        public static string EsDistribuidor => ResourceManager.GetString("EsDistribuidor", resourceCulture)!;
-
         public static string NombreObligatorio => ResourceManager.GetString("NombreObligatorio", resourceCulture)!;
 
         public static string Nuevo => ResourceManager.GetString("Nuevo", resourceCulture)!;
@@ -463,6 +465,8 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string AuditoriaLimiteAviso => ResourceManager.GetString("AuditoriaLimiteAviso", resourceCulture)!;
 
+        public static string SinRegistrosAuditoria => ResourceManager.GetString("SinRegistrosAuditoria", resourceCulture)!;
+
         public static string CuentasUsuario => ResourceManager.GetString("CuentasUsuario", resourceCulture)!;
 
         public static string NuevaCuenta => ResourceManager.GetString("NuevaCuenta", resourceCulture)!;
@@ -536,5 +540,65 @@ namespace RotoGestionClientes.UI.Resources
         public static string ModulosPermitidos => ResourceManager.GetString("ModulosPermitidos", resourceCulture)!;
 
         public static string CuentaInactivaTexto => ResourceManager.GetString("CuentaInactivaTexto", resourceCulture)!;
+
+        public static string NuevaAccion => ResourceManager.GetString("NuevaAccion", resourceCulture)!;
+
+        public static string EditarAccion => ResourceManager.GetString("EditarAccion", resourceCulture)!;
+
+        public static string SinAcciones => ResourceManager.GetString("SinAcciones", resourceCulture)!;
+
+        public static string Fecha => ResourceManager.GetString("Fecha", resourceCulture)!;
+
+        public static string FechaFin => ResourceManager.GetString("FechaFin", resourceCulture)!;
+
+        public static string FechaObligatoria => ResourceManager.GetString("FechaObligatoria", resourceCulture)!;
+
+        public static string FechaFinAnteriorAFecha => ResourceManager.GetString("FechaFinAnteriorAFecha", resourceCulture)!;
+
+        public static string HorasInvertidas => ResourceManager.GetString("HorasInvertidas", resourceCulture)!;
+
+        public static string HorasInvertidasObligatorias => ResourceManager.GetString("HorasInvertidasObligatorias", resourceCulture)!;
+
+        public static string Comercial => ResourceManager.GetString("Comercial", resourceCulture)!;
+
+        public static string UsuarioAccion => ResourceManager.GetString("UsuarioAccion", resourceCulture)!;
+
+        public static string UsuarioAccionObligatorio => ResourceManager.GetString("UsuarioAccionObligatorio", resourceCulture)!;
+
+        public static string TipoUsuario => ResourceManager.GetString("TipoUsuario", resourceCulture)!;
+
+        public static string TiposUsuario => ResourceManager.GetString("TiposUsuario", resourceCulture)!;
+
+        public static string TipoUsuarioObligatorio => ResourceManager.GetString("TipoUsuarioObligatorio", resourceCulture)!;
+
+        public static string EsDistribuidor => ResourceManager.GetString("EsDistribuidor", resourceCulture)!;
+
+        public static string Observaciones => ResourceManager.GetString("Observaciones", resourceCulture)!;
+
+        public static string TipoAccionObligatorio => ResourceManager.GetString("TipoAccionObligatorio", resourceCulture)!;
+
+        public static string DesactivarAccionTitulo => ResourceManager.GetString("DesactivarAccionTitulo", resourceCulture)!;
+
+        public static string ConfirmarDesactivarAccion => ResourceManager.GetString("ConfirmarDesactivarAccion", resourceCulture)!;
+
+        public static string AccionDesactivada => ResourceManager.GetString("AccionDesactivada", resourceCulture)!;
+
+        public static string TiposAccion => ResourceManager.GetString("TiposAccion", resourceCulture)!;
+
+        public static string InformeAcciones => ResourceManager.GetString("InformeAcciones", resourceCulture)!;
+
+        public static string HorasPorMes => ResourceManager.GetString("HorasPorMes", resourceCulture)!;
+
+        public static string HorasPorTipoAccion => ResourceManager.GetString("HorasPorTipoAccion", resourceCulture)!;
+
+        public static string HorasPorComercial => ResourceManager.GetString("HorasPorComercial", resourceCulture)!;
+
+        public static string RankingClientes => ResourceManager.GetString("RankingClientes", resourceCulture)!;
+
+        public static string RankingTop15 => ResourceManager.GetString("RankingTop15", resourceCulture)!;
+
+        public static string ErrorExportarGrafico => ResourceManager.GetString("ErrorExportarGrafico", resourceCulture)!;
+
+        public static string SinAccionesEstadisticas => ResourceManager.GetString("SinAccionesEstadisticas", resourceCulture)!;
     }
 }

@@ -1,28 +1,54 @@
-CREATE TABLE dbo.Usuario
+-- Maestro con el catálogo de tipos de usuario (gestionable desde
+-- Mantenimiento, igual que TipoAccion). EsDistribuidor marca la fila que el
+-- resto de la app trata como "catálogo de distribuidores" (se excluye del
+-- selector de comercial de una acción, etc.) -- ver el comentario de
+-- Models/TipoUsuario.cs. Debe crearse antes que dbo.Usuario porque esa tabla
+-- la referencia por FK.
+CREATE TABLE dbo.TipoUsuario
 (
     Id INT NOT NULL PRIMARY KEY,
     Nombre NVARCHAR(50) NOT NULL,
 	EsDistribuidor BIT NOT NULL DEFAULT (0),
 	Activa BIT NOT NULL DEFAULT (1),
-	
+
 );
 
-INSERT INTO dbo.Usuario (Id, Nombre, EsDistribuidor, Activa)
-VALUES 
-(1, 'Sergio González', 0, 1),
-(2, 'Agustín Canepa', 0, 1),
-(3, 'Albert Blas', 0, 1),
-(4, 'Antonio Barba', 0, 1),
-(5, 'Miguel Pereira', 0, 1),
-(6, 'Rotofer', 1, 1),
-(7, 'Alcantarilla', 1, 1),
-(8, 'Ignacio', 1, 1),
-(9, 'AluYPvc', 1, 1),
-(10, 'Comalfer', 1, 1),
-(11, 'Sumpai', 1, 1),
-(12, 'Fernasol', 1, 1),
-(13, 'Mapeal', 1, 1),
-(14, 'Centro del Accesorio', 1, 1);
+INSERT INTO dbo.TipoUsuario (Id, Nombre, EsDistribuidor, Activa)
+VALUES
+(1, 'Comercial', 0, 1),
+(2, 'Distribuidor', 1, 1),
+(3, 'Técnico', 0, 1);
+
+CREATE TABLE dbo.Usuario
+(
+    Id INT NOT NULL PRIMARY KEY,
+    Nombre NVARCHAR(50) NOT NULL,
+	TipoUsuarioId INT NOT NULL DEFAULT (1) REFERENCES dbo.TipoUsuario(Id),
+	Activa BIT NOT NULL DEFAULT (1),
+
+);
+
+INSERT INTO dbo.Usuario (Id, Nombre, TipoUsuarioId, Activa)
+VALUES
+(1, 'Sergio González', 1, 1),
+(2, 'Agustín Canepa', 1, 1),
+(3, 'Albert Blas', 1, 1),
+(4, 'Antonio Barba', 1, 1),
+(5, 'Miguel Pereira', 1, 1),
+(6, 'Rotofer', 2, 1),
+(7, 'Alcantarilla', 2, 1),
+(8, 'Ignacio', 2, 1),
+(9, 'AluYPvc', 2, 1),
+(10, 'Comalfer', 2, 1),
+(11, 'Sumpai', 2, 1),
+(12, 'Fernasol', 2, 1),
+(13, 'Mapeal', 2, 1),
+(14, 'Centro del Accesorio', 2, 1),
+(15, 'Antonio González', 3, 1),
+(16, 'Isaac Campos', 3, 1),
+(17, 'Gustavo Martínez', 3, 1),
+(18, 'José Alcario', 3, 1),
+(19, 'Antonio Martínez', 3, 1);
 
 CREATE TABLE dbo.Cliente
 (
@@ -1241,4 +1267,71 @@ CREATE TABLE dbo.CuentaUsuarioPermiso
     CONSTRAINT UQ_CuentaUsuarioPermiso_Cuenta_Modulo
         UNIQUE (CuentaUsuarioId, Modulo)
 );
+GO
+
+-- Catálogo de tipos de acción que se pueden registrar sobre un cliente
+-- (visita comercial, puesta en marcha, soporte telefónico...). Se gestiona
+-- desde Mantenimiento como cualquier otro maestro: se desactiva, nunca se
+-- borra, para no romper el histórico de ClienteAccion.
+CREATE TABLE dbo.TipoAccion
+(
+    Id INT NOT NULL,
+    Nombre NVARCHAR(50) NOT NULL,
+    Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_TipoAccion
+        PRIMARY KEY CLUSTERED (Id)
+);
+GO
+
+INSERT INTO dbo.TipoAccion (Id, Nombre, Activa)
+VALUES
+(1, 'Visita comercial', 1),
+(2, 'Puesta en marcha', 1),
+(3, 'Soporte telefónico', 1),
+(4, 'Actualización', 1);
+GO
+
+-- Acción registrada sobre un cliente ya existente. Fecha/FechaFin son la
+-- fecha (o rango de fechas, para acciones de varios días) en la que ocurrió
+-- la acción; HorasInvertidas se introduce siempre a mano, no se calcula a
+-- partir del rango. ComercialUsuarioId referencia el catálogo Usuario (el
+-- mismo que Cliente.ResponsableId), no CuentaUsuario (login). Activa
+-- permite ocultar un registro dado de alta por error sin perder el
+-- histórico.
+CREATE TABLE dbo.ClienteAccion
+(
+    Id INT IDENTITY(1,1) NOT NULL,
+    ClienteId INT NOT NULL,
+    TipoAccionId INT NOT NULL,
+    ComercialUsuarioId INT NOT NULL,
+    Fecha DATETIME2 NOT NULL,
+    FechaFin DATETIME2 NULL,
+    HorasInvertidas DECIMAL(6,2) NULL,
+    Observaciones NVARCHAR(1000) NULL,
+    Activa BIT NOT NULL DEFAULT (1),
+
+    CONSTRAINT PK_ClienteAccion
+        PRIMARY KEY CLUSTERED (Id),
+
+    CONSTRAINT FK_ClienteAccion_Cliente
+        FOREIGN KEY (ClienteId)
+        REFERENCES dbo.Cliente(Id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT FK_ClienteAccion_TipoAccion
+        FOREIGN KEY (TipoAccionId)
+        REFERENCES dbo.TipoAccion(Id),
+
+    CONSTRAINT FK_ClienteAccion_Usuario
+        FOREIGN KEY (ComercialUsuarioId)
+        REFERENCES dbo.Usuario(Id)
+);
+GO
+
+CREATE INDEX IX_ClienteAccion_ClienteId
+ON dbo.ClienteAccion(ClienteId);
+
+CREATE INDEX IX_ClienteAccion_Fecha
+ON dbo.ClienteAccion(Fecha);
 GO

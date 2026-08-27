@@ -53,5 +53,6 @@ namespace RotoGestionClientes
         public ICollection<ClienteDocumento> ClienteDocumentos { get; set; } = new List<ClienteDocumento>();
         public ClienteConfiguracionMaquinas? ClienteConfiguracionMaquinas { get; set; }
         public Usuario? Responsable { get; set; }
+        public ICollection<ClienteAccion> ClienteAcciones { get; set; } = new List<ClienteAccion>();
     }
 }

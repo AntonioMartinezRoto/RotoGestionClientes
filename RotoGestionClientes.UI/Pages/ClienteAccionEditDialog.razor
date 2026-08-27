@@ -1,0 +1,206 @@
+@* Diálogo de alta/edición de una acción registrada sobre un cliente ya
+   existente (visita comercial, puesta en marcha, soporte telefónico...).
+   Mismo patrón que MaestroEditDialog.razor/CuentaUsuarioEditDialog.razor: un
+   único formulario que sirve tanto para crear (Id es null) como para editar
+   (Id tiene valor). A diferencia de los maestros, ClienteAccion es una tabla
+   IDENTITY tipo "evento" -- no hace falta la asignación manual de Id
+   (NuevoIdAsync), pero sí el patrón de doble SaveChangesAsync ya usado en
+   Cliente/CuentaUsuario: el primer guardado asigna el Id real (IDENTITY)
+   antes de poder registrar la fila de auditoría que lo referencia. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject ISnackbar Snackbar
+@inject AuditoriaService AuditoriaService
+@using Microsoft.EntityFrameworkCore
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@(Id.HasValue ? MenuTextos.EditarAccion : MenuTextos.NuevaAccion)</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else
+        {
+            <MudStack Spacing="3">
+                <MudSelect T="int?" Label="@MenuTextos.Tipo" Value="_tipoAccionId" ValueChanged="@(v => _tipoAccionId = v)"
+                           Variant="Variant.Outlined" Required="true" RequiredError="@MenuTextos.TipoAccionObligatorio">
+                    @foreach (var tipo in _tiposAccion)
+                    {
+                        <MudSelectItem T="int?" Value="@((int?)tipo.Id)">@tipo.Nombre</MudSelectItem>
+                    }
+                </MudSelect>
+
+                @if (_mostrarComercial)
+                {
+                    <MudSelect T="int?" Label="@MenuTextos.UsuarioAccion" Value="_comercialUsuarioId" ValueChanged="@(v => _comercialUsuarioId = v)"
+                               Variant="Variant.Outlined" Required="true" RequiredError="@MenuTextos.UsuarioAccionObligatorio">
+                        @foreach (var usuario in _usuarios)
+                        {
+                            <MudSelectItem T="int?" Value="@((int?)usuario.Id)">@usuario.Nombre</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+
+                <MudStack Row="true" Spacing="3">
+                    <MudDatePicker Label="@MenuTextos.Fecha" @bind-Date="_fecha" Variant="Variant.Outlined"
+                                   Margin="Margin.Dense" Editable="true" DateFormat="dd/MM/yyyy" Required="true" />
+                    <MudDatePicker Label="@MenuTextos.FechaFin" @bind-Date="_fechaFin" Variant="Variant.Outlined"
+                                   Margin="Margin.Dense" Editable="true" DateFormat="dd/MM/yyyy" Clearable="true" />
+                </MudStack>
+
+                <MudNumericField T="decimal?" @bind-Value="_horasInvertidas" Label="@MenuTextos.HorasInvertidas" Variant="Variant.Outlined"
+                                  Min="0.01m" Step="0.5m" Format="0.##" Clearable="true" />
+
+                <MudTextField T="string" @bind-Value="_observaciones" Label="@MenuTextos.Observaciones" Variant="Variant.Outlined"
+                              Lines="3" />
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancelar">@MenuTextos.Cancelar</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="AceptarAsync" Disabled="_guardando">@MenuTextos.Guardar</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter, EditorRequired] public int ClienteId { get; set; }
+    [Parameter] public int? Id { get; set; }
+
+    private bool _cargando = true;
+    private bool _guardando;
+    private bool _mostrarComercial = true;
+
+    private int? _tipoAccionId;
+    private int? _comercialUsuarioId;
+    private DateTime? _fecha = DateTime.Today;
+    private DateTime? _fechaFin;
+    private decimal? _horasInvertidas;
+    private string? _observaciones;
+
+    private List<TipoAccion> _tiposAccion = new();
+    private List<Usuario> _usuarios = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        if (config is not null && Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+            _mostrarComercial = edition != ApplicationEdition.Distributor;
+
+        _tiposAccion = await db.TiposAccion.Where(x => x.Activa).OrderBy(x => x.Nombre).AsNoTracking().ToListAsync();
+
+        // El desplegable de comercial solo se muestra (y solo se rellena) en
+        // ediciones no-Distribuidor: en esas, la acción siempre se atribuye
+        // al propio distribuidor (ver más abajo). Los Usuario cuyo tipo
+        // (catálogo TipoUsuario) está marcado EsDistribuidor son catálogo de
+        // distribuidores, no personas que registren acciones, así que nunca
+        // aparecen en el combo -- cualquier otro tipo (Comercial, Técnico...)
+        // sí puede registrar/atribuirse acciones.
+        if (_mostrarComercial)
+        {
+            _usuarios = await db.Usuarios.Where(x => x.Activa && !x.TipoUsuario.EsDistribuidor)
+                .OrderBy(x => x.Nombre).AsNoTracking().ToListAsync();
+        }
+
+        if (Id.HasValue)
+        {
+            var entity = await db.ClienteAcciones.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+            _tipoAccionId = entity.TipoAccionId;
+            _comercialUsuarioId = entity.ComercialUsuarioId;
+            _fecha = entity.Fecha;
+            _fechaFin = entity.FechaFin;
+            _horasInvertidas = entity.HorasInvertidas;
+            _observaciones = entity.Observaciones;
+        }
+        else
+        {
+            // Por defecto se atribuye la acción al responsable del cliente si
+            // lo tiene -- el usuario puede cambiarlo antes de guardar.
+            var cliente = await db.Clientes.AsNoTracking().FirstOrDefaultAsync(x => x.Id == ClienteId);
+            _comercialUsuarioId = cliente?.ResponsableId;
+        }
+
+        // En la edición Distribuidor no hay combo que elegir: la acción
+        // siempre se atribuye al distribuidor configurado, igual que
+        // Cliente.ResponsableId en PasoDatosGeneralesStep.
+        if (!_mostrarComercial)
+            _comercialUsuarioId = config?.DistribuidorId;
+
+        _cargando = false;
+    }
+
+    private async Task AceptarAsync()
+    {
+        if (!_tipoAccionId.HasValue)
+        {
+            Snackbar.Add(MenuTextos.TipoAccionObligatorio, Severity.Warning);
+            return;
+        }
+
+        if (!_comercialUsuarioId.HasValue)
+        {
+            Snackbar.Add(MenuTextos.UsuarioAccionObligatorio, Severity.Warning);
+            return;
+        }
+
+        if (!_fecha.HasValue)
+        {
+            Snackbar.Add(MenuTextos.FechaObligatoria, Severity.Warning);
+            return;
+        }
+
+        if (_fechaFin.HasValue && _fechaFin.Value.Date < _fecha.Value.Date)
+        {
+            Snackbar.Add(MenuTextos.FechaFinAnteriorAFecha, Severity.Warning);
+            return;
+        }
+
+        // Las horas invertidas son opcionales (p.ej. una visita de un solo
+        // día puede registrarse solo con Fecha), pero si se informan deben
+        // ser un valor positivo.
+        if (_horasInvertidas.HasValue && _horasInvertidas.Value <= 0)
+        {
+            Snackbar.Add(MenuTextos.HorasInvertidasObligatorias, Severity.Warning);
+            return;
+        }
+
+        _guardando = true;
+        try
+        {
+            await using var db = await DbFactory.CreateDbContextAsync();
+
+            var entity = Id is null ? new ClienteAccion { ClienteId = ClienteId } : await db.ClienteAcciones.FirstAsync(x => x.Id == Id.Value);
+            if (Id is null)
+                db.ClienteAcciones.Add(entity);
+
+            entity.TipoAccionId = _tipoAccionId!.Value;
+            entity.ComercialUsuarioId = _comercialUsuarioId!.Value;
+            entity.Fecha = _fecha!.Value;
+            entity.FechaFin = _fechaFin;
+            entity.HorasInvertidas = _horasInvertidas;
+            entity.Observaciones = string.IsNullOrWhiteSpace(_observaciones) ? null : _observaciones.Trim();
+
+            // Primer guardado: asigna el Id real (IDENTITY) si es un alta,
+            // necesario para poder referenciarlo desde AuditoriaAccion.
+            await db.SaveChangesAsync();
+
+            var accionAuditoria = Id is null ? AuditoriaAccionTipo.Crear : AuditoriaAccionTipo.Modificar;
+            var tipoNombre = _tiposAccion.FirstOrDefault(x => x.Id == entity.TipoAccionId)?.Nombre ?? entity.TipoAccionId.ToString();
+            AuditoriaService.Registrar(db, accionAuditoria, "ClienteAccion", entity.Id, $"{tipoNombre} — {entity.Fecha:dd/MM/yyyy}");
+            await db.SaveChangesAsync();
+
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+        finally
+        {
+            _guardando = false;
+        }
+    }
+
+    private void Cancelar() => MudDialog.Cancel();
+}

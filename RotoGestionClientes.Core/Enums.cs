@@ -41,7 +41,9 @@ namespace RotoGestionClientes
             MaquinaMarcas,
             MaquinaTipo,
             CerraduraPuerta,
-            Usuario
+            Usuario,
+            TipoAccion,
+            TipoUsuario
         }
         public enum InformeFiltroTipo
         {

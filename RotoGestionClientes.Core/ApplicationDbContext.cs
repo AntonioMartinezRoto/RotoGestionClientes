@@ -58,6 +58,9 @@ namespace RotoGestionClientes
         public DbSet<CuentaUsuario> CuentasUsuario { get; set; } = null!;
         public DbSet<AuditoriaAccion> AuditoriaAcciones { get; set; } = null!;
         public DbSet<CuentaUsuarioPermiso> CuentaUsuarioPermisos { get; set; } = null!;
+        public DbSet<TipoAccion> TiposAccion { get; set; } = null!;
+        public DbSet<ClienteAccion> ClienteAcciones { get; set; } = null!;
+        public DbSet<TipoUsuario> TiposUsuario { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -773,6 +776,52 @@ namespace RotoGestionClientes
                     .HasForeignKey(e => e.ClienteId)
                     .OnDelete(DeleteBehavior.Cascade);
             });
+            modelBuilder.Entity<TipoAccion>(entity =>
+            {
+                entity.ToTable("TipoAccion", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
+            });
+            modelBuilder.Entity<ClienteAccion>(entity =>
+            {
+                entity.ToTable("ClienteAccion", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Fecha)
+                      .IsRequired();
+
+                entity.Property(e => e.HorasInvertidas)
+                      .HasColumnType("decimal(6,2)");
+
+                entity.Property(e => e.Observaciones)
+                      .HasMaxLength(1000);
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
+
+                entity.HasOne(e => e.Cliente)
+                      .WithMany(c => c.ClienteAcciones)
+                      .HasForeignKey(e => e.ClienteId)
+                      .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.TipoAccion)
+                      .WithMany(t => t.ClienteAcciones)
+                      .HasForeignKey(e => e.TipoAccionId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.ComercialUsuario)
+                      .WithMany()
+                      .HasForeignKey(e => e.ComercialUsuarioId)
+                      .OnDelete(DeleteBehavior.Restrict);
+            });
             modelBuilder.Entity<SoporteMarcoConfig>(entity =>
             {
                 entity.ToTable("SoporteMarcoConfig", "dbo");
@@ -826,6 +875,22 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Idioma)
                     .IsRequired();
             });
+            modelBuilder.Entity<TipoUsuario>(entity =>
+            {
+                entity.ToTable("TipoUsuario", "dbo");
+
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Nombre)
+                      .IsRequired()
+                      .HasMaxLength(50);
+
+                entity.Property(e => e.EsDistribuidor)
+                      .IsRequired();
+
+                entity.Property(e => e.Activa)
+                      .IsRequired();
+            });
             modelBuilder.Entity<Usuario>(entity =>
             {
                 entity.ToTable("Usuario", "dbo");
@@ -835,11 +900,16 @@ namespace RotoGestionClientes
                 entity.Property(e => e.Nombre)
                       .IsRequired();
 
-                entity.Property(e => e.EsDistribuidor)
+                entity.Property(e => e.TipoUsuarioId)
                       .IsRequired();
 
                 entity.Property(e => e.Activa)
                       .IsRequired();
+
+                entity.HasOne(e => e.TipoUsuario)
+                      .WithMany(t => t.Usuarios)
+                      .HasForeignKey(e => e.TipoUsuarioId)
+                      .OnDelete(DeleteBehavior.Restrict);
             });
             modelBuilder.Entity<CuentaUsuario>(entity =>
             {

@@ -3,6 +3,31 @@ html, body {
     margin: 0;
 }
 
+/* MudBlazor dibuja la etiqueta de los campos (MudSelect/MudTextField...)
+   dentro de un <label> con overflow:hidden (pensado para recortar con "..."
+   una etiqueta más larga que el campo). Con la tipografía de esta app
+   (Segoe UI, ver Theme/RgcTheme.cs) esa caja se queda justa de alto para el
+   rabito de letras como la "g" o la "j" y se recorta por abajo -- se nota
+   sobre todo en la etiqueta "Aguja" (Pages/AgujaSelector.razor), que lleva
+   las dos.
+   Primer intento: agrandar el line-height de la etiqueta. Sí evitó el
+   recorte, pero MudBlazor posiciona verticalmente la etiqueta con un
+   transform (translate) calculado para su line-height original, así que al
+   agrandarlo el texto quedaba centrado más abajo de lo debido dentro del
+   campo -- se notaba en todos los campos, no solo en "Aguja" (p.ej. Alias).
+   En vez de perseguir a mano los múltiples valores de translate que MudBlazor
+   usa según el estado de la etiqueta (con foco, encogida, variante Outlined,
+   Margin.Dense...) para intentar compensar ese desplazamiento, es más
+   robusto no tocar el line-height (así la posición no cambia) y quitar
+   directamente el recorte vertical: overflow:visible dentro de una etiqueta
+   con position:absolute no desplaza ni agranda nada del resto del campo, así
+   que el rabito simplemente deja de cortarse sin mover el texto de sitio. El
+   único coste es que una etiqueta más larga que el campo ya no se recortaría
+   con "..." -- aceptable, porque todas las etiquetas de esta app son cortas. */
+.mud-input-label {
+    overflow: visible !important;
+}
+
 #app {
     height: 100vh;
 }

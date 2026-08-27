@@ -1,0 +1,612 @@
+@* Informe visual global de las acciones registradas sobre los clientes
+   (ver Pages/ClienteResumen.razor, sección "Acciones"): a diferencia de
+   Pages/Informes.razor (listado de clientes filtrado por catálogo), esto es
+   un informe de series temporales/agregados -- horas invertidas por mes,
+   por tipo de acción, por comercial, y ranking de clientes -- por eso es una
+   página aparte con su propio modelo de filtros (rango de fechas, comercial,
+   tipo de acción, cliente) en vez de una pestaña más en Informes.razor.
+
+   Los gráficos (MudChart) se pueden exportar como PNG individualmente, o
+   todos juntos en un PDF (rgc-graficos.js + AccionesInformePdfBuilder.cs),
+   para poder llevarlos a una reunión sin tener la aplicación abierta. *@
+@page "/informes/acciones"
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IDialogService DialogService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+@inject ISnackbar Snackbar
+@inject SesionState SesionState
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.JSInterop
+@using NPOI.OpenXmlFormats.Spreadsheet
+@using NPOI.SS
+@using NPOI.SS.Util
+@using NPOI.XSSF.UserModel
+
+<MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
+    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-4" Wrap="Wrap.Wrap" Spacing="3">
+        <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+            <MudTooltip Text="@MenuTextos.VolverMenu">
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" OnClick="VolverMenu" />
+            </MudTooltip>
+            <MudText Typo="Typo.h5">@MenuTextos.InformeAcciones</MudText>
+        </MudStack>
+        <MudButton Variant="Variant.Outlined" Color="Color.Default" StartIcon="@Icons.Material.Filled.PictureAsPdf"
+                   OnClick="ExportarPdfAsync" Disabled="_exportandoPdf">
+            @MenuTextos.ExportarPdf
+        </MudButton>
+    </MudStack>
+
+    <MudPaper Outlined="true" Class="pa-3 mb-3">
+        <MudStack Row="true" Wrap="Wrap.Wrap" AlignItems="AlignItems.Center" Spacing="3">
+            <MudDatePicker Label="@MenuTextos.FechaDesde" @bind-Date="_fechaDesde" Variant="Variant.Outlined"
+                           Margin="Margin.Dense" Editable="true" DateFormat="dd/MM/yyyy" />
+            <MudDatePicker Label="@MenuTextos.FechaHasta" @bind-Date="_fechaHasta" Variant="Variant.Outlined"
+                           Margin="Margin.Dense" Editable="true" DateFormat="dd/MM/yyyy" />
+
+            <MudButton Variant="@(_comercialIds.Count > 0 ? Variant.Filled : Variant.Outlined)"
+                       Color="@(_comercialIds.Count > 0 ? Color.Primary : Color.Default)"
+                       StartIcon="@Icons.Material.Filled.Person" OnClick="@(() => AbrirFiltroAsync(FiltroTipo.Comercial))">
+                @MenuTextos.Comercial
+            </MudButton>
+            <MudButton Variant="@(_tipoAccionIds.Count > 0 ? Variant.Filled : Variant.Outlined)"
+                       Color="@(_tipoAccionIds.Count > 0 ? Color.Primary : Color.Default)"
+                       StartIcon="@Icons.Material.Filled.Assignment" OnClick="@(() => AbrirFiltroAsync(FiltroTipo.TipoAccion))">
+                @MenuTextos.Tipo
+            </MudButton>
+            <MudButton Variant="@(_clienteIds.Count > 0 ? Variant.Filled : Variant.Outlined)"
+                       Color="@(_clienteIds.Count > 0 ? Color.Primary : Color.Default)"
+                       StartIcon="@Icons.Material.Filled.Business" OnClick="@(() => AbrirFiltroAsync(FiltroTipo.Cliente))">
+                @MenuTextos.Clientes
+            </MudButton>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="BuscarAsync" Disabled="_cargando">
+                @MenuTextos.Buscar
+            </MudButton>
+            <MudButton Variant="Variant.Outlined" OnClick="LimpiarFiltrosAsync">
+                @MenuTextos.LimpiarFiltros
+            </MudButton>
+        </MudStack>
+    </MudPaper>
+
+    @if (_cargando)
+    {
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+    }
+    else if (_resultado.Count == 0)
+    {
+        <MudAlert Severity="Severity.Info">@MenuTextos.SinAccionesEstadisticas</MudAlert>
+    }
+    else
+    {
+        <MudGrid Spacing="3" Class="mb-3">
+            <MudItem xs="12" md="6">
+                <MudPaper Outlined="true" Class="pa-3">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.HorasPorMes</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                       OnClick="@(() => ExportarGraficoPngAsync("grafico-horas-mes", $"{MenuTextos.HorasPorMes}.png"))" />
+                    </MudStack>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalHorasPorMes.ToString("0.##") h</MudText>
+                    <div id="grafico-horas-mes">
+                        <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serieHorasPorMes" ChartLabels="@_etiquetasHorasPorMes"
+                                  ChartOptions="@(new BarChartOptions { ShowValues = true, ShowLegend = true })"
+                                  Width="100%" Height="260px" />
+                    </div>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudPaper Outlined="true" Class="pa-3">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.HorasPorTipoAccion</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                       OnClick="@(() => ExportarGraficoPngAsync("grafico-horas-tipo", $"{MenuTextos.HorasPorTipoAccion}.png"))" />
+                    </MudStack>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalHorasPorTipo.ToString("0.##") h</MudText>
+                    @* A diferencia de Bar/StackedBar, en MudBlazor 9.8.0 el gráfico
+                       Donut no dibuja el valor sobre cada tramo aunque se active
+                       ChartOptions.ShowValues (la propiedad existe porque
+                       DonutChartOptions hereda de PieChartOptions, pero el
+                       componente Donut no la usa). En vez de añadir un texto propio
+                       aparte (que descuadraba la altura de esta tarjeta frente a las
+                       demás), el valor de cada tramo va entre paréntesis en la propia
+                       etiqueta -- ya se usa como ChartLabels, así que también aparece
+                       tal cual en la leyenda nativa del gráfico, dentro del mismo
+                       contenedor que se captura al exportar a PNG/PDF. Sin la "h": el
+                       título de la tarjeta ya dice que son horas. *@
+                    <div id="grafico-horas-tipo">
+                        <MudChart T="double" ChartType="ChartType.Donut" ChartSeries="@_serieHorasPorTipo" ChartLabels="@_etiquetasHorasPorTipo"
+                                  ChartOptions="@(new DonutChartOptions { ShowLegend = true })"
+                                  Width="100%" Height="260px" />
+                    </div>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudPaper Outlined="true" Class="pa-3">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.HorasPorComercial</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                       OnClick="@(() => ExportarGraficoPngAsync("grafico-horas-comercial", $"{MenuTextos.HorasPorComercial}.png"))" />
+                    </MudStack>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalHorasPorComercial.ToString("0.##") h</MudText>
+                    <div id="grafico-horas-comercial">
+                        <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serieHorasPorComercial" ChartLabels="@_etiquetasHorasPorComercial"
+                                  ChartOptions="@(new BarChartOptions { ShowValues = true, ShowLegend = true })"
+                                  Width="100%" Height="260px" />
+                    </div>
+                </MudPaper>
+            </MudItem>
+
+            <MudItem xs="12" md="6">
+                <MudPaper Outlined="true" Class="pa-3">
+                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                        <MudText Typo="Typo.subtitle1">@MenuTextos.RankingClientes</MudText>
+                        <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                       OnClick="@(() => ExportarGraficoPngAsync("grafico-ranking-clientes", $"{MenuTextos.RankingClientes}.png"))" />
+                    </MudStack>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalHorasRanking.ToString("0.##") h</MudText>
+                    @if (_huboRecorteRanking)
+                    {
+                        <MudText Typo="Typo.caption" Class="mud-text-secondary mb-1">@MenuTextos.RankingTop15</MudText>
+                    }
+                    <div id="grafico-ranking-clientes">
+                        <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serieRankingClientes" ChartLabels="@_etiquetasRankingClientes"
+                                  ChartOptions="@(new BarChartOptions { ShowValues = true, ShowLegend = true })"
+                                  Width="100%" Height="260px" />
+                    </div>
+                </MudPaper>
+            </MudItem>
+        </MudGrid>
+
+        <MudPaper Outlined="true" Class="pa-3">
+            <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2" Wrap="Wrap.Wrap" Spacing="2">
+                <MudStack Row="true" AlignItems="AlignItems.Center" Spacing="3">
+                    <MudText Typo="Typo.subtitle1">@MenuTextos.Acciones</MudText>
+                    <MudText Typo="Typo.subtitle2" Class="mud-text-secondary">@MenuTextos.TotalRegistros@(_resultado.Count)</MudText>
+                </MudStack>
+                <MudButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.FileDownload" OnClick="ExportarExcelAsync" Disabled="_exportandoExcel">
+                    @MenuTextos.ExportarExcel
+                </MudButton>
+            </MudStack>
+            <div style="overflow-x: auto;">
+                <MudSimpleTable Dense="true" Striped="true" Style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>@MenuTextos.Clientes</th>
+                            <th>@MenuTextos.Fecha</th>
+                            <th>@MenuTextos.Tipo</th>
+                            <th>@MenuTextos.Comercial</th>
+                            <th>@MenuTextos.HorasInvertidas</th>
+                            <th>@MenuTextos.Observaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var accion in _resultado)
+                        {
+                            <tr>
+                                <td>@accion.ClienteNombre</td>
+                                <td>@FormatearRangoFechas(accion)</td>
+                                <td>@accion.TipoAccionNombre</td>
+                                <td>@accion.ComercialNombre</td>
+                                <td>@accion.HorasInvertidas.ToString("0.##")</td>
+                                <td>@accion.Observaciones</td>
+                            </tr>
+                        }
+                    </tbody>
+                </MudSimpleTable>
+            </div>
+        </MudPaper>
+    }
+</MudContainer>
+
+@code {
+    private enum FiltroTipo { Comercial, TipoAccion, Cliente }
+
+    private const int TopRankingClientes = 15;
+
+    private DateTime? _fechaDesde;
+    private DateTime? _fechaHasta;
+    private List<int> _comercialIds = new();
+    private List<int> _tipoAccionIds = new();
+    private List<int> _clienteIds = new();
+
+    private List<InformeAccionItem> _resultado = new();
+    private bool _cargando = true;
+    private bool _exportandoExcel;
+    private bool _exportandoPdf;
+    private bool _huboRecorteRanking;
+
+    private List<ChartSeries<double>> _serieHorasPorMes = new();
+    private string[] _etiquetasHorasPorMes = Array.Empty<string>();
+    private decimal _totalHorasPorMes;
+    private List<ChartSeries<double>> _serieHorasPorTipo = new();
+    private string[] _etiquetasHorasPorTipo = Array.Empty<string>();
+    private decimal _totalHorasPorTipo;
+    private List<ChartSeries<double>> _serieHorasPorComercial = new();
+    private string[] _etiquetasHorasPorComercial = Array.Empty<string>();
+    private decimal _totalHorasPorComercial;
+    private List<ChartSeries<double>> _serieRankingClientes = new();
+    private string[] _etiquetasRankingClientes = Array.Empty<string>();
+    // A diferencia de los otros tres totales (que siempre coinciden con la
+    // suma de todo _resultado, solo agrupada de formas distintas), este es
+    // el total de lo que realmente se dibuja en el gráfico -- que puede
+    // estar recortado a TopRankingClientes -- no el total de todos los
+    // clientes filtrados.
+    private decimal _totalHorasRanking;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Defensa además de la ocultación del menú/Dashboard (MainLayout.razor
+        // / Home.razor): sin esto, cualquiera podría llegar aquí navegando
+        // directamente a /informes/acciones aunque el enlace no se le muestre.
+        if (!SesionState.TieneAccesoModulo(Modulo.Informes))
+        {
+            NavigationManager.NavigateTo("/");
+            return;
+        }
+
+        await BuscarAsync();
+    }
+
+    private async Task<List<FiltroItem>> ObtenerItemsFiltroAsync(FiltroTipo tipo)
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        return tipo switch
+        {
+            FiltroTipo.Comercial => await db.Usuarios
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            FiltroTipo.TipoAccion => await db.TiposAccion
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            FiltroTipo.Cliente => await db.Clientes
+                .OrderBy(x => x.Nombre)
+                .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre })
+                .ToListAsync(),
+
+            _ => new List<FiltroItem>()
+        };
+    }
+
+    private async Task AbrirFiltroAsync(FiltroTipo tipo)
+    {
+        var items = await ObtenerItemsFiltroAsync(tipo);
+
+        var seleccionActual = tipo switch
+        {
+            FiltroTipo.Comercial => _comercialIds,
+            FiltroTipo.TipoAccion => _tipoAccionIds,
+            FiltroTipo.Cliente => _clienteIds,
+            _ => new List<int>()
+        };
+
+        foreach (var item in items)
+            item.Selected = seleccionActual.Contains(item.Id);
+
+        var titulo = tipo switch
+        {
+            FiltroTipo.Comercial => MenuTextos.Comercial,
+            FiltroTipo.TipoAccion => MenuTextos.Tipo,
+            FiltroTipo.Cliente => MenuTextos.Clientes,
+            _ => string.Empty
+        };
+
+        var parametros = new DialogParameters { ["Titulo"] = titulo, ["Items"] = items };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<FiltroDialog>(titulo, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is null || resultado.Canceled)
+            return;
+
+        var seleccionados = (List<int>)resultado.Data!;
+        switch (tipo)
+        {
+            case FiltroTipo.Comercial: _comercialIds = seleccionados; break;
+            case FiltroTipo.TipoAccion: _tipoAccionIds = seleccionados; break;
+            case FiltroTipo.Cliente: _clienteIds = seleccionados; break;
+        }
+    }
+
+    private async Task LimpiarFiltrosAsync()
+    {
+        _fechaDesde = null;
+        _fechaHasta = null;
+        _comercialIds = new();
+        _tipoAccionIds = new();
+        _clienteIds = new();
+        await BuscarAsync();
+    }
+
+    private async Task BuscarAsync()
+    {
+        _cargando = true;
+        StateHasChanged();
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        IQueryable<ClienteAccion> query = db.ClienteAcciones.Where(x => x.Activa);
+
+        if (_fechaDesde.HasValue)
+            query = query.Where(x => x.Fecha >= _fechaDesde.Value.Date);
+
+        if (_fechaHasta.HasValue)
+            query = query.Where(x => x.Fecha <= _fechaHasta.Value.Date.AddDays(1).AddTicks(-1));
+
+        if (_comercialIds.Count > 0)
+            query = query.Where(x => _comercialIds.Contains(x.ComercialUsuarioId));
+
+        if (_tipoAccionIds.Count > 0)
+            query = query.Where(x => _tipoAccionIds.Contains(x.TipoAccionId));
+
+        if (_clienteIds.Count > 0)
+            query = query.Where(x => _clienteIds.Contains(x.ClienteId));
+
+        _resultado = await query
+            .OrderByDescending(x => x.Fecha)
+            .Select(x => new InformeAccionItem
+            {
+                ClienteId = x.ClienteId,
+                ClienteNombre = x.Cliente.Nombre,
+                Fecha = x.Fecha,
+                FechaFin = x.FechaFin,
+                TipoAccionNombre = x.TipoAccion.Nombre,
+                ComercialNombre = x.ComercialUsuario.Nombre,
+                HorasInvertidas = x.HorasInvertidas ?? 0,
+                Observaciones = x.Observaciones
+            })
+            .ToListAsync();
+
+        RecalcularGraficos();
+
+        _cargando = false;
+    }
+
+    private void RecalcularGraficos()
+    {
+        var porMes = _resultado
+            .GroupBy(a => new DateTime(a.Fecha.Year, a.Fecha.Month, 1))
+            .OrderBy(g => g.Key)
+            .ToList();
+        _etiquetasHorasPorMes = porMes.Select(g => g.Key.ToString("MM/yyyy")).ToArray();
+        _serieHorasPorMes = new List<ChartSeries<double>>
+        {
+            new ChartSeries<double> { Name = MenuTextos.HorasInvertidas, Data = porMes.Select(g => (double)g.Sum(a => a.HorasInvertidas)).ToArray() }
+        };
+        _totalHorasPorMes = porMes.Sum(g => g.Sum(a => a.HorasInvertidas));
+
+        var porTipo = _resultado
+            .GroupBy(a => a.TipoAccionNombre)
+            .OrderByDescending(g => g.Sum(a => a.HorasInvertidas))
+            .ToList();
+        // El valor va entre paréntesis en la propia etiqueta (sin "h", el
+        // título de la tarjeta ya dice que son horas) para que se vea en la
+        // leyenda del donut sin depender de ChartOptions.ShowValues, que
+        // MudBlazor no dibuja para este tipo de gráfico -- ver el comentario
+        // junto al <div id="grafico-horas-tipo"> de más arriba.
+        _etiquetasHorasPorTipo = porTipo.Select(g => $"{g.Key} ({g.Sum(a => a.HorasInvertidas).ToString("0.##")})").ToArray();
+        _serieHorasPorTipo = new List<ChartSeries<double>>
+        {
+            new ChartSeries<double> { Name = MenuTextos.HorasInvertidas, Data = porTipo.Select(g => (double)g.Sum(a => a.HorasInvertidas)).ToArray() }
+        };
+        _totalHorasPorTipo = porTipo.Sum(g => g.Sum(a => a.HorasInvertidas));
+
+        var porComercial = _resultado
+            .GroupBy(a => a.ComercialNombre)
+            .OrderByDescending(g => g.Sum(a => a.HorasInvertidas))
+            .ToList();
+        _etiquetasHorasPorComercial = porComercial.Select(g => g.Key).ToArray();
+        _serieHorasPorComercial = new List<ChartSeries<double>>
+        {
+            new ChartSeries<double> { Name = MenuTextos.HorasInvertidas, Data = porComercial.Select(g => (double)g.Sum(a => a.HorasInvertidas)).ToArray() }
+        };
+        _totalHorasPorComercial = porComercial.Sum(g => g.Sum(a => a.HorasInvertidas));
+
+        // Se limita a los TopRankingClientes con más horas para que el
+        // gráfico siga siendo legible -- el listado completo sigue disponible
+        // más abajo en la tabla y en la exportación a Excel, así que no se
+        // pierde ningún dato, solo se recorta lo que se dibuja.
+        var porClienteCompleto = _resultado
+            .GroupBy(a => a.ClienteNombre)
+            .OrderByDescending(g => g.Sum(a => a.HorasInvertidas))
+            .ToList();
+        _huboRecorteRanking = porClienteCompleto.Count > TopRankingClientes;
+        var porCliente = porClienteCompleto.Take(TopRankingClientes).ToList();
+        _etiquetasRankingClientes = porCliente.Select(g => g.Key).ToArray();
+        _serieRankingClientes = new List<ChartSeries<double>>
+        {
+            new ChartSeries<double> { Name = MenuTextos.HorasInvertidas, Data = porCliente.Select(g => (double)g.Sum(a => a.HorasInvertidas)).ToArray() }
+        };
+        _totalHorasRanking = porCliente.Sum(g => g.Sum(a => a.HorasInvertidas));
+    }
+
+    private static string FormatearRangoFechas(InformeAccionItem accion) =>
+        accion.FechaFin.HasValue && accion.FechaFin.Value.Date != accion.Fecha.Date
+            ? $"{accion.Fecha:dd/MM/yyyy} - {accion.FechaFin.Value:dd/MM/yyyy}"
+            : accion.Fecha.ToString("dd/MM/yyyy");
+
+    private string ResumenFiltrosTexto()
+    {
+        var partes = new List<string>();
+
+        partes.Add(_fechaDesde.HasValue || _fechaHasta.HasValue
+            ? $"{(_fechaDesde.HasValue ? _fechaDesde.Value.ToString("dd/MM/yyyy") : "…")} - {(_fechaHasta.HasValue ? _fechaHasta.Value.ToString("dd/MM/yyyy") : "…")}"
+            : MenuTextos.Todos);
+
+        partes.Add($"{MenuTextos.Comercial}: {(_comercialIds.Count > 0 ? _comercialIds.Count.ToString() : MenuTextos.Todos)}");
+        partes.Add($"{MenuTextos.Tipo}: {(_tipoAccionIds.Count > 0 ? _tipoAccionIds.Count.ToString() : MenuTextos.Todos)}");
+        partes.Add($"{MenuTextos.Clientes}: {(_clienteIds.Count > 0 ? _clienteIds.Count.ToString() : MenuTextos.Todos)}");
+
+        return string.Join("   |   ", partes);
+    }
+
+    private async Task ExportarGraficoPngAsync(string elementId, string nombreArchivo)
+    {
+        var base64 = await JsRuntime.InvokeAsync<string?>("rgcExportarGraficoPng", elementId);
+        if (string.IsNullOrEmpty(base64))
+        {
+            Snackbar.Add(MenuTextos.ErrorExportarGrafico, Severity.Error);
+            return;
+        }
+
+        await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+    }
+
+    private async Task ExportarPdfAsync()
+    {
+        if (_resultado.Count == 0)
+        {
+            Snackbar.Add(MenuTextos.NoDatosExportar, Severity.Info);
+            return;
+        }
+
+        _exportandoPdf = true;
+        try
+        {
+            var graficos = new List<(string Titulo, byte[] Png)>();
+
+            var ids = new[]
+            {
+                ("grafico-horas-mes", MenuTextos.HorasPorMes),
+                ("grafico-horas-tipo", MenuTextos.HorasPorTipoAccion),
+                ("grafico-horas-comercial", MenuTextos.HorasPorComercial),
+                ("grafico-ranking-clientes", MenuTextos.RankingClientes),
+            };
+
+            foreach (var (elementId, titulo) in ids)
+            {
+                var base64 = await JsRuntime.InvokeAsync<string?>("rgcExportarGraficoPng", elementId);
+                if (!string.IsNullOrEmpty(base64))
+                    graficos.Add((titulo, Convert.FromBase64String(base64)));
+            }
+
+            var pdf = await Task.Run(() => AccionesInformePdfBuilder.Construir(graficos, ResumenFiltrosTexto()));
+            var base64Pdf = Convert.ToBase64String(pdf);
+            var nombreArchivo = $"{MenuTextos.InformeAcciones}_{DateTime.Now:yyyyMMdd_HHmmss}.pdf";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64Pdf);
+            Snackbar.Add(MenuTextos.PdfGeneradoCorrectamente, Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add(MenuTextos.ErrorGenerarPdf, Severity.Error);
+        }
+        finally
+        {
+            _exportandoPdf = false;
+        }
+    }
+
+    private async Task ExportarExcelAsync()
+    {
+        if (_resultado.Count == 0)
+        {
+            Snackbar.Add(MenuTextos.NoDatosExportar, Severity.Info);
+            return;
+        }
+
+        _exportandoExcel = true;
+        try
+        {
+            string[] columnas = { MenuTextos.Clientes, MenuTextos.Fecha, MenuTextos.Tipo, MenuTextos.Comercial, MenuTextos.HorasInvertidas, MenuTextos.Observaciones };
+
+            using var workbook = new XSSFWorkbook();
+            var sheet = workbook.CreateSheet(MenuTextos.Acciones);
+
+            var headerStyle = workbook.CreateCellStyle();
+            var headerFont = workbook.CreateFont();
+            headerFont.IsBold = true;
+            headerFont.Color = NPOI.SS.UserModel.IndexedColors.White.Index;
+            headerStyle.SetFont(headerFont);
+            headerStyle.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+
+            var header = sheet.CreateRow(0);
+            for (var i = 0; i < columnas.Length; i++)
+            {
+                header.CreateCell(i).SetCellValue(columnas[i]);
+                header.GetCell(i).CellStyle = headerStyle;
+            }
+
+            var rowIndex = 1;
+            foreach (var item in _resultado)
+            {
+                var row = sheet.CreateRow(rowIndex++);
+                row.CreateCell(0).SetCellValue(item.ClienteNombre);
+                row.CreateCell(1).SetCellValue(FormatearRangoFechas(item));
+                row.CreateCell(2).SetCellValue(item.TipoAccionNombre);
+                row.CreateCell(3).SetCellValue(item.ComercialNombre);
+                row.CreateCell(4).SetCellValue((double)item.HorasInvertidas);
+                row.CreateCell(5).SetCellValue(item.Observaciones ?? string.Empty);
+            }
+
+            var totalRows = _resultado.Count + 1;
+            var area = new AreaReference(
+                new CellReference(0, 0),
+                new CellReference(totalRows - 1, columnas.Length - 1),
+                SpreadsheetVersion.EXCEL2007);
+
+            var xssfSheet = (XSSFSheet)sheet;
+            var table = xssfSheet.CreateTable();
+            var ctTable = table.GetCTTable();
+
+            ctTable.id = 1;
+            ctTable.name = "TablaAcciones";
+            ctTable.displayName = "TablaAcciones";
+            ctTable.@ref = area.FormatAsString();
+
+            ctTable.tableColumns = new CT_TableColumns();
+            ctTable.tableColumns.count = (uint)columnas.Length;
+
+            for (var i = 0; i < columnas.Length; i++)
+            {
+                var columna = ctTable.tableColumns.AddNewTableColumn();
+                columna.id = (uint)(i + 1);
+                columna.name = columnas[i];
+            }
+
+            var estilo = ctTable.AddNewTableStyleInfo();
+            estilo.name = "TableStyleMedium2";
+            estilo.showRowStripes = true;
+            estilo.showColumnStripes = false;
+
+            for (var i = 0; i < columnas.Length; i++)
+                sheet.SetColumnWidth(i, 9000);
+
+            using var ms = new MemoryStream();
+            workbook.Write(ms, leaveOpen: true);
+
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var nombreArchivo = $"{MenuTextos.Acciones}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+
+            await JsRuntime.InvokeVoidAsync("rgcDescargarArchivo", nombreArchivo, base64);
+
+            Snackbar.Add(MenuTextos.ExcelExportadoCorrectamente, Severity.Success);
+        }
+        finally
+        {
+            _exportandoExcel = false;
+        }
+    }
+
+    private void VolverMenu() => NavigationManager.NavigateTo("/");
+
+    private sealed class InformeAccionItem
+    {
+        public int ClienteId { get; set; }
+        public string ClienteNombre { get; set; } = string.Empty;
+        public DateTime Fecha { get; set; }
+        public DateTime? FechaFin { get; set; }
+        public string TipoAccionNombre { get; set; } = string.Empty;
+        public string ComercialNombre { get; set; } = string.Empty;
+        public decimal HorasInvertidas { get; set; }
+        public string? Observaciones { get; set; }
+    }
+}
