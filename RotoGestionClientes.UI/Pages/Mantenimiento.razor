@@ -38,6 +38,8 @@
                     <MudListItem T="MaestroTipo?" Value="MaestroTipo.Manilla" Icon="@RgcIcons.Manillas">@MenuTextos.Manillas</MudListItem>
                     <MudListItem T="MaestroTipo?" Value="MaestroTipo.BisagraPuerta" Icon="@RgcIcons.Bisagras">@MenuTextos.Bisagras</MudListItem>
                     <MudListItem T="MaestroTipo?" Value="MaestroTipo.CerraduraPuerta" Icon="@Icons.Material.Filled.VpnKey">@MenuTextos.Cerraduras</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.TipoAccion" Icon="@Icons.Material.Filled.Assignment">@MenuTextos.TiposAccion</MudListItem>
+                    <MudListItem T="MaestroTipo?" Value="MaestroTipo.TipoUsuario" Icon="@Icons.Material.Filled.Badge">@MenuTextos.TiposUsuario</MudListItem>
                 </MudList>
             </MudPaper>
         </MudItem>
@@ -63,7 +65,7 @@
                     }
                     else if (_items.Count == 0)
                     {
-                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinResultados</MudText>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinRegistros</MudText>
                     }
                     else
                     {
@@ -71,13 +73,9 @@
                             <thead>
                                 <tr>
                                     <th>@MenuTextos.Nombre</th>
-                                    @if (_tablaActual == MaestroTipo.Perfil)
+                                    @if (_tablaActual == MaestroTipo.Perfil || _tablaActual == MaestroTipo.Usuario)
                                     {
                                         <th>@MenuTextos.Tipo</th>
-                                    }
-                                    @if (_tablaActual == MaestroTipo.Usuario)
-                                    {
-                                        <th>@MenuTextos.EsDistribuidor</th>
                                     }
                                     <th>@MenuTextos.Activo</th>
                                     <th></th>
@@ -88,13 +86,9 @@
                                 {
                                     <tr>
                                         <td>@item.Nombre</td>
-                                        @if (_tablaActual == MaestroTipo.Perfil)
+                                        @if (_tablaActual == MaestroTipo.Perfil || _tablaActual == MaestroTipo.Usuario)
                                         {
                                             <td>@item.Tipo</td>
-                                        }
-                                        @if (_tablaActual == MaestroTipo.Usuario)
-                                        {
-                                            <td>@(item.EsDistribuidor ? MenuTextos.Si : MenuTextos.No)</td>
                                         }
                                         <td>@(item.Activa ? MenuTextos.Si : MenuTextos.No)</td>
                                         <td style="text-align:right">
@@ -211,7 +205,17 @@
 
             MaestroTipo.Usuario => await db.Usuarios
                 .OrderBy(x => x.Nombre)
-                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, EsDistribuidor = x.EsDistribuidor, Activa = x.Activa })
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Tipo = x.TipoUsuario.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.TipoAccion => await db.TiposAccion
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
+                .ToListAsync(),
+
+            MaestroTipo.TipoUsuario => await db.TiposUsuario
+                .OrderBy(x => x.Nombre)
+                .Select(x => new MaestroGridItem { Id = x.Id, Nombre = x.Nombre, Activa = x.Activa })
                 .ToListAsync(),
 
             _ => new List<MaestroGridItem>()
@@ -233,6 +237,8 @@
         MaestroTipo.BisagraPuerta => MenuTextos.Bisagras,
         MaestroTipo.CerraduraPuerta => MenuTextos.Cerraduras,
         MaestroTipo.Usuario => MenuTextos.Usuarios,
+        MaestroTipo.TipoAccion => MenuTextos.TiposAccion,
+        MaestroTipo.TipoUsuario => MenuTextos.TiposUsuario,
         _ => string.Empty
     };
 

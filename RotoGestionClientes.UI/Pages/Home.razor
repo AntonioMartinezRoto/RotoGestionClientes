@@ -106,6 +106,10 @@
                             <MudIconButton Icon="@Icons.Material.Filled.Category" Size="Size.Small" Color="Color.Primary"
                                            OnClick="@(() => NavigationManager.NavigateTo($"/informes?maquinaId={MaquinaTipoIdMesaHerraje}"))" />
                         </MudTooltip>
+                        <MudTooltip Text="@MenuTextos.InformeAcciones">
+                            <MudIconButton Icon="@Icons.Material.Filled.BarChart" Size="Size.Small" Color="Color.Primary"
+                                           OnClick="@(() => NavigationManager.NavigateTo("/informes/acciones"))" />
+                        </MudTooltip>
                     </MudStack>
                 </MudPaper>
             </MudItem>

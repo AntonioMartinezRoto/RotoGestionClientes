@@ -21,11 +21,11 @@ else
             <MudGrid>
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.Seguridad" Items="_seguridad" OnToggle="OnSeguridadToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.HojaPasiva" Items="_cremonaPasiva" OnToggle="OnCremonaPasivaToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
             </MudGrid>
         </MudPaper>
@@ -37,7 +37,7 @@ else
                 <img src="_content/RotoGestionClientes.UI/images/wizard/ventana-practicable-2h.png" alt="@MenuTextos.Practicables" />
             </div>
             <SeleccionableGrid Title="@MenuTextos.HojaPasiva" Items="_cremonaPasivaPract" OnToggle="OnCremonaPasivaPractToggle"
-                                EmptyText="@MenuTextos.SinResultados" />
+                                EmptyText="@MenuTextos.SinElementos" />
         </MudPaper>
 
         <MudTextField T="string" @bind-Value="Model.ObservacionesVentanas" Label="@MenuTextos.Comentarios"

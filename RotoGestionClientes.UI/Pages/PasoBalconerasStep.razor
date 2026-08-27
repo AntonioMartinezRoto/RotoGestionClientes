@@ -22,11 +22,11 @@ else
             <MudGrid Class="mb-4">
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.Seguridad" Items="_seguridad" OnToggle="OnSeguridadToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.HojaPasiva" Items="_cremonaPasiva" OnToggle="OnCremonaPasivaToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
             </MudGrid>
             <AgujaSelector Model="Model" AgujaModeloTipoId="@((int)AgujasTipoModelo.Balconera)"
@@ -43,11 +43,11 @@ else
             <MudGrid Class="mb-4">
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.Bisagras" Items="_bisagras" OnToggle="OnBisagraToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
                 <MudItem xs="12" md="6">
                     <SeleccionableGrid Title="@MenuTextos.Cerraduras" Items="_cerraduras" OnToggle="OnCerraduraToggle"
-                                        EmptyText="@MenuTextos.SinResultados" />
+                                        EmptyText="@MenuTextos.SinElementos" />
                 </MudItem>
             </MudGrid>
             <AgujaSelector Model="Model" AgujaModeloTipoId="@((int)AgujasTipoModelo.PuertaSecundaria)"

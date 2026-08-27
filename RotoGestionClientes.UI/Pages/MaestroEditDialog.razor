@@ -1,10 +1,12 @@
 @* Diálogo genérico de alta/edición de "maestro" (tabla de referencia).
    Réplica moderna de Mantenimiento/MaestroEditForm.cs (WinForms): un mismo
    formulario (Nombre + Activo, con un combo de Tipo de perfil solo para
-   Perfiles y un checkbox "Es distribuidor" solo para Usuarios) que sirve
-   para las 11 categorías de maestros del módulo de Mantenimiento. Al
-   guardar, incrementa ConfiguracionAplicacion.VersionMaestros igual que
-   IncrementarVersionDatos() en la app legacy. *@
+   Perfiles, un combo de Tipo de usuario -- cargado del catálogo TipoUsuario
+   -- solo para Usuarios, y un checkbox "Es distribuidor" solo para el propio
+   catálogo de Tipos de usuario) que sirve para las 12 categorías de maestros
+   del módulo de Mantenimiento. Al guardar, incrementa
+   ConfiguracionAplicacion.VersionMaestros igual que IncrementarVersionDatos()
+   en la app legacy. *@
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
 @inject ISnackbar Snackbar
 @inject VersionDatosState VersionDatosState
@@ -37,11 +39,22 @@
                     </MudSelect>
                 }
 
-                <MudCheckBox T="bool" @bind-Value="_activo" Label="@MenuTextos.Activo" Color="Color.Primary" />
-
                 @if (Tipo == MaestroTipo.Usuario)
                 {
-                    <MudCheckBox T="bool" @bind-Value="_esDistribuidor" Label="@MenuTextos.EsDistribuidor" Color="Color.Primary" />
+                    <MudSelect T="int?" Label="@MenuTextos.TipoUsuario" Value="_tipoUsuarioId" ValueChanged="@(v => _tipoUsuarioId = v)"
+                               Variant="Variant.Outlined" Required="true" RequiredError="@MenuTextos.TipoUsuarioObligatorio">
+                        @foreach (var tipo in _tiposUsuario)
+                        {
+                            <MudSelectItem T="int?" Value="@((int?)tipo.Id)">@tipo.Nombre</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+
+                <MudCheckBox T="bool" @bind-Value="_activo" Label="@MenuTextos.Activo" Color="Color.Primary" />
+
+                @if (Tipo == MaestroTipo.TipoUsuario)
+                {
+                    <MudCheckBox T="bool" @bind-Value="_esDistribuidorTipo" Label="@MenuTextos.EsDistribuidor" Color="Color.Primary" />
                 }
             </MudStack>
         }
@@ -64,16 +77,19 @@
 
     private string _nombre = string.Empty;
     private bool _activo = true;
-    private bool _esDistribuidor;
+    private int? _tipoUsuarioId;
+    private bool _esDistribuidorTipo;
     private int? _perfilTipoId;
     private List<PerfilTipo> _perfilTipos = new();
+    private List<TipoUsuario> _tiposUsuario = new();
 
     // Fotografía de los valores tal como estaban en la BBDD al abrir el
     // diálogo (solo se rellenan cuando Id.HasValue), para poder detectar en
     // AceptarAsync si Guardar realmente cambia algo -- ver huboCambios ahí.
     private string _nombreOriginal = string.Empty;
     private bool _activoOriginal;
-    private bool _esDistribuidorOriginal;
+    private int? _tipoUsuarioIdOriginal;
+    private bool _esDistribuidorTipoOriginal;
     private int? _perfilTipoIdOriginal;
 
     protected override async Task OnInitializedAsync()
@@ -82,6 +98,16 @@
 
         if (Tipo == MaestroTipo.Perfil)
             _perfilTipos = await db.PerfilTipos.Where(x => x.Activa).OrderBy(x => x.Nombre).AsNoTracking().ToListAsync();
+
+        if (Tipo == MaestroTipo.Usuario)
+        {
+            _tiposUsuario = await db.TiposUsuario.Where(x => x.Activa).OrderBy(x => x.Nombre).AsNoTracking().ToListAsync();
+            // Por defecto, al dar de alta un usuario nuevo, se preselecciona
+            // el primer tipo del catálogo (en vez de dejarlo vacío) para que
+            // el caso más común no obligue a abrir el desplegable.
+            if (Id is null && _tiposUsuario.Count > 0)
+                _tipoUsuarioId = _tiposUsuario[0].Id;
+        }
 
         if (Id.HasValue)
         {
@@ -173,20 +199,38 @@
                         var e = await db.Usuarios.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
                         _nombre = e.Nombre;
                         _activo = e.Activa;
-                        _esDistribuidor = e.EsDistribuidor;
+                        _tipoUsuarioId = e.TipoUsuarioId;
+                    }
+                    break;
+
+                case MaestroTipo.TipoAccion:
+                    {
+                        var e = await db.TiposAccion.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                    }
+                    break;
+
+                case MaestroTipo.TipoUsuario:
+                    {
+                        var e = await db.TiposUsuario.AsNoTracking().FirstAsync(x => x.Id == Id.Value);
+                        _nombre = e.Nombre;
+                        _activo = e.Activa;
+                        _esDistribuidorTipo = e.EsDistribuidor;
                     }
                     break;
             }
 
             // Fotografía tras el switch: cualquiera que sea el Tipo, en este
-            // punto _nombre/_activo/_perfilTipoId/_esDistribuidor tienen
-            // exactamente lo que había en la BBDD (los que no aplican a este
-            // Tipo se quedan en su valor por defecto en ambos lados, así que
-            // no afectan a la comparación).
+            // punto _nombre/_activo/_perfilTipoId/_tipoUsuarioId/
+            // _esDistribuidorTipo tienen exactamente lo que había en la BBDD
+            // (los que no aplican a este Tipo se quedan en su valor por
+            // defecto en ambos lados, así que no afectan a la comparación).
             _nombreOriginal = _nombre;
             _activoOriginal = _activo;
             _perfilTipoIdOriginal = _perfilTipoId;
-            _esDistribuidorOriginal = _esDistribuidor;
+            _tipoUsuarioIdOriginal = _tipoUsuarioId;
+            _esDistribuidorTipoOriginal = _esDistribuidorTipo;
         }
 
         _cargando = false;
@@ -207,6 +251,12 @@
             return;
         }
 
+        if (Tipo == MaestroTipo.Usuario && !_tipoUsuarioId.HasValue)
+        {
+            Snackbar.Add(MenuTextos.TipoUsuarioObligatorio, Severity.Warning);
+            return;
+        }
+
         // Si se está editando (Id.HasValue) y ninguno de los campos ha
         // cambiado respecto a lo que había al abrir el diálogo, no hay nada
         // que guardar: se evita registrar auditoría e incrementar
@@ -216,7 +266,8 @@
             || nombre != _nombreOriginal
             || _activo != _activoOriginal
             || (Tipo == MaestroTipo.Perfil && _perfilTipoId != _perfilTipoIdOriginal)
-            || (Tipo == MaestroTipo.Usuario && _esDistribuidor != _esDistribuidorOriginal);
+            || (Tipo == MaestroTipo.Usuario && _tipoUsuarioId != _tipoUsuarioIdOriginal)
+            || (Tipo == MaestroTipo.TipoUsuario && _esDistribuidorTipo != _esDistribuidorTipoOriginal);
 
         if (!huboCambios)
         {
@@ -384,7 +435,36 @@
                         }
                         entity.Nombre = nombre;
                         entity.Activa = _activo;
-                        entity.EsDistribuidor = _esDistribuidor;
+                        entity.TipoUsuarioId = _tipoUsuarioId!.Value;
+                        entidadId = entity.Id;
+                    }
+                    break;
+
+                case MaestroTipo.TipoAccion:
+                    {
+                        var entity = Id is null ? new TipoAccion() : await db.TiposAccion.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<TipoAccion>(db);
+                            db.TiposAccion.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                        entidadId = entity.Id;
+                    }
+                    break;
+
+                case MaestroTipo.TipoUsuario:
+                    {
+                        var entity = Id is null ? new TipoUsuario() : await db.TiposUsuario.FirstAsync(x => x.Id == Id.Value);
+                        if (Id is null)
+                        {
+                            entity.Id = await NuevoIdAsync<TipoUsuario>(db);
+                            db.TiposUsuario.Add(entity);
+                        }
+                        entity.Nombre = nombre;
+                        entity.Activa = _activo;
+                        entity.EsDistribuidor = _esDistribuidorTipo;
                         entidadId = entity.Id;
                     }
                     break;

@@ -22,7 +22,7 @@
         else
         {
             <MudSelect T="int?" Value="AgujaId" ValueChanged="@(v => AgujaIdChanged.InvokeAsync(v))"
-                       Label="@MenuTextos.Aguja" Variant="Variant.Outlined" Dense="true" Style="min-width: 220px;">
+                       Label="@MenuTextos.Aguja" Variant="Variant.Outlined" Style="min-width: 220px;">
                 @foreach (var aguja in Agujas)
                 {
                     <MudSelectItem T="int?" Value="@((int?)aguja.Id)">@aguja.Nombre</MudSelectItem>

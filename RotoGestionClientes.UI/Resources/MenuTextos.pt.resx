@@ -175,6 +175,12 @@
   <data name="SinDocumentos" xml:space="preserve">
     <value>Não há documentos.</value>
   </data>
+  <data name="SinElementos" xml:space="preserve">
+    <value>Não há elementos disponíveis.</value>
+  </data>
+  <data name="SinRegistros" xml:space="preserve">
+    <value>Não foram encontrados registos.</value>
+  </data>
   <data name="Cancelar" xml:space="preserve">
     <value>Cancelar</value>
   </data>
@@ -442,9 +448,6 @@
   <data name="Activo" xml:space="preserve">
     <value>Ativo</value>
   </data>
-  <data name="EsDistribuidor" xml:space="preserve">
-    <value>É distribuidor</value>
-  </data>
   <data name="NombreObligatorio" xml:space="preserve">
     <value>O nome é obrigatório.</value>
   </data>
@@ -676,6 +679,9 @@
   <data name="AuditoriaLimiteAviso" xml:space="preserve">
     <value>Mostram-se os últimos 500 registos. Ajusta os filtros para ver mais.</value>
   </data>
+  <data name="SinRegistrosAuditoria" xml:space="preserve">
+    <value>Não foram encontrados registos de auditoria.</value>
+  </data>
   <data name="CuentasUsuario" xml:space="preserve">
     <value>Contas de utilizador</value>
   </data>
@@ -786,5 +792,95 @@
   </data>
   <data name="CuentaInactivaTexto" xml:space="preserve">
     <value>Esta conta está desativada. Contacta um Administrador.</value>
+  </data>
+  <data name="NuevaAccion" xml:space="preserve">
+    <value>Nova ação</value>
+  </data>
+  <data name="EditarAccion" xml:space="preserve">
+    <value>Editar ação</value>
+  </data>
+  <data name="SinAcciones" xml:space="preserve">
+    <value>Não há ações registadas para este cliente.</value>
+  </data>
+  <data name="Fecha" xml:space="preserve">
+    <value>Data</value>
+  </data>
+  <data name="FechaFin" xml:space="preserve">
+    <value>Data fim</value>
+  </data>
+  <data name="FechaObligatoria" xml:space="preserve">
+    <value>A data é obrigatória.</value>
+  </data>
+  <data name="FechaFinAnteriorAFecha" xml:space="preserve">
+    <value>A data fim não pode ser anterior à data de início.</value>
+  </data>
+  <data name="HorasInvertidas" xml:space="preserve">
+    <value>Horas investidas</value>
+  </data>
+  <data name="HorasInvertidasObligatorias" xml:space="preserve">
+    <value>As horas investidas devem ser maiores que zero.</value>
+  </data>
+  <data name="Comercial" xml:space="preserve">
+    <value>Comercial</value>
+  </data>
+  <data name="UsuarioAccion" xml:space="preserve">
+    <value>Utilizador</value>
+  </data>
+  <data name="UsuarioAccionObligatorio" xml:space="preserve">
+    <value>O utilizador é obrigatório.</value>
+  </data>
+  <data name="TipoUsuario" xml:space="preserve">
+    <value>Tipo de usuário</value>
+  </data>
+  <data name="TiposUsuario" xml:space="preserve">
+    <value>Tipos de usuário</value>
+  </data>
+  <data name="TipoUsuarioObligatorio" xml:space="preserve">
+    <value>Deve selecionar um tipo de usuário.</value>
+  </data>
+  <data name="EsDistribuidor" xml:space="preserve">
+    <value>É distribuidor</value>
+  </data>
+  <data name="Observaciones" xml:space="preserve">
+    <value>Observações</value>
+  </data>
+  <data name="TipoAccionObligatorio" xml:space="preserve">
+    <value>O tipo de ação é obrigatório.</value>
+  </data>
+  <data name="DesactivarAccionTitulo" xml:space="preserve">
+    <value>Desativar ação</value>
+  </data>
+  <data name="ConfirmarDesactivarAccion" xml:space="preserve">
+    <value>Tem a certeza de que quer desativar a ação</value>
+  </data>
+  <data name="AccionDesactivada" xml:space="preserve">
+    <value>Ação desativada com sucesso.</value>
+  </data>
+  <data name="TiposAccion" xml:space="preserve">
+    <value>Tipos de ação</value>
+  </data>
+  <data name="InformeAcciones" xml:space="preserve">
+    <value>Estatísticas</value>
+  </data>
+  <data name="HorasPorMes" xml:space="preserve">
+    <value>Horas por mês</value>
+  </data>
+  <data name="HorasPorTipoAccion" xml:space="preserve">
+    <value>Horas por tipo de ação</value>
+  </data>
+  <data name="HorasPorComercial" xml:space="preserve">
+    <value>Horas por comercial</value>
+  </data>
+  <data name="RankingClientes" xml:space="preserve">
+    <value>Ranking de clientes</value>
+  </data>
+  <data name="RankingTop15" xml:space="preserve">
+    <value>Mostram-se os 15 clientes com mais horas investidas.</value>
+  </data>
+  <data name="ErrorExportarGrafico" xml:space="preserve">
+    <value>Erro ao exportar o gráfico como imagem.</value>
+  </data>
+  <data name="SinAccionesEstadisticas" xml:space="preserve">
+    <value>Não foram encontradas ações com os filtros aplicados.</value>
   </data>
 </root>

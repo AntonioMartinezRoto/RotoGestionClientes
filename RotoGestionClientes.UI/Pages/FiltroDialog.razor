@@ -3,20 +3,34 @@
    checkboxes sobre los valores de una categoría (Software, Perfil,
    Manilla...). Trabaja sobre una copia de Items para que, si el usuario
    cancela, no queden marcas a medias; al guardar devuelve la lista de Id
-   seleccionados a través de DialogResult.Data. *@
+   seleccionados a través de DialogResult.Data.
+
+   Cuando la categoría tiene muchos valores (p.ej. el filtro de Clientes en
+   el informe de acciones) se muestra además un buscador que filtra la
+   rejilla en memoria por nombre, sin tocar la selección ya marcada en los
+   elementos que queden ocultos por el texto de búsqueda. Para categorías
+   cortas (Tipo de acción, Comercial...) el buscador no aporta nada y se
+   oculta para no añadir ruido visual. *@
 <MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">@Titulo</MudText>
     </TitleContent>
     <DialogContent>
-        @if (_items.Count == 0)
+        @if (_items.Count > UmbralBuscador)
         {
-            <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinResultados</MudText>
+            <MudTextField T="string" Value="_busqueda" ValueChanged="OnBusquedaChanged" Immediate="true"
+                          Label="@MenuTextos.Buscar" Variant="Variant.Outlined" Margin="Margin.Dense"
+                          Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" Class="mb-3" />
+        }
+
+        @if (_itemsFiltrados.Count == 0)
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinElementos</MudText>
         }
         else
         {
             <div class="rgc-check-grid">
-                @foreach (var item in _items)
+                @foreach (var item in _itemsFiltrados)
                 {
                     <MudCheckBox T="bool" Value="item.Selected" ValueChanged="@(v => item.Selected = v)"
                                  Label="@item.Nombre" Dense="true" Color="Color.Primary" />
@@ -36,13 +50,27 @@
     [Parameter, EditorRequired] public string Titulo { get; set; } = string.Empty;
     [Parameter, EditorRequired] public List<FiltroItem> Items { get; set; } = new();
 
+    // A partir de cuántos elementos merece la pena mostrar el buscador.
+    private const int UmbralBuscador = 8;
+
     private List<FiltroItem> _items = new();
+    private List<FiltroItem> _itemsFiltrados = new();
+    private string _busqueda = string.Empty;
 
     protected override void OnInitialized()
     {
         _items = Items
             .Select(x => new FiltroItem { Id = x.Id, Nombre = x.Nombre, Selected = x.Selected })
             .ToList();
+        _itemsFiltrados = _items;
+    }
+
+    private void OnBusquedaChanged(string valor)
+    {
+        _busqueda = valor;
+        _itemsFiltrados = string.IsNullOrWhiteSpace(_busqueda)
+            ? _items
+            : _items.Where(x => x.Nombre.Contains(_busqueda, StringComparison.OrdinalIgnoreCase)).ToList();
     }
 
     private void Aceptar()

@@ -1,0 +1,227 @@
+@* Paso "Acciones" del wizard de Clientes. A diferencia del resto de pasos,
+   este SOLO existe en edición (ClienteWizard.razor añade "Acciones" a
+   _pasos únicamente cuando _mode == WizardMode.Edit) -- no tiene sentido
+   registrar acciones sobre un cliente que todavía no existe en BBDD.
+
+   Registro de acciones comerciales/técnicas sobre el cliente (visita,
+   puesta en marcha, soporte telefónico, actualización...): listado, alta y
+   edición mediante ClienteAccionEditDialog, y un gráfico compacto de horas
+   por mes. A diferencia del resto de pasos del wizard, este trabaja
+   directamente contra BBDD (vía IDbContextFactory) en lugar de sobre el
+   modelo en memoria del wizard: cada acción es un evento independiente del
+   cliente que se guarda al momento, no algo que espere al "Guardar" final
+   del wizard. *@
+@inject IDbContextFactory<ApplicationDbContext> DbFactory
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
+@inject AuditoriaService AuditoriaService
+@using Microsoft.EntityFrameworkCore
+
+<MudStack Spacing="4">
+    <MudPaper Outlined="true" Class="pa-4">
+        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-3" Wrap="Wrap.Wrap" Spacing="2">
+            <MudText Typo="Typo.subtitle1">@MenuTextos.Acciones</MudText>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Size="Size.Small" StartIcon="@Icons.Material.Filled.Add"
+                       OnClick="AbrirNuevaAccionAsync">
+                @MenuTextos.NuevaAccion
+            </MudButton>
+        </MudStack>
+
+        @if (_cargando)
+        {
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" Class="my-4" />
+        }
+        else if (_acciones.Count == 0)
+        {
+            <MudText Typo="Typo.body2" Class="mud-text-secondary">@MenuTextos.SinAcciones</MudText>
+        }
+        else
+        {
+            <MudGrid Spacing="2">
+                <MudItem xs="12" md="7">
+                    <div style="overflow-x: auto;">
+                        <MudSimpleTable Dense="true" Style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th>@MenuTextos.Fecha</th>
+                                    <th>@MenuTextos.Tipo</th>
+                                    @if (_mostrarComercial)
+                                    {
+                                        <th>@MenuTextos.Comercial</th>
+                                    }
+                                    <th>@MenuTextos.HorasInvertidas</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var accion in _acciones)
+                                {
+                                    <tr>
+                                        <td>@FormatearRangoFechas(accion)</td>
+                                        <td>@accion.TipoAccionNombre</td>
+                                        @if (_mostrarComercial)
+                                        {
+                                            <td>@accion.ComercialNombre</td>
+                                        }
+                                        <td>@(accion.HorasInvertidas.HasValue ? accion.HorasInvertidas.Value.ToString("0.##") : "—")</td>
+                                        <td style="text-align:right; white-space:nowrap;">
+                                            <MudTooltip Text="@MenuTextos.Editar">
+                                                <MudIconButton Icon="@Icons.Material.Filled.Edit" Size="Size.Small"
+                                                               OnClick="@(() => AbrirEditarAccionAsync(accion))" />
+                                            </MudTooltip>
+                                            <MudTooltip Text="@MenuTextos.Desactivar">
+                                                <MudIconButton Icon="@Icons.Material.Filled.VisibilityOff" Size="Size.Small"
+                                                               OnClick="@(() => DesactivarAccionAsync(accion))" />
+                                            </MudTooltip>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </MudSimpleTable>
+                    </div>
+                </MudItem>
+                <MudItem xs="12" md="5">
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary">@MenuTextos.HorasPorMes</MudText>
+                    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalHorasPorMes.ToString("0.##") h</MudText>
+                    <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serieHorasPorMes" ChartLabels="@_etiquetasHorasPorMes"
+                              Width="100%" Height="220px" />
+                </MudItem>
+            </MudGrid>
+        }
+    </MudPaper>
+</MudStack>
+
+@code {
+    [Parameter, EditorRequired] public int ClienteId { get; set; }
+
+    private bool _cargando = true;
+    private bool _mostrarComercial = true;
+
+    private List<ClienteAccionResumenItem> _acciones = new();
+    private List<ChartSeries<double>> _serieHorasPorMes = new();
+    private string[] _etiquetasHorasPorMes = Array.Empty<string>();
+    private decimal _totalHorasPorMes;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        if (config is not null && Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+            _mostrarComercial = edition != ApplicationEdition.Distributor;
+
+        await CargarAccionesAsync();
+    }
+
+    private async Task CargarAccionesAsync()
+    {
+        _cargando = true;
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        _acciones = await db.ClienteAcciones
+            .Where(x => x.ClienteId == ClienteId && x.Activa)
+            .OrderByDescending(x => x.Fecha)
+            .Select(x => new ClienteAccionResumenItem
+            {
+                Id = x.Id,
+                Fecha = x.Fecha,
+                FechaFin = x.FechaFin,
+                TipoAccionNombre = x.TipoAccion.Nombre,
+                ComercialNombre = x.ComercialUsuario.Nombre,
+                HorasInvertidas = x.HorasInvertidas,
+                Observaciones = x.Observaciones
+            })
+            .ToListAsync();
+
+        RecalcularGraficoHoras();
+
+        _cargando = false;
+    }
+
+    // Gráfico compacto (horas por mes) calculado en memoria a partir de la
+    // lista ya cargada -- no hace falta una consulta aparte a BBDD para
+    // esto. Las acciones sin horas registradas (campo opcional) cuentan
+    // como 0 en la suma, igual que en el informe global.
+    private void RecalcularGraficoHoras()
+    {
+        var porMes = _acciones
+            .GroupBy(a => new DateTime(a.Fecha.Year, a.Fecha.Month, 1))
+            .OrderBy(g => g.Key)
+            .ToList();
+
+        _etiquetasHorasPorMes = porMes.Select(g => g.Key.ToString("MM/yyyy")).ToArray();
+        _serieHorasPorMes = new List<ChartSeries<double>>
+        {
+            new ChartSeries<double>
+            {
+                Name = MenuTextos.HorasInvertidas,
+                Data = porMes.Select(g => (double)g.Sum(a => a.HorasInvertidas ?? 0)).ToArray()
+            }
+        };
+        _totalHorasPorMes = porMes.Sum(g => g.Sum(a => a.HorasInvertidas ?? 0));
+    }
+
+    private static string FormatearRangoFechas(ClienteAccionResumenItem accion) =>
+        accion.FechaFin.HasValue && accion.FechaFin.Value.Date != accion.Fecha.Date
+            ? $"{accion.Fecha:dd/MM/yyyy} - {accion.FechaFin.Value:dd/MM/yyyy}"
+            : accion.Fecha.ToString("dd/MM/yyyy");
+
+    private async Task AbrirNuevaAccionAsync()
+    {
+        var parametros = new DialogParameters { ["ClienteId"] = ClienteId };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<ClienteAccionEditDialog>(MenuTextos.NuevaAccion, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+            await CargarAccionesAsync();
+    }
+
+    private async Task AbrirEditarAccionAsync(ClienteAccionResumenItem accion)
+    {
+        var parametros = new DialogParameters { ["ClienteId"] = ClienteId, ["Id"] = accion.Id };
+        var opciones = new DialogOptions { MaxWidth = MaxWidth.Small, FullWidth = true, CloseOnEscapeKey = true };
+
+        var dialogo = await DialogService.ShowAsync<ClienteAccionEditDialog>(MenuTextos.EditarAccion, parametros, opciones);
+        var resultado = await dialogo.Result;
+
+        if (resultado is not null && !resultado.Canceled)
+            await CargarAccionesAsync();
+    }
+
+    private async Task DesactivarAccionAsync(ClienteAccionResumenItem accion)
+    {
+        bool? confirmado = await DialogService.ShowMessageBoxAsync(
+            MenuTextos.DesactivarAccionTitulo,
+            $"{MenuTextos.ConfirmarDesactivarAccion} \"{accion.TipoAccionNombre}\" ({FormatearRangoFechas(accion)})?",
+            yesText: MenuTextos.Desactivar,
+            cancelText: MenuTextos.Cancelar);
+
+        if (confirmado != true)
+            return;
+
+        await using var db = await DbFactory.CreateDbContextAsync();
+        var entity = await db.ClienteAcciones.FirstAsync(x => x.Id == accion.Id);
+        entity.Activa = false;
+
+        AuditoriaService.Registrar(db, AuditoriaAccionTipo.Modificar, "ClienteAccion", entity.Id, $"{accion.TipoAccionNombre} — {MenuTextos.Desactivar}");
+        await db.SaveChangesAsync();
+
+        Snackbar.Add(MenuTextos.AccionDesactivada, Severity.Success, config => { config.SnackbarVariant = Variant.Filled; });
+
+        await CargarAccionesAsync();
+    }
+
+    private sealed class ClienteAccionResumenItem
+    {
+        public int Id { get; set; }
+        public DateTime Fecha { get; set; }
+        public DateTime? FechaFin { get; set; }
+        public string TipoAccionNombre { get; set; } = string.Empty;
+        public string ComercialNombre { get; set; } = string.Empty;
+        public decimal? HorasInvertidas { get; set; }
+        public string? Observaciones { get; set; }
+    }
+}

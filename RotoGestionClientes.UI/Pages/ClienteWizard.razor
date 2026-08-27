@@ -1,7 +1,12 @@
 @* Wizard de alta/edición de clientes. Réplica moderna de Clientes/ClienteWizard.cs
    (WinForms). Los 8 pasos ("Datos generales", "Ventanas", "Balconeras",
    "Puertas", "Correderas", "Elevables/Plegables", "Máquinas" y
-   "Documentos") están totalmente funcionales contra BBDD. *@
+   "Documentos") están totalmente funcionales contra BBDD.
+
+   En edición (nunca en alta, porque no tiene sentido registrar acciones
+   sobre un cliente que todavía no existe en BBDD) se añade un 9º paso,
+   "Acciones", para registrar visitas/puestas en marcha/soporte/etc. sobre
+   el cliente ya creado -- ver PasoAccionesStep.razor. *@
 @page "/clientes/nuevo"
 @page "/clientes/editar/{ClienteId:int}"
 @inject IDbContextFactory<ApplicationDbContext> DbFactory
@@ -79,6 +84,10 @@
                 else if (_currentStep == 7)
                 {
                     <PasoDocumentosStep Model="_model" />
+                }
+                else if (_currentStep == 8 && _mode == WizardMode.Edit)
+                {
+                    <PasoAccionesStep ClienteId="@_model.Id" />
                 }
                 else
                 {
@@ -166,6 +175,11 @@
         if (ClienteId.HasValue)
         {
             _mode = WizardMode.Edit;
+
+            // Paso "Acciones": solo visible en edición, tras "Documentos
+            // asociados" -- no tiene sentido registrar acciones sobre un
+            // cliente que todavía no se ha guardado.
+            _pasos.Add(MenuTextos.Acciones);
 
             var modelo = await CargarModeloAsync(ClienteId.Value);
             if (modelo is null)
