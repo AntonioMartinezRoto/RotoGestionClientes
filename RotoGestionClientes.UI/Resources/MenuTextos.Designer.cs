@@ -534,5 +534,7 @@ namespace RotoGestionClientes.UI.Resources
         public static string IniciarSesionTitulo => ResourceManager.GetString("IniciarSesionTitulo", resourceCulture)!;
 
         public static string ModulosPermitidos => ResourceManager.GetString("ModulosPermitidos", resourceCulture)!;
+
+        public static string CuentaInactivaTexto => ResourceManager.GetString("CuentaInactivaTexto", resourceCulture)!;
     }
 }

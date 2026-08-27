@@ -4,8 +4,14 @@ using RotoGestionClientes;
 
 namespace RotoGestionClientes.UI.Services;
 
-/// <summary>Resultado de comprobar un usuario/contraseña, sin tocar SesionState todavía.</summary>
-public sealed record ResultadoVerificacion(bool Exito, bool RequiereCambioPassword, CuentaUsuario? Cuenta);
+/// <summary>
+/// Resultado de comprobar un usuario/contraseña, sin tocar SesionState
+/// todavía. CuentaInactiva distingue el caso "la cuenta existe pero un
+/// Administrador la ha desactivado" del resto de fallos (usuario inexistente
+/// o contraseña incorrecta), que se siguen agrupando en un único mensaje
+/// genérico para no dar pistas de qué parte de las credenciales falló.
+/// </summary>
+public sealed record ResultadoVerificacion(bool Exito, bool RequiereCambioPassword, CuentaUsuario? Cuenta, bool CuentaInactiva = false);
 
 /// <summary>
 /// Verifica credenciales contra dbo.CuentaUsuario y gestiona el cambio de
@@ -39,8 +45,11 @@ public class AuthService
         // Include(Permisos): SesionState.IniciarSesion necesita los módulos
         // concedidos para poder resolver el acceso sin volver a la BBDD.
         var cuenta = await db.CuentasUsuario.Include(x => x.Permisos).FirstOrDefaultAsync(x => x.Login == login);
-        if (cuenta is null || !cuenta.Activa)
+        if (cuenta is null)
             return new ResultadoVerificacion(false, false, null);
+
+        if (!cuenta.Activa)
+            return new ResultadoVerificacion(false, false, null, CuentaInactiva: true);
 
         var verificacion = _hasher.VerifyHashedPassword(cuenta, cuenta.PasswordHash, password);
         if (verificacion == PasswordVerificationResult.Failed)

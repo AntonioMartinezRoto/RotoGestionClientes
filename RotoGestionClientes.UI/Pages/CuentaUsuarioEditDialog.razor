@@ -104,18 +104,57 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _modulos =
-        [
-            new ModuloCheckbox { Modulo = Modulo.Clientes, Label = MenuTextos.Clientes, Seleccionado = true },
-            new ModuloCheckbox { Modulo = Modulo.Mantenimiento, Label = MenuTextos.Mantenimiento, Seleccionado = true },
-            new ModuloCheckbox { Modulo = Modulo.Informes, Label = MenuTextos.Informes, Seleccionado = true },
-            new ModuloCheckbox { Modulo = Modulo.CrearActualizacion, Label = MenuTextos.CrearActualizacion, Seleccionado = true },
-            new ModuloCheckbox { Modulo = Modulo.ActualizarDatos, Label = MenuTextos.ActualizarDatos, Seleccionado = true },
-        ];
+        await using var db = await DbFactory.CreateDbContextAsync();
+
+        // Igual que MainLayout.razor/Home.razor: Mantenimiento y Crear
+        // actualización no existen en la edición Distribuidor, y Actualizar
+        // datos no existe en la edición Interna. No tiene sentido dejar que
+        // el Administrador marque un módulo que ningún Usuario de esta base
+        // de datos podría usar nunca -- solo genera confusión.
+        var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+        var edition = ApplicationEdition.Internal;
+        if (config is not null)
+        {
+            Enum.TryParse(config.AppEdition, out edition);
+        }
+
+        bool mostrarMantenimiento;
+        bool mostrarCrearActualizacion;
+        bool mostrarActualizarDatos;
+
+        switch (edition)
+        {
+            case ApplicationEdition.Distributor:
+                mostrarMantenimiento = false;
+                mostrarCrearActualizacion = false;
+                mostrarActualizarDatos = true;
+                break;
+            case ApplicationEdition.Internal:
+                mostrarMantenimiento = true;
+                mostrarCrearActualizacion = true;
+                mostrarActualizarDatos = false;
+                break;
+            default: // Debug / desconocido: se muestra todo
+                mostrarMantenimiento = true;
+                mostrarCrearActualizacion = true;
+                mostrarActualizarDatos = true;
+                break;
+        }
+
+        _modulos = new List<ModuloCheckbox>
+        {
+            new() { Modulo = Modulo.Clientes, Label = MenuTextos.Clientes, Seleccionado = true },
+        };
+        if (mostrarMantenimiento)
+            _modulos.Add(new ModuloCheckbox { Modulo = Modulo.Mantenimiento, Label = MenuTextos.Mantenimiento, Seleccionado = true });
+        _modulos.Add(new ModuloCheckbox { Modulo = Modulo.Informes, Label = MenuTextos.Informes, Seleccionado = true });
+        if (mostrarCrearActualizacion)
+            _modulos.Add(new ModuloCheckbox { Modulo = Modulo.CrearActualizacion, Label = MenuTextos.CrearActualizacion, Seleccionado = true });
+        if (mostrarActualizarDatos)
+            _modulos.Add(new ModuloCheckbox { Modulo = Modulo.ActualizarDatos, Label = MenuTextos.ActualizarDatos, Seleccionado = true });
 
         if (Id.HasValue)
         {
-            await using var db = await DbFactory.CreateDbContextAsync();
             var cuenta = await db.CuentasUsuario.AsNoTracking().Include(x => x.Permisos).FirstAsync(x => x.Id == Id.Value);
 
             _login = cuenta.Login;

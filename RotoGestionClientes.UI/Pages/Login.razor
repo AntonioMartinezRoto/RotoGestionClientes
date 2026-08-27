@@ -98,7 +98,12 @@
 
             if (!resultado.Exito || resultado.Cuenta is null)
             {
-                _error = MenuTextos.CredencialesIncorrectas;
+                // CuentaInactiva sí se distingue del resto de fallos (usuario
+                // inexistente o contraseña incorrecta, que se agrupan en un
+                // único mensaje para no dar pistas de cuál de los dos
+                // falló): así se sabe si hay que revisar lo escrito o pedirle
+                // a un Administrador que reactive la cuenta.
+                _error = resultado.CuentaInactiva ? MenuTextos.CuentaInactivaTexto : MenuTextos.CredencialesIncorrectas;
                 return;
             }
 

@@ -784,4 +784,7 @@
   <data name="ModulosPermitidos" xml:space="preserve">
     <value>Módulos permitidos</value>
   </data>
+  <data name="CuentaInactivaTexto" xml:space="preserve">
+    <value>Esta cuenta está desactivada. Contacta con un Administrador.</value>
+  </data>
 </root>
