@@ -44,11 +44,14 @@
             <MudDatePicker Label="@MenuTextos.FechaHasta" @bind-Date="_fechaHasta" Variant="Variant.Outlined"
                            Margin="Margin.Dense" Editable="true" DateFormat="dd/MM/yyyy" />
 
-            <MudButton Variant="@(_comercialIds.Count > 0 ? Variant.Filled : Variant.Outlined)"
-                       Color="@(_comercialIds.Count > 0 ? Color.Primary : Color.Default)"
-                       StartIcon="@Icons.Material.Filled.Person" OnClick="@(() => AbrirFiltroAsync(FiltroTipo.Comercial))">
-                @MenuTextos.Comercial
-            </MudButton>
+            @if (_mostrarComercial)
+            {
+                <MudButton Variant="@(_comercialIds.Count > 0 ? Variant.Filled : Variant.Outlined)"
+                           Color="@(_comercialIds.Count > 0 ? Color.Primary : Color.Default)"
+                           StartIcon="@Icons.Material.Filled.Person" OnClick="@(() => AbrirFiltroAsync(FiltroTipo.Comercial))">
+                    @MenuTextos.Comercial
+                </MudButton>
+            }
             <MudButton Variant="@(_tipoAccionIds.Count > 0 ? Variant.Filled : Variant.Outlined)"
                        Color="@(_tipoAccionIds.Count > 0 ? Color.Primary : Color.Default)"
                        StartIcon="@Icons.Material.Filled.Assignment" OnClick="@(() => AbrirFiltroAsync(FiltroTipo.TipoAccion))">
@@ -124,19 +127,45 @@
             </MudItem>
 
             <MudItem xs="12" md="6">
-                <MudPaper Outlined="true" Class="pa-3">
-                    <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
-                        <MudText Typo="Typo.subtitle1">@MenuTextos.HorasPorComercial</MudText>
-                        <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
-                                       OnClick="@(() => ExportarGraficoPngAsync("grafico-horas-comercial", $"{MenuTextos.HorasPorComercial}.png"))" />
-                    </MudStack>
-                    <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalHorasPorComercial.ToString("0.##") h</MudText>
-                    <div id="grafico-horas-comercial">
-                        <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serieHorasPorComercial" ChartLabels="@_etiquetasHorasPorComercial"
-                                  ChartOptions="@(new BarChartOptions { ShowValues = true, ShowLegend = true })"
-                                  Width="100%" Height="260px" />
-                    </div>
-                </MudPaper>
+                @if (_mostrarComercial)
+                {
+                    <MudPaper Outlined="true" Class="pa-3">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                            <MudText Typo="Typo.subtitle1">@MenuTextos.HorasPorComercial</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                           OnClick="@(() => ExportarGraficoPngAsync("grafico-horas-comercial", $"{MenuTextos.HorasPorComercial}.png"))" />
+                        </MudStack>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalHorasPorComercial.ToString("0.##") h</MudText>
+                        <div id="grafico-horas-comercial">
+                            <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serieHorasPorComercial" ChartLabels="@_etiquetasHorasPorComercial"
+                                      ChartOptions="@(new BarChartOptions { ShowValues = true, ShowLegend = true })"
+                                      Width="100%" Height="260px" />
+                        </div>
+                    </MudPaper>
+                }
+                else
+                {
+                    @* En una edición Distribuidor todas las acciones se atribuyen
+                       siempre al mismo usuario (ver ClienteAccionEditDialog.razor),
+                       así que un desglose "por comercial" no aporta nada -- se
+                       muestra en su lugar cuántos clientes distintos se han
+                       atendido cada mes, un dato de cobertura que sí tiene sentido
+                       para un solo distribuidor. Mismo id de contenedor que la
+                       versión de arriba para no duplicar lógica de exportación. *@
+                    <MudPaper Outlined="true" Class="pa-3">
+                        <MudStack Row="true" Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Class="mb-2">
+                            <MudText Typo="Typo.subtitle1">@MenuTextos.ClientesAtendidosPorMes</MudText>
+                            <MudIconButton Icon="@Icons.Material.Filled.Download" Size="Size.Small"
+                                           OnClick="@(() => ExportarGraficoPngAsync("grafico-horas-comercial", $"{MenuTextos.ClientesAtendidosPorMes}.png"))" />
+                        </MudStack>
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary mb-1">@MenuTextos.Total: @_totalClientesPorMes</MudText>
+                        <div id="grafico-horas-comercial">
+                            <MudChart T="double" ChartType="ChartType.Bar" ChartSeries="@_serieClientesPorMes" ChartLabels="@_etiquetasClientesPorMes"
+                                      ChartOptions="@(new BarChartOptions { ShowValues = true, ShowLegend = true })"
+                                      Width="100%" Height="260px" />
+                        </div>
+                    </MudPaper>
+                }
             </MudItem>
 
             <MudItem xs="12" md="6">
@@ -218,6 +247,12 @@
     private bool _exportandoPdf;
     private bool _huboRecorteRanking;
 
+    // En una edición Distribuidor toda acción se atribuye siempre al mismo
+    // usuario configurado (Cliente/ClienteAccionEditDialog.razor no deja
+    // elegir otro), así que ni el filtro ni el desglose "por comercial"
+    // tienen sentido -- ver dónde se usa este flag más abajo.
+    private bool _mostrarComercial = true;
+
     private List<ChartSeries<double>> _serieHorasPorMes = new();
     private string[] _etiquetasHorasPorMes = Array.Empty<string>();
     private decimal _totalHorasPorMes;
@@ -227,6 +262,11 @@
     private List<ChartSeries<double>> _serieHorasPorComercial = new();
     private string[] _etiquetasHorasPorComercial = Array.Empty<string>();
     private decimal _totalHorasPorComercial;
+    // Sustituye a horas-por-comercial en edición Distribuidor -- ver el
+    // comentario junto al <MudItem> del gráfico correspondiente más arriba.
+    private List<ChartSeries<double>> _serieClientesPorMes = new();
+    private string[] _etiquetasClientesPorMes = Array.Empty<string>();
+    private int _totalClientesPorMes;
     private List<ChartSeries<double>> _serieRankingClientes = new();
     private string[] _etiquetasRankingClientes = Array.Empty<string>();
     // A diferencia de los otros tres totales (que siempre coinciden con la
@@ -245,6 +285,13 @@
         {
             NavigationManager.NavigateTo("/");
             return;
+        }
+
+        await using (var db = await DbFactory.CreateDbContextAsync())
+        {
+            var config = await db.ConfiguracionAplicacion.AsNoTracking().FirstOrDefaultAsync();
+            if (config is not null && Enum.TryParse(config.AppEdition, out ApplicationEdition edition))
+                _mostrarComercial = edition != ApplicationEdition.Distributor;
         }
 
         await BuscarAsync();
@@ -410,6 +457,25 @@
         };
         _totalHorasPorComercial = porComercial.Sum(g => g.Sum(a => a.HorasInvertidas));
 
+        // Solo se dibuja en edición Distribuidor (sustituye a horas por
+        // comercial), pero se calcula siempre igual que el resto de gráficos
+        // -- es una simple agrupación en memoria sobre _resultado, no supone
+        // ninguna consulta extra a BBDD.
+        var clientesPorMes = _resultado
+            .GroupBy(a => new DateTime(a.Fecha.Year, a.Fecha.Month, 1))
+            .OrderBy(g => g.Key)
+            .ToList();
+        _etiquetasClientesPorMes = clientesPorMes.Select(g => g.Key.ToString("MM/yyyy")).ToArray();
+        _serieClientesPorMes = new List<ChartSeries<double>>
+        {
+            new ChartSeries<double> { Name = MenuTextos.Clientes, Data = clientesPorMes.Select(g => (double)g.Select(a => a.ClienteId).Distinct().Count()).ToArray() }
+        };
+        // A diferencia de los totales anteriores, esto NO es la suma de las
+        // barras (un mismo cliente atendido en varios meses contaría más de
+        // una vez) sino el número de clientes distintos en todo el periodo
+        // filtrado.
+        _totalClientesPorMes = _resultado.Select(a => a.ClienteId).Distinct().Count();
+
         // Se limita a los TopRankingClientes con más horas para que el
         // gráfico siga siendo legible -- el listado completo sigue disponible
         // más abajo en la tabla y en la exportación a Excel, así que no se
@@ -477,7 +543,7 @@
             {
                 ("grafico-horas-mes", MenuTextos.HorasPorMes),
                 ("grafico-horas-tipo", MenuTextos.HorasPorTipoAccion),
-                ("grafico-horas-comercial", MenuTextos.HorasPorComercial),
+                ("grafico-horas-comercial", _mostrarComercial ? MenuTextos.HorasPorComercial : MenuTextos.ClientesAtendidosPorMes),
                 ("grafico-ranking-clientes", MenuTextos.RankingClientes),
             };
 

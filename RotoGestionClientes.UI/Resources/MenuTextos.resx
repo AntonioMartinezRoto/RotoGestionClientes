@@ -871,6 +871,9 @@
   <data name="HorasPorComercial" xml:space="preserve">
     <value>Horas por comercial</value>
   </data>
+  <data name="ClientesAtendidosPorMes" xml:space="preserve">
+    <value>Clientes atendidos por mes</value>
+  </data>
   <data name="RankingClientes" xml:space="preserve">
     <value>Ranking de clientes</value>
   </data>

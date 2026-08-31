@@ -593,6 +593,8 @@ namespace RotoGestionClientes.UI.Resources
 
         public static string HorasPorComercial => ResourceManager.GetString("HorasPorComercial", resourceCulture)!;
 
+        public static string ClientesAtendidosPorMes => ResourceManager.GetString("ClientesAtendidosPorMes", resourceCulture)!;
+
         public static string RankingClientes => ResourceManager.GetString("RankingClientes", resourceCulture)!;
 
         public static string RankingTop15 => ResourceManager.GetString("RankingTop15", resourceCulture)!;
