@@ -602,5 +602,19 @@ namespace RotoGestionClientes.UI.Resources
         public static string ErrorExportarGrafico => ResourceManager.GetString("ErrorExportarGrafico", resourceCulture)!;
 
         public static string SinAccionesEstadisticas => ResourceManager.GetString("SinAccionesEstadisticas", resourceCulture)!;
+
+        public static string ErrorConexionTitulo => ResourceManager.GetString("ErrorConexionTitulo", resourceCulture)!;
+
+        public static string ErrorConexionTexto => ResourceManager.GetString("ErrorConexionTexto", resourceCulture)!;
+
+        public static string ConexionConfigurada => ResourceManager.GetString("ConexionConfigurada", resourceCulture)!;
+
+        public static string Reintentar => ResourceManager.GetString("Reintentar", resourceCulture)!;
+
+        public static string AbrirCarpetaConfiguracion => ResourceManager.GetString("AbrirCarpetaConfiguracion", resourceCulture)!;
+
+        public static string ErrorInesperadoTitulo => ResourceManager.GetString("ErrorInesperadoTitulo", resourceCulture)!;
+
+        public static string ErrorInesperadoTexto => ResourceManager.GetString("ErrorInesperadoTexto", resourceCulture)!;
     }
 }

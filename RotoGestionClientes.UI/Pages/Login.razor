@@ -8,6 +8,7 @@
    contraseña nueva antes de conceder acceso. Ver Services/AuthService.cs
    para por qué el cambio de sesión se retrasa hasta que ese paso termina. *@
 @inject AuthService AuthService
+@inject IAppHost AppHost
 
 <div class="rgc-login">
     <MudPaper Outlined="true" Class="rgc-login-card pa-8">
@@ -16,7 +17,44 @@
             <MudText Typo="Typo.h5" Class="mt-3">@MenuTextos.IniciarSesionTitulo</MudText>
         </div>
 
-        @if (_paso == PasoLogin.Credenciales)
+        @if (_errorConexion)
+        {
+            @* No se puede llegar a la BBDD (servidor caído, cadena de
+               conexión mal configurada, sin red...). En vez de dejar que la
+               excepción suba sin control y se vea la barra roja genérica de
+               Blazor ("Se ha producido un error inesperado. Recargar"), que
+               transmite desconfianza porque no dice qué ha pasado ni qué
+               hacer, se sustituye toda la tarjeta de login por un aviso
+               claro con la conexión configurada (sin credenciales) y tres
+               acciones concretas para poder resolverlo sin ayuda técnica. *@
+            <MudAlert Severity="Severity.Error" Variant="Variant.Outlined" Class="mt-4" Icon="@Icons.Material.Filled.CloudOff">
+                <MudText Typo="Typo.subtitle1" Class="mb-1">@MenuTextos.ErrorConexionTitulo</MudText>
+                <MudText Typo="Typo.body2">@MenuTextos.ErrorConexionTexto</MudText>
+
+                @if (!string.IsNullOrEmpty(AppHost.InfoConexion))
+                {
+                    <MudText Typo="Typo.caption" Class="mt-3 d-block">
+                        @MenuTextos.ConexionConfigurada: @AppHost.InfoConexion
+                    </MudText>
+                }
+            </MudAlert>
+
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" Class="mt-4"
+                       StartIcon="@Icons.Material.Filled.Refresh" OnClick="ReintentarAsync">
+                @MenuTextos.Reintentar
+            </MudButton>
+
+            <MudButton Variant="Variant.Outlined" Color="Color.Default" FullWidth="true" Class="mt-2"
+                       StartIcon="@Icons.Material.Filled.FolderOpen" OnClick="@(() => AppHost.AbrirCarpetaConfiguracion())">
+                @MenuTextos.AbrirCarpetaConfiguracion
+            </MudButton>
+
+            <MudButton Variant="Variant.Text" Color="Color.Error" FullWidth="true" Class="mt-2"
+                       StartIcon="@Icons.Material.Filled.ExitToApp" OnClick="@(() => AppHost.Exit())">
+                @MenuTextos.Salir
+            </MudButton>
+        }
+        else if (_paso == PasoLogin.Credenciales)
         {
             <MudTextField T="string" @bind-Value="_login" Label="@MenuTextos.UsuarioLogin" Variant="Variant.Outlined"
                           Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Person"
@@ -76,6 +114,7 @@
     private string _confirmarPassword = string.Empty;
     private string? _error;
     private bool _cargando;
+    private bool _errorConexion;
     private CuentaUsuario? _cuentaPendiente;
 
     private async Task EntrarAsync()
@@ -91,6 +130,7 @@
 
         _cargando = true;
         _error = null;
+        _errorConexion = false;
 
         try
         {
@@ -118,6 +158,21 @@
                 AuthService.EstablecerSesion(resultado.Cuenta);
             }
         }
+        catch (Exception)
+        {
+            // No se ha podido ni siquiera consultar dbo.CuentaUsuario: servidor
+            // apagado/inalcanzable, cadena de conexión mal configurada, sin
+            // red, etc. -- no es un fallo de credenciales, es que no se ha
+            // podido hablar con la BBDD en absoluto. En vez de dejar que la
+            // excepción suba sin control (lo que en un BlazorWebView deja la
+            // pantalla en un estado roto con la barra roja "Recargar" de
+            // Blazor, sin explicar nada), se captura aquí y se sustituye la
+            // tarjeta de login por un aviso claro con opciones. No se
+            // registra el detalle técnico en pantalla a propósito: a la
+            // persona usuaria no le sirve de nada un mensaje de SqlException
+            // y solo transmite desconfianza.
+            _errorConexion = true;
+        }
         finally
         {
             _cargando = false;
@@ -143,6 +198,7 @@
 
         _cargando = true;
         _error = null;
+        _errorConexion = false;
 
         try
         {
@@ -155,9 +211,25 @@
 
             AuthService.EstablecerSesion(cuentaActualizada);
         }
+        catch (Exception)
+        {
+            // Mismo escenario que en EntrarAsync: se ha perdido la conexión
+            // con la BBDD justo al fijar la contraseña nueva (menos
+            // frecuente, pero posible si el servidor cae entre medias).
+            _errorConexion = true;
+        }
         finally
         {
             _cargando = false;
         }
     }
+
+    /// <summary>
+    /// Botón "Reintentar" del aviso de error de conexión: repite la misma
+    /// operación que falló (login o cambio de contraseña, según en qué paso
+    /// estuviera) sin que la persona tenga que volver a escribir nada.
+    /// </summary>
+    private Task ReintentarAsync() => _paso == PasoLogin.CambiarPassword
+        ? GuardarNuevaPasswordAsync()
+        : EntrarAsync();
 }

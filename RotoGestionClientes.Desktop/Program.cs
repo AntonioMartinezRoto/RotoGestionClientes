@@ -15,6 +15,8 @@ internal static class Program
     {
         ApplicationConfiguration.Initialize();
 
+        var appSettingsPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
+
         IConfiguration configuration = new ConfigurationBuilder()
             .SetBasePath(AppContext.BaseDirectory)
             .AddJsonFile("appsettings.json", optional: false)
@@ -42,7 +44,7 @@ internal static class Program
         services.AddDbContextFactory<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString));
 
-        services.AddSingleton<IAppHost, DesktopAppHost>();
+        services.AddSingleton<IAppHost>(new DesktopAppHost(connectionString, appSettingsPath));
         services.AddSingleton<ClientesListState>();
         services.AddSingleton<VersionDatosState>();
         services.AddSingleton<SesionState>();

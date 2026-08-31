@@ -13,64 +13,102 @@
 <MudDialogProvider />
 <MudSnackbarProvider />
 
-@if (!SesionState.EstaAutenticado)
-{
-    @* Ni @Body ni el Router se llegan a renderizar mientras no haya sesión:
-       no es solo ocultar el menú, es que ninguna página es alcanzable. *@
-    <Login />
-}
-else
-{
-    <MudLayout>
-        <MudAppBar Elevation="1">
-            <MudImage Src="_content/RotoGestionClientes.UI/images/logo-main.png" Height="34" ObjectFit="ObjectFit.Contain" Class="mr-4" />
-            <MudText Typo="Typo.h6">@MenuTextos.MenuPrincipal</MudText>
-            <MudText Typo="Typo.caption" Class="mud-text-secondary ml-2 rgc-appbar-version">v@(AppHost.AppVersion)</MudText>
-            <MudSpacer />
-            <MudText Typo="Typo.body2" Class="mr-2">@SesionState.NombreMostrado</MudText>
-            <MudTooltip Text="@MenuTextos.CerrarSesion">
-                <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="CerrarSesion" />
-            </MudTooltip>
-        </MudAppBar>
+@* ErrorBoundary a nivel de aplicación: red de seguridad para cualquier
+   excepción no controlada en algún punto de la UI que no se haya
+   anticipado (Login.razor ya gestiona su propio caso de "sin conexión a
+   BBDD" de forma específica, con opciones). Sin esto, cualquier excepción
+   sin capturar deja la pantalla en la barra roja genérica de Blazor ("Se ha
+   producido un error inesperado. Recargar"), que no dice nada útil y
+   transmite desconfianza. Con ErrorBoundary se sustituye por un aviso
+   controlado con un botón para reintentar. *@
+<ErrorBoundary @ref="_errorBoundary">
+    <ChildContent>
+        @if (!SesionState.EstaAutenticado)
+        {
+            @* Ni @Body ni el Router se llegan a renderizar mientras no haya
+               sesión: no es solo ocultar el menú, es que ninguna página es
+               alcanzable. *@
+            <Login />
+        }
+        else
+        {
+            <MudLayout>
+                <MudAppBar Elevation="1">
+                    <MudImage Src="_content/RotoGestionClientes.UI/images/logo-main.png" Height="34" ObjectFit="ObjectFit.Contain" Class="mr-4" />
+                    <MudText Typo="Typo.h6">@MenuTextos.MenuPrincipal</MudText>
+                    <MudText Typo="Typo.caption" Class="mud-text-secondary ml-2 rgc-appbar-version">v@(AppHost.AppVersion)</MudText>
+                    <MudSpacer />
+                    <MudText Typo="Typo.body2" Class="mr-2">@SesionState.NombreMostrado</MudText>
+                    <MudTooltip Text="@MenuTextos.CerrarSesion">
+                        <MudIconButton Icon="@Icons.Material.Filled.Logout" Color="Color.Inherit" OnClick="CerrarSesion" />
+                    </MudTooltip>
+                </MudAppBar>
 
-        <MudDrawer Open="true" Elevation="0" Variant="DrawerVariant.Persistent" ClipMode="DrawerClipMode.Always">
-            <div class="rgc-nav-container">
-                <MudNavMenu Class="pa-2">
-                    @foreach (var item in _menuItems.Where(i => i.Visible && !i.EsSalir))
-                    {
-                        <MudNavLink Icon="@item.Icon" IconColor="Color.Primary" OnClick="@item.OnClick" Class="rgc-nav-link">
-                            @item.Label
-                        </MudNavLink>
-                    }
-                </MudNavMenu>
+                <MudDrawer Open="true" Elevation="0" Variant="DrawerVariant.Persistent" ClipMode="DrawerClipMode.Always">
+                    <div class="rgc-nav-container">
+                        <MudNavMenu Class="pa-2">
+                            @foreach (var item in _menuItems.Where(i => i.Visible && !i.EsSalir))
+                            {
+                                <MudNavLink Icon="@item.Icon" IconColor="Color.Primary" OnClick="@item.OnClick" Class="rgc-nav-link">
+                                    @item.Label
+                                </MudNavLink>
+                            }
+                        </MudNavMenu>
 
-                <MudSpacer />
+                        <MudSpacer />
 
-                @{
-                    var salir = _menuItems.FirstOrDefault(i => i.EsSalir);
-                }
-                @if (salir is not null)
-                {
-                    <MudDivider />
-                    <MudNavMenu Class="pa-2">
-                        <MudNavLink Icon="@salir.Icon" IconColor="Color.Error" OnClick="@salir.OnClick" Class="rgc-nav-link rgc-nav-link-salir">
-                            @salir.Label
-                        </MudNavLink>
-                    </MudNavMenu>
-                }
-            </div>
-        </MudDrawer>
+                        @{
+                            var salir = _menuItems.FirstOrDefault(i => i.EsSalir);
+                        }
+                        @if (salir is not null)
+                        {
+                            <MudDivider />
+                            <MudNavMenu Class="pa-2">
+                                <MudNavLink Icon="@salir.Icon" IconColor="Color.Error" OnClick="@salir.OnClick" Class="rgc-nav-link rgc-nav-link-salir">
+                                    @salir.Label
+                                </MudNavLink>
+                            </MudNavMenu>
+                        }
+                    </div>
+                </MudDrawer>
 
-        <MudMainContent>
-            @Body
-        </MudMainContent>
-    </MudLayout>
-}
+                <MudMainContent>
+                    @Body
+                </MudMainContent>
+            </MudLayout>
+        }
+    </ChildContent>
+    <ErrorContent>
+        <div style="display:flex; justify-content:center; align-items:flex-start; padding-top:15vh;">
+            <MudPaper Outlined="true" Class="pa-8" Style="max-width:480px; width:100%;">
+                <MudText Typo="Typo.h5" Class="mb-2">@MenuTextos.ErrorInesperadoTitulo</MudText>
+                <MudText Typo="Typo.body2" Class="mb-4">@MenuTextos.ErrorInesperadoTexto</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true"
+                           StartIcon="@Icons.Material.Filled.Refresh" OnClick="RecuperarTrasErrorInesperado">
+                    @MenuTextos.Reintentar
+                </MudButton>
+            </MudPaper>
+        </div>
+    </ErrorContent>
+</ErrorBoundary>
 
 @code {
     private List<MenuItem> _menuItems = new();
+    private ErrorBoundary? _errorBoundary;
 
     private sealed record MenuItem(string Label, string Icon, bool Visible, Action OnClick, bool EsSalir = false);
+
+    /// <summary>
+    /// Botón "Reintentar" del ErrorBoundary raíz: Recover() vuelve a
+    /// renderizar el ChildContent (Login o MudLayout, según toque), y la
+    /// navegación a "/" evita reaparecer justo en la página que provocó el
+    /// error si esta seguía teniendo datos inválidos en memoria.
+    /// </summary>
+    private void RecuperarTrasErrorInesperado()
+    {
+        _errorBoundary?.Recover();
+        NavigationManager.NavigateTo("/");
+    }
 
     protected override async Task OnInitializedAsync()
     {

@@ -886,4 +886,25 @@
   <data name="SinAccionesEstadisticas" xml:space="preserve">
     <value>Não foram encontradas ações com os filtros aplicados.</value>
   </data>
+  <data name="ErrorConexionTitulo" xml:space="preserve">
+    <value>Não foi possível ligar à base de dados</value>
+  </data>
+  <data name="ErrorConexionTexto" xml:space="preserve">
+    <value>É possível que o servidor não esteja disponível neste momento ou que a configuração de ligação não esteja correta. Pode tentar novamente, rever a configuração ou sair da aplicação.</value>
+  </data>
+  <data name="ConexionConfigurada" xml:space="preserve">
+    <value>Ligação configurada</value>
+  </data>
+  <data name="Reintentar" xml:space="preserve">
+    <value>Tentar novamente</value>
+  </data>
+  <data name="AbrirCarpetaConfiguracion" xml:space="preserve">
+    <value>Abrir pasta de configuração</value>
+  </data>
+  <data name="ErrorInesperadoTitulo" xml:space="preserve">
+    <value>Ocorreu um problema</value>
+  </data>
+  <data name="ErrorInesperadoTexto" xml:space="preserve">
+    <value>Ocorreu um erro inesperado. Podes tentar novamente; se o problema persistir, contacta o suporte.</value>
+  </data>
 </root>
